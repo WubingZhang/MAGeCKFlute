@@ -1,9 +1,8 @@
-GroupAB <- function(beta, ctrlname="Control",treatname="Treatment", cutoff_scale=F,filename=NULL){
+GroupAB <- function(beta, ctrlname="Control", treatname="Treatment", scale_cutoff=1, filename=NULL){
   loginfo("Select AB group genes ...")
-  dd1 = beta
-  dd1=dd1[,c("Gene",treatname, ctrlname, "ENTREZID")]
-  dd1$diff=dd1[, treatname]-dd1[, ctrlname]
-  cutoff=Cutoff_Calling(dd1$diff,scale=cutoff_scale)
+  dd1 = beta[,c("Gene",'ENTREZID',treatname, ctrlname)]
+  dd1$diff=rowMeans(dd1[,treatname,drop=F])-rowMeans(dd1[,ctrlname,drop=F])
+  cutoff=Cutoff_Calling(dd1$diff,scale=scale_cutoff)
   dd1$group="no"
   dd1$group[dd1$diff>cutoff]="up"
   dd1$group[dd1$diff<(-cutoff)]="down"
@@ -11,5 +10,5 @@ GroupAB <- function(beta, ctrlname="Control",treatname="Treatment", cutoff_scale
   if(!is.null(filename)){
     write.table(dd1, filename, sep="\t", row.names = F,col.names = T,quote=F)
   }
-  return(list(result=dd1, cutoff=cutoff))
+  return(dd1)
 }

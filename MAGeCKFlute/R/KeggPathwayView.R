@@ -205,9 +205,11 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
           message("Warning: ", warn.msg)
         }else {
           #=====My revised===========
+          orgdb = c("org.Hs.eg.db", "org.Mm.eg.db")
+          names(orgdb) = c("hsa", "mmu")
           #plot.data.gene$labels = eg2id(as.character(plot.data.gene$kegg.names), category = "SYMBOL", pkg.name = gene.annotpkg)[,2]
           ID2SYMBOL= bitr(as.character(plot.data.gene$kegg.names),
-                          toType="SYMBOL", fromType="ENTREZID", OrgDb="org.Hs.eg.db",drop=T)
+                          toType="SYMBOL", fromType="ENTREZID", OrgDb=orgdb[species],drop=T)
           ID2SYMBOL1=merge(plot.data.gene,ID2SYMBOL,by.x="kegg.names",by.y="ENTREZID",all.x=T,sort=F)
           plot.data.gene$labels=ID2SYMBOL1$SYMBOL
           #==========================
@@ -284,54 +286,5 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
   return(invisible(out.list))
 }
 
-
-pathPng2Pdf <- function(genelist, pathways=c(), title="Group A",
-                        sub="Negative control normalized", output=".",
-                        path.archive=".", kegg.native = T){
-    #====No pathways supplied======================
-    if(length(pathways)<1){
-      p=ggplot()
-      p=p+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
-      p=p+theme_void()
-      print(p)
-      return(0)
-    }
-
-    if(length(pathways)>4){
-      keggID=pathways[1:4]
-    }else{keggID=pathways}
-
-    loginfo(paste('Starting plot kegg pathways for',sub, title))
-    rownames(genelist)=genelist$ENTREZID
-    p1 <- KeggPathwayView(gene.data  = genelist[,c("Control","Treatment")], pathway.id = keggID,
-                          kegg.dir = path.archive, kegg.native = kegg.native)
-
-    #Maybe there are not multi file, but only keggID.pathview.png
-    pngnames=paste0(keggID, ".pathview.multi.png")
-    idx = which(list.files() %in% pngnames)
-    pngnames=list.files()[idx]
-
-    boo=file.rename(from=pngnames,to=paste0(output,"/",title,"_",sub,"_",pngnames))
-    originPng=paste0(keggID, ".png")
-    originXML=paste0(keggID, ".xml")
-    file.remove(originPng)
-    file.remove(originXML)
-    if(all(boo)){
-      pngnames = paste0(output,"/",title,"_",sub,"_",pngnames)
-    }
-    thePlots <- lapply (pngnames, function(figure) {
-      rasterGrob(readPNG(figure, native = FALSE),interpolate = FALSE)})
-    if(length(thePlots)<4){
-      for(i in (length(thePlots)+1):4){
-        p1=ggplot()
-        p1=p1+geom_text(aes(x=0,y=0,label="No multi pathview figures"),size=6)
-        p1=p1+theme_void()
-        thePlots[[i]]=p1
-      }
-    }
-    do.call(grid.arrange, c(thePlots[1:2], ncol = 2,top=title,bottom=sub))
-    do.call(grid.arrange, c(thePlots[3:4], ncol = 2,top=title,bottom=sub))
-    # grid.arrange(thePlots, ncol = 2, top=title0)
-}
 
 

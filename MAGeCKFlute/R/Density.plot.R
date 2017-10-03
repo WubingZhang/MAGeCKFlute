@@ -5,8 +5,8 @@ Density.plot <- function(beta, ctrlname="Control",treatname="Treatment",
   dd1 = beta
   loginfo(paste("Density plot for", main, xlab, "..."))
   dd1 = dd1[,c("Gene", ctrlname, treatname)]
-  dd1 = melt(dd1[,1:3],id="Gene")
-  dd1$variable = gsub(".beta","",dd1$variable)
+  dd1 = melt(dd1,id="Gene")
+  #==========
   p=ggplot(data=dd1,aes(x=value,color=variable,group=variable))
   p=p+geom_density()
   # p=p+facet_wrap(~variable,nrow=1)

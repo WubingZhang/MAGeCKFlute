@@ -1,10 +1,10 @@
 #Plot square
 Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
-                      main=NULL, filename=NULL, out.dir="."){
+                      main=NULL, filename=NULL, out.dir=".", scale_cutoff=1){
   loginfo(paste("Square plot for",main, "beta scores ..."))
   beta$group="Others"
-  Control_cutoff=Cutoff_Calling(beta[, ctrlname],scale=F)
-  drug_cutoff=Cutoff_Calling(beta[,treatname],scale=F)
+  Control_cutoff=Cutoff_Calling(beta[, ctrlname],scale=scale_cutoff)
+  drug_cutoff=Cutoff_Calling(beta[,treatname],scale=scale_cutoff)
   idx1=-Control_cutoff<beta[, ctrlname]
   idx2=beta[, ctrlname]<Control_cutoff
   idx3=beta[,treatname]>drug_cutoff
@@ -25,7 +25,7 @@ Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
   x=beta[,ctrlname]
   y=beta[,treatname]
   slope=drug_cutoff/Control_cutoff
-  intercept=0.3*Cutoff_Calling(y-x,scale=T)
+  intercept=0.2*Cutoff_Calling(y-x,scale=scale_cutoff)
   y_max=x*slope+intercept
   y_min=x*slope-intercept
   idx=y>y_max | y<y_min
@@ -62,10 +62,10 @@ Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
   p=p+theme(legend.position="bottom")+theme(legend.title=element_blank())
   p=p+guides(col = guide_legend(ncol = 3,byrow =T))
   p=p+xlim(x_min,x_max)+ylim(y_min,y_max)
-  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group1",])[1]),sep=""), x=0, y=y_max-0.01,vjust=0,hjust = 0.5)
-  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group3",])[1]),sep=""), x=0, y=y_min+0.01,vjust=1,hjust = 0.5)
-  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group2",])[1]),sep=""), x=x_max-0.01, y=0,vjust=0.5,hjust = 1)
-  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group4",])[1]),sep=""), x=x_min+0.01, y=0,vjust=0.5,hjust = 0)
+  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group2",])[1]),sep=""), x=0, y=y_max-0.01,vjust=0,hjust = 0.5)
+  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group4",])[1]),sep=""), x=0, y=y_min+0.01,vjust=1,hjust = 0.5)
+  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group3",])[1]),sep=""), x=x_max-0.01, y=0,vjust=0.5,hjust = 1)
+  p=p+annotate("text",color="black",label=paste("",as.character(dim(beta[beta$group=="Group1",])[1]),sep=""), x=x_min+0.01, y=0,vjust=0.5,hjust = 0)
   p=ggExtra::ggMarginal(p, type="histogram",bins=50)
 
   # grid.arrange(p,ncol = 1)

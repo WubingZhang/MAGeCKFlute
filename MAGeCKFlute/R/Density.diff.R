@@ -6,7 +6,7 @@ Density.diff <- function(beta, ctrlname="Control",treatname="Treatment",
 
   loginfo(paste("Density plot for", main, "treat-control beta scores..."))
   d=beta
-  d$Diff=d[,treatname]-d[,ctrlname]
+  d$Diff=rowMeans(d[,treatname,drop=F])-rowMeans(d[,ctrlname,drop=F])
   d$r <- rnorm(length(d$Diff), mean=0, sd=sd(d$Diff)-0.01)
   p=ggplot(d,aes(x=Diff))
   p=p+geom_histogram(aes(y = ..density..),fill="gray90",binwidth=0.02)

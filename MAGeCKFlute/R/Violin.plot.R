@@ -6,8 +6,8 @@ Violin.plot <- function(beta, ctrlname="Control",treatname="Treatment",
   dd1=beta
   loginfo(paste("Violin plot for", main, ylab, "..."))
   dd1 = dd1[,c("Gene", ctrlname, treatname)]
-  dd1 = melt(dd1[,1:3],id="Gene")
-  dd1$variable = gsub(".beta","",dd1$variable)
+  dd1 = melt(dd1,id="Gene")
+  #======
   p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)
   #p=p+ylim(-1.5,1)

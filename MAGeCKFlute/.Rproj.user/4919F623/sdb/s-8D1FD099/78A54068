@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{GeneID_Convert_mmu}\n\\alias{GeneID_Convert_mmu}\n\\docType{data}\n\\title{\ngene name mapping data for mmu\n}\n\\description{\nmapping of ENTREZID and SYMBOL for mmu\n}\n\\usage{data(\"GeneID_Convert_mmu\")}\n\\format{\n  A data frame with 2 variables.\n}\n\n\\keyword{datasets}\n",
+    "created" : 1506937715688.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2894301377",
+    "id" : "78A54068",
+    "lastKnownWriteTime" : 1506937721,
+    "last_content_update" : 1506937721007,
+    "path" : "~/MyWork/Research/CRISPR/7 MAGeCKFlute/Versions/MAGeCKFlute/man/GeneID_Convert_mmu.Rd",
+    "project_path" : "man/GeneID_Convert_mmu.Rd",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

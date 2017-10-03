@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{GeneID_Convert_hsa}\n\\alias{GeneID_Convert_hsa}\n\\docType{data}\n\\title{\ngene name mapping data for hsa\n}\n\\description{\nmapping of ENTREZID and SYMBOL for hsa\n}\n\\usage{data(\"GeneID_Convert_hsa\")}\n\\format{\n  A data frame with 115954 observations on 2 variables.\n}\n\n\\keyword{datasets}\n",
+    "created" : 1506935376602.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "495571593",
+    "id" : "7803BBF7",
+    "lastKnownWriteTime" : 1506937734,
+    "last_content_update" : 1506937734447,
+    "path" : "~/MyWork/Research/CRISPR/7 MAGeCKFlute/Versions/MAGeCKFlute/man/GeneID_Convert_hsa.Rd",
+    "project_path" : "man/GeneID_Convert_hsa.Rd",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

@@ -1,6 +1,5 @@
 #===normalize function=====================================
 NormalizeBeta <- function(beta, method="cell_cycle", minus=0.6){
-  data("Essential_list")
   loginfo("Normalize beta scores ...")
   if(method=="cell_cycle"){
     normalized = beta

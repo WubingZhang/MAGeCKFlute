@@ -1,6 +1,7 @@
 
-RankAB <- function(beta, genelist=c(),cutoff=Cutoff_Calling(data$diff,scale=T),main=NULL,filename=NULL){
+RankAB <- function(beta, genelist=c(), scale_cutoff=1, main=NULL,filename=NULL){
   loginfo(paste("Rank of", main, "Treat-Ctrl beta scores ..."))
+  cutoff=Cutoff_Calling(beta$diff, scale=scale_cutoff)
   mycolour=c("no"="darkgray",  "up"="#e41a1c","down"="#377eb8")
   data = beta
   data$Rank=rank(data$diff)

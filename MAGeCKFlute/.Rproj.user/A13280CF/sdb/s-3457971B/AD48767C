@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{FluteRRA}\n\\alias{FluteRRA}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nFunctional analysis for RRA results\n}\n\\description{\nThis function do a functional analysis for essential genes identified by MAGeCK-RRA. KEGG pathway and BP enrichment are done.\n}\n\\usage{\nFluteRRA(gene_summary, ctrlName=\"Control\", treatName=\"Treatment\", pvalueCutoff=0.05,\n                     enrich_kegg=\"HyperGeometric\",adjust=\"none\")\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{gene_summary}{\n    Either a path of gene summary file in RRA results or a data frame in which the column 'id', {treatName}_vs_{ctrlName}.neg.fdr are accessible.\n}\n  \\item{ctrlName}{\n     Label of Control sample\n}\n  \\item{treatName}{\n     Label of Treatment sample\n}\n  \\item{enrich_kegg}{\n     Method used for KEGG pathway enrichment analysis\n}\n  \\item{adjust}{\n     The pvalue adjust method for enrichment analysis\n}\n  \\item{pvalueCutoff}{\n     Cutoff of pvalue used to select essential genes and do enrichment analysis\n}\n\n}\n\\details{\n%%  ~~ If necessary, more details than the description above ~~\n}\n\\value{\n%%  ~Describe the value returned\n%%  If it is a LIST, use\n%%  \\item{comp1 }{Description of 'comp1'}\n%%  \\item{comp2 }{Description of 'comp2'}\n%% ...\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\nWubing Zhang\n}\n\n\\examples{\n##Load RRA gene summary result\ndata(\"BRAF_rra.gene_summary\")\n##Run the Flute RRA pipeline\nFluteRRA(BRAF_rra.gene_summary, prefix=\"BRAF\")\n}\n\n",
+    "created" : 1504523855944.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2921826432",
+    "id" : "AD48767C",
+    "lastKnownWriteTime" : 1504185790,
+    "last_content_update" : 1504185790,
+    "path" : "~/MAGeCKFlute/man/FluteRRA.Rd",
+    "project_path" : "man/FluteRRA.Rd",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

@@ -2,11 +2,9 @@
 CellCycleFit <- function(beta,ctrlname="Control",treatname="Treatment",
                          main=NULL,ylab="Beta score",filename=NULL){
   loginfo(paste("Cell cycle fitting for", main, ylab))
-  dd1 = beta
-  dd2 = dd1[,c("Gene", ctrlname, treatname)]
-  dd2 = melt(dd2[,1:3],id="Gene")
-  dd2$variable = gsub(".beta","",dd2$variable)
-  dd2$x = rep(dd1$Control,2)
+  dd2 = beta[,c("Gene", ctrlname, treatname)]
+  dd2 = melt(dd2,id="Gene")
+  dd2$x = rep(rowMeans(beta[,ctrlname,drop=F]),ncol(dd2)-1)
 
   p=ggplot(dd2,aes(x,value,color=variable,group=variable))
   p=p+geom_point(alpha=4/10,size=0.8)

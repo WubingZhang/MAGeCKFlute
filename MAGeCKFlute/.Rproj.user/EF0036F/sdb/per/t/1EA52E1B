@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "read.gct <- function (file,nrows=-1) {\n    expr = read.table(file, skip = 2, header = TRUE, sep = \"\\t\", quote = \"\",nrows=nrows)\n    rownames(expr) = expr[,1]\n\n    checkName = table(expr[,1])\n    if(max(checkName) > 1) {\n      stop(paste(\"Genes in gct file should be unique: \", names(which.max(checkName)), sep = \" \"))\n    }\n    expr = expr[,-1]\n    expr = as.matrix(expr)\n\n    return(expr)\n}\n\n##===================\nfile=\"D:/jobs/Drug resistance/L1000 datasets/GSE70138_Broad_LINCS_Level2_GEX_n78980x978_2015-06-30.gct\"\nexpr = read.gct(file)\n\nsamples = colnames(expr)\nprInfo = expr[12:nrow(expr),1:11]\nsampleInfo = t(expr[1:11, 12:ncol(expr)])\nexpr = expr[12:nrow(expr), 12:ncol(expr)]\n\nidx = sampleInfo[,\"SM_Name\"]==\"tozasertib\" & sampleInfo[,1]==\"A375\"\nsName = rownames(sampleInfo)[idx]\n\nsubExpr = matrix(as.numeric(expr[,sName]), nrow=nrow(expr[,sName]), byrow=F)\nsubExpr = log2(subExpr)\n\n\nres = cor(subExpr)\nrownames(res) = paste(\"A375\", paste(\"Toza\", sampleInfo[idx, \"SM_Dose\"], sep=\".\"),\n                      substring(sName,10), sep=\"_\")\ncolnames(res) = rownames(res)\n\nlibrary(pheatmap)\npng(filename = paste0(\"Correlation_A375_tozasertib.png\"), res=300, height = 7.5*300, width=9*300)\npheatmap(res, cluster_rows=T, cluster_cols=T, display_numbers=T, breaks = seq(-1,1,0.1),\n         color=colorRampPalette(c(\"blue\", \"white\", \"red\"))(20),\n         main=\"GSE70138_level2_A375_tozasertib\", fontsize = 12)\ndev.off()\n\n##===================\n\n\nfile=\"D:/jobs/New jobs/Drug resistance/1 Datasets/LINCS datasets/Broad_LINCS_Level2_GEX_n113012x978_2015-12-31.gct\"\nexpr2 = read.gct(file)\n\nsamples2 = colnames(expr2)\nprInfo2 = expr2[12:nrow(expr2),1:11]\nsampleInfo2 = t(expr2[1:11, 12:ncol(expr2)])\nexpr2 = expr2[12:nrow(expr2), 12:ncol(expr2)]\n\nidx = sampleInfo2[,\"SM_Name\"]==\"TP53\" & sampleInfo2[,1]==\"PC3.101\"\nsName2 = rownames(sampleInfo2)[idx]\n\nsubExpr2 = matrix(as.numeric(expr2[,sName2]), nrow=nrow(expr2[,sName2]), byrow=F)\nsubExpr2 = log2(subExpr2)\n\nres2 = cor(subExpr2)\nrownames(res2) = paste(\"PC3.101\", paste(\"TP53\", sampleInfo2[idx, \"SM_Dose\"], sep=\".\"),\n                      substring(sName2,10), sep=\"_\")\ncolnames(res2) = rownames(res2)\n\nlibrary(pheatmap)\npng(filename = paste0(\"Correlation_PC3.101_TP53.png\"), res=300, height = 7.5*300, width=9*300)\npheatmap(res2, cluster_rows=T, cluster_cols=T, display_numbers=T, breaks = seq(-1,1,0.1),\n         color=colorRampPalette(c(\"blue\", \"white\", \"red\"))(20),\n         main=\"GSE70138_level2_PC3.101_TP53\", fontsize = 12)\ndev.off()\n\n",
+    "created" : 1504612127241.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1001677368",
+    "id" : "1EA52E1B",
+    "lastKnownWriteTime" : 1504612260,
+    "last_content_update" : 1504612260116,
+    "path" : "D:/jobs/New jobs/Drug resistance/Codes/read.gct.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

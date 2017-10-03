@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{FluteMLE}\n\\alias{FluteMLE}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\n  A pipeline of functional analysis of CRISPR screening data\n}\n\\description{\nThis function do a functional analysis based on  gene summary file. In this pipeline, negative control normalized, cell cycle normalized and loess normalized(optional) datasets are analyzed simultaneously. Positive and negative selection genes are filtered as GroupA and GroupB, and drug related meaningful genes are selected. For each group of selected genes, enrichment analysis on KEGG pathways and GO BP terms is done.\n}\n\\usage{\nFluteMLE(gene_summary, ctrlname = \"Control\", treatname = \"Treatment\",\n      prefix = \"test\", out.dir = paste0(prefix, \"_Results\"),\n      enrich_kegg = \"HyperGeometric\", adjust = \"none\", pvalueCutoff = 0.05,\n      loess = F, gsea = F, workspace = \".\")\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{gene_summary}{\n     Either a path of gene summary file or a data frame in which the column 'Gene', {ctrlname}.beta and  {treatname}.beta are accessible.\n}\n\\item{ctrlname}{\n     Label of Control sample\n}\n\\item{treatname}{\n     Label of Treatment sample\n}\n\\item{prefix}{\n     Prefix of output folder and result summary file\n}\n\\item{enrich_kegg}{\n     Method used for KEGG pathway enrichment analysis\n}\n\\item{loess}{\n     A boolean value indicates whether includes pipeline analysis for loess normalized data\n}\n\\item{adjust}{\n     The pvalue adjust method for enrichment analysis\n}\n\\item{pvalueCutoff}{\n     Cutoff of pvalue used in enrichment analysis\n}\n\\item{gsea}{\n     A boolean value indicates whether includes GSEA in pipeline analysis\n}\n\\item{out.dir}{\n     Path of output directory\n}\n\\item{workspace}{\n     Path of workspace\n}\n}\n\n\\value{\n  All of the pipeline results is output into the {out.dir}/{prefix}_Results, which includes a pdf file and many folders. The pdf file '{prefix}_Pipeline_results.pdf' is the summary of pipeline results. For each section in this pipeline, figures and useful data are outputed to corresponding subfolders.\n\n  Distribution_of_BetaScores: Density plot and violin plot of beta scores.\n\n  MAplot: Maplot for each normalized data.\n\n  Linear_Fitting_of_BetaScores: Linear fitting of beta scores indicates the difference of cell cycle time between Control and Treatment samples.\n\n  Scatter_Treat_Ctrl: Positive selection and negative selection\n\n  Enrichment_Treat-Ctrl: Enrichment analysis for positive and negative selection genes\n\n  Pathview_Treat_Ctrl: Pathway view for top enriched pathways\n\n  Scatter_9Square: Using 9 Square to select drug related genes\n\n  Enrichment_9Square: Enrichment analysis for selected genes\n\n  Pathview_9Square: Pathway view for top enriched pathways\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\n  Wubing Zhang\n}\n\n\n\\examples{\n##Load MLE gene summary result\ndata(\"BRAF_mle.gene_summary\")\n##Run the Flute MLE pipeline\nFluteMLE(BRAF_mle.gene_summary, ctrlname=c(\"D7_R1\",\"D7_R2\"), treatname=c(\"PLX7_R1\",\"PLX7_R2\"),\n         prefix=\"BRAF_D7\", pvalueCutoff=0.05)\n}\n",
+    "created" : 1504523866048.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "895079814",
+    "id" : "2A4624B2",
+    "lastKnownWriteTime" : 1504185753,
+    "last_content_update" : 1504185753,
+    "path" : "~/MAGeCKFlute/man/FluteMLE.Rd",
+    "project_path" : "man/FluteMLE.Rd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

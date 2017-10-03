@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{enrich.HGT}\n\\alias{enrich.HGT}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nDo enrichment anlaysis using HyperGeometric test\n}\n\\description{\nJust simply use hyperGeometric test to do enrichment analysis\n}\n\\usage{\nenrich.HGT(gene, universe, type = \"KEGG\", organism = \"hsa\", pvalueCutoff = 0.05, pAdjustMethod = \"none\", minGSSize = 2, maxGSSize = 500)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{gene}{\ninterested gene list\n}\n  \\item{universe}{\nbackground gene list\n}\n  \\item{type}{\ncategory of gene sets, e.g. KEGG(default)\n}\n  \\item{organism}{\norganism short name, e.g. hsa(Human)(default)\n}\n  \\item{pvalueCutoff}{\np value cutoff for enrichment analysis\n}\n  \\item{pAdjustMethod}{\np value correction method. Can be abbreviated.\n}\n  \\item{minGSSize}{\nMin gene set size\n}\n  \\item{maxGSSize}{\nMax gene set size\n}\n}\n\n\\value{\nA enrichResult object\n}\n\n\\author{\nWubing Zhang, Feizhen Wu, Binbin Wang\n}\n\n\\seealso{\n \\code{\\link{enrich.GOstats}}\n \\code{\\link{enrich.DAVID}}\n \\code{\\link{enrich.GSE}}\n \\code{\\link{enrich.ORT}}\n \\code{\\link{enrichment_analysis}}\n \\code{\\link{enrichResult-class}}\n}\n\n\\examples{\ndata(\"BRAF_mle.gene_summary\")\ngene_summary = BRAF_mle.gene_summary\n\n#Read beta score from gene summary matrix\ndd = ReadBeta(gene_summary, ctrlName = \"D7_R1\", treatName = \"PLX7_R1\")\n\n##Select GroupA and GroupB genes\nddAB=GroupAB(dd)\n\n##Intersted gene list\nidx1=ddAB$group==\"up\"\ngenes=ddAB$ENTREZID[idx1]\nuniverse=ddAB$ENTREZID\n\nenrichRes = enrich.HGT(gene=genes, universe=universe, type=\"KEGG\", organism=\"hsa\")\nhead(enrichRes@result)\n}\n",
+    "created" : 1506935233100.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1644544867",
+    "id" : "D3A58474",
+    "lastKnownWriteTime" : 1506935257,
+    "last_content_update" : 1506935257495,
+    "path" : "~/MyWork/Research/CRISPR/7 MAGeCKFlute/Versions/MAGeCKFlute/man/enrich.HGT.Rd",
+    "project_path" : "man/enrich.HGT.Rd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}
