@@ -110,14 +110,12 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   \code{\link{pathview}}
 }
 \examples{
-data("BRAF_mle.gene_summary")
-data("pathways")
 
-gene_summary = BRAF_mle.gene_summary
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 
-rownames(dd)=dd$ENTREZID
-p1 <- KeggPathwayView(gene.data  = dd[,c("Control","Treatment")], pathway.id = pathways$PathwayID[1])
+# rownames(dd)=dd$ENTREZID
+# p1 <- KeggPathwayView(gene.data  = dd[,c("Control","Treatment")], pathway.id = pathways_hsa$PathwayID[1], species="hsa")
 
 }

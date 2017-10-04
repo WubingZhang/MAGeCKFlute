@@ -7,7 +7,7 @@ mapping of genes and pathways
 \description{
 mapping of genes to pathways for hsa
 }
-\usage{data("gene2path_hsa")}
+\usage{gene2path_hsa}
 \format{
   A data frame with 28245 observations on the following 2 variables.
   \describe{

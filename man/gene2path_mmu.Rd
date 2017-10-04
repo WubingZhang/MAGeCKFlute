@@ -7,7 +7,7 @@ mapping of genes and pathways
 \description{
 mapping of genes to pathways for mmu
 }
-\usage{data("gene2path_mmu")}
+\usage{gene2path_mmu}
 \format{
   A data frame with 2 variables.
   \describe{

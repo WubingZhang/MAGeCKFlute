@@ -7,7 +7,7 @@ Essential gene list
 \description{
 A gene list of core essential genes
 }
-\usage{data("essential_list")}
+\usage{essential_list}
 \format{
   A vector of essential gene list.
 }

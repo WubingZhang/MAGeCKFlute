@@ -7,7 +7,7 @@ mapping of pathwayID to pathway name
 \description{
 mapping of pathwayID to pathway name for hsa
 }
-\usage{data("pathways_hsa")}
+\usage{pathways_hsa}
 \format{
   A data frame with 321 observations on the following 2 variables.
   \describe{

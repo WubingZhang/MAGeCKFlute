@@ -52,10 +52,9 @@ gene_summary = BRAF_mle.gene_summary
 #Read beta score from gene summary matrix
 dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 head(dd)
-dd_essential = NormalizeBeta(dd)
 
-dd2=dd_essential[,c("Gene","Treatment","Control","ENTREZID")]
-P2=Square.plot(dd2,main="Cell cycle normalized")
+dd=dd[,c("Gene","Treatment","Control","ENTREZID")]
+P2=Square.plot(dd,main="Cell cycle normalized")
 print(P2$p)
 head(P2$dd1)
 }

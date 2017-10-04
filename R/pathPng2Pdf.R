@@ -30,7 +30,10 @@ pathPng2Pdf <- function(genelist, pathways=c(), organism='hsa', view_allpath=F, 
   idx = file.exists(allpngnames)
   allpngnames=allpngnames[idx]
 
-  boo=file.rename(from=allpngnames,to=paste0(output,"/",title,"_",sub,"_",allpngnames))
+  if(length(allpngnames)>0){
+    toFile=paste0(output,"/",title,"_",sub,"_",allpngnames)
+    boo=file.rename(from=allpngnames,to=toFile)
+  }else{boo=FALSE}
   originPng=paste0(keggID, ".png")
   originXML=paste0(keggID, ".xml")
   failMulti=paste0(keggID, ".pathview.png")
@@ -42,7 +45,8 @@ pathPng2Pdf <- function(genelist, pathways=c(), organism='hsa', view_allpath=F, 
     pngnames = paste0(output,"/",title,"_",sub,"_",allpngnames)
     idx=file.exists(pngnames)
     pngnames = pngnames[idx]
-  }
+  }else{pngnames=c()}
+
   if(length(pngnames)>0){
     thePlots <- lapply (pngnames, function(figure) {
       rasterGrob(readPNG(figure, native = FALSE),interpolate = FALSE)})

@@ -7,9 +7,13 @@ gene name mapping data for mmu
 \description{
 mapping of ENTREZID and SYMBOL for mmu
 }
-\usage{data("GeneID_Convert_mmu")}
+\usage{GeneID_Convert_mmu}
 \format{
-  A data frame with 2 variables.
+  A data frame with 205941 observations on the following 2 variables.
+  \describe{
+    \item{\code{ENTREZID}}{a character vector}
+    \item{\code{SYMBOL}}{a character vector}
+  }
 }
 
 \keyword{datasets}

@@ -82,8 +82,7 @@ FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment", prefix = "Test
 }
 
 \examples{
-
-##Run the Flute MLE pipeline
-FluteMLE(BRAF_mle.gene_summary, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
-         prefix="BRAF_D7", pvalueCutoff=0.05, scale_cutoff=1.1, organism="hsa")
+## Run the Flute MLE pipeline
+# FluteMLE(BRAF_mle.gene_summary, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
+#          prefix="BRAF_D7", pvalueCutoff=0.05, scale_cutoff=1.1, organism="hsa")
 }

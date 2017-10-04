@@ -49,24 +49,21 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link{enrich.HGT}}
  \code{\link{enrich.ORT}}
  \code{\link{enrichment_analysis}}
- \code{\link{enrichResult-class}}
+ \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
-data("BRAF_mle.gene_summary")
-gene_summary = BRAF_mle.gene_summary
+# gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# #Select GroupA and GroupB genes
+# ddAB=GroupAB(dd)
 
-##Select GroupA and GroupB genes
-ddAB=GroupAB(dd)
+# #Intersted gene list
+# idx1=ddAB$group=="up"
+# genes=ddAB$ENTREZID[idx1]
+# universe=ddAB$ENTREZID
 
-##Intersted gene list
-idx1=ddAB$group=="up"
-genes=ddAB$ENTREZID[idx1]
-universe=ddAB$ENTREZID
-
-enrichRes = enrich.GOstats(gene=genes, universe=universe, type="BP")
-head(enrichRes@result)
-
+# enrichRes = enrich.GOstats(gene=genes, universe=universe, type="BP")
+# head(enrichRes@result)
 }

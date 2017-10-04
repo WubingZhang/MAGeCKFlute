@@ -43,11 +43,13 @@ CellCycleFit(beta, ctrlname = "Control", treatname = "Treatment",
 }
 
 \examples{
+library(MAGeCKFlute)
 data("BRAF_mle.gene_summary")
 gene_summary = BRAF_mle.gene_summary
 #Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
 head(dd)
+
 dd_essential = NormalizeBeta(dd, method="cell_cycle")
 ##Fitting all gene beta scores
 CellCycleFit(dd_essential,ylab="Beta Score",main="Cell cycle  normalized")

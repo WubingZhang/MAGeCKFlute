@@ -50,23 +50,23 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link{enrich.HGT}}
  \code{\link{enrich.ORT}}
  \code{\link{enrichment_analysis}}
- \code{\link{enrichResult-class}}
+ \code{\link[DOSE]{enrichResult-class}}
 }
 
 \examples{
-data("BRAF_mle.gene_summary")
-gene_summary = BRAF_mle.gene_summary
 
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# gene_summary = BRAF_mle.gene_summary
 
-##Select GroupA and GroupB genes
-ddAB=GroupAB(dd)
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 
-geneList=ddAB$diff
-names(geneList)=ddAB$ENTREZID
+# ##Select GroupA and GroupB genes
+# ddAB=GroupAB(dd)
 
-enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-head(enrichRes@result)
+# geneList=ddAB$diff
+# names(geneList)=ddAB$ENTREZID
+
+# enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+# head(enrichRes@result)
 
 }

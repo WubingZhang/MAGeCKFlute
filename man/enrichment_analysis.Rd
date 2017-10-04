@@ -80,11 +80,9 @@ universe=ddAB$ENTREZID
 
 #====GO_KEGG_enrichment=====
 keggA = enrichment_analysis(geneList = genes, universe=universe, method = "Hypergeometric",type = "KEGG", organism = "hsa", plotTitle="KEGG: GroupA",gridColour="#e41a1c")
-bpA=enrichment_analysis(geneList = genes, universe=universe, method = "ORT", type = "BP", organism = "hsa", plotTitle="BP: GroupA",gridColour="#e41a1c")
 
 head(keggA$enrichRes@result)
 print(keggA$gridPlot)
-print(bpA$gridPlot)
 
 }
 

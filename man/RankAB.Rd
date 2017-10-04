@@ -43,11 +43,11 @@ gene_summary = BRAF_mle.gene_summary
 #Read beta score from gene summary matrix
 dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 head(dd)
-dd_essential = NormalizeBeta(dd, method="cell_cycle")
 
+dd_essential = NormalizeBeta(dd, method="cell_cycle")
 ##Rank beta score changes between treatment and control samples, and select GroupA and GroupB genes
 ddAB_essential=GroupAB(dd_essential)
 ##Rank beta score changes and mark top and bottom 10 genes
-RankAB(ddAB_essential$result,genelist=c(),main="Cell cycle  normalized")
+RankAB(ddAB_essential,genelist=c(),main="Cell cycle  normalized")
 }
 

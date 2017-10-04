@@ -52,7 +52,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link{enrich.GSE}}
  \code{\link{enrich.ORT}}
  \code{\link{enrichment_analysis}}
- \code{\link{enrichResult-class}}
+ \code{\link[DOSE]{enrichResult-class}}
 }
 
 \examples{

@@ -50,11 +50,10 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   \code{\link{KeggPathwayView}}
 }
 \examples{
-data("BRAF_mle.gene_summary")
-gene_summary = BRAF_mle.gene_summary
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-
-pathPng2Pdf(dd, pathways$PathwayID[1:2], title=NULL, sub=NULL, organism="hsa")
+# data("BRAF_mle.gene_summary")
+# gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+# pathPng2Pdf(dd, pathways_hsa$PathwayID[1:2], title=NULL, sub=NULL, organism="hsa")
 
 }

@@ -51,7 +51,6 @@ dd = ReadBeta(gene_summary, ctrlName = ctrlName, treatName = treatName)
 
 #Essential normalization
 dd_essential = NormalizeBeta(dd, method="cell_cycle")
-
 ddAB_essential=GroupAB(dd_essential)
 
 ##View the head of data

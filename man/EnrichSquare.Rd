@@ -75,19 +75,17 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 \code{\link{Square.plot}}
 }
 \examples{
-data("BRAF_mle.gene_summary")
-gene_summary = BRAF_mle.gene_summary
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-head(dd)
-dd_essential = NormalizeBeta(dd, method="cell_cycle")
+# gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+# head(dd)
+# dd_essential = NormalizeBeta(dd, method="cell_cycle")
 
-dd2=dd_essential[,c("Gene","Treatment","Control","ENTREZID")]
-P2=Square.plot(dd2,main="Cell cycle normalized")
+# dd2=dd_essential[,c("Gene","Treatment","Control","ENTREZID")]
+# P2=Square.plot(dd2,main="Cell cycle normalized")
 
-#Enrichment analysis for grouped genes
-E1 = EnrichSquare(P2$dd1, pvalue=0.05, adjust="BH", enrich_method="ORT", organism="hsa")
-
-print(E1$kegg1$gridPlot)
+# # Enrichment analysis for grouped genes
+# E1 = EnrichSquare(P2$dd1, pvalue=0.05, adjust="BH", enrich_method="ORT", organism="hsa")
+# print(E1$kegg1$gridPlot)
 }
 

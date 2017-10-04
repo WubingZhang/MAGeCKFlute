@@ -2,7 +2,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
                            pvalueCutoff = 0.05, pAdjustMethod = "none"){
   #======
   DS = toupper(type[1])
-  over.sum=NULL
+  over.sum=data.frame()
   orgdb = c("org.Hs.eg.db", "org.Mm.eg.db")
   names(orgdb) = c("hsa", "mmu")
   #========
@@ -26,6 +26,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
 #     over.sum$geneID <- glist[as.character(over.sum$KEGGID)]
 #     # over.sum$Symbols <- glist[as.character(over.sum$KEGGID)]
   }
+
   if(DS %in% c("BP", "CC", "MF")){
     # gene ontology background
     loginfo(paste('Running GO', DS, 'for list of entrezIDs'))
@@ -35,9 +36,11 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
     over <- hyperGTest(params)
     over.sum <- summary(over)
   }
+
   #==================
   result = list()
-  if(!is.null(over.sum) & nrow(over.sum)>0){
+  boo=!is.null(over.sum) & (nrow(over.sum)>0)
+  if(boo){
     glist <- geneIdsByCategory(over)
     glist <- sapply(glist, function(.ids) {
       .sym <- .ids

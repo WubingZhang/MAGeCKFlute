@@ -60,24 +60,24 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link{enrich.GSE}}
  \code{\link{enrich.ORT}}
  \code{\link{enrichment_analysis}}
- \code{\link{enrichResult-class}}
+ \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
 
-gene_summary = BRAF_mle.gene_summary
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 
-##Select GroupA and GroupB genes
-ddAB=GroupAB(dd)
+# ##Select GroupA and GroupB genes
+# ddAB=GroupAB(dd)
 
-##Intersted gene list
-idx1=ddAB$group=="up"
-genes=ddAB$ENTREZID[idx1]
-universe=ddAB$ENTREZID
+# ##Intersted gene list
+# idx1=ddAB$group=="up"
+# genes=ddAB$ENTREZID[idx1]
+# universe=ddAB$ENTREZID
 
-enrichRes = enrich.DAVID(gene=genes, universe=universe, david.user="ma.tongji@gmail.com")
-head(enrichRes@result)
+# enrichRes = enrich.DAVID(gene=genes, universe=universe, david.user="example@example.com")
+# head(enrichRes@result)
 
 }
 
