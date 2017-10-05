@@ -51,7 +51,7 @@ enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff 
       q=length(universe[idx1&idx2])
       geneID=paste(universe[idx1&idx2],collapse = "/")
 
-      if(k>=minGSSize&k<=minGSSize&q>0){
+      if(k>=minGSSize&k<=maxGSSize&q>0){
         pvalue=phyper(q,m,n,k,lower.tail = F)
         res[kk,"ID"]=c
         res[kk,"Description"]=pathways$PathwayName[pathways$PathwayID %in% c]
