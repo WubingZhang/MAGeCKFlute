@@ -8,7 +8,9 @@ Enrichment analysis for GroupA and GroupB genes
 The function GroupAB() returns positive selection and negative selection genes, termed as GroupA and GroupB genes. Using EnrichAB() to do enrichment analysis for GroupA and GroupB genes.
 }
 \usage{
-EnrichAB(data, pvalue = 0.05, enrich_method = "Hypergeometric", organism = "hsa", adjust = "none", filename = NULL, out.dir = ".", gsea = FALSE)
+EnrichAB(data, pvalue = 0.05, enrich_method = "Hypergeometric",
+          organism = "hsa", adjust = "none", filename = NULL,
+          out.dir = ".", gsea = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -62,7 +64,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 
 # gene_summary = BRAF_mle.gene_summary
 # #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1",
+#               treatName = "PLX7_R1", organism="hsa")
 # head(dd)
 # dd_essential = NormalizeBeta(dd, method="cell_cycle")
 

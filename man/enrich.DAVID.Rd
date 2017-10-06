@@ -8,8 +8,9 @@ Do enrichment analysis using DAVID
 An update version of DAVIDWebService to do enrichment analysis
 }
 \usage{
-enrich.DAVID(gene, universe = NULL, david.user, idType="ENTREZ_GENE_ID", minGSSize = 2, maxGSSize = 500,
-annotation = "GOTERM_BP_FAT", pvalueCutoff = 0.05, pAdjustMethod = "BH", qvalueCutoff = 0.2)
+enrich.DAVID(gene, universe = NULL, david.user, idType="ENTREZ_GENE_ID",
+            minGSSize = 2, maxGSSize = 500, annotation = "GOTERM_BP_FAT",
+            pvalueCutoff = 0.05, pAdjustMethod = "BH", qvalueCutoff = 0.2)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -76,7 +77,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 # genes=ddAB$ENTREZID[idx1]
 # universe=ddAB$ENTREZID
 
-# enrichRes = enrich.DAVID(gene=genes, universe=universe, david.user="example@example.com")
+# enrichRes = enrich.DAVID(gene=genes, universe=universe,
+#              david.user="example@example.com")
 # head(enrichRes@result)
 
 }

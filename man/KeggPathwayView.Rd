@@ -8,7 +8,21 @@ Plot kegg pathway
 kegg pathway view
 }
 \usage{
-KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id, species = "hsa", kegg.dir = ".", cpd.idtype = "kegg", gene.idtype = "ENTREZ", gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE, map.null = TRUE, expand.node = FALSE, split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum", discrete = list(gene = FALSE, cpd = FALSE), limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10), both.dirs = list(gene = T, cpd = T), trans.fun = list(gene = NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"), mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red", cpd = "yellow"), na.col = "transparent", ...)
+KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id,
+                species = "hsa", kegg.dir = ".", cpd.idtype = "kegg",
+                gene.idtype = "ENTREZ", gene.annotpkg = NULL,
+                min.nnodes = 3, kegg.native = TRUE, map.null = TRUE,
+                expand.node = FALSE, split.group = FALSE,
+                map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum",
+                discrete = list(gene = FALSE, cpd = FALSE),
+                limit = list(gene = 1, cpd = 1),
+                bins = list(gene = 10, cpd = 10),
+                both.dirs = list(gene = T, cpd = T),
+                trans.fun = list(gene = NULL, cpd = NULL),
+                low = list(gene = "deepskyblue1", cpd = "blue"),
+                mid = list(gene = "gray", cpd = "gray"),
+                high = list(gene = "red", cpd = "yellow"),
+                na.col = "transparent", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -116,6 +130,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 # dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 
 # rownames(dd)=dd$ENTREZID
-# p1 <- KeggPathwayView(gene.data  = dd[,c("Control","Treatment")], pathway.id = pathways_hsa$PathwayID[1], species="hsa")
+# p1 <- KeggPathwayView(gene.data  = dd[,c("Control","Treatment")],
+#                   pathway.id = pathways_hsa$PathwayID[1], species="hsa")
 
 }

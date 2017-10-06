@@ -8,12 +8,13 @@ Violin plot
 Plots the violin of two sample beta scores.
 }
 \usage{
-Violin.plot(beta, ctrlname = "Control", treatname = "Treatment", main = NULL, ylab = "Beta Score", filename = NULL)
+Violin.plot(beta, ctrlname = "Control", treatname = "Treatment",
+            main = NULL, ylab = "Beta Score", filename = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{beta}{
-A data frame object in which the column 'Gene', {ctrlname}.beta and  {treatname}.beta are accessible.
+A data frame object in which the column Gene, ctrl.beta and  treat.beta are accessible.
 }
   \item{ctrlname}{
 Label of Control sample

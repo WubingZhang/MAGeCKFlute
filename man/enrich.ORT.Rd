@@ -9,7 +9,8 @@ Over-Representation Analysis in ClusterProfiler
 }
 \usage{
 enrich.ORT(gene, universe = NULL, type = "KEGG", organism="hsa",
-pvalueCutoff = 0.05, qvalueCutoff = 0.2, pAdjustMethod = "none", minGSSize = 2, maxGSSize = 500)
+          pvalueCutoff = 0.05, qvalueCutoff = 0.2, pAdjustMethod = "none",
+          minGSSize = 2, maxGSSize = 500)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +21,8 @@ interested gene list
 background gene list
 }
   \item{type}{
-category of gene sets, one of "KEGG", "BP", "MF", "CC", "DO", "NCG", and "MKEGG"
+category of gene sets, one of "KEGG", "BP", "MF", "CC", "DO", "NCG",
+and "MKEGG"
 }
 \item{organism}{
      "hsa" or "mmu"
@@ -75,7 +77,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 # genes=ddAB$ENTREZID[idx1]
 # universe=ddAB$ENTREZID
 
-# enrichRes = enrich.ORT(gene=genes, universe=universe, type="BP", organism="hsa")
+# enrichRes = enrich.ORT(gene=genes, universe=universe, type="BP",
+# organism="hsa")
 # head(enrichRes@result)
 }
 

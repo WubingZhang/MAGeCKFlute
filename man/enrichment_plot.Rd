@@ -8,7 +8,8 @@ Plot enrichment analysis results
 Grid plot for enrichment results
 }
 \usage{
-enrichment_plot(enrichment, plotTitle = NULL, gridColour = "blue", termNum = 10, charLength = 50)
+enrichment_plot(enrichment, plotTitle = NULL, gridColour = "blue",
+                termNum = 10, charLength = 50)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -59,6 +60,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wu
   enrichRes = enrich.HGT(gene=genes, universe=universe, type="KEGG")
   head(enrichRes@result)
 
-  enrichment_plot(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
+  enrichment_plot(enrichment=enrichRes@result,
+                  plotTitle = "Hypergemetric test")
 }
 

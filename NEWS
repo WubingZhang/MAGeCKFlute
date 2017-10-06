@@ -1,0 +1,6 @@
+CHANGES IN VERSION 0.99.0
+-------------------------
+
+    o FluteMLE and FluteRRA are two main functions in MAGeCKFlute package. FluteMLE run pipeline from gene beta scores caculated by MAGeCK MLE, while FluteRRA run pipeline based on MAGeCK RRA results.
+
+

@@ -5,11 +5,13 @@
   A pipeline of functional analysis of CRISPR screening data
 }
 \description{
-This function do a functional analysis based on  gene summary file. In this pipeline, negative control normalized, cell cycle normalized and loess normalized(optional) datasets are analyzed simultaneously. Positive and negative selection genes are filtered as GroupA and GroupB, and drug related meaningful genes are selected. For each group of selected genes, enrichment analysis on KEGG pathways and GO BP terms is done.
+This function do a functional analysis based on  gene summary file. In this pipeline, negative control normalized, cell cycle normalized and loess normalized(optional) datasets are analyzed simultaneously. Positive and negative selection genes are filtered as GroupA and GroupB, and drug related meaningful genes are selected. For each group of selected genes, enrichment analysis on KEGG pathways and GO BP terms are done.
 }
 \usage{
-FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment", prefix = "Test",scale_cutoff=1,
-				adjust="none", pvalueCutoff=0.05, enrich_kegg="ORT", organism="hsa", gsea=F, loess=F, view_allpath=F, workspace=".")
+FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
+        prefix = "Test",scale_cutoff=1,	adjust="none", pvalueCutoff=0.05,
+        enrich_kegg="ORT", organism="hsa", gsea=F, loess=F, view_allpath=F,
+        workspace=".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -83,6 +85,7 @@ FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment", prefix = "Test
 
 \examples{
 ## Run the Flute MLE pipeline
-# FluteMLE(BRAF_mle.gene_summary, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
-#          prefix="BRAF_D7", pvalueCutoff=0.05, scale_cutoff=1.1, organism="hsa")
+# FluteMLE(BRAF_mle.gene_summary, ctrlname=c("D7_R1","D7_R2"),
+#         treatname=c("PLX7_R1","PLX7_R2"), prefix="BRAF_D7",
+#         pvalueCutoff=0.05, scale_cutoff=1.1, organism="hsa")
 }

@@ -8,8 +8,9 @@ Functional analysis for RRA results
 This function do a functional analysis for essential genes identified by MAGeCK-RRA. KEGG pathway and BP enrichment are done.
 }
 \usage{
-FluteRRA(gene_summary, prefix="Test", enrich_kegg="HyperGeometric", organism="hsa", pvalueCutoff=0.05,
-                     adjust="none", out.dir=paste0(prefix, "_Flute_Results"), workspace=".")
+FluteRRA(gene_summary, prefix="Test", enrich_kegg="HyperGeometric",
+        organism="hsa", pvalueCutoff=0.05, adjust="none",
+        out.dir=paste0(prefix, "_Flute_Results"), workspace=".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

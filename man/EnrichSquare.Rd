@@ -8,8 +8,9 @@ Do enrichment analysis for selected genes in 9 Square plot
 For each group of selected genes and combinations of them in 9 Square plot, do enrichment analysis on KEGG pathways and GO BP terms.
 }
 \usage{
-EnrichSquare(beta, ctrlname = "Control", treatname = "Treatment", pvalue = 0.05, enrich_method = "Hypergeometric",
-organism="hsa", adjust = "none", filename = NULL, out.dir = ".")
+EnrichSquare(beta, ctrlname = "Control", treatname = "Treatment",
+            pvalue = 0.05, enrich_method="Hypergeometric", organism="hsa",
+            adjust = "none", filename = NULL, out.dir = ".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -77,7 +78,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 \examples{
 # gene_summary = BRAF_mle.gene_summary
 # #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1",
+#               treatName = "PLX7_R1", organism="hsa")
 # head(dd)
 # dd_essential = NormalizeBeta(dd, method="cell_cycle")
 
@@ -85,7 +87,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 # P2=Square.plot(dd2,main="Cell cycle normalized")
 
 # # Enrichment analysis for grouped genes
-# E1 = EnrichSquare(P2$dd1, pvalue=0.05, adjust="BH", enrich_method="ORT", organism="hsa")
+# E1 = EnrichSquare(P2$dd1, pvalue=0.05, adjust="BH",
+#                   enrich_method="ORT", organism="hsa")
 # print(E1$kegg1$gridPlot)
 }
 

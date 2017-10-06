@@ -1,4 +1,5 @@
-GroupAB <- function(beta, ctrlname="Control", treatname="Treatment", scale_cutoff=1, filename=NULL){
+GroupAB <- function(beta, ctrlname="Control", treatname="Treatment",
+                    scale_cutoff=1, filename=NULL){
   loginfo("Select AB group genes ...")
   dd1 = beta[,c("Gene",'ENTREZID',treatname, ctrlname)]
   dd1$diff=rowMeans(dd1[,treatname,drop=F])-rowMeans(dd1[,ctrlname,drop=F])

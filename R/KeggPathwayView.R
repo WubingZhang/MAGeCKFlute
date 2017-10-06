@@ -1,12 +1,19 @@
-KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species = "hsa",
-                          kegg.dir = ".", cpd.idtype = "kegg",gene.idtype ="ENTREZ",
-                          gene.annotpkg = NULL, min.nnodes = 3, kegg.native = TRUE,
-                          map.null = TRUE, expand.node = FALSE, split.group = FALSE,
-                          map.symbol = TRUE, map.cpdname = TRUE, node.sum = "sum",
-                          discrete = list(gene = FALSE, cpd = FALSE), limit=list(gene=1, cpd=1),
-                          bins = list(gene = 10, cpd = 10),both.dirs = list(gene = T,cpd = T),
-                          trans.fun = list(gene = NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
-                          mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red", cpd ="yellow"),
+KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
+                          species = "hsa", kegg.dir = ".",
+                          cpd.idtype = "kegg",gene.idtype ="ENTREZ",
+                          gene.annotpkg = NULL, min.nnodes = 3,
+                          kegg.native = TRUE, map.null = TRUE,
+                          expand.node = FALSE, split.group = FALSE,
+                          map.symbol = TRUE, map.cpdname = TRUE,
+                          node.sum = "sum", discrete =
+                            list(gene = FALSE, cpd = FALSE),
+                          limit=list(gene=1, cpd=1),
+                          bins = list(gene = 10, cpd = 10),
+                          both.dirs = list(gene = T,cpd = T),
+                          trans.fun = list(gene = NULL, cpd = NULL),
+                          low = list(gene = "deepskyblue1", cpd = "blue"),
+                          mid = list(gene = "gray", cpd = "gray"),
+                          high = list(gene = "red", cpd ="yellow"),
                           na.col = "transparent", ...)
 {
   dtypes = !is.null(gene.data) + (!is.null(cpd.data))
@@ -61,7 +68,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
     species.data = c(kegg.code = "ko", entrez.gnodes = "0",
                      kegg.geneid = "K01488", ncbi.geneid = "")
     gene.idtype = "KEGG"
-    msg.fmt = "Only KEGG ortholog gene ID is supported, make sure it looks like \"%s\"!"
+    msg.fmt = "Only KEGG ortholog gene ID is supported,
+      make sure it looks like \"%s\"!"
     msg = sprintf(msg.fmt, species.data["kegg.geneid"])
     message("Note: ", msg)
   }
@@ -73,7 +81,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
   entrez.gnodes = species.data["entrez.gnodes"] == 1
   if (is.na(species.data["ncbi.geneid"])) {
     if (!is.na(species.data["kegg.geneid"])) {
-      msg.fmt = "Only native KEGG gene ID is supported for this species,\nmake sure it looks like \"%s\"!"
+      msg.fmt = "Only native KEGG gene ID is supported for this species,
+      \nmake sure it looks like \"%s\"!"
       msg = sprintf(msg.fmt, species.data["kegg.geneid"])
       message("Note: ", msg)
     }else {
@@ -147,7 +156,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
     }else tfiles = tfiles.xml[i]
     if (!all(tfiles %in% kfiles)) {
       dstatus = download.kegg(pathway.id = pathway.id[i],
-                              species = species, kegg.dir = kegg.dir, file.type = ttype)
+                              species = species, kegg.dir = kegg.dir,
+                              file.type = ttype)
       if (dstatus == "failed") {
         warn.fmt = "Failed to download KEGG xml/png files, %s skipped!"
         warn.msg = sprintf(warn.fmt, pathway.name[i])
@@ -176,7 +186,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
       node.data = lapply(node.data, "[", sel.idx)
     }else {
       gR1 = try(parseKGML2Graph2(xml.file[i], genes = F,
-                                 expand = expand.node, split.group = split.group),
+                                 expand = expand.node, split.group =
+                                   split.group),
                 silent = T)
       node.data = try(node.info(gR1), silent = T)
       if (class(node.data) == "try-error") {
@@ -191,26 +202,32 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
     head(gene.data)
     if ((!is.null(gene.data) | map.null) & sum(node.data$type ==
                                                gene.node.type) > 1) {
-      plot.data.gene = node.map(gene.data, node.data, node.types = gene.node.type,
+      plot.data.gene = node.map(gene.data, node.data,
+                                node.types = gene.node.type,
                                 node.sum = node.sum, entrez.gnodes = entrez.gnodes)
-      plot.data.gene<-plot.data.gene[rowSums(plot.data.gene[,c("x","y","width","height")])!=4,]
+      plot.data.gene<-plot.data.gene[
+        rowSums(plot.data.gene[,c("x","y","width","height")])!=4,]
       kng = plot.data.gene$kegg.names
       kng.char = gsub("[0-9]", "", unlist(kng))
       if (any(kng.char > ""))
         entrez.gnodes = FALSE
       if (map.symbol & species != "ko" & entrez.gnodes) {
         if (is.na(gene.annotpkg)) {
-          warn.fmt = "No annotation package for the species %s, gene symbols not mapped!"
+          warn.fmt = "No annotation package for the species %s,
+          gene symbols not mapped!"
           warn.msg = sprintf(warn.fmt, species)
           message("Warning: ", warn.msg)
         }else {
           #=====My revised===========
           orgdb = c("org.Hs.eg.db", "org.Mm.eg.db")
           names(orgdb) = c("hsa", "mmu")
-          #plot.data.gene$labels = eg2id(as.character(plot.data.gene$kegg.names), category = "SYMBOL", pkg.name = gene.annotpkg)[,2]
+          #plot.data.gene$labels = eg2id(as.character(plot.data.gene$kegg.names),
+          #       category = "SYMBOL", pkg.name = gene.annotpkg)[,2]
           ID2SYMBOL= bitr(as.character(plot.data.gene$kegg.names),
-                          toType="SYMBOL", fromType="ENTREZID", OrgDb=orgdb[species],drop=T)
-          ID2SYMBOL1=merge(plot.data.gene,ID2SYMBOL,by.x="kegg.names",by.y="ENTREZID",all.x=T,sort=F)
+                          toType="SYMBOL", fromType="ENTREZID",
+                          OrgDb=orgdb[species],drop=T)
+          ID2SYMBOL1=merge(plot.data.gene,ID2SYMBOL,by.x="kegg.names",
+                           by.y="ENTREZID",all.x=T,sort=F)
           plot.data.gene$labels=ID2SYMBOL1$SYMBOL
           #==========================
           mapped.gnodes = rownames(plot.data.gene)
@@ -218,41 +235,54 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
         }
       }
       cols.ts.gene = node.color(plot.data.gene, limit$gene,
-                                bins$gene, both.dirs = both.dirs$gene, trans.fun = trans.fun$gene,
-                                discrete = discrete$gene, low = low$gene, mid = mid$gene,
+                                bins$gene, both.dirs = both.dirs$gene,
+                                trans.fun = trans.fun$gene,
+                                discrete = discrete$gene, low = low$gene,
+                                mid = mid$gene,
                                 high = high$gene, na.col = na.col)
     }else plot.data.gene = cols.ts.gene = NULL
     if ((!is.null(cpd.data) | map.null) & sum(node.data$type ==
                                               "compound") > 1) {
-      plot.data.cpd = node.map(cpd.data, node.data, node.types = "compound",
+      plot.data.cpd = node.map(cpd.data, node.data,
+                               node.types = "compound",
                                node.sum = node.sum)
       if (map.cpdname & !kegg.native) {
-        plot.data.cpd$labels = cpdkegg2name(plot.data.cpd$labels)[,
-                                                                  2]
+        plot.data.cpd$labels = cpdkegg2name(plot.data.cpd$labels)[,2]
         mapped.cnodes = rownames(plot.data.cpd)
         node.data$labels[mapped.cnodes] = plot.data.cpd$labels
       }
       cols.ts.cpd = node.color(plot.data.cpd, limit$cpd,
-                               bins$cpd, both.dirs = both.dirs$cpd, trans.fun = trans.fun$cpd,
-                               discrete = discrete$cpd, low = low$cpd, mid = mid$cpd,
+                               bins$cpd, both.dirs = both.dirs$cpd,
+                               trans.fun = trans.fun$cpd,
+                               discrete = discrete$cpd, low = low$cpd,
+                               mid = mid$cpd,
                                high = high$cpd, na.col = na.col)
     }else plot.data.cpd = cols.ts.cpd = NULL
     if (kegg.native) {
       pv.pars = keggview.native(plot.data.gene = plot.data.gene,
-                                cols.ts.gene = cols.ts.gene, plot.data.cpd = plot.data.cpd,
-                                cols.ts.cpd = cols.ts.cpd, node.data = node.data,
-                                pathway.name = pathway.name[i], kegg.dir = kegg.dir,
-                                limit = limit, bins = bins, both.dirs = both.dirs,
-                                discrete = discrete, low = low, mid = mid, high = high,
+                                cols.ts.gene = cols.ts.gene,
+                                plot.data.cpd = plot.data.cpd,
+                                cols.ts.cpd = cols.ts.cpd,
+                                node.data = node.data,
+                                pathway.name = pathway.name[i],
+                                kegg.dir = kegg.dir,
+                                limit = limit, bins = bins,
+                                both.dirs = both.dirs, discrete = discrete,
+                                low = low, mid = mid, high = high,
                                 na.col = na.col, ...)
     }else {
       pv.pars = keggview.graph(plot.data.gene = plot.data.gene,
-                               cols.ts.gene = cols.ts.gene, plot.data.cpd = plot.data.cpd,
-                               cols.ts.cpd = cols.ts.cpd, node.data = node.data,
-                               path.graph = gR1, pathway.name = pathway.name[i],
-                               map.cpdname = map.cpdname, split.group = split.group,
-                               limit = limit, bins = bins, both.dirs = both.dirs,
-                               discrete = discrete, low = low, mid = mid, high = high,
+                               cols.ts.gene = cols.ts.gene,
+                               plot.data.cpd = plot.data.cpd,
+                               cols.ts.cpd = cols.ts.cpd,
+                               node.data = node.data,
+                               path.graph = gR1,
+                               pathway.name = pathway.name[i],
+                               map.cpdname = map.cpdname,
+                               split.group = split.group,
+                               limit = limit, bins = bins,
+                               both.dirs = both.dirs, discrete = discrete,
+                               low = low, mid = mid, high = high,
                                na.col = na.col)
     }
     plot.data.gene = cbind(plot.data.gene, cols.ts.gene)
@@ -260,8 +290,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
       cnames = colnames(plot.data.gene)[-(1:8)]
       nsamp = length(cnames)/2
       if (nsamp > 1) {
-        cnames[(nsamp + 1):(2 * nsamp)] = paste(cnames[(nsamp +
-                                                          1):(2 * nsamp)], "col", sep = ".")
+        cnames[(nsamp + 1):(2 * nsamp)] =
+          paste(cnames[(nsamp + 1):(2 * nsamp)], "col", sep = ".")
       }
       else cnames[2] = "mol.col"
       colnames(plot.data.gene)[-(1:8)] = cnames
@@ -271,8 +301,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id, species
       cnames = colnames(plot.data.cpd)[-(1:8)]
       nsamp = length(cnames)/2
       if (nsamp > 1) {
-        cnames[(nsamp + 1):(2 * nsamp)] = paste(cnames[(nsamp +
-                                                          1):(2 * nsamp)], "col", sep = ".")
+        cnames[(nsamp + 1):(2 * nsamp)] =
+          paste(cnames[(nsamp + 1):(2 * nsamp)], "col", sep = ".")
       }
       else cnames[2] = "mol.col"
       colnames(plot.data.cpd)[-(1:8)] = cnames

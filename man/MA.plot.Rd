@@ -8,7 +8,14 @@ MAplot of beta score
 MAplot of beta scores in Control and Treatment samples
 }
 \usage{
-MA.plot(beta, ctrlname = "Control", treatname = "Treatment", main = "Negative control normalized", subset = sample(1:length(M), min(c(10000, length(M)))), show.statistics = TRUE, span = 2/3, family.loess = "gaussian", cex = 1, cex.lab = 1.2, cex.axis = 1, cex.main = 1.2, plot.method = c("normal", "smoothScatter", "add"), add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red", filename = NULL)
+MA.plot(beta, ctrlname = "Control", treatname = "Treatment",
+        main = "Negative control normalized",
+        subset = sample(1:length(M), min(c(10000, length(M)))),
+        show.statistics = TRUE, span = 2/3, family.loess = "gaussian",
+        cex = 1, cex.lab = 1.2, cex.axis = 1, cex.main = 1.2,
+        plot.method = c("normal", "smoothScatter", "add"),
+        add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",
+        filename = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -8,7 +8,8 @@ Select drug related genes using 9 Square model
 Plot a scatter plot with Control beta score as x-axis and Treatment beta score as y-axis. Select meaningful genes by considering the detail information of Control beta score, Treatment beta score and the beta score difference  in two samples.
 }
 \usage{
-Square.plot(beta, ctrlname = "Control", treatname = "Treatment", main = NULL, filename = NULL, out.dir = ".", scale_cutoff = 1)
+Square.plot(beta, ctrlname = "Control", treatname = "Treatment",
+            main = NULL, filename = NULL, out.dir = ".", scale_cutoff = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

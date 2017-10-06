@@ -8,7 +8,9 @@ Do enrichment anlaysis using HyperGeometric test
 Just simply use hyperGeometric test to do enrichment analysis
 }
 \usage{
-enrich.HGT(gene, universe, type = "KEGG", organism = "hsa", pvalueCutoff = 0.05, pAdjustMethod = "none", minGSSize = 2, maxGSSize = 500)
+enrich.HGT(gene, universe, type = "KEGG", organism = "hsa",
+          pvalueCutoff = 0.05, pAdjustMethod = "none", minGSSize = 2,
+          maxGSSize = 500)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -70,6 +72,7 @@ idx1=ddAB$group=="up"
 genes=ddAB$ENTREZID[idx1]
 universe=ddAB$ENTREZID
 
-enrichRes = enrich.HGT(gene=genes, universe=universe, type="KEGG", organism="hsa")
+enrichRes = enrich.HGT(gene=genes, universe=universe, type="KEGG",
+                      organism="hsa")
 head(enrichRes@result)
 }

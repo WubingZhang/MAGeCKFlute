@@ -25,9 +25,10 @@ output:
     toc: true
     fig_width: 5
 vignette: >
-  %\VignetteIndexEntry{MAGeCKFlute.Rmd}
+  %\VignetteIndexEntry{Analyzing pooled CRISPR functional genetic screens 
+  with MAGeCKFlute}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding[utf8]{inputenc}
 ---
 
 

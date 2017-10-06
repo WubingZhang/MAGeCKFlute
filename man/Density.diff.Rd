@@ -8,7 +8,8 @@ Density plot for beta score deviation between Control and Treatment.
 Density.diff() can be used to plot the density of beta score deviation between two samples. It retures a ggplot object.
 }
 \usage{
-Density.diff(beta, ctrlname = "Control", treatname = "Treatment", main = NULL, filename = NULL)
+Density.diff(beta, ctrlname = "Control", treatname = "Treatment",
+            main = NULL, filename = NULL)
 }
 
 \arguments{

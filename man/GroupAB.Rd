@@ -8,7 +8,8 @@ Negative selection and positive selection
 Compare Control beta scores and Treatment beta scores, and then get positive selection and negative selection genes.
 }
 \usage{
-GroupAB(beta, ctrlname = "Control", treatname = "Treatment", scale_cutoff = 1, filename = NULL)
+GroupAB(beta, ctrlname = "Control", treatname = "Treatment",
+        scale_cutoff = 1, filename = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -8,7 +8,8 @@ A scatter plot for GroupA and GroupB genes
 A scatter plot with Control beta scores as x axis and Treatment beta scores as y axis. In this figure, GroupA genes and GroupB genes are selected and marked with diffrent color.
 }
 \usage{
-ScatterAB(beta, ctrlname = "Control", treatname = "Treatment", scale_cutoff = 1, main = NULL, filename = NULL)
+ScatterAB(beta, ctrlname = "Control", treatname = "Treatment",
+scale_cutoff = 1, main = NULL, filename = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -8,7 +8,8 @@ Plot results of GSEA analysis
 Grid plot for GSEA results
 }
 \usage{
-enrichment_plot_GSE(enrichment, plotTitle = NULL, gridColour = "blue", termNum = 10, charLength = 50)
+enrichment_plot_GSE(enrichment, plotTitle = NULL, gridColour = "blue",
+                    termNum = 10, charLength = 50)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,7 +45,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   gene_summary = BRAF_mle.gene_summary
 
   #Read beta score from gene summary matrix
-  dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+  dd = ReadBeta(gene_summary, ctrlName = "D7_R1",
+                treatName = "PLX7_R1", organism="hsa")
 
   ##Select GroupA and GroupB genes
   ddAB=GroupAB(dd)
@@ -57,5 +59,6 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
   head(enrichRes@result)
 
-  enrichment_plot_GSE(enrichment=enrichRes@result, plotTitle = "GSEA Analysis")
+  enrichment_plot_GSE(enrichment=enrichRes@result,
+                      plotTitle = "GSEA Analysis")
 }
