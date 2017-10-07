@@ -4,27 +4,27 @@ knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       message=FALSE, error=FALSE, warning=TRUE)
 
 ## ----quickStart1, eval=FALSE---------------------------------------------
-# ##Load MLE gene summary data
-# data("BRAF_mle.gene_summary")
-# ##Run the MAGeCKFlute MLE pipeline
-# FluteMLE(gene_summary=BRAF_mle.gene_summary, 
-#          ctrlname=c("D7_R1", "D7_R2"), 
-#          treatname=c("PLX7_R1","PLX7_R2"), 
-#          prefix="BRAF", organism="hsa")
-# 
-# #All pipeline results are written into local directory 
-# # "./BRAF_Flute_Results/", and all figures are integrated into file
-# # "BRAF_Flute.mle_summary.pdf".
+#  ##Load MLE gene summary data
+#  data("BRAF_mle.gene_summary")
+#  ##Run the MAGeCKFlute MLE pipeline
+#  FluteMLE(gene_summary=BRAF_mle.gene_summary,
+#           ctrlname=c("D7_R1", "D7_R2"),
+#           treatname=c("PLX7_R1","PLX7_R2"),
+#           prefix="BRAF", organism="hsa")
+#  
+#  #All pipeline results are written into local directory
+#  # "./BRAF_Flute_Results/", and all figures are integrated into file
+#  # "BRAF_Flute.mle_summary.pdf".
 
 ## ----quickStart2, eval=FALSE---------------------------------------------
-# ##Load RRA gene summary
-# data("BRAF_rra.gene_summary")
-# ##Run the MAGeCKFlute RRA pipeline
-# FluteRRA(BRAF_rra.gene_summary, prefix="BRAF", organism="hsa")
-# 
-# #All pipeline results are written into local directory
-# # "./BRAF_Flute_Results/" too, and all figures are integrated into file 
-# # "BRAF_Flute.rra_summary.pdf".
+#  ##Load RRA gene summary
+#  data("BRAF_rra.gene_summary")
+#  ##Run the MAGeCKFlute RRA pipeline
+#  FluteRRA(BRAF_rra.gene_summary, prefix="BRAF", organism="hsa")
+#  
+#  #All pipeline results are written into local directory
+#  # "./BRAF_Flute_Results/" too, and all figures are integrated into file
+#  # "BRAF_Flute.rra_summary.pdf".
 
 ## ----CheckMLERes---------------------------------------------------------
 library(MAGeCKFlute)
@@ -43,6 +43,7 @@ head(dd)
 ## ----NormalizeBeta-------------------------------------------------------
 dd_essential = NormalizeBeta(dd, method="cell_cycle")
 head(dd_essential)
+
 #OR
 dd_loess = NormalizeBeta(dd, method="loess")
 head(dd_loess)
@@ -73,11 +74,11 @@ print(enrich_result$keggA$gridPlot)
 print(enrich_result$keggB$gridPlot)
 
 ## ----pathview, eval=FALSE------------------------------------------------
-# genedata = dd_essential[,c("Control","Treatment")]
-# rownames(genedata)=dd_essential$ENTREZID
-# keggID = enrich_result$keggA$enrichRes@result$ID[1]
-# KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
-# #The pathway map will be located on current workspace
+#  genedata = dd_essential[,c("Control","Treatment")]
+#  rownames(genedata)=dd_essential$ENTREZID
+#  keggID = enrich_result$keggA$enrichRes@result$ID[1]
+#  KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
+#  #The pathway map will be located on current workspace
 
 ## ----9Square-------------------------------------------------------------
 dd2=dd_essential[,c("Gene","Treatment","Control","ENTREZID")]
@@ -89,21 +90,21 @@ enrich_result2 = EnrichSquare(P2$dd1,pvalue=0.05)
 print(enrich_result2$kegg3$gridPlot)
 print(enrich_result2$kegg4$gridPlot)
 
-## ----pathview2, eval=FALSE----------------------------------------------
-# genedata = dd_essential[,c("Control","Treatment")]
-# rownames(genedata)=dd_essential$ENTREZID
-# keggID = enrich_result2$kegg1$enrichRes@result$ID[1]
-# KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
+## ----pathview2, eval=FALSE-----------------------------------------------
+#  genedata = dd_essential[,c("Control","Treatment")]
+#  rownames(genedata)=dd_essential$ENTREZID
+#  keggID = enrich_result2$kegg1$enrichRes@result$ID[1]
+#  KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
 
-## ----CheckRRARes--------------------------------------------------------
+## ----CheckRRARes---------------------------------------------------------
 data("BRAF_rra.gene_summary")
 head(BRAF_rra.gene_summary)
 
-## ----ReadRRA------------------------------------------------------------
+## ----ReadRRA-------------------------------------------------------------
 dd.rra = ReadRRA(BRAF_rra.gene_summary, organism="hsa")
 head(dd.rra)
 
-## ----selection2---------------------------------------------------------
+## ----selection2----------------------------------------------------------
 ##Negative selection
 universe=dd.rra$ENTREZID
 genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
@@ -128,7 +129,7 @@ bp.pos=enrichment_analysis(geneList = genes, universe=universe,
 print(kegg.pos$gridPlot)
 print(bp.pos$gridPlot)
 
-## ----sessionInfo--------------------------------------------------------
-sessionInfo()
 
+## ----sessionInfo---------------------------------------------------------
+sessionInfo()
 
