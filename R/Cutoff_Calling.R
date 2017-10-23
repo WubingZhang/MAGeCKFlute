@@ -10,5 +10,9 @@ Cutoff_Calling=function(d,scale=F){
   temp_2=qnorm(0.84)
   cutoff=round(temp/temp_2,digits = 3)
   names(cutoff)=NULL
-  return(cutoff*param)
+  cutoff=cutoff*param
+  if(cutoff==0){
+    stop("Cutoff can not be zero!")
+  }
+  return(cutoff)
 }

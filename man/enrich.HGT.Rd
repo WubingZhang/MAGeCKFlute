@@ -9,7 +9,7 @@ Just simply use hyperGeometric test to do enrichment analysis
 }
 \usage{
 enrich.HGT(gene, universe, type = "KEGG", organism = "hsa",
-          pvalueCutoff = 0.05, pAdjustMethod = "none", minGSSize = 2,
+          pvalueCutoff = 0.05, pAdjustMethod = "BH", minGSSize = 2,
           maxGSSize = 500)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -24,7 +24,7 @@ background gene list
 category of gene sets, e.g. KEGG(default)
 }
   \item{organism}{
-organism short name, e.g. hsa(Human)(default)
+organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{pvalueCutoff}{
 p value cutoff for enrichment analysis
@@ -58,21 +58,9 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-data("BRAF_mle.gene_summary")
-gene_summary = BRAF_mle.gene_summary
-
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-##Select GroupA and GroupB genes
-ddAB=GroupAB(dd)
-
-##Intersted gene list
-idx1=ddAB$group=="up"
-genes=ddAB$ENTREZID[idx1]
-universe=ddAB$ENTREZID
-
-enrichRes = enrich.HGT(gene=genes, universe=universe, type="KEGG",
-                      organism="hsa")
-head(enrichRes@result)
+# data(geneList)
+# genes <- names(geneList)[1:100]
+# universe <- names(geneList)
+# enrichRes <- enrich.HGT(genes, universe)
+# head(enrichRes@result)
 }

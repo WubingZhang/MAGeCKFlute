@@ -9,9 +9,9 @@ This function do a functional analysis based on  gene summary file. In this pipe
 }
 \usage{
 FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
-        prefix = "Test",scale_cutoff=1,	adjust="none", pvalueCutoff=0.05,
-        enrich_kegg="ORT", organism="hsa", gsea=F, loess=F, view_allpath=F,
-        workspace=".")
+         organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
+         pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=F,
+         posControl=NULL, scale_cutoff=1, loess=F, view_allpath=F, workspace=".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,26 +24,39 @@ FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
 \item{treatname}{
      the name of treatment sample in gene summary
 }
+\item{organism}{
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
+}
 \item{prefix}{
      prefix of output folder and result file
 }
-\item{scale_cutoff}{
- cutoff scale, can be TRUE or FALSE, or a number. e.g. TRUE means the cutoff will be scaled according to library size, 1 means using one standard deviation as cutoff(default).
+\item{top}{
+     number of top genes labeled in rank figure
+}
+\item{bottom}{
+     number of bottom genes labeled in rank figure
+}
+\item{interestGenes}{
+     interested genes labeled in rank figure
+}
+
+\item{pvalueCutoff}{
+     p value cutoff used in enrichment analysis
 }
 \item{adjust}{
      correction method. Can be "bonferroni", "holm", "hochberg", "hommel", "BH" or its alias "fdr", "BY", or "none".
 }
-\item{pvalueCutoff}{
-     p value cutoff used in enrichment analysis
-}
 \item{enrich_kegg}{
      enrichment method for KEGG, One of "ORT", "GSEA", "DAVID", "GOstats", and "HyperGeometric", or index from 1 to 5
 }
-\item{organism}{
-     "hsa" or "mmu"
-}
 \item{gsea}{
      boolean, whether do GSEA analysis
+}
+\item{posControl}{
+    essential gene list used for cell cycle normalization
+}
+\item{scale_cutoff}{
+ cutoff scale, can be TRUE or FALSE, or a number. e.g. TRUE means the cutoff will be scaled according to library size, 1 means using one standard deviation as cutoff(default).
 }
 \item{loess}{
      boolean, whether include loess analysis in pipeline
@@ -51,7 +64,6 @@ FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
 \item{view_allpath}{
      boolean, whether output all pathway figures
 }
-
 \item{workspace}{
      workspace path
 }
@@ -87,5 +99,5 @@ FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
 ## Run the Flute MLE pipeline
 # FluteMLE(BRAF_mle.gene_summary, ctrlname=c("D7_R1","D7_R2"),
 #         treatname=c("PLX7_R1","PLX7_R2"), prefix="BRAF_D7",
-#         pvalueCutoff=0.05, scale_cutoff=1.1, organism="hsa")
+#         pvalueCutoff=0.05, organism="hsa")
 }

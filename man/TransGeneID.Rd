@@ -22,7 +22,7 @@ a character, "SYMBOL" or "ENTREZID"
 a character, "SYMBOL" or "ENTREZID"
 }
   \item{organism}{
-one of "hsa"(default) and "mmu"
+organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
 }
 

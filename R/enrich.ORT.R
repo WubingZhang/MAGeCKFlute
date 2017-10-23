@@ -1,6 +1,8 @@
 enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalueCutoff = 0.05,
-                       qvalueCutoff = 0.2, pAdjustMethod = "none",minGSSize = 2, maxGSSize = 500){
+                       qvalueCutoff = 0.2, pAdjustMethod = "BH",minGSSize = 2, maxGSSize = 500){
   loginfo(paste('Running Over-Representation Test for list of entrezIDs'))
+  gene = unique(as.character(gene))
+  universe = unique(as.character(universe))
   orgdb = c("org.Hs.eg.db", "org.Mm.eg.db")
   names(orgdb) = c("hsa", "mmu")
   #=======================
@@ -36,7 +38,6 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
     })
     enrichedRes@result$geneName = unlist(geneName)
   }
-
   return(enrichedRes)
 }
 

@@ -1,12 +1,12 @@
 
-RankAB <- function(beta, genelist=c(), scale_cutoff=1, main=NULL,filename=NULL){
+RankAB <- function(beta, genelist=c(), top=10, bottom=10, scale_cutoff=1, main=NULL,filename=NULL){
   loginfo(paste("Rank of", main, "Treat-Ctrl beta scores ..."))
   cutoff=Cutoff_Calling(beta$diff, scale=scale_cutoff)
   mycolour=c("no"="darkgray",  "up"="#e41a1c","down"="#377eb8")
   data = beta
   data$Rank=rank(data$diff)
 
-  idx=(data$Rank)<11|(data$Rank)>(max(data$Rank)-10)|data$Gene %in% genelist
+  idx=(data$Rank<=bottom) | (data$Rank>(max(data$Rank)-top)) | (data$Gene %in% genelist)
   p=ggplot()
   p=p+geom_point(aes(x=diff,y=Rank,color=factor(data$group)),data=data,size=0.5)
   p=p+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))

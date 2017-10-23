@@ -1,7 +1,7 @@
 #enrichment for square grouped genes
 EnrichSquare <- function(beta, ctrlname="Control",treatname="Treatment",
                          pvalue=0.05,enrich_method="Hypergeometric",
-                         organism="hsa", adjust="none", filename=NULL,
+                         organism="hsa", adjust="BH", filename=NULL,
                          out.dir="."){
   loginfo("Enrichment analysis of 9 Square grouped genes ...")
   gg=beta
@@ -128,7 +128,7 @@ EnrichSquare <- function(beta, ctrlname="Control",treatname="Treatment",
                              method = "ORT", type = "BP",organism=organism,
                              pvalueCutoff = pvalue, plotTitle="BP: Group1&2&3&4",
                              pAdjustMethod = adjust)
-
+  ###========Output results=================================================
   if(!is.null(filename)){
     if(!is.null(kegg1$enrichRes)){
       write.table(kegg1$enrichRes@result,

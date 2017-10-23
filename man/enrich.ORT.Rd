@@ -9,7 +9,7 @@ Over-Representation Analysis in ClusterProfiler
 }
 \usage{
 enrich.ORT(gene, universe = NULL, type = "KEGG", organism="hsa",
-          pvalueCutoff = 0.05, qvalueCutoff = 0.2, pAdjustMethod = "none",
+          pvalueCutoff = 0.05, qvalueCutoff = 0.2, pAdjustMethod = "BH",
           minGSSize = 2, maxGSSize = 500)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,7 +25,7 @@ category of gene sets, one of "KEGG", "BP", "MF", "CC", "DO", "NCG",
 and "MKEGG"
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{pvalueCutoff}{
 p value cutoff for enrichment analysis
@@ -63,22 +63,10 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 
 
 \examples{
-# data("BRAF_mle.gene_summary")
-# gene_summary = BRAF_mle.gene_summary
-
-# #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-# ##Select GroupA and GroupB genes
-# ddAB=GroupAB(dd)
-
-# ##Intersted gene list
-# idx1=ddAB$group=="up"
-# genes=ddAB$ENTREZID[idx1]
-# universe=ddAB$ENTREZID
-
-# enrichRes = enrich.ORT(gene=genes, universe=universe, type="BP",
-# organism="hsa")
+# data(geneList)
+# genes <- names(geneList)[1:100]
+# universe <- names(geneList)
+# enrichRes <- enrich.ORT(genes, universe)
 # head(enrichRes@result)
 }
 

@@ -38,7 +38,7 @@ A ggplot figure object
 Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 \seealso{
-  \code{\link{geom_density}}
+  \code{\link[ggplot2]{geom_density}}
   \code{\link{Density.plot}}
   \code{\link{Violin.plot}}
   \code{\link{Square.plot}}

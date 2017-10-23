@@ -3,4 +3,11 @@ CHANGES IN VERSION 0.99.0
 
     o FluteMLE and FluteRRA are two main functions in MAGeCKFlute package. FluteMLE run pipeline from gene beta scores caculated by MAGeCK MLE, while FluteRRA run pipeline based on MAGeCK RRA results.
 
+CHANGES IN VERSION 0.99.1
+-------------------------
+
+    o Remove some new errors, such as error trigered by no GroupA genes.
+    o Allow users to input their own essential genes to do the cell cycle normalization
+    o Allow users to define the number of genes labeled in rank figure, default label top 10 and bottom 10 genes
+    o Add annotation of other organisms
 

@@ -1,10 +1,10 @@
 # enrichment for GroupA and GrouB genes
 EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
-                     organism="hsa", adjust="none", filename=NULL,
+                     organism="hsa", adjust="BH", filename=NULL,
                      out.dir=".", gsea=FALSE){
   loginfo("Enrichment analysis of GroupA and GroupB genes ...")
   gg=data
-
+  ##===================enrichment for GroupA==============================
   idx1=gg$group=="up"
   genes=as.character(gg$ENTREZID[idx1])
   geneList=gg$diff[idx1]
@@ -27,7 +27,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
                              pvalueCutoff = pvalue, plotTitle="GSEA: GroupA",
                              gridColour="#e41a1c", pAdjustMethod = adjust)
   }
-
+  ##=============Enrichment for GroupB========================================
   idx2=gg$group=="down"
   genes=gg$ENTREZID[idx2]
   geneList=gg$diff
@@ -48,14 +48,16 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
                              pvalueCutoff = pvalue, plotTitle="GSEA: GroupB",
                              gridColour="#377eb8", pAdjustMethod = adjust)
   }
-
+  ##================output results=============================================
   if(!is.null(filename)){
+    ####===========GSEA results===================================
     if(gsea){
       p1=ggplot()
       p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
       p1=p1+theme_void()
 
       dir.create(file.path(out.dir,"GSEA_results"), showWarnings=FALSE)
+      ##=========GroupA GSEA plot=================================
       if(!is.null(gseA$enrichRes) && nrow(gseA$enrichRes@result)>0){
         for(term in gseA$enrichRes@result$ID[nrow(gseA$enrichRes@result):1]){
           png(file.path(out.dir,paste0("GSEA_results/GroupA_gse_",
@@ -80,7 +82,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
               sep="\t", row.names = F,col.names = T,quote=F)
       }
       gseA$gseaplot = p1
-
+      ##=========GroupB GSEA plot==================================
       if(!is.null(gseB$enrichRes) && nrow(gseB$enrichRes@result)>0){
         for(term in gseB$enrichRes@result$ID[nrow(gseB$enrichRes@result):1]){
           png(file.path(out.dir,paste0("GSEA_results/GroupB_gse_",
@@ -106,6 +108,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
       }
       gseB$gseaplot = p1
     }
+    ##=========Save GroupA enrichment results===========================
     if(!is.null(keggA$enrichRes)){
       write.table(keggA$enrichRes@result,
                   file.path(out.dir,paste0("GroupA_kegg_",filename,".txt")),
@@ -123,6 +126,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
              filename=file.path(out.dir,paste0("GroupA_bp_",filename,".png")),
              units = "in",width=400/100,height =270/100 )
     }
+    ##=========Save GroupB enrichment results===========================
     if(!is.null(keggB$enrichRes)){
       write.table(keggB$enrichRes@result,
                   file.path(out.dir,paste0("GroupB_kegg_",filename,".txt")),
@@ -140,6 +144,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
              units = "in",width=400/100,height =270/100 )
     }
   }
+  ##=========Return results=====================================
   if(gsea){
     return(list(keggA=keggA, bpA=bpA, gseA=gseA,
                 keggB=keggB, bpB=bpB, gseB=gseB))

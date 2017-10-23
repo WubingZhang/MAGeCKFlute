@@ -9,7 +9,7 @@ The function GroupAB() returns positive selection and negative selection genes, 
 }
 \usage{
 EnrichAB(data, pvalue = 0.05, enrich_method = "Hypergeometric",
-          organism = "hsa", adjust = "none", filename = NULL,
+          organism = "hsa", adjust = "BH", filename = NULL,
           out.dir = ".", gsea = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -24,7 +24,7 @@ Pvalue cutoff used in enrichment analysis
 Enrichment method for KEGG pathway enrichment
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{adjust}{
 Pvalue adjust method, one of "none", "BH" and "bonferroni"
@@ -61,7 +61,6 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 \code{\link{GroupAB}}
 }
 \examples{
-
 # gene_summary = BRAF_mle.gene_summary
 # #Read beta score from gene summary matrix
 # dd = ReadBeta(gene_summary, ctrlName = "D7_R1",

@@ -1,16 +1,17 @@
 enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC"), organism = "hsa",
-                           pvalueCutoff = 0.05, pAdjustMethod = "none"){
+                           pvalueCutoff = 0.05, pAdjustMethod = "BH"){
+  gene = unique(as.character(gene))
+  universe = unique(as.character(universe))
   #======
   DS = toupper(type[1])
   over.sum=data.frame()
-  orgdb = c("org.Hs.eg.db", "org.Mm.eg.db")
-  names(orgdb) = c("hsa", "mmu")
+  orgdb = getOrg(organism, onlyLib=T)$pkg
   #========
   if(DS == "KEGG"){
     loginfo(paste('Running KEGG for list of entrezIDs'))
     params <- new("KEGGHyperGParams", categoryName="KEGG",
                   geneIds=gene, universeGeneIds=universe,
-                  annotation=orgdb[organism], pvalueCutoff=pvalueCutoff,testDirection="over")
+                  annotation=orgdb, pvalueCutoff=pvalueCutoff,testDirection="over")
     #loginfo('    Starting HyperG test')
     over <- hyperGTest(params)
     #loginfo('    HyperG test done')
@@ -30,7 +31,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   if(DS %in% c("BP", "CC", "MF")){
     # gene ontology background
     loginfo(paste('Running GO', DS, 'for list of entrezIDs'))
-    params <- new("GOHyperGParams", annotation=orgdb[organism],
+    params <- new("GOHyperGParams", annotation=orgdb,
                   geneIds = gene, universeGeneIds = universe,
                   ontology=DS, pvalueCutoff=pvalueCutoff, testDirection="over")
     over <- hyperGTest(params)

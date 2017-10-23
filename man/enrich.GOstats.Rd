@@ -9,7 +9,7 @@ GOstats can be used easily.
 }
 \usage{
 enrich.GOstats(gene, universe = NULL, type = c("KEGG", "BP", "MF", "CC"), organism="hsa",
-  pvalueCutoff = 0.05, pAdjustMethod = "none")
+  pvalueCutoff = 0.05, pAdjustMethod = "BH")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,7 +23,7 @@ background ENTREZID gene list
 category of gene sets, e.g. KEGG(default)
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{pvalueCutoff}{
 p value cutoff for enrichment analysis
@@ -52,18 +52,9 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
-# gene_summary = BRAF_mle.gene_summary
-# #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-# #Select GroupA and GroupB genes
-# ddAB=GroupAB(dd)
-
-# #Intersted gene list
-# idx1=ddAB$group=="up"
-# genes=ddAB$ENTREZID[idx1]
-# universe=ddAB$ENTREZID
-
-# enrichRes = enrich.GOstats(gene=genes, universe=universe, type="BP")
+# data(geneList)
+# genes <- names(geneList)[1:100]
+# universe <- names(geneList)
+# enrichRes <- enrich.GOstats(genes, universe, type="BP")
 # head(enrichRes@result)
 }

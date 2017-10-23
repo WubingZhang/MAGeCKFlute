@@ -8,7 +8,7 @@ Rank all genes according to beta score difference between Control and Treatment 
 Rank all genes accounding to beta score difference between Control and Treatment samples, and label top and bottom meaningful genes. Some other interested genes can be labeled with gene symbol.
 }
 \usage{
-RankAB(beta, genelist = c(), scale_cutoff = 1, main = NULL, filename = NULL)
+RankAB(beta, genelist=c(), top=10, bottom=10, scale_cutoff=1, main=NULL,filename=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,6 +17,12 @@ The output data frame of GroupAB or a data frame object in which the column 'Gen
 }
   \item{genelist}{
 An interested gene list, they will be labeled.
+}
+\item{top}{
+     number of top genes labeled in rank figure
+}
+\item{bottom}{
+     number of bottom genes labeled in rank figure
 }
   \item{scale_cutoff}{
 Cutoff scale, can be TRUE or FALSE, or a number. e.g. TRUE means the cutoff will be scaled according to library size, 1 means using one standard deviation as cutoff(default).

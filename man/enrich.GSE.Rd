@@ -9,7 +9,7 @@ Run GSEA in R easily
 }
 \usage{
 enrich.GSE(geneList, type = "KEGG", organism="hsa",
-  minGSSize = 10, maxGSSize = 500, pvalueCutoff = 0.05, pAdjustMethod = "none")
+  minGSSize = 10, maxGSSize = 500, pvalueCutoff = 0.05, pAdjustMethod = "BH")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +20,7 @@ a ranked numeric list with geneid as the names, and names of this genelist will 
 gene set type, can be one of "KEGG", "BP", "MF", "CC", "DO", "NCG" and "MKEGG"
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{minGSSize}{
 the min size of gene set to do enrichment test
@@ -54,18 +54,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-
-# gene_summary = BRAF_mle.gene_summary
-
-# #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-# ##Select GroupA and GroupB genes
-# ddAB=GroupAB(dd)
-
-# geneList=ddAB$diff
-# names(geneList)=ddAB$ENTREZID
-
+# data(geneList)
 # enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 # head(enrichRes@result)
 

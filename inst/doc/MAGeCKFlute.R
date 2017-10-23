@@ -36,8 +36,7 @@ gene_summary=BRAF_mle.gene_summary
 ctrlName=c("D7_R1", "D7_R2")
 treatName=c("PLX7_R1", "PLX7_R2")
 #Read beta scores from gene summary matrix
-dd=ReadBeta(gene_summary, ctrlName=ctrlName, 
-            treatName=treatName, organism="hsa")
+dd=ReadBeta(gene_summary, ctrlName=ctrlName, treatName=treatName, organism="hsa")
 head(dd)
 
 ## ----NormalizeBeta-------------------------------------------------------

@@ -20,7 +20,7 @@ pathPng2Pdf(genelist, pathways = c(), organism = "hsa", view_allpath=F, title = 
       character vector, the KEGG pathway ID(s)
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
 \item{view_allpath}{
      boolean, whether output all pathway figures

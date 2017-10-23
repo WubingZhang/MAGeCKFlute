@@ -22,7 +22,7 @@ Name of Control sample
 Name of Treatment sample
 }
   \item{organism}{
-organism type, can be "hsa"(default) or "mmu"
+organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
 }
 

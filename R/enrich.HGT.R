@@ -1,43 +1,38 @@
 enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff = 0.05,
-                      pAdjustMethod = "none", minGSSize = 2, maxGSSize = 500){
+                      pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
+  gene = unique(as.character(gene))
+  universe = unique(as.character(universe))
   # download Kegg data
+  organism = getOrg(organism, onlyLib = T)$organism
   tmp1 <- paste0("pathways_", organism," (KeGG)")
   if(!(tmp1 %in% data(package="MAGeCKFlute")$results[,"Item"])){
-    gene2path_hsa=fread("http://rest.kegg.jp/link/pathway/hsa",header = F)
-    names(gene2path_hsa)=c("EntrezID","PathwayID")
-    pathways_hsa=fread("http://rest.kegg.jp/list/pathway/hsa",header = F)
-    names(pathways_hsa)=c("PathwayID","PathwayName")
-    gene2path_hsa$EntrezID=gsub("hsa:","",gene2path_hsa$EntrezID)
-    gene2path_hsa$PathwayID=gsub("path:","",gene2path_hsa$PathwayID)
-    pathways_hsa$PathwayID=gsub("path:","",pathways_hsa$PathwayID)
-    pathways_hsa$PathwayName=gsub(" - Homo sapiens .(human.)", "", pathways_hsa$PathwayName)
-    #========
-    gene2path_mmu=fread("http://rest.kegg.jp/link/pathway/mmu", header = F)
-    names(gene2path_mmu)=c("EntrezID","PathwayID")
-    pathways_mmu=fread("http://rest.kegg.jp/list/pathway/mmu",header = F)
-    names(pathways_mmu)=c("PathwayID","PathwayName")
-    gene2path_mmu$EntrezID=gsub("mmu:","",gene2path_mmu$EntrezID)
-    gene2path_mmu$PathwayID=gsub("path:","",gene2path_mmu$PathwayID)
-    pathways_mmu$PathwayID=gsub("path:","",pathways_mmu$PathwayID)
-    pathways_mmu$PathwayName=gsub(" - Mus musculus .(mouse.)", "", pathways_mmu$PathwayName)
+    gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),header = F)
+    names(gene2path)=c("EntrezID","PathwayID")
+    pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),header = F)
+    names(pathways)=c("PathwayID","PathwayName")
+    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
+    pathways$PathwayID=gsub("path:","",pathways$PathwayID)
+    pathways$PathwayName=gsub(" - Homo sapiens .(human.)", "", pathways$PathwayName)
 
-    save(gene2path_hsa,pathways_hsa,gene2path_mmu,pathways_mmu,file="KeGG.RData")
-  }
-
-  #==========
-  if(organism == "hsa"){
+    # #========
+    # gene2path_mmu=fread("http://rest.kegg.jp/link/pathway/mmu",header = F)
+    # names(gene2path_mmu)=c("EntrezID","PathwayID")
+    # pathways_mmu=fread("http://rest.kegg.jp/list/pathway/mmu",header = F)
+    # names(pathways_mmu)=c("PathwayID","PathwayName")
+    # gene2path_mmu$PathwayID=gsub("path:","",gene2path_mmu$PathwayID)
+    # pathways_mmu$PathwayID=gsub("path:","",pathways_mmu$PathwayID)
+    # pathways_mmu$PathwayName=gsub(" - Mus musculus .(mouse.)", "", pathways_mmu$PathwayName)
+    #
+    # save(gene2path_hsa,pathways_hsa,gene2path_mmu,pathways_mmu,file="KeGG.RData")
+  }else if(organism == "hsa"){
     gene2path=gene2path_hsa
-    pathways=pathways_hsa}
-  if(organism == "mmu"){
+    pathways=pathways_hsa
+  }else if(organism == "mmu"){
     gene2path=gene2path_mmu
     pathways=pathways_mmu}
-  gene2path=as.data.frame(gene2path)
-  pathways=as.data.frame(pathways)
   #============
   loginfo(paste('Running KEGG patwhay for list of entrezIDs'))
   if(type=="KEGG"){
-    gene=unique(gene)
-    universe=unique(universe)
     m=length(gene)
     n=length(universe)-m
     res=data.frame(ID=c(),Description=c(),GeneRatio=c(),BgRatio=c(),pvalue=c(),

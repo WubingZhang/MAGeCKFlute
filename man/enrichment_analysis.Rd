@@ -12,7 +12,7 @@ and various methods are available, including "ORT", "GSEA", "DAVID",
 \usage{
 enrichment_analysis(geneList, universe, method = 1, type = "KEGG",
                   organism="hsa", pvalueCutoff = 0.05, qvalueCutoff = 1,
-                  pAdjustMethod = "none", minGSSize = 2, maxGSSize = 500,
+                  pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500,
                   plotTitle = NULL, gridColour = "blue")
 }
 %- maybe also 'usage' for other objects documented here.
@@ -31,7 +31,7 @@ from 1 to 5
 One of "KEGG", "BP", "MF", "CC", "DO", "NCG", and "MKEGG"
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{pvalueCutoff}{
 The cutoff of pvalue and adjust pvalue
@@ -70,28 +70,14 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-
-gene_summary = BRAF_mle.gene_summary
-#Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-##Select GroupA and GroupB genes
-ddAB=GroupAB(dd)
-
-##Intersted gene list
-idx1=ddAB$group=="up"
-#Meaningful geneset
-genes=ddAB$ENTREZID[idx1]
-universe=ddAB$ENTREZID
-
-#====GO_KEGG_enrichment=====
-keggA = enrichment_analysis(geneList = genes, universe=universe,
-                          method = "Hypergeometric",type = "KEGG",
-                          organism = "hsa", plotTitle="KEGG: GroupA",
-                          gridColour="#e41a1c")
-
-head(keggA$enrichRes@result)
-print(keggA$gridPlot)
+# data(geneList)
+# genes <- names(geneList)[1:100]
+# universe <- names(geneList)
+# #====enrichment=====
+# keggA = enrichment_analysis(geneList = genes, universe=universe,
+#                           method = "Hypergeometric",type = "KEGG",
+#                           organism = "hsa", gridColour="#e41a1c")
+# print(keggA$gridPlot)
 
 }
 

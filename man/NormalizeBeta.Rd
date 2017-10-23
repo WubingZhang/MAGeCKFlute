@@ -8,23 +8,26 @@ Normalize beta score in gene summary
 Normalize beta scores using essential normalization or loess normalization methods.
 }
 \usage{
-NormalizeBeta(beta, method = "cell_cycle", minus = 0.6)
+NormalizeBeta(beta, method="cell_cycle", posControl=NULL, minus=0.6)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{beta}{
-A data frame object in which the column Gene, Control, Treatment and ENTREZID are accessible.
+a data frame object in which the column Gene, Control, Treatment and ENTREZID are accessible.
 }
   \item{method}{
-One of essential or loess
+one of essential or loess
+}
+\item{posControl}{
+    a file or character vector of essential gene list used for cell cycle normalization
 }
   \item{minus}{
-A useful parameter for essential normalization, it should be between 0 and 1.
+a useful parameter for essential normalization, it should be between 0 and 1.
 }
 }
 
 \value{
-A data frame has four columns, Gene, Control, Treatment, and ENTREZID.
+a data frame has four columns, Gene, Control, Treatment, and ENTREZID.
 }
 
 \author{

@@ -1,6 +1,6 @@
 enrichment_plot=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,charLength=50){
 
-  if(nrow(enrichment)==0){
+  if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)

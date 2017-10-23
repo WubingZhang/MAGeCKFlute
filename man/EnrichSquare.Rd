@@ -10,7 +10,7 @@ For each group of selected genes and combinations of them in 9 Square plot, do e
 \usage{
 EnrichSquare(beta, ctrlname = "Control", treatname = "Treatment",
             pvalue = 0.05, enrich_method="Hypergeometric", organism="hsa",
-            adjust = "none", filename = NULL, out.dir = ".")
+            adjust = "BH", filename = NULL, out.dir = ".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,7 +30,7 @@ Pvalue cutoff used in enrichment analysis
 Enrichment method for KEGG pathway enrichment
 }
 \item{organism}{
-     "hsa" or "mmu"
+     organism, such as ("hsa" or Human), ("mmu" or "Mouse")
 }
   \item{adjust}{
 Pvalue adjust method, one of "none", "BH" and "bonferroni"

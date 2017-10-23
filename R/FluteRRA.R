@@ -1,6 +1,6 @@
 #===read RRA results=====================================
-FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HyperGeometric",
-                     organism="hsa", pvalueCutoff=0.05, adjust="none",
+FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
+                     organism="hsa", pvalueCutoff=0.05, adjust="BH",
                      out.dir=paste0(prefix, "_Flute_Results"), workspace="."){
   #=========Prepare the running environment=========
   {

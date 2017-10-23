@@ -1,8 +1,8 @@
 #! /usr/bin/Rscript --vanilla
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
-                     prefix = "Test",scale_cutoff=1, adjust="none",
-                     pvalueCutoff=0.05, enrich_kegg="ORT", organism="hsa",
-                     gsea=F, loess=F, view_allpath=F, workspace="."){
+                     organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
+                     pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=F,
+                     posControl=NULL, scale_cutoff=1, loess=F, view_allpath=F, workspace="."){
 
 	#=========Prepare the running environment=========
 	{
@@ -17,6 +17,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }else{
 		pdf(file.path(out.dir_sub, output_pdf),width=9,height = 6)
 	  }
+	  organism = getOrg(organism, onlyLib = T)$organism
 	}
 
 	#=========Beta Score Preparation=========================
@@ -25,7 +26,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	                treatName = treatname, organism=organism)
 
 	  if(loess){ dd_loess = NormalizeBeta(dd, method="loess") }
-	  dd_essential = NormalizeBeta(dd, method="cell_cycle",minus=0.6)
+	  dd_essential = NormalizeBeta(dd, method="cell_cycle", posControl=posControl, minus=0.6)
 	}
 
 
@@ -175,42 +176,33 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	  #Negative normalized
 	  ddAB=GroupAB(dd, scale_cutoff=scale_cutoff,
-	               filename=file.path(
-	                 outputDir4,"GroupAB_detail_negative_normalized.txt"))
+	               filename=file.path(outputDir4,"GroupAB_detail_negative_normalized.txt"))
 	  P1=ScatterAB(ddAB,main="Negative control normalized",
 	               scale_cutoff=scale_cutoff,
-	               filename=file.path(
-	                 outputDir4,"Scatter_Treat-Ctrl_negative_normalized.png"))
-	  P2=RankAB(ddAB,genelist=c(),main="Negative control normalized",
-	            scale_cutoff=scale_cutoff,
-	            filename=file.path(
-	              outputDir4,"Rank_Treat-Ctrl_negative_normalized.png"))
+	               filename=file.path(outputDir4,"Scatter_Treat-Ctrl_negative_normalized.png"))
+	  P2=RankAB(ddAB, genelist=interestGenes, top=top, bottom=bottom,
+	            main="Negative control normalized", scale_cutoff=scale_cutoff,
+	            filename=file.path(outputDir4,"Rank_Treat-Ctrl_negative_normalized.png"))
 	  #Essential normalized
 	  ddAB_essential=GroupAB(dd_essential, scale_cutoff=scale_cutoff,
-	                         filename=file.path(
-	                           outputDir4,"GroupAB_detail_essential_normalized.txt"))
+	                         filename=file.path(outputDir4,"GroupAB_detail_essential_normalized.txt"))
 	  P3=ScatterAB(ddAB_essential,main="Cell cycle normalized",
 	               scale_cutoff=scale_cutoff,
-	               filename=file.path(
-	                 outputDir4,"Scatter_Treat-Ctrl_essential_normalized.png"))
-	  P4=RankAB(ddAB_essential,genelist=c(),main="Cell cycle  normalized",
-	            scale_cutoff=scale_cutoff,
-	            filename=file.path(
-	              outputDir4,"Rank_Treat-Ctrl_essential_normalized.png"))
+	               filename=file.path(outputDir4,"Scatter_Treat-Ctrl_essential_normalized.png"))
+	  P4=RankAB(ddAB_essential,genelist=interestGenes, top=top, bottom=bottom,
+	            main="Cell cycle  normalized", scale_cutoff=scale_cutoff,
+	            filename=file.path(outputDir4,"Rank_Treat-Ctrl_essential_normalized.png"))
 
 	  #Loess normalized
 	  if(loess){
 		ddAB_loess=GroupAB(dd_loess, scale_cutoff=scale_cutoff,
-		                   filename=file.path(
-		                     outputDir4,"GroupAB_detail_loess_normalized.txt"))
+		                   filename=file.path(outputDir4,"GroupAB_detail_loess_normalized.txt"))
 		P5=ScatterAB(ddAB_loess,main="Loess normalized",
 		             scale_cutoff=scale_cutoff,
-		             filename=file.path(
-		               outputDir4,"Scatter_Treat-Ctrl_loess_normalized.png"))
-		P6=RankAB(ddAB_loess,genelist=c(),main="Loess  normalized",
-		          scale_cutoff=scale_cutoff,
-		          filename=file.path(
-		            outputDir4,"Rank_Treat-Ctrl_loess_normalized.png"))
+		             filename=file.path(outputDir4,"Scatter_Treat-Ctrl_loess_normalized.png"))
+		P6=RankAB(ddAB_loess, genelist=interestGenes, top=top, bottom=bottom,
+		          main="Loess  normalized", scale_cutoff=scale_cutoff,
+		          filename=file.path(outputDir4,"Rank_Treat-Ctrl_loess_normalized.png"))
 
 		grid.arrange(P1,P3,P5,P2,P4,P6, ncol=3)
 	  }else{grid.arrange(P1,P3,P2,P4, ncol=2)}
@@ -222,8 +214,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  dir.create(outputDir5, showWarnings=FALSE)
 
 	  E1 = EnrichAB(ddAB,pvalue=pvalueCutoff,enrich_method = enrich_kegg,
-	                organism=organism,
-	                adjust=adjust, gsea=gsea,
+	                organism=organism, adjust=adjust, gsea=gsea,
 	                filename="Negative_ctrl_normalized", out.dir=outputDir5)
 	  E2 = EnrichAB(ddAB_essential,pvalue=pvalueCutoff,
 	                enrich_method = enrich_kegg, organism=organism,
@@ -265,31 +256,38 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  dir.create(file.path(out.dir_sub,"Pathview_Treat_Ctrl"),
 	             showWarnings=FALSE)
 	  #Pathway view for top 4 pathway
-	  pathPng2Pdf(dd, E1$keggA$enrichRes@result$ID, "Group A",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=file.path(
-	                out.dir_sub,"Pathview_Treat_Ctrl"))
-	  pathPng2Pdf(dd, E1$keggB$enrichRes@result$ID, "Group B",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=file.path(
-	                out.dir_sub,"Pathview_Treat_Ctrl"))
-	  pathPng2Pdf(dd_essential, E2$keggA$enrichRes@result$ID, "Group A",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=file.path(
-	                out.dir_sub,"Pathview_Treat_Ctrl"))
-	  pathPng2Pdf(dd_essential, E2$keggB$enrichRes@result$ID, "Group B",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=file.path(
-	                out.dir_sub,"Pathview_Treat_Ctrl"))
+	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$keggA$enrichRes@result$ID, "Group A",
+  	              "Negative control normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(
+  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+	  if(!is.null(E1$keggB$enrichRes) && nrow(E1$keggB$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$keggB$enrichRes@result$ID, "Group B",
+  	              "Negative control normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(
+  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+	  if(!is.null(E2$keggA$enrichRes) && nrow(E2$keggA$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$keggA$enrichRes@result$ID, "Group A",
+  	              "Cell cycle normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(
+  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+	  if(!is.null(E2$keggB$enrichRes) && nrow(E2$keggB$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$keggB$enrichRes@result$ID, "Group B",
+  	              "Cell cycle normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(
+  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+
 	  if(loess){
-		pathPng2Pdf(dd_loess, E3$keggA$enrichRes@result$ID, "Group A",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=file.path(
-		              out.dir_sub,"Pathview_Treat_Ctrl"))
-		pathPng2Pdf(dd_loess, E3$keggB$enrichRes@result$ID, "Group B",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=file.path(
-		              out.dir_sub,"Pathview_Treat_Ctrl"))
+	    if(!is.null(E3$keggA$enrichRes) && nrow(E3$keggA$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$keggA$enrichRes@result$ID, "Group A",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(
+    		              out.dir_sub,"Pathview_Treat_Ctrl"))
+	    if(!is.null(E3$keggB$enrichRes) && nrow(E3$keggB$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$keggB$enrichRes@result$ID, "Group B",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(
+    		              out.dir_sub,"Pathview_Treat_Ctrl"))
 	  }
 	}
 
@@ -313,8 +311,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
   		               filename="loess_normalized",
   		               out.dir=file.path(out.dir_sub,"Scatter_9Square/"))
   		grid.arrange(P1$p,P2$p,P3$p, ncol = 3)
-	  }else{grid.arrange(P1$p,P2$p, ncol = 2, bottom="", left="",
-	                     right="", top="")}
+	  }else{grid.arrange(P1$p,P2$p, ncol = 2, bottom="", left="", right="", top="")}
 	}
 
 	#==============9 Square grouped gene enrichment======================
@@ -323,22 +320,21 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	             showWarnings=FALSE)
 	  E1 = EnrichSquare(P1$dd1,pvalue=pvalueCutoff,adjust=adjust,
 	                    enrich_method=enrich_kegg,organism=organism,
-						 filename="negative_normalized", out.dir=
-						   file.path(out.dir_sub,"Enrichment_9Square"))
+        						 filename="negative_normalized",
+        						 out.dir=file.path(out.dir_sub,"Enrichment_9Square"))
 	  E2 = EnrichSquare(P2$dd1,pvalue=pvalueCutoff,adjust=adjust,
 	                    enrich_method=enrich_kegg,organism=organism,
-						 filename="essential_normalized", out.dir=
-						   file.path(out.dir_sub,"Enrichment_9Square"))
+        						 filename="essential_normalized",
+        						 out.dir=file.path(out.dir_sub,"Enrichment_9Square"))
 
 	  if(loess){
 		E3 = EnrichSquare(P3$dd1,pvalue=pvalueCutoff,adjust=adjust,
 		                  enrich_method=enrich_kegg, organism=organism,
-						   filename="loess_normalized", out.dir=
-						     file.path(out.dir_sub,"Enrichment_9Square"))
+      						   filename="loess_normalized",
+      						   out.dir=file.path(out.dir_sub,"Enrichment_9Square"))
 
 		grid.arrange(E1$kegg1$gridPlot, E2$kegg1$gridPlot, E3$kegg1$gridPlot,
-		             E1$bp1$gridPlot, E2$bp1$gridPlot, E3$bp1$gridPlot,
-		             ncol = 3)
+		             E1$bp1$gridPlot, E2$bp1$gridPlot, E3$bp1$gridPlot, ncol = 3)
 		grid.arrange(E1$kegg2$gridPlot, E2$kegg2$gridPlot, E3$kegg2$gridPlot,
 		             E1$bp2$gridPlot, E2$bp2$gridPlot, E3$bp2$gridPlot, ncol = 3)
 		grid.arrange(E1$kegg3$gridPlot, E2$kegg3$gridPlot, E3$kegg3$gridPlot,
@@ -387,127 +383,124 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	{
 	  dir.create(file.path(out.dir_sub,"Pathview_9Square"),
 	             showWarnings=FALSE)
-
-	  pathPng2Pdf(dd, E1$kegg1$enrichRes@result$ID,"Group 1",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg1$enrichRes@result$ID,"Group 1",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg2$enrichRes@result$ID,"Group 2",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg2$enrichRes@result$ID,"Group 2",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg3$enrichRes@result$ID,"Group 3",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg3$enrichRes@result$ID,"Group 3",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg4$enrichRes@result$ID,"Group 4",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg4$enrichRes@result$ID,"Group 4",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg13$enrichRes@result$ID,"Group 1 & Group 3",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg13$enrichRes@result$ID,
-	              "Group 1 & Group 3","Cell cycle normalized",
-	              organism=organism, view_allpath=view_allpath,
-	              output=file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg14$enrichRes@result$ID,"Group 1 & Group 4",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg14$enrichRes@result$ID,
-	              "Group 1 & Group 4","Cell cycle normalized",
-	              organism=organism, view_allpath=view_allpath,
-	              output=file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg23$enrichRes@result$ID,"Group 2 & Group 3",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg23$enrichRes@result$ID,
-	              "Group 2 & Group 3","Cell cycle normalized",
-	              organism=organism, view_allpath=view_allpath,
-	              output=file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg24$enrichRes@result$ID,
-	              "Group 2 & Group 4","Negative control normalized",
-	              organism=organism, view_allpath=view_allpath,
-	              output=file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg24$enrichRes@result$ID,
-	              "Group 2 & Group 4","Cell cycle normalized",
-	              organism=organism, view_allpath=view_allpath,
-	              output=file.path(out.dir_sub,"Pathview_9Square"))
-
-	  pathPng2Pdf(dd, E1$kegg1234$enrichRes@result$ID,
-	              "Group 1 & Group 2 & Group 3 & Group 4",
-	              "Negative control normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
-	  pathPng2Pdf(dd_essential, E2$kegg1234$enrichRes@result$ID,
-	              "Group 1 & Group 2 & Group 3 & Group 4",
-	              "Cell cycle normalized",organism=organism,
-	              view_allpath=view_allpath, output=
-	                file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg1$enrichRes@result$ID,"Group 1",
+  	              "Negative control normalized",organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg1$enrichRes) && nrow(E2$kegg1$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg1$enrichRes@result$ID,"Group 1",
+  	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg2$enrichRes) && nrow(E1$kegg2$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg2$enrichRes@result$ID,"Group 2",
+  	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg2$enrichRes) && nrow(E2$kegg2$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg2$enrichRes@result$ID,"Group 2",
+  	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg3$enrichRes) && nrow(E1$kegg3$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg3$enrichRes@result$ID,"Group 3",
+  	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg3$enrichRes) && nrow(E2$kegg3$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg3$enrichRes@result$ID,"Group 3",
+  	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg4$enrichRes) && nrow(E1$kegg4$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg4$enrichRes@result$ID,"Group 4",
+  	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg4$enrichRes) && nrow(E2$kegg4$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg4$enrichRes@result$ID,"Group 4",
+  	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg13$enrichRes) && nrow(E1$kegg13$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg13$enrichRes@result$ID,"Group 1 & Group 3",
+  	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg13$enrichRes) && nrow(E2$kegg13$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg13$enrichRes@result$ID,
+  	              "Group 1 & Group 3","Cell cycle normalized",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg14$enrichRes) && nrow(E1$kegg14$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg14$enrichRes@result$ID,"Group 1 & Group 4",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg14$enrichRes) && nrow(E2$kegg14$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg14$enrichRes@result$ID,
+  	              "Group 1 & Group 4","Cell cycle normalized",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg23$enrichRes) && nrow(E1$kegg23$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg23$enrichRes@result$ID,"Group 2 & Group 3",
+  	              "Negative control normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg23$enrichRes) && nrow(E2$kegg23$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg23$enrichRes@result$ID,
+  	              "Group 2 & Group 3","Cell cycle normalized",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg24$enrichRes) && nrow(E1$kegg24$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg24$enrichRes@result$ID,
+  	              "Group 2 & Group 4","Negative control normalized",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg24$enrichRes) && nrow(E2$kegg24$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg24$enrichRes@result$ID,
+  	              "Group 2 & Group 4","Cell cycle normalized",
+  	              organism=organism, view_allpath=view_allpath,
+  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E1$kegg1234$enrichRes) && nrow(E1$kegg1234$enrichRes@result)>0)
+  	  pathPng2Pdf(dd, E1$kegg1234$enrichRes@result$ID,
+  	              "Group 1 & Group 2 & Group 3 & Group 4",
+  	              "Negative control normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	  if(!is.null(E2$kegg1234$enrichRes) && nrow(E2$kegg1234$enrichRes@result)>0)
+  	  pathPng2Pdf(dd_essential, E2$kegg1234$enrichRes@result$ID,
+  	              "Group 1 & Group 2 & Group 3 & Group 4",
+  	              "Cell cycle normalized",organism=organism,
+  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
 
 	  if(loess){
-		pathPng2Pdf(dd_loess, E3$kegg1$enrichRes@result$ID,"Group 1",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg2$enrichRes@result$ID,"Group 2",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg3$enrichRes@result$ID,"Group 3",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg4$enrichRes@result$ID,"Group 4",
-		            "Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg13$enrichRes@result$ID,
-		            "Group 1 & Group 3","Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg14$enrichRes@result$ID,
-		            "Group 1 & Group 4","Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg23$enrichRes@result$ID,
-		            "Group 2 & Group 3","Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg24$enrichRes@result$ID,
-		            "Group 2 & Group 4","Loess normalized",organism=organism,
-		            view_allpath=view_allpath, output=
-		              file.path(out.dir_sub,"Pathview_9Square"))
-		pathPng2Pdf(dd_loess, E3$kegg1234$enrichRes@result$ID,
-		            "Group 1 & Group 2 & Group 3 & Group 4","Loess normalized",
-		            organism=organism,view_allpath=view_allpath,
-		            output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg1$enrichRes) && nrow(E3$kegg1$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$kegg1$enrichRes@result$ID,"Group 1",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg2$enrichRes) && nrow(E3$kegg2$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$kegg2$enrichRes@result$ID,"Group 2",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg3$enrichRes) && nrow(E3$kegg3$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$kegg3$enrichRes@result$ID,"Group 3",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg4$enrichRes) && nrow(E3$kegg4$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$kegg4$enrichRes@result$ID,"Group 4",
+    		            "Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg13$enrichRes) && nrow(E3$kegg13$enrichRes@result)>0)
+	      pathPng2Pdf(dd_loess, E3$kegg13$enrichRes@result$ID,
+    		            "Group 1 & Group 3","Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg14$enrichRes) && nrow(E3$kegg14$enrichRes@result)>0)
+    		pathPng2Pdf(dd_loess, E3$kegg14$enrichRes@result$ID,
+    		            "Group 1 & Group 4","Loess normalized",organism=organism,
+    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg23$enrichRes) && nrow(E3$kegg23$enrichRes@result)>0)
+  	    pathPng2Pdf(dd_loess, E3$kegg23$enrichRes@result$ID,
+      		            "Group 2 & Group 3","Loess normalized",organism=organism,
+      		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg24$enrichRes) && nrow(E3$kegg24$enrichRes@result)>0)
+  	    pathPng2Pdf(dd_loess, E3$kegg24$enrichRes@result$ID,
+      		            "Group 2 & Group 4","Loess normalized",organism=organism,
+      		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+	    if(!is.null(E3$kegg1234$enrichRes) && nrow(E3$kegg1234$enrichRes@result)>0)
+  	    pathPng2Pdf(dd_loess, E3$kegg1234$enrichRes@result$ID,
+      		            "Group 1 & Group 2 & Group 3 & Group 4","Loess normalized",
+      		            organism=organism,view_allpath=view_allpath,
+      		            output=file.path(out.dir_sub,"Pathview_9Square"))
 	  }
 	}
 	dev.off()

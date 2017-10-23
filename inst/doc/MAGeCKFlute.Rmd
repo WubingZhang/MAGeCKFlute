@@ -2,7 +2,7 @@
 title: "Analyzing pooled CRISPR functional genetic screens with MAGeCKFlute"
 author: "WubingZhang, Feizhen Wu, and Binbin Wang"
 date: "5 Oct 2017"
-package: "0.99.0"
+package: "0.99.1"
 abstract: >
   The purpose to do CRISPR screen is to filter essential genes, pathways 
   and to explain the background mechanisms. We developed MAGeCKFlute to
@@ -166,8 +166,7 @@ gene_summary=BRAF_mle.gene_summary
 ctrlName=c("D7_R1", "D7_R2")
 treatName=c("PLX7_R1", "PLX7_R2")
 #Read beta scores from gene summary matrix
-dd=ReadBeta(gene_summary, ctrlName=ctrlName, 
-            treatName=treatName, organism="hsa")
+dd=ReadBeta(gene_summary, ctrlName=ctrlName, treatName=treatName, organism="hsa")
 head(dd)
 ```
 

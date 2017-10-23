@@ -42,7 +42,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \seealso{
-  \code{\link{geom_violin}}
+  \code{\link[ggplot2]{geom_violin}}
   \code{\link{Density.plot}}
   \code{\link{Density.diff}}
   \code{\link{Square.plot}}

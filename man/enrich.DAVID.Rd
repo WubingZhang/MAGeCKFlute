@@ -64,22 +64,11 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
-
-# gene_summary = BRAF_mle.gene_summary
-# #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-# ##Select GroupA and GroupB genes
-# ddAB=GroupAB(dd)
-
-# ##Intersted gene list
-# idx1=ddAB$group=="up"
-# genes=ddAB$ENTREZID[idx1]
-# universe=ddAB$ENTREZID
-
-# enrichRes = enrich.DAVID(gene=genes, universe=universe,
-#              david.user="example@example.com")
-# head(enrichRes@result)
+# data(geneList)
+# genes <- names(geneList)[1:100]
+# universe <- names(geneList)
+# enrichRes <- enrich.DAVID(genes, universe, david.user="ma.tongji@gmail.com")
+# head(enrichRes$result)
 
 }
 
