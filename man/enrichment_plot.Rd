@@ -45,7 +45,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wu
 data(geneList)
 genes <- names(geneList)[1:100]
 universe <- names(geneList)
-enrichRes <- enrich.HGT(genes, universe)
-enrichment_plot(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
+# enrichRes <- enrich.HGT(genes, universe)
+# enrichment_plot(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
 }
 

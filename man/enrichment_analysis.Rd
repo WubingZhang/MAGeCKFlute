@@ -74,10 +74,10 @@ data(geneList)
 genes <- names(geneList)[1:100]
 universe <- names(geneList)
 #====enrichment=====
-keggA = enrichment_analysis(geneList = genes, universe=universe,
-                          method = "Hypergeometric",type = "KEGG",
-                          organism = "hsa", gridColour="#e41a1c")
-print(keggA$gridPlot)
+# keggA = enrichment_analysis(geneList = genes, universe=universe,
+#                           method = "Hypergeometric",type = "KEGG",
+#                           organism = "hsa", gridColour="#e41a1c")
+# print(keggA$gridPlot)
 
 }
 

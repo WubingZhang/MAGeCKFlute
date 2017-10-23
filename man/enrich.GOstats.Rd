@@ -55,6 +55,6 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 data(geneList)
 genes <- names(geneList)[1:100]
 universe <- names(geneList)
-enrichRes <- enrich.GOstats(genes, universe, type="BP")
-head(enrichRes@result)
+# enrichRes <- enrich.GOstats(genes, universe, type="BP")
+# head(enrichRes@result)
 }
