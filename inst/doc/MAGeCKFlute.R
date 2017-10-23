@@ -66,13 +66,13 @@ ddAB_essential=GroupAB(dd_essential)
 ScatterAB(ddAB_essential, main="Cell cycle normalized")
 RankAB(ddAB_essential, main="Cell cycle normalized")
 
-## ----EnrichAB------------------------------------------------------------
-enrich_result = EnrichAB(ddAB_essential,pvalue=0.05, 
-                         enrich_method = "Hypergeometric", organism="hsa")
-print(enrich_result$keggA$gridPlot)
-print(enrich_result$keggB$gridPlot)
+## ----EnrichAB, eval=FALSE------------------------------------------------
+#  enrich_result = EnrichAB(ddAB_essential,pvalue=0.05,
+#                           enrich_method = "Hypergeometric", organism="hsa")
+#  print(enrich_result$keggA$gridPlot)
+#  print(enrich_result$keggB$gridPlot)
 
-## ----pathview, eval=FALSE------------------------------------------------
+## ----pathview, eval=FALSE,eval=FALSE-------------------------------------
 #  genedata = dd_essential[,c("Control","Treatment")]
 #  rownames(genedata)=dd_essential$ENTREZID
 #  keggID = enrich_result$keggA$enrichRes@result$ID[1]
@@ -84,12 +84,12 @@ dd2=dd_essential[,c("Gene","Treatment","Control","ENTREZID")]
 P2=Square.plot(dd2,main="Cell cycle normalized")
 print(P2$p)
 
-## ----EnrichSquare--------------------------------------------------------
-enrich_result2 = EnrichSquare(P2$dd1,pvalue=0.05)
-print(enrich_result2$kegg3$gridPlot)
-print(enrich_result2$kegg4$gridPlot)
+## ----EnrichSquare,eval=FALSE---------------------------------------------
+#  enrich_result2 = EnrichSquare(P2$dd1,pvalue=0.05)
+#  print(enrich_result2$kegg3$gridPlot)
+#  print(enrich_result2$kegg4$gridPlot)
 
-## ----pathview2, eval=FALSE-----------------------------------------------
+## ----pathview2, eval=FALSE,eval=FALSE------------------------------------
 #  genedata = dd_essential[,c("Control","Treatment")]
 #  rownames(genedata)=dd_essential$ENTREZID
 #  keggID = enrich_result2$kegg1$enrichRes@result$ID[1]
@@ -103,31 +103,31 @@ head(BRAF_rra.gene_summary)
 dd.rra = ReadRRA(BRAF_rra.gene_summary, organism="hsa")
 head(dd.rra)
 
-## ----selection2----------------------------------------------------------
-##Negative selection
-universe=dd.rra$ENTREZID
-genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
-kegg.neg=enrichment_analysis(geneList = genes, universe=universe, 
-                             type = "KEGG", method="HyperGeometric", 
-                             pvalueCutoff = 0.05, plotTitle="KEGG: neg")
-bp.neg=enrichment_analysis(geneList = genes, universe=universe, 
-                           method = "ORT", type = "BP", 
-                           pvalueCutoff = 0.05, plotTitle="BP: neg")
-print(kegg.neg$gridPlot)
-print(bp.neg$gridPlot)
-
-##Positive selection
-universe=dd.rra$ENTREZID
-genes = dd.rra[dd.rra$pos.fdr<0.05, "ENTREZID"]
-kegg.pos=enrichment_analysis(geneList = genes, universe=universe, 
-                             type = "KEGG", method="HyperGeometric", 
-                             pvalueCutoff = 0.05, plotTitle="KEGG: pos")
-bp.pos=enrichment_analysis(geneList = genes, universe=universe, 
-                           method = "ORT", type = "BP", 
-                           pvalueCutoff = 0.05, plotTitle="BP: pos")
-print(kegg.pos$gridPlot)
-print(bp.pos$gridPlot)
-
+## ----selection2, eval=FALSE----------------------------------------------
+#  ##Negative selection
+#  universe=dd.rra$ENTREZID
+#  genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
+#  kegg.neg=enrichment_analysis(geneList = genes, universe=universe,
+#                               type = "KEGG", method="HyperGeometric",
+#                               pvalueCutoff = 0.05, plotTitle="KEGG: neg")
+#  bp.neg=enrichment_analysis(geneList = genes, universe=universe,
+#                             method = "ORT", type = "BP",
+#                             pvalueCutoff = 0.05, plotTitle="BP: neg")
+#  print(kegg.neg$gridPlot)
+#  print(bp.neg$gridPlot)
+#  
+#  ##Positive selection
+#  universe=dd.rra$ENTREZID
+#  genes = dd.rra[dd.rra$pos.fdr<0.05, "ENTREZID"]
+#  kegg.pos=enrichment_analysis(geneList = genes, universe=universe,
+#                               type = "KEGG", method="HyperGeometric",
+#                               pvalueCutoff = 0.05, plotTitle="KEGG: pos")
+#  bp.pos=enrichment_analysis(geneList = genes, universe=universe,
+#                             method = "ORT", type = "BP",
+#                             pvalueCutoff = 0.05, plotTitle="BP: pos")
+#  print(kegg.pos$gridPlot)
+#  print(bp.pos$gridPlot)
+#  
 
 ## ----sessionInfo---------------------------------------------------------
 sessionInfo()

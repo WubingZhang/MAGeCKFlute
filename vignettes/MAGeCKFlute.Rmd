@@ -243,7 +243,7 @@ genomes (KEGG) pathway enrichment analysis are available in this pipeline.
 For GroupA and GroupB genes, we use function ‘EnrichAB’ to do all useful
 enrichment analysis.
 
-```{r EnrichAB}
+```{r EnrichAB, eval=FALSE}
 enrich_result = EnrichAB(ddAB_essential,pvalue=0.05, 
                          enrich_method = "Hypergeometric", organism="hsa")
 print(enrich_result$keggA$gridPlot)
@@ -253,7 +253,7 @@ print(enrich_result$keggB$gridPlot)
 For enriched pathways, we can use function "KeggPathwayView" to visualize
 the beta score level in control and treatment on pathway map.
 
-```{r pathview, eval=FALSE}
+```{r pathview, eval=FALSE,eval=FALSE}
 genedata = dd_essential[,c("Control","Treatment")]
 rownames(genedata)=dd_essential$ENTREZID
 keggID = enrich_result$keggA$enrichRes@result$ID[1]
@@ -286,7 +286,7 @@ print(P2$p)
 For all the four subgroup genes and combination of them, BP and KEGG
 enrichment analysis can be performed easily using ‘EnrichSquare’ function.
 
-```{r EnrichSquare}
+```{r EnrichSquare,eval=FALSE}
 enrich_result2 = EnrichSquare(P2$dd1,pvalue=0.05)
 print(enrich_result2$kegg3$gridPlot)
 print(enrich_result2$kegg4$gridPlot)
@@ -294,7 +294,7 @@ print(enrich_result2$kegg4$gridPlot)
 
 Pathway visualization can be done using function ‘KeggPathwayView’, the same as section above.
 
-```{r pathview2, eval=FALSE}
+```{r pathview2, eval=FALSE,eval=FALSE}
 genedata = dd_essential[,c("Control","Treatment")]
 rownames(genedata)=dd_essential$ENTREZID
 keggID = enrich_result2$kegg1$enrichRes@result$ID[1]
@@ -325,7 +325,7 @@ head(dd.rra)
 
 Take 0.05 as cutoff, get negative selection and positive selection genes and do enrichment analysis on KEGG pathway and GO BP terms.
 
-```{r selection2}
+```{r selection2, eval=FALSE}
 ##Negative selection
 universe=dd.rra$ENTREZID
 genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
