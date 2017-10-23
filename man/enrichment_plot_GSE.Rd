@@ -42,23 +42,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-#   gene_summary = BRAF_mle.gene_summary
-#
-#   #Read beta score from gene summary matrix
-#   dd = ReadBeta(gene_summary, ctrlName = "D7_R1",
-#                 treatName = "PLX7_R1", organism="hsa")
-#
-#   ##Select GroupA and GroupB genes
-#   ddAB=GroupAB(dd)
-#
-#   geneList=ddAB$diff
-#   names(geneList)=ddAB$ENTREZID
-#   idx=ddAB$group=="down"
-#   geneList = geneList[idx]
-#
-#   enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-#   head(enrichRes@result)
-#
-#   enrichment_plot_GSE(enrichment=enrichRes@result,
-#                       plotTitle = "GSEA Analysis")
+# data(geneList)
+# enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+# enrichment_plot_GSE(enrichment=enrichRes@result, plotTitle = "GSEA Analysis")
 }

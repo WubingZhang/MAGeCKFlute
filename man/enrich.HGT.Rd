@@ -58,9 +58,9 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-# data(geneList)
-# genes <- names(geneList)[1:100]
-# universe <- names(geneList)
-# enrichRes <- enrich.HGT(genes, universe)
-# head(enrichRes@result)
+data(geneList)
+genes <- names(geneList)[1:100]
+universe <- names(geneList)
+enrichRes <- enrich.HGT(genes, universe)
+head(enrichRes@result)
 }

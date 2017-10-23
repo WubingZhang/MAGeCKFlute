@@ -52,9 +52,9 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
-# data(geneList)
-# genes <- names(geneList)[1:100]
-# universe <- names(geneList)
-# enrichRes <- enrich.GOstats(genes, universe, type="BP")
-# head(enrichRes@result)
+data(geneList)
+genes <- names(geneList)[1:100]
+universe <- names(geneList)
+enrichRes <- enrich.GOstats(genes, universe, type="BP")
+head(enrichRes@result)
 }

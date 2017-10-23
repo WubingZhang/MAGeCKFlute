@@ -124,13 +124,13 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   \code{\link{pathview}}
 }
 \examples{
+#load data
+data(gse16873.d)
+data(demo.paths)
 
-# gene_summary = BRAF_mle.gene_summary
-# #Read beta score from gene summary matrix
-# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-# rownames(dd)=dd$ENTREZID
-# p1 <- KeggPathwayView(gene.data  = dd[,c("Control","Treatment")],
-#                   pathway.id = pathways_hsa$PathwayID[1], species="hsa")
-
+#KEGG view: gene data only
+i <- 1
+pv.out <- KeggPathwayView(gene.data = gse16873.d[, 1],
+        pathway.id = demo.paths$sel.paths[i], species = "hsa",
+        out.suffix = "gse16873", kegg.native = TRUE)
 }
