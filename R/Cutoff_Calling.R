@@ -1,4 +1,4 @@
-Cutoff_Calling=function(d,scale=F){
+Cutoff_Calling=function(d,scale=FALSE){
   param=1
   if(class(scale)=="logical" & scale){
     param=round(length(d) / 16000,digits = 1)

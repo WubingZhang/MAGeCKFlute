@@ -3,7 +3,7 @@ NormalizeBeta <- function(beta, method="cell_cycle", posControl=NULL, minus=0.6)
   loginfo("Normalize beta scores ...")
   if(method=="cell_cycle"){
     if(!is.null(posControl) && class(posControl)=="character" && file.exists(posControl)[1]){
-      tmp = read.table(posControl, sep = "\t", header = F)
+      tmp = read.table(posControl, sep = "\t", header = FALSE)
       posControl = as.character(unlist(tmp))
     }else{
       posControl=essential_list
@@ -16,7 +16,7 @@ NormalizeBeta <- function(beta, method="cell_cycle", posControl=NULL, minus=0.6)
   }
   if(method=="loess"){
     normalized = beta
-    normalized[,2:(ncol(normalized)-1)]=normalize.loess(normalized[,2:(ncol(normalized)-1)],log.it = F)
+    normalized[,2:(ncol(normalized)-1)]=normalize.loess(normalized[,2:(ncol(normalized)-1)],log.it = FALSE)
   }
   return(normalized)
 }

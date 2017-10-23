@@ -1,25 +1,15 @@
 Package: MAGeCKFlute
 Type: Package
 Title: Integrative analysis of pooled CRISPR functional genetic screens
-Version: 0.99.6
-Date: 2017-10-23
+Version: 0.99.7
+Date: 2017-10-05
 Author: Wubing Zhang, Feizhen Wu, Binbin Wang
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
 Description: The MAGeCKFlute package provides a functional analytical pipeline for pooled CRISPR functional genetic screens.
 License: GPL (>=3)
 VignetteBuilder: knitr
-Depends: R (>= 3.4.2), ggplot2 (>= 2.1.0), ggExtra (>= 0.3), gridExtra
-        (>= 2.0.1), affy (>= 1.40.0), fitdistrplus (>= 1.0.0), reshape
-        (>= 0.6.3), ggsci (>= 1.0), ggrepel (>= 0.3.5), grid (>=
-        3.1.0), org.Hs.eg.db (>= 2.1.0), pathview (>= 1.6.0), Category
-        (>= 2.20.0), GOstats (>= 2.20.0), GO.db (>= 2.1.0), KEGG.db (>=
-        3.1), png (>= 0.1.0), clusterProfiler (>= 2.0.0), GSEABase (>=
-        1.20.0)
+Depends: R (>= 3.4.2), ggplot2 (>= 2.1.0), ggExtra (>= 0.3), gridExtra (>= 2.0.1), affy (>= 1.40.0), fitdistrplus (>= 1.0.0), reshape (>= 0.6.3), ggsci (>= 1.0), ggrepel (>= 0.3.5), grid (>= 3.1.0), org.Hs.eg.db (>= 2.1.0), pathview (>= 1.6.0), Category (>= 2.20.0), GOstats (>= 2.20.0), GO.db (>= 2.1.0), KEGG.db (>= 3.1), png (>= 0.1.0), clusterProfiler (>= 2.0.0), GSEABase (>= 1.20.0)
 Suggests: knitr, rmarkdown, BiocStyle, org.Mm.eg.db (>= 2.1.0)
 LazyData: TRUE
 NeedsCompilation: yes
-biocViews: Sequencing, RNASeq, GeneticVariability,
-        FunctionalPrediction, GeneSetEnrichment, GenomicVariation,
-        FunctionalGenomics, CRISPR, Sequencing, ExperimentalDesign,
-        MultipleComparison, Normalization, Pathways, Visualization
-Packaged: 2017-10-23 10:54:58 UTC; Wubing
+biocViews: Sequencing, RNASeq, GeneticVariability, FunctionalPrediction, GeneSetEnrichment, GenomicVariation, FunctionalGenomics, CRISPR, Sequencing, ExperimentalDesign, MultipleComparison, Normalization, Pathways, Visualization

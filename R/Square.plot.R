@@ -3,8 +3,8 @@ Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
                       main=NULL, filename=NULL, out.dir=".", scale_cutoff=1){
   loginfo(paste("Square plot for",main, "beta scores ..."))
   beta$group="Others"
-  beta$Control = rowMeans(beta[, ctrlname, drop=F])
-  beta$Treatment = rowMeans(beta[, treatname, drop=F])
+  beta$Control = rowMeans(beta[, ctrlname, drop= FALSE])
+  beta$Treatment = rowMeans(beta[, treatname, drop= FALSE])
   Control_cutoff = Cutoff_Calling(beta$Control, scale=scale_cutoff)
   drug_cutoff = Cutoff_Calling(beta$Treatment, scale=scale_cutoff)
   idx1 = -Control_cutoff<beta$Control
@@ -63,7 +63,7 @@ Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
   p=p+geom_abline(slope=slope, intercept=-intercept,linetype = "dotted")
   p=p+labs(x="Control Beta Score",y="Treatment Beta Score",title=main)
   p=p+theme(legend.position="bottom")+theme(legend.title=element_blank())
-  p=p+guides(col = guide_legend(ncol = 3,byrow =T))
+  p=p+guides(col = guide_legend(ncol = 3,byrow = TRUE))
   p=p+xlim(x_min,x_max)+ylim(y_min,y_max)
   p=p+annotate("text",color="black",
                label=paste("",as.character(dim(beta[beta$group=="Group2",])[1]),sep=""),
@@ -82,7 +82,7 @@ Square.plot<-function(beta, ctrlname="Control",treatname="Treatment",
   # grid.arrange(p,ncol = 1)
   if(!is.null(filename)){
     write.table(beta, file.path(out.dir,paste0("Square9_detail_",filename,".txt")),
-                sep="\t", row.names = F,col.names = T,quote=F)
+                sep="\t", row.names = FALSE,col.names = TRUE,quote= FALSE)
     ggsave(p,filename=file.path(out.dir,paste0("Square9_scatter_",filename,".png")),
            units="in",width=520/100,height=500/100)
   }

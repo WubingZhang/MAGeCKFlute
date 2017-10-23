@@ -23,7 +23,7 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
   }
   #====Gene Set Enrichment Analysis=======================================================
   if(method == "GSEA"){
-    geneList=geneList[order(geneList,decreasing = T)]
+    geneList=geneList[order(geneList,decreasing = TRUE)]
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff=pvalueCutoff, pAdjustMethod = pAdjustMethod,
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
     result$enrichRes = enrichRes

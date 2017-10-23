@@ -1,6 +1,6 @@
 
-pathPng2Pdf <- function(genelist, pathways=c(), organism='hsa', view_allpath=F, title="Group A", sub="Negative control normalized",
-                        output=".", path.archive=".", kegg.native = T){
+pathPng2Pdf <- function(genelist, pathways=c(), organism='hsa', view_allpath= FALSE, title="Group A", sub="Negative control normalized",
+                        output=".", path.archive=".", kegg.native = TRUE){
   #====No pathways supplied======================
   if(length(pathways)<1){
     p=ggplot()

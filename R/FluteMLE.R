@@ -1,8 +1,8 @@
 #! /usr/bin/Rscript --vanilla
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
-                     pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=F,
-                     posControl=NULL, scale_cutoff=1, loess=F, view_allpath=F, workspace="."){
+                     pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
+                     posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, workspace="."){
 
 	#=========Prepare the running environment=========
 	{
@@ -17,7 +17,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }else{
 		pdf(file.path(out.dir_sub, output_pdf),width=9,height = 6)
 	  }
-	  organism = getOrg(organism, onlyLib = T)$organism
+	  organism = getOrg(organism, onlyLib = TRUE)$organism
 	}
 
 	#=========Beta Score Preparation=========================
@@ -81,14 +81,14 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 		vp.Top <- viewport(height=unit(0.5, "npc"), width=unit(1, "npc"),
 		                   just=c("bottom"), y=0.5, x=0.5)
 		plot.new()
-		grid.arrange(P3,P6,P9,ncol = 3, vp=vp.Top,newpage = F)
+		grid.arrange(P3,P6,P9,ncol = 3, vp=vp.Top,newpage = FALSE)
 	  }else{
 		par(mfrow=c(2,2))
 		plot.new()
 		plot.new()
 		vp.Top <- viewport(height=unit(0.5, "npc"), width=unit(1, "npc"),
 		                   just=c("bottom"), y=0.5, x=0.5)
-		grid.arrange(P3,P6,ncol = 2, vp=vp.Top,newpage = F)
+		grid.arrange(P3,P6,ncol = 2, vp=vp.Top,newpage = FALSE)
 	  }
 
 	  MA.plot(dd, cex=1, main="Negative control normalized",

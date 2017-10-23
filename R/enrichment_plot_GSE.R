@@ -19,7 +19,7 @@ enrichment_plot_GSE=function(enrichment,plotTitle=NULL,gridColour="blue",termNum
   enrichment$logP = -log10(enrichment$p.adjust)
   enrichment = enrichment[!is.na(enrichment$ID),]
   enrichment=enrichment[!duplicated(enrichment$Description),]
-  enrichment = enrichment[order(enrichment$logP,decreasing = T), ]
+  enrichment = enrichment[order(enrichment$logP,decreasing = TRUE), ]
 
   #normalize term description
   {
@@ -41,7 +41,7 @@ enrichment_plot_GSE=function(enrichment,plotTitle=NULL,gridColour="blue",termNum
 
   p1=ggplot(data=enrichment,aes(x=logP,y=Name,size=NES,colour = factor(NES)))
   p1=p1+geom_point()
-  p1=p1+guides(color=F)
+  p1=p1+guides(color= FALSE)
   p1 <- p1+theme(panel.grid.major=element_line(colour=gridColour),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())

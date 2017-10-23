@@ -79,7 +79,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
         write.table(gseA$enrichRes@result,
               file.path(out.dir,
                   paste0("GSEA_results/GroupA_gse_",filename,".txt")),
-              sep="\t", row.names = F,col.names = T,quote=F)
+              sep="\t", row.names = FALSE,col.names = TRUE,quote=F)
       }
       gseA$gseaplot = p1
       ##=========GroupB GSEA plot==================================
@@ -104,7 +104,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
         write.table(gseB$enrichRes@result,
                     file.path(out.dir,paste0("GSEA_results/GroupB_gse_",
                                              filename,".txt")),
-                    sep="\t", row.names = F,col.names = T,quote=F)
+                    sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       }
       gseB$gseaplot = p1
     }
@@ -112,7 +112,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
     if(!is.null(keggA$enrichRes)){
       write.table(keggA$enrichRes@result,
                   file.path(out.dir,paste0("GroupA_kegg_",filename,".txt")),
-                  sep="\t", row.names = F,col.names = T,quote=F)
+                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(keggA$gridPlot,
              filename=file.path(out.dir,paste0("GroupA_kegg_",
                                                filename,".png")),
@@ -121,7 +121,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
     if(!is.null(bpA$enrichRes)){
       write.table(bpA$enrichRes@result,
                   file.path(out.dir,paste0("GroupA_bp_",filename,".txt")),
-                  sep="\t", row.names = F,col.names = T,quote=F)
+                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bpA$gridPlot,
              filename=file.path(out.dir,paste0("GroupA_bp_",filename,".png")),
              units = "in",width=400/100,height =270/100 )
@@ -130,7 +130,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
     if(!is.null(keggB$enrichRes)){
       write.table(keggB$enrichRes@result,
                   file.path(out.dir,paste0("GroupB_kegg_",filename,".txt")),
-                  sep="\t", row.names = F,col.names = T,quote=F)
+                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(keggB$gridPlot,
              filename=file.path(out.dir,paste0("GroupB_kegg_",filename,".png")),
              units = "in",width=400/100,height =270/100 )
@@ -138,7 +138,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
     if(!is.null(bpB$enrichRes)){
       write.table(bpB$enrichRes@result,
                   file.path(out.dir,paste0("GroupB_bp_",filename,".txt")),
-                  sep="\t", row.names = F,col.names = T,quote=F)
+                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bpB$gridPlot,
              filename=file.path(out.dir,paste0("GroupB_bp_",filename,".png")),
              units = "in",width=400/100,height =270/100 )

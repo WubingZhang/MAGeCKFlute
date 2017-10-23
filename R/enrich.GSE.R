@@ -2,26 +2,26 @@
 enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, maxGSSize = 500,
                        pvalueCutoff = 0.05, pAdjustMethod = "BH"){
 
-  geneList = sort(geneList, decreasing = T)
+  geneList = sort(geneList, decreasing = TRUE)
   loginfo(paste('Running GSEA for list of entrezIDs'))
   #geneList:	order ranked geneList
   if(type == "KEGG"){
     # download Kegg data
-    organism = getOrg(organism, onlyLib = T)$organism
+    organism = getOrg(organism, onlyLib = TRUE)$organism
     tmp1 <- paste0("pathways_", organism," (KeGG)")
     if(!(tmp1 %in% data(package="MAGeCKFlute")$results[,"Item"])){
-      gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),header = F)
+      gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),header = FALSE)
       names(gene2path)=c("EntrezID","PathwayID")
-      pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),header = F)
+      pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),header = FALSE)
       names(pathways)=c("PathwayID","PathwayName")
       gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
       pathways$PathwayID=gsub("path:","",pathways$PathwayID)
       pathways$PathwayName=gsub(" - Homo sapiens .(human.)", "", pathways$PathwayName)
 
       # #========
-      # gene2path_mmu=fread("http://rest.kegg.jp/link/pathway/mmu",header = F)
+      # gene2path_mmu=fread("http://rest.kegg.jp/link/pathway/mmu",header = FALSE)
       # names(gene2path_mmu)=c("EntrezID","PathwayID")
-      # pathways_mmu=fread("http://rest.kegg.jp/list/pathway/mmu",header = F)
+      # pathways_mmu=fread("http://rest.kegg.jp/list/pathway/mmu",header = FALSE)
       # names(pathways_mmu)=c("PathwayID","PathwayName")
       # gene2path_mmu$PathwayID=gsub("path:","",gene2path_mmu$PathwayID)
       # pathways_mmu$PathwayID=gsub("path:","",pathways_mmu$PathwayID)
@@ -41,7 +41,7 @@ enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, m
   }
 
   if(type %in% c("BP", "CC", "MF")){
-    orgdb = getOrg(organism, onlyLib = T)$pkg
+    orgdb = getOrg(organism, onlyLib = TRUE)$pkg
     enrichedRes = gseGO(geneList=geneList, ont = type, OrgDb=orgdb,
                         minGSSize = minGSSize, maxGSSize = maxGSSize,
                         pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod)

@@ -9,7 +9,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                             list(gene = FALSE, cpd = FALSE),
                           limit=list(gene=1, cpd=1),
                           bins = list(gene = 10, cpd = 10),
-                          both.dirs = list(gene = T,cpd = T),
+                          both.dirs = list(gene =TRUE,cpd =TRUE),
                           trans.fun = list(gene = NULL, cpd = NULL),
                           low = list(gene = "deepskyblue1", cpd = "blue"),
                           mid = list(gene = "gray", cpd = "gray"),
@@ -62,7 +62,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
   gene.idtype = toupper(gene.idtype)
   data(bods)
   if (species != "ko") {
-    species.data = kegg.species.code(species, na.rm = T,
+    species.data = kegg.species.code(species, na.rm =TRUE,
                                      code.only = FALSE)
   }else {
     species.data = c(kegg.code = "ko", entrez.gnodes = "0",
@@ -97,7 +97,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     if (!gene.idtype %in% gene.idtype.bods[[species]])
       stop("Wrong input gene ID type!")
     gene.idmap = id2eg(gd.names, category = gene.idtype,
-                       pkg.name = gene.annotpkg, unique.map = F)
+                       pkg.name = gene.annotpkg, unique.map =FALSE)
     gene.data = mol.sum(gene.data, gene.idmap)
     gene.idtype = "ENTREZ"
   }
@@ -166,7 +166,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
       }
     }
     if (kegg.native) {
-      node.data = try(node.info(xml.file[i]), silent = T)
+      node.data = try(node.info(xml.file[i]), silent =TRUE)
       if (class(node.data) == "try-error") {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         message("Warning: ", warn.msg)
@@ -185,11 +185,11 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
       }
       node.data = lapply(node.data, "[", sel.idx)
     }else {
-      gR1 = try(parseKGML2Graph2(xml.file[i], genes = F,
+      gR1 = try(parseKGML2Graph2(xml.file[i], genes =FALSE,
                                  expand = expand.node, split.group =
                                    split.group),
-                silent = T)
-      node.data = try(node.info(gR1), silent = T)
+                silent =TRUE)
+      node.data = try(node.info(gR1), silent =TRUE)
       if (class(node.data) == "try-error") {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         message("Warning: ", warn.msg)
@@ -225,9 +225,9 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
           #       category = "SYMBOL", pkg.name = gene.annotpkg)[,2]
           ID2SYMBOL= bitr(as.character(plot.data.gene$kegg.names),
                           toType="SYMBOL", fromType="ENTREZID",
-                          OrgDb=orgdb[species],drop=T)
+                          OrgDb=orgdb[species],drop= TRUE)
           ID2SYMBOL1=merge(plot.data.gene,ID2SYMBOL,by.x="kegg.names",
-                           by.y="ENTREZID",all.x=T,sort=F)
+                           by.y="ENTREZID",all.x= TRUE,sort=FALSE)
           plot.data.gene$labels=ID2SYMBOL1$SYMBOL
           #==========================
           mapped.gnodes = rownames(plot.data.gene)

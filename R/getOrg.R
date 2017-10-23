@@ -1,9 +1,9 @@
-getOrg <- function(organism, onlyLib=F){
+getOrg <- function(organism, onlyLib=FALSE){
   data(bods)
   res=list()
   ##======
   # Get the mapping from organism to package
-  orgMap = as.data.frame(bods[,1:3], stringsAsFactors=F)
+  orgMap = as.data.frame(bods[,1:3], stringsAsFactors=FALSE)
   orgMap$species = tolower(orgMap$species)
   orgMap$`kegg code` = tolower(orgMap$`kegg code`)
   orgMap = melt(orgMap, id="package")
@@ -34,7 +34,7 @@ getOrg <- function(organism, onlyLib=F){
     source("http://bioconductor.org/biocLite.R")
     biocLite(pkg)
   }
-  suppressPackageStartupMessages(library(pkg,character.only=T))
+  suppressPackageStartupMessages(library(pkg,character.only=TRUE))
 
   #===============
   # Get mapping data

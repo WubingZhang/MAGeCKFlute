@@ -5,7 +5,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   #======
   DS = toupper(type[1])
   over.sum=data.frame()
-  orgdb = getOrg(organism, onlyLib=T)$pkg
+  orgdb = getOrg(organism, onlyLib= TRUE)$pkg
   #========
   if(DS == "KEGG"){
     loginfo(paste('Running KEGG for list of entrezIDs'))
