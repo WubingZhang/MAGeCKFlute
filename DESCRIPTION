@@ -2,7 +2,7 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative analysis of pooled CRISPR functional genetic screens
 Version: 0.99.8
-Date: 2017-10-05
+Date: 2017-10-24
 Author: Wubing Zhang, Feizhen Wu, Binbin Wang
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
 Description: The MAGeCKFlute package provides a functional analytical pipeline for pooled CRISPR functional genetic screens.
