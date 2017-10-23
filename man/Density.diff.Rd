@@ -1,0 +1,54 @@
+\name{Density.diff}
+\alias{Density.diff}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+Density plot for beta score deviation between Control and Treatment.
+}
+\description{
+Density.diff() can be used to plot the density of beta score deviation between two samples. It retures a ggplot object.
+}
+\usage{
+Density.diff(beta, ctrlname = "Control", treatname = "Treatment",
+            main = NULL, filename = NULL)
+}
+
+\arguments{
+  \item{beta}{
+A data frame object in which the column 'Gene', ctrlname.beta and  treatname.beta are accessible.
+}
+  \item{ctrlname}{
+Label of Control sample
+}
+  \item{treatname}{
+Label of Treatment sample
+}
+  \item{main}{
+The title of density plot
+}
+  \item{filename}{
+The file name of output figure, when it is NULL(default), figure will not be output.
+}
+}
+
+\value{
+A ggplot figure object
+}
+
+\author{
+Wubing Zhang, Feizhen Wu, Binbin Wang
+}
+\seealso{
+  \code{\link[ggplot2]{geom_density}}
+  \code{\link{Density.plot}}
+  \code{\link{Violin.plot}}
+  \code{\link{Square.plot}}
+}
+\examples{
+gene_summary = BRAF_mle.gene_summary
+# #Read beta score from gene summary matrix
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# ##Density plot of all gene beta score change between control and treatment
+# Density.diff(dd)
+}
+
+\keyword{geom_density}
