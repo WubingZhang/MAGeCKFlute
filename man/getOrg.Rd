@@ -8,7 +8,7 @@ Get annotation data for specific organism
 Mapping the organism to annotation package and data for geneid convertor
 }
 \usage{
-getOrg(organism, onlyLib = F)
+getOrg(organism, onlyLib = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,5 +31,5 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-kegg_code = getOrg("human", onlyLib = T)$organism
+kegg_code = getOrg("human", onlyLib = TRUE)$organism
 }

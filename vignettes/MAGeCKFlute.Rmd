@@ -1,8 +1,8 @@
 ---
 title: "Analyzing pooled CRISPR functional genetic screens with MAGeCKFlute"
 author: "WubingZhang, Feizhen Wu, and Binbin Wang"
-date: "23 Oct 2017"
-package: "0.99.7"
+date: "5 Oct 2017"
+package: "0.99.8"
 abstract: >
   The purpose to do CRISPR screen is to filter essential genes, pathways 
   and to explain the background mechanisms. We developed MAGeCKFlute to

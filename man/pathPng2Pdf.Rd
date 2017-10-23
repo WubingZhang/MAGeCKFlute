@@ -8,8 +8,8 @@ Read local pathway figure into pdf file
 Kegg pathway view and write into pdf file
 }
 \usage{
-pathPng2Pdf(genelist, pathways = c(), organism = "hsa", view_allpath=F, title = "Group A",
-  sub = "Negative control normalized", output = ".", path.archive = ".", kegg.native = T)
+pathPng2Pdf(genelist, pathways = c(), organism = "hsa", view_allpath=FALSE, title = "Group A",
+  sub = "Negative control normalized", output = ".", path.archive = ".", kegg.native = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,7 +41,9 @@ character, the directory of KEGG pathway data file (.xml) and image file (.png).
 logical, whether to render pathway graph as native KEGG graph (.png) or using graphviz layout engine (.pdf). Default kegg.native=TRUE.
 }
 }
-
+\value{
+no return value, just arrange figures in pdf
+}
 \author{
 Wubing Zhang, Feizhen Wu, Binbin Wang
 }

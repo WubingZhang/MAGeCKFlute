@@ -10,8 +10,8 @@ This function do a functional analysis based on  gene summary file. In this pipe
 \usage{
 FluteMLE(gene_summary, ctrlname="Control", treatname="Treatment",
          organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
-         pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=F,
-         posControl=NULL, scale_cutoff=1, loess=F, view_allpath=F, workspace=".")
+         pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea= FALSE,
+         posControl=NULL, scale_cutoff=1, loess= FALSE, view_allpath= FALSE, workspace=".")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

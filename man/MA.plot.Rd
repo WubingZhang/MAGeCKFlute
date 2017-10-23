@@ -74,6 +74,9 @@ The same as ma.plot
 The same as ma.plot
 }
 }
+\value{
+No return value, just print a MAplot
+}
 
 \author{
 Wubing Zhang, Feizhen Wu, Binbin Wang

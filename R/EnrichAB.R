@@ -79,7 +79,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
         write.table(gseA$enrichRes@result,
               file.path(out.dir,
                   paste0("GSEA_results/GroupA_gse_",filename,".txt")),
-              sep="\t", row.names = FALSE,col.names = TRUE,quote=F)
+              sep="\t", row.names = FALSE,col.names = TRUE,quote= FALSE)
       }
       gseA$gseaplot = p1
       ##=========GroupB GSEA plot==================================

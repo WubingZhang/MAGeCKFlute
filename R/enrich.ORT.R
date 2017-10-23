@@ -16,7 +16,7 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
   if(type == "KEGG"){
     enrichedRes = enrichKEGG(gene=gene,  universe=universe, organism = organism,
                              pAdjustMethod = pAdjustMethod, pvalueCutoff = pvalueCutoff, qvalueCutoff=qvalueCutoff,
-                             minGSSize = minGSSize, maxGSSize = maxGSSize, use_internal_data=F)
+                             minGSSize = minGSSize, maxGSSize = maxGSSize, use_internal_data=FALSE)
   }
   if(type == "DO"){
     enrichedRes = enrichDO(gene=gene,  universe=universe, pAdjustMethod = pAdjustMethod,pvalueCutoff = pvalueCutoff,

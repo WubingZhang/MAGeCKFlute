@@ -39,7 +39,9 @@ FluteRRA(gene_summary, prefix="Test", enrich_kegg="ORT",
      Path of workspace
 }
 }
-
+\value{
+  All of the pipeline results is output into the {out.dir}/{prefix}_Results, which includes a pdf file and a folder named 'RRA'.
+}
 \author{
 Wubing Zhang, Feizhen Wu, Binbin Wang
 }

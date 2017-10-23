@@ -8,7 +8,7 @@ Call cutoff value
 Calculate beta score cutoff
 }
 \usage{
-Cutoff_Calling(d, scale = F)
+Cutoff_Calling(d, scale = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

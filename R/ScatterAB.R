@@ -1,8 +1,8 @@
 
 ScatterAB<-function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=1,
                      main=NULL,filename=NULL){
-  beta$Control=rowMeans(beta[,ctrlname,drop=F])
-  beta$Treatment=rowMeans(beta[,treatname,drop=F])
+  beta$Control=rowMeans(beta[,ctrlname,drop= FALSE])
+  beta$Treatment=rowMeans(beta[,treatname,drop= FALSE])
   intercept=Cutoff_Calling(beta$Treatment-beta$Control, scale=scale_cutoff)
   data=beta
   loginfo(paste("Scatter plot of", main, "Treat-Ctrl beta scores ..."))
@@ -13,9 +13,9 @@ ScatterAB<-function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff
   ymax=max(data$Treatment)
   #=========
   p=ggplot(data,aes(x=Control,y=Treatment,colour=group,fill=group))
-  p=p+geom_point(position = "identity",shape=".",alpha=1/100,size = 0.01,show.legend = F)
+  p=p+geom_point(position = "identity",shape=".",alpha=1/100,size = 0.01,show.legend = FALSE)
   p=p+scale_color_manual(values=mycolour)
-  p=p+geom_jitter(position = "jitter",show.legend = F)
+  p=p+geom_jitter(position = "jitter",show.legend = FALSE)
   p=p+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
   p=p+geom_abline(intercept = -intercept)
   p=p+geom_abline(intercept = +intercept)

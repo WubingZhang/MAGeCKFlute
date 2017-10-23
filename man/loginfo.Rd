@@ -17,6 +17,9 @@ A character
 }
 }
 
+\value{
+print log message
+}
 \author{
 Wubing Zhang, Feizhen Wu, Binbin Wang
 }

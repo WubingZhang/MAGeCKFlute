@@ -5,7 +5,7 @@ TransGeneID <- function(genes, fromType="SYMBOL", toType="ENTREZID", organism="h
   genes = as.character(genes)
   tmpGene = toupper(genes)
   #=====================
-  GeneID_Convert = getOrg(organism, onlyLib = F)$Symbol_Entrez
+  GeneID_Convert = getOrg(organism, onlyLib = FALSE)$Symbol_Entrez
   idx = duplicated(GeneID_Convert[,fromType])
   convert = GeneID_Convert[!idx,toType]
   names(convert) = GeneID_Convert[!idx,fromType]

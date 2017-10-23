@@ -8,7 +8,7 @@ MA.plot <- function(beta, ctrlname="Control",treatname="Treatment", main="Negati
   dd=beta
   loginfo(paste("MAplot for", main, "beta scores ..."))
   A = rowMeans(dd[,c(ctrlname, treatname)])
-  M = rowMeans(dd[,treatname,drop=F])-rowMeans(dd[,ctrlname,drop=F])
+  M = rowMeans(dd[,treatname,drop= FALSE])-rowMeans(dd[,ctrlname,drop= FALSE])
   par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main)
   ma.plot(A, M, main=main, subset=subset, show.statistics=show.statistics, span=span,
           family.loess=family.loess, cex=cex, plot.method=plot.method, add.loess=add.loess,
