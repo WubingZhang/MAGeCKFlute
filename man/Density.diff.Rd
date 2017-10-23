@@ -48,7 +48,7 @@ gene_summary = BRAF_mle.gene_summary
 # #Read beta score from gene summary matrix
 # dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
 # ##Density plot of all gene beta score change between control and treatment
-# Density.diff(dd_essential, main="Cell cycle normalized")
+# Density.diff(dd)
 }
 
 \keyword{geom_density}
