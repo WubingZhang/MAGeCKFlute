@@ -29,11 +29,5 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-  data("BRAF_mle.gene_summary")
-  gene_summary = BRAF_mle.gene_summary
-  #Read beta score from gene summary matrix
-  dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-
-  dd$diff=dd$Treatment - dd$Control
-  cutoff=Cutoff_Calling(dd$diff,scale=TRUE)
+  cutoff=Cutoff_Calling(rnorm(18000),scale=TRUE)
 }

@@ -48,14 +48,10 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-data("BRAF_mle.gene_summary")
 gene_summary = BRAF_mle.gene_summary
 #Read beta score from gene summary matrix
-dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-head(dd)
-
-dd=dd[,c("Gene","Treatment","Control","ENTREZID")]
-P2=Square.plot(dd,main="Cell cycle normalized")
-print(P2$p)
-head(P2$dd1)
+# dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
+# P2=Square.plot(dd,main="Cell cycle normalized")
+# print(P2$p)
+# head(P2$dd1)
 }

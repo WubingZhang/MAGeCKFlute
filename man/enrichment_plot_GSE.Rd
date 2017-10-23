@@ -42,7 +42,7 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-# data(geneList)
+data(geneList)
 # enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 # enrichment_plot_GSE(enrichment=enrichRes@result, plotTitle = "GSEA Analysis")
 }

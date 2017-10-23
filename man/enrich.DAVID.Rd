@@ -64,9 +64,9 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
  \code{\link[DOSE]{enrichResult-class}}
 }
 \examples{
-# data(geneList)
-# genes <- names(geneList)[1:100]
-# universe <- names(geneList)
+data(geneList)
+genes <- names(geneList)[1:100]
+universe <- names(geneList)
 # enrichRes <- enrich.DAVID(genes, universe, david.user="ma.tongji@gmail.com")
 # head(enrichRes$result)
 

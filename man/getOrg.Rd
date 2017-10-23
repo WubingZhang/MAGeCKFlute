@@ -31,6 +31,5 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
-mapping = getOrg("human", onlyLib = FALSE)$Symbol_Entrez
-head(mapping)
+kegg_code = getOrg("human", onlyLib = T)$organism
 }

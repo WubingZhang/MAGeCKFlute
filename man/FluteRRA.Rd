@@ -45,7 +45,8 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
 }
 
 \examples{
+gene_summary=BRAF_rra.gene_summary
 # ##Run the Flute RRA pipeline
-# FluteRRA(BRAF_rra.gene_summary, prefix="BRAF", organism="hsa")
+# FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
 }
 

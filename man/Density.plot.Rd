@@ -47,14 +47,11 @@ Wubing Zhang, Feizhen Wu, Binbin Wang
   \code{\link{Square.plot}}
 }
 \examples{
-data("BRAF_mle.gene_summary")
 gene_summary = BRAF_mle.gene_summary
 #Read beta score from gene summary matrix
 dd = ReadBeta(gene_summary, ctrlName = "D7_R1", treatName = "PLX7_R1")
-head(dd)
-dd_essential = NormalizeBeta(dd, method="cell_cycle")
 ##Density plot of all gene beta scores in control and treatment
-Density.plot(dd_essential, main="Cell cycle normalized")
+Density.plot(dd_essential)
 
 }
 
