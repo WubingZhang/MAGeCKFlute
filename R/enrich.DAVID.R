@@ -1,25 +1,73 @@
+# A job with more than 3000 genes to generate gene or term cluster report will not be handled by DAVID due to resource limit.
+# No more than 200 jobs in a day from one user or computer.
+# DAVID Team reserves right to suspend any improper uses of the web service without notice.
+#' Do enrichment analysis using DAVID
+#'
+#' an update version of DAVIDWebService to do enrichment analysis
+#'
+#' @docType methods
+#' @name enrich.DAVID
+#' @rdname enrich.DAVID
+#' @aliases enrichDAVID
+#'
+#' @param gene character vector, specifying the genelist to do enrichment analysis.
+#' @param universe character vector, specifying the backgound genelist, default is whole genome.
+#' @param david.user character, specifying a valid DAVID user account.
+#' @param idType character, indicating the gene id type of input genelist, such as "ENTREZ_GENE_ID"(default).
+#' @param minGSSize minimal size of each geneSet for testing.
+#' @param maxGSSize maximal size of each geneSet for analyzing.
+#' @param annotation geneset category for testing, GOTERM_BP_FAT(default).
+#' @param pvalueCutoff pvalue cutoff.
+#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param qvalueCutoff qvalue cutoff.
+#'
+#' @return A enrichResult instance.
+#'
+#' @author Wubing Zhang
+#'
+#' @note This function depends on network and DAVID account, so don't show in the vignette.
+#' The source can be found by typing \code{MAGeCKFlute:::enrich.DAVID}
+#' or \code{getMethod("enrich.DAVID")}, or
+#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.DAVID.R}
+#' Users should find it easy to customize this function.
+#'
+#' @seealso \code{\link{enrich.HGT}}
+#' @seealso \code{\link{enrich.GOstats}}
+#' @seealso \code{\link{enrich.GSE}}
+#' @seealso \code{\link{enrich.ORT}}
+#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link[DOSE]{enrichResult-class}}
+#'
+#' @examples
+#' \dontrun{
+#'  data(MLE_Data)
+#'  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#'  genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' 	# Before running this example, you need to have a david account.
+#' 	enrichRes <- enrich.DAVID(genes, universe, david.user="david.user@edu.com")
+#' 	head(enrichRes@result)
+#' }
+#'
+#'
+#' @export
+
+
 enrich.DAVID <- function(gene, universe=NULL, david.user, idType="ENTREZ_GENE_ID",
                          minGSSize = 2, maxGSSize = 500, annotation  = "GOTERM_BP_FAT",
                          pvalueCutoff  = 0.05, pAdjustMethod = "BH", qvalueCutoff= 0.2){
 
-  # A job with more than 3000 genes to generate gene or term cluster report will not be handled by DAVID due to resource limit.
-  # No more than 200 jobs in a day from one user or computer.
-  # DAVID Team reserves right to suspend any improper uses of the web service without notice.
-  ##' enrichment analysis by DAVID
+  loginfo('Running DAVID for list of entrezIDs')
 
-  loginfo(paste('Running DAVID for list of entrezIDs'))
+  david.pkg <- "RDAVIDWebService"
+  pkgs <- installed.packages()[,1]
+  if (! david.pkg %in% pkgs) {
+    stop("Install RDAVIDWebService package before using enrichDAVID...")
+  }
 
   Count <- List.Total <- Pop.Hits <- Pop.Total <- NULL
 
   pAdjustMethod <- match.arg(pAdjustMethod, c("bonferroni", "BH"))
 
-  david.pkg <- "RDAVIDWebService"
-  pkgs <- installed.packages()[,1]
-  if (! david.pkg %in% pkgs) {
-    stop("You should have RDAVIDWebService package installed before using enrichDAVID...")
-  }
-
-  require(david.pkg, character.only=TRUE)
   DAVIDWebService <- eval(parse(text="DAVIDWebService"))
   addList <- eval(parse(text="addList"))
   setAnnotationCategories <- eval(parse(text="setAnnotationCategories"))
@@ -93,9 +141,9 @@ enrich.DAVID <- function(gene, universe=NULL, david.user, idType="ENTREZ_GENE_ID
   org <- gsub("\\(.*\\)", "", org)
 
   if(org=="Homo sapiens"){
-    SYMBOL = TransGeneID(gc, "ENTREZID", "SYMBOL", "hsa")
+    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", org = "hsa")[, "SYMBOL"])
   }else{
-    SYMBOL = TransGeneID(gc, "ENTREZID", "SYMBOL", "mmu")
+    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", org = "mmu")[, "SYMBOL"])
   }
   geneName=paste(SYMBOL, collapse = "/")
   Over$geneName <- geneName

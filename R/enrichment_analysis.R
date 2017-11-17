@@ -1,11 +1,65 @@
+#' Enrichment analysis
+#'
+#' Enrichment analysis
+#'
+#' @docType methods
+#' @name enrichment_analysis
+#' @rdname enrichment_analysis
+#' @aliases enrichment
+#'
+#' @param geneList a character vector or a ranked numeric vector(for GSEA) with names of geneid,
+#' specifying the genelist to do enrichment analysis.
+#' @param universe a character vector, specifying the backgound genelist, default is whole genome.
+#' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
+#' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5
+#' @param type geneset category for testing, KEGG(default).
+#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param pvalueCutoff pvalue cutoff.
+#' @param qvalueCutoff qvalue cutoff.
+#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param minGSSize minimal size of each geneSet for testing.
+#' @param maxGSSize maximal size of each geneSet for analyzing.
+#' @param plotTitle same as 'title' in 'plot'.
+#' @param gridColour color of grids.
+#'
+#' @return a list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
+#' a ggplot object, and \code{enrichRes} is a enrichResult instance.
+#'
+#' @author Feizhen Wu
+#'
+#' @note  See the vignette for an example of enrichment analysis
+#' The source can be found by typing \code{MAGeCKFlute:::enrichment_analysis}
+#' or \code{getMethod("enrichment_analysis")}, or
+#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrichment_analysis.R}
+#' Users should find it easy to customize this function.
+#'
+#' @seealso \code{\link{enrich.GOstats}}
+#' @seealso \code{\link{enrich.DAVID}}
+#' @seealso \code{\link{enrich.GSE}}
+#' @seealso \code{\link{enrich.ORT}}
+#' @seealso \code{\link{enrich.HGT}}
+#' @seealso \code{\link[DOSE]{enrichResult-class}}
+#'
+#' @examples
+#' data(MLE_Data)
+#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' keggA = enrichment_analysis(geneList = genes, universe=universe,
+#'                          method = "HGT",type = "KEGG",
+#'                          organism = "hsa", gridColour="#e41a1c")
+#' print(keggA$gridPlot)
+#'
+#'
+#' @export
+
 #====enrichment analysis===================================
 enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", organism="hsa",
                                pvalueCutoff = 0.05, qvalueCutoff = 1, pAdjustMethod = "BH",
                                minGSSize = 2, maxGSSize = 500, plotTitle=NULL,gridColour="blue"){
-
+  requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   result=list()
   type=toupper(type[1])
-  methods = c("ORT", "GSEA", "DAVID", "GOstats", "HyperGeometric")
+  methods = c("ORT", "GSEA", "DAVID", "GOstats", "HGT")
   names(methods) = toupper(methods)
   if(class(method)=="character"){method = toupper(method)}
   method = methods[method]
@@ -27,7 +81,7 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff=pvalueCutoff, pAdjustMethod = pAdjustMethod,
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
     result$enrichRes = enrichRes
-    gridPlot <- enrichment_plot_GSE(enrichRes@result, plotTitle, gridColour=gridColour)
+    gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, gridColour=gridColour)
     result$gridPlot = gridPlot
     return(result)
   }
@@ -57,13 +111,13 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod)
   }
   #==================================HyperGeometric test=================================
-  if(method == "HyperGeometric"){
+  if(method == "HGT"){
     enrichRes = enrich.HGT(gene = geneList, universe = universe, type  = type, organism=organism,
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod,
                            minGSSize = minGSSize, maxGSSize = maxGSSize)
   }
   result$enrichRes = enrichRes
-  gridPlot <- enrichment_plot(enrichRes@result, plotTitle, gridColour=gridColour)
+  gridPlot <- EnrichedView(enrichRes@result, plotTitle, gridColour=gridColour)
   result$gridPlot = gridPlot
 
   return(result)

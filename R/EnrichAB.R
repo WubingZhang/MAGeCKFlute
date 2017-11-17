@@ -1,5 +1,54 @@
+#' Enrichment analysis for Positive and Negative selection genes
+#'
+#' Do enrichment analysis for selected genes, in which positive selection and negative selection
+#' are termed as GroupA and GroupB
+#'
+#' @docType methods
+#' @name enrichAB
+#' @rdname enrichAB
+#'
+#' @param data a data frame containing columns of "ENTREZID" and "diff".
+#' @param pvalue pvalue cutoff.
+#' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
+#' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5
+#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+
+#' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param filename suffix of output file name. NULL(default) means no output.
+#' @param out.dir Path to save plot to (combined with filename).
+#' @param gsea boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea=FALSE.
+#'
+#' @return a list containing enrichment results for each group genes. This list contains items four
+#' items, \code{keggA}, \code{keggB}, \code{bpA}, \code{bpB}. Four items are all list object, containing
+#' subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
+#' \code{enrichRes} is a enrichResult instance
+#'
+#' @author Binbin Wang
+#'
+#' @note  See the vignette for an example of EnrichAB
+#' The source can be found by typing \code{MAGeCKFlute:::EnrichAB}
+#' or \code{getMethod("EnrichAB")}, or
+#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichAB.R}
+#' Users should find it easy to customize this function.
+#'
+#' @seealso \code{\link{EnrichSquare}}
+#'
+# @examples
+#' data(MLE_Data)
+#' # Read beta score from gene summary table in MAGeCK MLE results
+# dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+#
+# \dontrun{
+#   data=ScatterView(dd)$data
+#   #BP and KEGG enrichment analysis
+#   enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
+#   print(enrich_result$keggA$gridPlot)
+#   print(enrich_result$bpA$gridPlot)
+# }
+#
+
 # enrichment for GroupA and GrouB genes
-EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
+EnrichAB <- function(data, pvalue=0.05, enrich_method="ORT",
                      organism="hsa", adjust="BH", filename=NULL,
                      out.dir=".", gsea=FALSE){
   loginfo("Enrichment analysis of GroupA and GroupB genes ...")
@@ -22,6 +71,7 @@ EnrichAB <- function(data, pvalue=0.05, enrich_method="Hypergeometric",
                           pvalueCutoff = pvalue, plotTitle="BP: GroupA",
                           gridColour="#e41a1c", pAdjustMethod = adjust)
   if(gsea){
+    requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
     gseA=enrichment_analysis(geneList = geneList, method = "GSEA",
                              type = "KEGG", organism=organism,
                              pvalueCutoff = pvalue, plotTitle="GSEA: GroupA",

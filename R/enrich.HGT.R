@@ -1,42 +1,91 @@
+#' Do enrichment analysis using Hypergeometric test
+#'
+#' Do enrichment analysis using Hypergeometric test
+#'
+#' @docType methods
+#' @name enrich.HGT
+#' @rdname enrich.HGT
+#' @aliases Hypergeometric
+#'
+#' @param gene a character vector, specifying the genelist to do enrichment analysis.
+#' @param universe a character vector, specifying the backgound genelist, default is whole genome.
+#' @param type geneset category for testing, KEGG(default).
+#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param pvalueCutoff pvalue cutoff.
+#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param minGSSize minimal size of each geneSet for testing.
+#' @param maxGSSize maximal size of each geneSet for analyzing.
+#'
+#' @return A enrichResult instance.
+#'
+#' @author Feizhen Wu
+#'
+#' @note  See the vignette for an example of enrichment analysis using hypergemetric test
+#' The source can be found by typing \code{MAGeCKFlute:::enrich.HGT}
+#' or \code{getMethod("enrich.HGT")}, or
+#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.HGT.R}
+#' Users should find it easy to customize this function.
+#'
+#' @seealso \code{\link{enrich.GOstats}}
+#' @seealso \code{\link{enrich.DAVID}}
+#' @seealso \code{\link{enrich.GSE}}
+#' @seealso \code{\link{enrich.ORT}}
+#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link[DOSE]{enrichResult-class}}
+#'
+#' @examples
+#' data(MLE_Data)
+#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' enrichRes <- enrich.HGT(genes, universe)
+#' head(enrichRes@result)
+#'
+#' @importFrom data.table fread
+#' @importFrom pathological temp_dir
+#'
+#' @export
+
+
 enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff = 0.05,
                       pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
+  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
+  requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
+
   gene = unique(as.character(gene))
   universe = unique(as.character(universe))
   # download Kegg data
-  organism = getOrg(organism, onlyLib = TRUE)$organism
-  tmp1 <- paste0("pathways_", organism," (KeGG)")
-  if(!(tmp1 %in% data(package="MAGeCKFlute")$results[,"Item"])){
-    gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),header = FALSE)
-    names(gene2path)=c("EntrezID","PathwayID")
-    pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),header = FALSE)
-    names(pathways)=c("PathwayID","PathwayName")
-    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
-    pathways$PathwayID=gsub("path:","",pathways$PathwayID)
-    pathways$PathwayName=gsub(" - Homo sapiens .(human.)", "", pathways$PathwayName)
+  organism = getOrg(organism)$org
+  pathwayFiles <- c(file.path(temp_dir(), paste0("pathways_", organism)),
+                    file.path(temp_dir(), paste0("gene2path_", organism)))
 
-    # #========
-    # gene2path_mmu=fread("http://rest.kegg.jp/link/pathway/mmu",header = FALSE)
-    # names(gene2path_mmu)=c("EntrezID","PathwayID")
-    # pathways_mmu=fread("http://rest.kegg.jp/list/pathway/mmu",header = FALSE)
-    # names(pathways_mmu)=c("PathwayID","PathwayName")
-    # gene2path_mmu$PathwayID=gsub("path:","",gene2path_mmu$PathwayID)
-    # pathways_mmu$PathwayID=gsub("path:","",pathways_mmu$PathwayID)
-    # pathways_mmu$PathwayName=gsub(" - Mus musculus .(mouse.)", "", pathways_mmu$PathwayName)
-    #
-    # save(gene2path_hsa,pathways_hsa,gene2path_mmu,pathways_mmu,file="KeGG.RData")
-  }else if(organism == "hsa"){
-    gene2path=gene2path_hsa
-    pathways=pathways_hsa
-  }else if(organism == "mmu"){
-    gene2path=gene2path_mmu
-    pathways=pathways_mmu}
+  if(!all(file.exists(pathwayFiles))){
+    gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),
+                    header = FALSE, showProgress = FALSE)
+    names(gene2path)=c("EntrezID","PathwayID")
+    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
+    gene2path$EntrezID=gsub(paste0(organism,":"),"",gene2path$EntrezID)
+
+    pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),
+                   header = FALSE, showProgress = FALSE)
+    names(pathways)=c("PathwayID","PathwayName")
+
+    pathways$PathwayID=gsub("path:","",pathways$PathwayID)
+    pathways$PathwayName=gsub(" - .*", "", pathways$PathwayName)
+
+    write.table(pathways, pathwayFiles[1], sep="\t", row.names = FALSE)
+    write.table(gene2path, pathwayFiles[2], sep="\t", row.names = FALSE)
+  }else{
+    pathways=read.table(pathwayFiles[1], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+    gene2path=read.table(pathwayFiles[2], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+  }
+
   #============
   loginfo(paste('Running KEGG patwhay for list of entrezIDs'))
   if(type=="KEGG"){
     m=length(gene)
     n=length(universe)-m
     res=data.frame(ID=c(),Description=c(),GeneRatio=c(),BgRatio=c(),pvalue=c(),
-                   nLogpvalue=c(),geneID=c(),geneName=c(), Count=c())
+                   geneID=c(),geneName=c(), Count=c())
     kk=1
     for(c in pathways$PathwayID){
       pathwayEntrezID=gene2path$EntrezID[gene2path$PathwayID%in%c]
@@ -53,10 +102,9 @@ enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff 
         res[kk,"GeneRatio"]=paste(q,length(which(idx1)),sep="/")
         res[kk,"BgRatio"]=paste(length(which(idx1)),length(gene2path$EntrezID),sep="/")
         res[kk,"pvalue"]=pvalue
-        res[kk,"nLogpvalue"]=-log10(pvalue)
         res[kk,"geneID"]=geneID
 
-        SYMBOL = TransGeneID(universe[idx1&idx2], "ENTREZID", "SYMBOL", organism)
+        SYMBOL = suppressMessages(eg2id(universe[idx1&idx2], "SYMBOL", org = organism)[, "SYMBOL"])
         geneName=paste(SYMBOL, collapse = "/")
         res[kk,"geneName"]=geneName
         res[kk,"Count"]=q
@@ -65,13 +113,16 @@ enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff 
       }
     }
     res$p.adjust=p.adjust(res$pvalue,pAdjustMethod)
+    res$nLogpvalue = -log10(res$p.adjust)
     idx = which(res$pvalue<=pvalueCutoff & res$p.adjust<=pvalueCutoff)
+
     if(length(idx)>0){
       res = res[idx, ]
       res = res[order(res$p.adjust),]
+      res = res[,c("ID", "Description", "pvalue", "p.adjust", "nLogpvalue", "GeneRatio",
+                   "BgRatio", "geneID", "geneName", "Count")]
     }else{
-      res=data.frame(ID=c(),Description=c(),GeneRatio=c(),BgRatio=c(),pvalue=c(),
-                     nLogpvalue=c(),geneID=c(),geneName=c(), Count=c())
+      res=data.frame()
     }
 
   }
@@ -84,3 +135,4 @@ enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff 
       gene           = as.character(gene),
       keytype        = "ENTREZID")
 }
+
