@@ -39,6 +39,9 @@ and only plot top 4 enriched pathways.}
 \item{kegg.native}{logical, whether to render pathway graph as native KEGG graph (.png)
 or using graphviz layout engine (.pdf). Default kegg.native=TRUE.}
 }
+\value{
+plot on the current device
+}
 \description{
 Kegg pathway view and arrange grobs on page.
 }

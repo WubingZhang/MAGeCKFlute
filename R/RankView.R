@@ -58,7 +58,7 @@ RankView <- function(beta, genelist=c(), top=10, bottom=10,
   data$Rank = rank(diff)
   data$Gene = beta$Gene
   data$group = "no"
-  data = as.data.frame(data, stringsAsFactors=F)
+  data = as.data.frame(data, stringsAsFactors=FALSE)
   data$group[data$diff>cutoff[1]] = "up"
   data$group[data$diff<cutoff[2]] = "down"
 

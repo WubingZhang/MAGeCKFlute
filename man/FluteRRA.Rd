@@ -55,10 +55,12 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
+\dontrun{
 data(RRA_Data)
 gene_summary = RRA_Data
 # Run the FluteRRA pipeline
 FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
+}
 
 
 }

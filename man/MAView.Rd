@@ -51,6 +51,9 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{filename}{figure file name to create on disk. Default filename="NULL", which means
 no output.}
 }
+\value{
+plot on current device
+}
 \description{
 MAplot of gene beta scores in Control vs Treatment
 }

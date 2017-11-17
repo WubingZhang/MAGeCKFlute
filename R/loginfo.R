@@ -17,6 +17,7 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/loginfo.R}
 #' Users should find it easy to customize this function.
 #'
+#' @return print log message on stdout.
 #' @examples
 #' loginfo("Test the loginfo function ...")
 #'

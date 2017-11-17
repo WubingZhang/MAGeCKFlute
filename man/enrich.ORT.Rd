@@ -43,11 +43,13 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
+\dontrun{
  data(MLE_Data)
  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
  genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
 	enrichRes <- enrich.ORT(genes, universe)
 	head(enrichRes@result)
+}
 
 
 }

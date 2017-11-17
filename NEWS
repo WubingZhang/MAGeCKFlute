@@ -11,7 +11,7 @@ CHANGES IN VERSION 0.99.1
     o Allow users to define the number of genes labeled in rank figure, default label top 10 and bottom 10 genes
     o Add annotation of other organisms
 
-CHANGES IN VERSION 1.1.0
+CHANGES IN VERSION 0.99.10
 -------------------------
 
     o Change all plot function names ended with 'View'.

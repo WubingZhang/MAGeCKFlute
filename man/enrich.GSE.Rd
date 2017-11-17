@@ -38,6 +38,7 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
+\dontrun{
  data(MLE_Data)
  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
  geneList = MLE_Data$D7_R1.beta
@@ -45,6 +46,10 @@ Users should find it easy to customize this function.
  geneList = geneList[!is.na(universe)]
 	enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 	head(enrichRes@result)
+	term = enrichRes@result$ID[1]
+	gseaplot(enrichRes, term)
+}
+
 
 }
 \seealso{

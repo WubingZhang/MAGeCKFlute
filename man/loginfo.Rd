@@ -11,6 +11,9 @@ loginfo(msg)
 \arguments{
 \item{msg}{a character, specifying log message.}
 }
+\value{
+print log message on stdout.
+}
 \description{
 Write log message on console
 }

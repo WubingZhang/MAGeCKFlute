@@ -496,6 +496,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @param kegg.native logical, whether to render pathway graph as native KEGG graph (.png)
 #'  or using graphviz layout engine (.pdf). Default kegg.native=TRUE.
 #'
+#' @return plot on the current device
 #'
 #' @author Wubing Zhang
 #'

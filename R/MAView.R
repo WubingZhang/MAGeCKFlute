@@ -28,6 +28,8 @@
 #'
 #' @author Wubing Zhang
 #'
+#' @return plot on current device
+#'
 #' @note See the vignette for an example of MAView.
 #' Note that the source code of \code{MAView} is very simple.
 #' The source can be found by typing \code{MAGeCKFlute:::MAView}
