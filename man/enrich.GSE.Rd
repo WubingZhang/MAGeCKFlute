@@ -45,8 +45,6 @@ names(geneList) = universe
 geneList = geneList[!is.na(universe)]
 enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 head(enrichRes@result)
-#term = enrichRes@result$ID[1]
-#DOSE::gseaplot(enrichRes, term)
 
 
 }

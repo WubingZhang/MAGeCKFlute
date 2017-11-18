@@ -35,11 +35,11 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#'  data(MLE_Data)
-#'  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#'  genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
-#' 	enrichRes <- enrich.ORT(genes, universe)
-#' 	head(enrichRes@result)
+#' data(MLE_Data)
+#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' enrichRes <- enrich.ORT(genes, universe)
+#' head(enrichRes@result)
 #'
 #'
 #' @import clusterProfiler

@@ -33,15 +33,13 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#'data(MLE_Data)
-#'universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#'geneList = MLE_Data$D7_R1.beta
-#'names(geneList) = universe
-#'geneList = geneList[!is.na(universe)]
-#'enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-#'head(enrichRes@result)
-#'#term = enrichRes@result$ID[1]
-#'#DOSE::gseaplot(enrichRes, term)
+#' data(MLE_Data)
+#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' geneList = MLE_Data$D7_R1.beta
+#' names(geneList) = universe
+#' geneList = geneList[!is.na(universe)]
+#' enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+#' head(enrichRes@result)
 #'
 #'
 #' @import clusterProfiler
