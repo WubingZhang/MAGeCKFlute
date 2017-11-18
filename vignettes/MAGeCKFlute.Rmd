@@ -2,7 +2,7 @@
 title: "Integrative analysis pipeline for pooled CRISPR functional genetic screens - MAGeCKFlute"
 author: "WubingZhang, Feizhen Wu, and Binbin Wang"
 date: "17 Nov 2017"
-package: "0.99.12"
+package: "0.99.13"
 abstract: >
   Genome-wide CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
   Here, We developed MAGeCKFlute for supporting downstream analysis, utilizing the data provided through MAGeCK and MAGeCK-VISPR. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis and pathway enrichment analysis of these genes. The package also visualizes genes in the context of pathways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
@@ -173,6 +173,9 @@ between control and treatment and mark top selected genes in figure.
 ```{r selection}
 p1 = ScatterView(dd_essential, main="Cell cycle normalized")
 print(p1)
+```
+
+```{r rank}
 ## Add column of 'diff'
 dd_essential$diff = dd_essential$Treatment - dd_essential$Control
 p2 = RankView(dd_essential, main="Cell cycle normalized")
@@ -198,19 +201,23 @@ keggA = enrichment_analysis(geneList = genes, universe = universe, method = "HGT
 kegg_A = enrich.HGT(genes, universe, type = "KEGG", organism = "human")
 keggA_grid = EnrichedView(kegg_A@result, plotTitle = "Positive selection")
 
-## Do enrichment analysis using GSEA method
-gseA = enrichment_analysis(geneList = geneList, method = "GSEA", type = "KEGG", organism="human",
-                          plotTitle="Positive selection")
-#same as
-gse_A = enrich.GSE(geneList, type = "KEGG", organism = "human")
-gseA_grid = EnrichedGSEView(gse_A@result, plotTitle = "Positive selection")
-
 ## look at the results
 head(keggA$enrichRes@result)
 print(keggA$gridPlot)
 #should same as
 head(kegg_A@result)
 print(keggA_grid)
+
+```
+
+```{r GSEA}
+## Do enrichment analysis using GSEA method
+gseA = enrichment_analysis(geneList = geneList, method = "GSEA", type = "KEGG", 
+                           organism="human", plotTitle="Positive selection")
+#same as
+gse_A = enrich.GSE(geneList, type = "KEGG", organism = "human")
+gseA_grid = EnrichedGSEView(gse_A@result, plotTitle = "Positive selection")
+
 
 head(gseA$enrichRes@result)
 print(gseA$gridPlot)
