@@ -33,7 +33,6 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#' \dontrun{
 #'  data(MLE_Data)
 #'  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
 #'  geneList = MLE_Data$D7_R1.beta
@@ -43,7 +42,6 @@
 #' 	head(enrichRes@result)
 #' 	term = enrichRes@result$ID[1]
 #' 	gseaplot(enrichRes, term)
-#' }
 #'
 #'
 #' @import clusterProfiler

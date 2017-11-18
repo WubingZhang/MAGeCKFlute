@@ -127,7 +127,6 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,cha
 #' @seealso \code{\link{EnrichedView}}
 #'
 #' @examples
-#' \dontrun{
 #'  data(MLE_Data)
 #'  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
 #'  geneList = MLE_Data$D7_R1.beta
@@ -135,7 +134,6 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,cha
 #'  geneList = geneList[!is.na(universe)]
 #' 	enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 #'  EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
-#' }
 #'
 #'
 #'
