@@ -12,10 +12,15 @@ Genome-wide CRISPR (clustered regularly interspaced short palindrome repeats) co
 source("http://bioconductor.org/biocLite.R")
 biocLite("MAGeCKFlute")
 
-#or
+#or (R >= 3.5)
 install.packages("devtools")
 library(devtools)
 install_github("WubingZhang/MAGeCKFlute")
+
+#or (R >= 3.4.2)
+install.packages("devtools")
+library(devtools)
+install_bitbucket("WubingZhang/mageckflute")
 ~~~
 
 ## Quick start
