@@ -13,9 +13,10 @@ the gene annotation package. For all potential values check: data(bods); bods. D
 and can also be "human" (case insensitive).}
 }
 \value{
-a list containing two items:
+a list containing three elements:
 \item{organism}{species}
 \code{pkg}{annotation package name}
+\code{Symbol_Entrez}{a data frame, mapping between gene symbol and entrez id}
 }
 \description{
 Determine the gene annotation package. for specific organism

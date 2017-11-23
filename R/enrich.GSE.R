@@ -34,7 +34,7 @@
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
 #' geneList = MLE_Data$D7_R1.beta
 #' names(geneList) = universe
 #' geneList = geneList[!is.na(universe)]
@@ -108,7 +108,7 @@ enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, m
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     geneID = strsplit(enrichedRes@result$core_enrichment, "/")
     geneName = lapply(geneID, function(gid){
-      SYMBOL = suppressMessages(eg2id(gid, "SYMBOL", org = organism)[, "SYMBOL"])
+      SYMBOL = TransGeneID(gid, "ENTREZID", "SYMBOL", organism = organism)
       paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)

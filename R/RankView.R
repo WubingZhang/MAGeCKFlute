@@ -73,9 +73,9 @@ RankView <- function(beta, genelist=c(), top=10, bottom=10,
   p=p+theme(panel.background = element_rect(fill='white', colour='black'))
   p=p+geom_vline(xintercept = 0,linetype = "dotted")+geom_vline(xintercept = cutoff,linetype = "dotted")
   p=p+geom_label_repel(aes(x=diff, y=Rank,fill=group,label = Gene),data=data[idx,],
-                       fontface = 'bold', color = 'white',size = 2.5,force=3,
-                       box.padding = unit(0.4, "lines"),segment.color = 'grey50',
-                       point.padding = unit(0.3, "lines"))
+                       fontface = 'bold', color = 'white',size = 2.5,force=8,
+                       box.padding = unit(0.4, "lines"), segment.color = 'grey50',
+                       point.padding = unit(0.3, "lines"), segment.size = 0.3)
   p=p+scale_fill_manual(values=mycolour)
   p=p+labs(x="Treatment-Control Beta Score",y="Rank",title=main)
   p=p+theme(legend.position="none")#+ylim(-1000,7000)

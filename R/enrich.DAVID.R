@@ -41,8 +41,8 @@
 #' @examples
 #' \dontrun{
 #'  data(MLE_Data)
-#'  universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#'  genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#'  universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+#'  genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' 	# Before running this example, you need to have a david account.
 #' 	enrichRes <- enrich.DAVID(genes, universe, david.user="david.user@edu.com")
 #' 	head(enrichRes@result)
@@ -141,9 +141,9 @@ enrich.DAVID <- function(gene, universe=NULL, david.user, idType="ENTREZ_GENE_ID
   org <- gsub("\\(.*\\)", "", org)
 
   if(org=="Homo sapiens"){
-    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", org = "hsa")[, "SYMBOL"])
+    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", pkg.name = getOrg("hsa")$lib)[, "SYMBOL"])
   }else{
-    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", org = "mmu")[, "SYMBOL"])
+    SYMBOL = suppressMessages(eg2id(gc, "SYMBOL", pkg.name = getOrg("mmu")$lib)[, "SYMBOL"])
   }
   geneName=paste(SYMBOL, collapse = "/")
   Over$geneName <- geneName

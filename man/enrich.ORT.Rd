@@ -44,8 +44,8 @@ Users should find it easy to customize this function.
 }
 \examples{
 data(MLE_Data)
-universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 enrichRes <- enrich.ORT(genes, universe)
 head(enrichRes@result)
 

@@ -36,8 +36,8 @@
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' enrichRes <- enrich.ORT(genes, universe)
 #' head(enrichRes@result)
 #'
@@ -64,7 +64,7 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
   if(type == "KEGG"){
     enrichedRes = enrichKEGG(gene=gene,  universe=universe, organism = organism,
                              pAdjustMethod = pAdjustMethod, pvalueCutoff = pvalueCutoff, qvalueCutoff=qvalueCutoff,
-                             minGSSize = minGSSize, maxGSSize = maxGSSize, use_internal_data=FALSE)
+                             minGSSize = minGSSize, maxGSSize = maxGSSize, use_internal_data=TRUE)
   }
   if(type == "DO"){
     enrichedRes = enrichDO(gene=gene,  universe=universe, pAdjustMethod = pAdjustMethod,pvalueCutoff = pvalueCutoff,
@@ -81,7 +81,7 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
   if(!is.null(enrichedRes)){
     geneID = strsplit(enrichedRes@result$geneID, "/")
     geneName = lapply(geneID, function(gid){
-      SYMBOL = suppressMessages(eg2id(gid, "SYMBOL", org = organism)[, "SYMBOL"])
+      SYMBOL = TransGeneID(gid, "ENTREZID", "SYMBOL", organism = organism)
       paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)

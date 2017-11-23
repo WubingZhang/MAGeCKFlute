@@ -67,7 +67,7 @@ ReadBeta <- function(gene_summary, ctrlName="Control",
   dd1$Gene = dd$Gene
   dd1$Control = rowMeans(dd[,ctrlName, drop = FALSE])
   dd1$Treatment = rowMeans(dd[,treatName, drop = FALSE])
-  dd1$ENTREZID = suppressMessages(id2eg(dd$Gene, "SYMBOL", org = organism)[, "ENTREZID"])
+  dd1$ENTREZID = TransGeneID(dd$Gene, "SYMBOL", "ENTREZID", organism = organism)
   dd1=as.data.frame(dd1, stringsAsFactors= FALSE)
 
   ##==============Remove NAs=============================================

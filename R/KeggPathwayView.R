@@ -379,8 +379,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
           warning(warn.msg)
         }else {
           #=====My revised===========
-          plot.data.gene$labels = eg2id(as.character(plot.data.gene$kegg.names),
-                category = "SYMBOL", pkg.name = gene.annotpkg)[,2]
+          plot.data.gene$labels = TransGeneID(as.character(
+            plot.data.gene$kegg.names),"ENTREZID", "SYMBOL", organism = species)[as.character(plot.data.gene$kegg.names)]
           #==========================
           mapped.gnodes = rownames(plot.data.gene)
           node.data$labels[mapped.gnodes] = plot.data.gene$labels

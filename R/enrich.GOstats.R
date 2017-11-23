@@ -33,8 +33,8 @@
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' enrichRes <- enrich.GOstats(genes, universe, type="BP")
 #' head(enrichRes@result)
 #'
@@ -101,7 +101,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
     over.sum$geneID <- glist[as.character(over.sum[,1])]
     geneID = strsplit(over.sum$geneID, "/")
     geneName = lapply(geneID, function(gid){
-      SYMBOL = suppressMessages(eg2id(gid, "SYMBOL", org = organism)[, "SYMBOL"])
+      SYMBOL = TransGeneID(gid, "ENTREZID", "SYMBOL", organism = organism)
       paste(SYMBOL, collapse = "/")
     })
     over.sum$geneName <- unlist(geneName)

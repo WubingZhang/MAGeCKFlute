@@ -39,7 +39,7 @@ Users should find it easy to customize this function.
 }
 \examples{
 data(MLE_Data)
-universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
 geneList = MLE_Data$D7_R1.beta
 names(geneList) = universe
 geneList = geneList[!is.na(universe)]

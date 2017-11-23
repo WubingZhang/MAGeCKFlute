@@ -51,7 +51,7 @@ ReadRRA <- function(gene_summary, organism="hsa"){
   dd=dd[!idx,]
 
   dd=dd[,c("id","neg.fdr","pos.fdr")]
-  dd$ENTREZID = suppressMessages(id2eg(dd$id, "SYMBOL", org = organism)[, "ENTREZID"])
+  dd$ENTREZID = TransGeneID(dd$id, "SYMBOL", "ENTREZID", organism = organism)
   idx=is.na(dd$ENTREZID)
   dd=dd[!idx,]
   colnames(dd) = c("Official", "neg.fdr", "pos.fdr", "ENTREZID")

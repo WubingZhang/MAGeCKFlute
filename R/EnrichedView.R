@@ -31,8 +31,8 @@
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' enrichRes <- enrich.HGT(genes, universe)
 #' EnrichedView(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
 #'
@@ -40,7 +40,7 @@
 #' @export
 
 
-EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,charLength=50){
+EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,charLength=50){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()
@@ -128,7 +128,7 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,cha
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
 #' geneList = MLE_Data$D7_R1.beta
 #' names(geneList) = universe
 #' geneList = geneList[!is.na(universe)]
@@ -140,7 +140,7 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,cha
 #' @export
 
 ##===================
-EnrichedGSEView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=10,charLength=50){
+EnrichedGSEView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,charLength=50){
 
   if(nrow(enrichment)==0){
     p1=ggplot()

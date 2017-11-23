@@ -42,8 +42,8 @@
 #'
 #' @examples
 #' data(MLE_Data)
-#' universe = id2eg(MLE_Data$Gene, "SYMBOL")[,"ENTREZID"]
-#' genes = id2eg(Core_Essential[1:200], "SYMBOL")[,"ENTREZID"]
+#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' keggA = enrichment_analysis(geneList = genes, universe=universe,
 #'                          method = "HGT",type = "KEGG",
 #'                          organism = "hsa", gridColour="#e41a1c")
@@ -56,6 +56,7 @@
 enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", organism="hsa",
                                pvalueCutoff = 0.05, qvalueCutoff = 1, pAdjustMethod = "BH",
                                minGSSize = 2, maxGSSize = 500, plotTitle=NULL,gridColour="blue"){
+
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   result=list()
   type=toupper(type[1])
@@ -64,13 +65,14 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
   if(class(method)=="character"){method = toupper(method)}
   method = methods[method]
   #======================================================================================
-  p1=ggplot()
-  p1=p1+geom_text(aes(x=0,y=0,label="Less than 10 genes"),size=6)
-  p1=p1+labs(title=plotTitle)
-  p1=p1+theme(plot.title = element_text(size=10))
-  p1=p1+theme_void()
-  p1=p1+theme(plot.title = element_text(hjust = 0.5))
   if(length(geneList)<10){
+    p1=ggplot()
+    p1=p1+geom_text(aes(x=0,y=0,label="Less than 10 genes"),size=6)
+    p1=p1+labs(title=plotTitle)
+    p1=p1+theme(plot.title = element_text(size=10))
+    p1=p1+theme_void()
+    p1=p1+theme(plot.title = element_text(hjust = 0.5))
+
     result$enrichRes = NULL
     result$gridPlot = p1
     return(result)
@@ -81,7 +83,17 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff=pvalueCutoff, pAdjustMethod = pAdjustMethod,
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
     result$enrichRes = enrichRes
-    gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, gridColour=gridColour)
+    if(!is.null(enrichRes)){
+      gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, gridColour=gridColour)
+    }else{
+      p1=ggplot()
+      p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
+      p1=p1+labs(title=plotTitle)
+      p1=p1+theme(plot.title = element_text(size=10))
+      p1=p1+theme_void()
+      p1=p1+theme(plot.title = element_text(hjust = 0.5))
+      gridPlot = p1
+    }
     result$gridPlot = gridPlot
     return(result)
   }
@@ -116,8 +128,20 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod,
                            minGSSize = minGSSize, maxGSSize = maxGSSize)
   }
+
   result$enrichRes = enrichRes
-  gridPlot <- EnrichedView(enrichRes@result, plotTitle, gridColour=gridColour)
+  if(!is.null(enrichRes)){
+    gridPlot <- EnrichedView(enrichRes@result, plotTitle, gridColour=gridColour)
+  }else{
+    p1=ggplot()
+    p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
+    p1=p1+labs(title=plotTitle)
+    p1=p1+theme(plot.title = element_text(size=10))
+    p1=p1+theme_void()
+    p1=p1+theme(plot.title = element_text(hjust = 0.5))
+    gridPlot = p1
+  }
+
   result$gridPlot = gridPlot
 
   return(result)
