@@ -6,11 +6,11 @@
 \alias{normalizebeta}
 \title{Normalize gene beta scores}
 \usage{
-NormalizeBeta(beta, samples = c("Control", "Treatment"),
-  method = "cell_cycle", posControl = NULL, minus = 0.6)
+NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
+  posControl = NULL, minus = 0.6)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', and \code{samples}.}
+\item{beta}{data frame, which has columns of 'Gene', and \code{samples} beginning from the third columns.}
 
 \item{samples}{character vector, specifying the samples in \code{beta} to be normalized.}
 
@@ -49,7 +49,7 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+dd = ReadBeta(MLE_Data, organism="hsa")
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, method="cell_cycle")
 head(dd_essential)

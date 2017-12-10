@@ -6,9 +6,8 @@
 #' @name DensityView
 #' @rdname DensityView
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname a character, specifying the name of control sample.
-#' @param treatname a character, specifying the name of treatment sample.
+#' @param beta data frame, which has columns of 'Gene', \code{samples} beginning from the second column.
+#' @param samples character, specifying sample names in \code{beta}.
 #' @param main as in 'plot'.
 #' @param xlab as in 'plot'.
 #' @param filename figure file name to create on disk. Default filename="NULL", which means
@@ -34,8 +33,7 @@
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-#' #Density plot of all gene beta scores in control and treatment
+#' dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
 #' DensityView(dd)
 #'
 #'
@@ -45,11 +43,10 @@
 #' @export
 
 #===Distribution of beta scores======================================
-DensityView <- function(beta, ctrlname="Control",treatname="Treatment",
-                         main=NULL,xlab="Beta Score",filename=NULL){
+DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename=NULL){
   dd1 = beta
   loginfo(paste("Density plot for", main, xlab, "..."))
-  dd1 = dd1[,c("Gene", ctrlname, treatname)]
+  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[,c("Gene", samples)]}
   dd1 = melt(dd1,id="Gene")
   #==========
   p=ggplot(data=dd1,aes(x=value,color=variable,group=variable))

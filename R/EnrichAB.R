@@ -33,24 +33,27 @@
 #'
 #' @seealso \code{\link{EnrichSquare}}
 #'
+#'
 # @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-# dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+# dd = ReadBeta(MLE_Data, organism="hsa")
 #
 # \dontrun{
-#   data=ScatterView(dd)$data
+#   data=ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")$data
 #   #BP and KEGG enrichment analysis
 #   enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
 #   print(enrich_result$keggA$gridPlot)
 #   print(enrich_result$bpA$gridPlot)
 # }
-#
+#'
+#' @import clusterProfiler
 
 # enrichment for GroupA and GrouB genes
 EnrichAB <- function(data, pvalue=0.05, enrich_method="ORT",
                      organism="hsa", adjust="BH", filename=NULL,
                      out.dir=".", gsea=FALSE){
+  requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   loginfo("Enrichment analysis of GroupA and GroupB genes ...")
   gg=data
   ##===================enrichment for GroupA==============================

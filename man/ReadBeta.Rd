@@ -6,16 +6,11 @@
 \alias{readbeta}
 \title{Read gene beta scores}
 \usage{
-ReadBeta(gene_summary, ctrlName = "Control", treatName = "Treatment",
-  organism = "hsa")
+ReadBeta(gene_summary, organism = "hsa")
 }
 \arguments{
 \item{gene_summary}{a file path or a data frame, data frame, which has columns of 'Gene',
 \code{ctrlname}.beta and \code{treatname}.beta.}
-
-\item{ctrlName}{character vector, specifying the name of control sample.}
-
-\item{treatName}{character vector, specifying the name of treatment sample.}
 
 \item{organism}{character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
@@ -35,10 +30,7 @@ Users should find it easy to customize this function.
 }
 \examples{
 data(MLE_Data)
-ctrlName = c("D7_R1", "D7_R2")
-treatName = c("PLX7_R1", "PLX7_R2")
-#Read beta score from gene summary table
-dd = ReadBeta(MLE_Data, ctrlName = ctrlName, treatName = treatName, organism="hsa")
+dd = ReadBeta(MLE_Data, organism="hsa")
 head(dd)
 
 }

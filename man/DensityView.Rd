@@ -5,15 +5,13 @@
 \alias{DensityView}
 \title{Density plot for gene beta scores in Control and Treatment}
 \usage{
-DensityView(beta, ctrlname = "Control", treatname = "Treatment",
-  main = NULL, xlab = "Beta Score", filename = NULL)
+DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
+  filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{data frame, which has columns of 'Gene', \code{samples} beginning from the second column.}
 
-\item{ctrlname}{a character, specifying the name of control sample.}
-
-\item{treatname}{a character, specifying the name of treatment sample.}
+\item{samples}{character, specifying sample names in \code{beta}.}
 
 \item{main}{as in 'plot'.}
 
@@ -39,8 +37,7 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-#Density plot of all gene beta scores in control and treatment
+dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
 DensityView(dd)
 
 

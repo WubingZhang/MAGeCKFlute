@@ -19,3 +19,13 @@ CHANGES IN VERSION 0.99.10
     o Decrease package denpendcies
     o Revise all documents
 
+CHANGES IN VERSION 0.99.18
+-------------------------
+
+    o Add HeatmapView and BatchRemove.
+    o Change view distribution functions which allow more than two samples
+    o Change function ReadBeta to be more friendly
+
+
+
+

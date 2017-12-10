@@ -43,8 +43,8 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-dd$diff = dd$Treatment - dd$Control
+dd = ReadBeta(MLE_Data, organism="hsa")
+dd$diff = dd$PLX7_R1 - dd$D7_R1
 RankView(dd[,c("Gene", "diff")])
 
 }

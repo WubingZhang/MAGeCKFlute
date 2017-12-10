@@ -37,8 +37,8 @@
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-#' ScatterView(dd)
+#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 #'
 #'
 #' @export

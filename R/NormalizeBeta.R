@@ -9,7 +9,7 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta data frame, which has columns of 'Gene', and \code{samples}.
+#' @param beta data frame, which has columns of 'Gene', and \code{samples} beginning from the third columns.
 #' @param samples character vector, specifying the samples in \code{beta} to be normalized.
 #' @param method character, one of 'cell_cycle'(default) and 'loess'.
 #' @param posControl a file path or a character vector, specifying positive control genes used
@@ -39,7 +39,7 @@
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+#' dd = ReadBeta(MLE_Data, organism="hsa")
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, method="cell_cycle")
 #' head(dd_essential)
@@ -54,9 +54,11 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=c("Control", "Treatment"), method="cell_cycle", posControl=NULL, minus=0.6){
+NormalizeBeta <- function(beta, samples=NULL,
+                          method="cell_cycle", posControl=NULL, minus=0.6){
   loginfo("Normalize beta scores ...")
   requireNamespace("Biobase", quietly=TRUE) || stop("need Biobase package")
+  if(is.null(samples)) samples = colnames(beta)[3:ncol(beta)]
 
   if(method=="cell_cycle"){
     if(!is.null(posControl) && class(posControl)=="character" && file.exists(posControl)[1]){

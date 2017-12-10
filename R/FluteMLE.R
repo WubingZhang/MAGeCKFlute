@@ -82,7 +82,7 @@
 #! /usr/bin/Rscript --vanilla
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
-                     pvalueCutoff=0.05, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
+                     pvalueCutoff=1, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
                      posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, workspace="."){
 
 	#=========Prepare the running environment=========
@@ -103,50 +103,50 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#=========Beta Score Preparation=========================
 	{
-	  dd = ReadBeta(gene_summary, ctrlName=ctrlname, treatName=treatname, organism=organism)
-	  dd$diff = dd$Treatment - dd$Control
-	  dd_essential = NormalizeBeta(dd, method="cell_cycle", posControl=posControl, minus=0.6)
-	  dd_essential$diff = dd_essential$Treatment - dd_essential$Control
-	  if(loess){
-	    dd_loess = NormalizeBeta(dd, method="loess")
-	    dd_loess$diff = dd_loess$Treatment - dd_loess$Control
-	   }
-	}
+	  beta = ReadBeta(gene_summary, organism=organism)
+	  if(all(c(ctrlname, treatname)%in%colnames(dd))){
+	    dd = beta[, c("Gene", "ENTREZID", ctrlname, treatname)]
+	  }else{ stop("No sample found!") }
 
+	  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
+	                               method="cell_cycle", posControl=posControl)
+	  if(loess){ dd_loess = NormalizeBeta(dd, method="loess")}
+	}
 
 	# ========distribution of all genes================================
 	{
 	  outputDir1 <- file.path(out.dir_sub,"Distribution_of_BetaScores")
 	  dir.create(outputDir1, showWarnings=FALSE)
+	  idx_distr = c("Gene", ctrlname, treatname)
 	  #Negative normalization
-	  P1=ViolinView(dd, main="Negative control normalized",
+	  P1=ViolinView(dd[,idx_distr], main="Negative control normalized",
 	                 filename=file.path(outputDir1,
 	                                    "violin_all_negative_normalized.png"))
-	  P2=DensityView(dd, main="Negative control normalized",
+	  P2=DensityView(dd[,idx_distr], main="Negative control normalized",
 	                  filename=file.path(outputDir1,
 	                                     "density_all_negative_normalized.png"))
-	  P3=DensityDiffView(dd, main="Negative control normalized",
+	  P3=DensityDiffView(dd, ctrlname, treatname, main="Negative control normalized",
 	                  filename=file.path(
 	                    outputDir1, "density_all_treat-ctrl_negative_normalized.png"))
 	  #Essential gene normalization
-	  P4=ViolinView(dd_essential, main="Cell cycle normalized",
+	  P4=ViolinView(dd_essential[,idx_distr], main="Cell cycle normalized",
 	                 filename=file.path(outputDir1,
 	                                    "violin_all_essential_normalized.png"))
-	  P5=DensityView(dd_essential, main="Cell cycle normalized",
+	  P5=DensityView(dd_essential[,idx_distr], main="Cell cycle normalized",
 	                  filename=file.path(
 	                    outputDir1,"density_all_essential_normalized.png"))
-	  P6=DensityDiffView(dd_essential, main="Cell cycle normalized",
+	  P6=DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized",
 	                  filename=file.path(
 	                    outputDir1, "density_all_treat-ctrl_essential_normalized.png"))
 	  #Loess normalization
 	  if(loess){
-		P7=ViolinView(dd_loess,main="Loess normalized",
+		P7=ViolinView(dd_loess[,idx_distr],main="Loess normalized",
 		               filename=file.path(
 		                 outputDir1,"violin_all_loess_normalized.png"))
-		P8=DensityView(dd_loess,main="Loess normalized",
+		P8=DensityView(dd_loess[,idx_distr],main="Loess normalized",
 		                filename=file.path(
 		                  outputDir1,"density_all_loess_normalized.png"))
-		P9=DensityDiffView(dd_loess,main="Loess normalized",
+		P9=DensityDiffView(dd_loess, ctrlname, treatname, main="Loess normalized",
 		                filename=file.path(
 		                  outputDir1,"density_all_treat-ctrl_loess_normalized.png"))
 		grid.arrange(P1,P4,P7,P2,P5,P8, ncol = 3)
@@ -175,11 +175,11 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 		grid.arrange(P3,P6,ncol = 2, vp=vp.Top,newpage = FALSE)
 	  }
 
-	  MAView(dd, cex=1, main="Negative control normalized",
+	  MAView(dd, ctrlname, treatname, cex=1, main="Negative control normalized",
 	          filename=file.path(outputDir2,"maplot_negative_normalized.png"))
-	  MAView(dd_essential, cex=1, main="Cell cycle normalized",
+	  MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized",
 	          filename=file.path(outputDir2,"maplot_essential_normalized.png"))
-	  if(loess){MAView(dd_loess, cex=1, main="Loess normalized",
+	  if(loess){MAView(dd_loess, ctrlname, treatname, cex=1, main="Loess normalized",
 	                    filename=file.path(outputDir2,"maplot_loess_normalized.png"))}
 	}
 
@@ -191,55 +191,55 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  data(Core_Essential)
 	  idx=which(dd$Gene %in% Core_Essential)
 	  #Negative control normalized
-	  P1=ViolinView(dd[idx,],ylab="Essential.B.S.",
+	  P1=ViolinView(dd[idx,idx_distr],ylab="Essential.B.S.",
 	                 main="Negative control normalized",
 	                 filename=file.path(
 	                   outputDir1,"violin_ess_negative_normalized.png"))
-	  P2=DensityView(dd[idx,],xlab="Essential.B.S.",
+	  P2=DensityView(dd[idx,idx_distr],xlab="Essential.B.S.",
 	                  main="Negative control normalized",
 	                  filename=file.path(
 	                    outputDir1,"density_ess_negative_normalized.png"))
-	  P3=CellCycleView(dd,ylab="Beta Score",
+	  P3=CellCycleView(dd[,idx_distr], ctrlname, ylab="Beta Score",
 	                  main="Negative control normalized",
 	                  filename=file.path(
 	                    outputDir3,"Linear_all_negative_normalized.png"))
-	  P4=CellCycleView(dd[idx,],ylab="Essential.B.S.",
+	  P4=CellCycleView(dd[idx,idx_distr], ctrlname, ylab="Essential.B.S.",
 	                  main="Negative control normalized",
 	                  filename=file.path(
 	                    outputDir3,"Linear_ess_negative_normalized.png"))
 	  #Essential normalized
-	  P5=ViolinView(dd_essential[idx,],ylab="Essential.B.S.",
+	  P5=ViolinView(dd_essential[idx,idx_distr],ylab="Essential.B.S.",
 	                 main="Cell cycle  normalized",
 	                 filename=file.path(
 	                   outputDir1,"violin_ess_essential_normalized.png"))
-	  P6=DensityView(dd_essential[idx,],xlab="Essential.B.S.",
+	  P6=DensityView(dd_essential[idx,idx_distr],xlab="Essential.B.S.",
 	                  main="Cell cycle  normalized",
 	                  filename=file.path(
 	                    outputDir1,"density_ess_essential_normalized.png"))
-	  P7=CellCycleView(dd_essential,ylab="Beta Score",
+	  P7=CellCycleView(dd_essential[,idx_distr], ctrlname, ylab="Beta Score",
 	                  main="Cell cycle  normalized",
 	                  filename=file.path(
 	                    outputDir3,"Linear_all_essential_normalized.png"))
-	  P8=CellCycleView(dd_essential[idx,],ylab="Essential.B.S.",
+	  P8=CellCycleView(dd_essential[idx,idx_distr], ctrlname,ylab="Essential.B.S.",
 	                  main="Cell cycle  normalized",
 	                  filename=file.path(
 	                    outputDir3,"Linear_ess_essential_normalized.png"))
 
 	  #loess normalized
 	  if(loess){
-		P9=ViolinView(dd_loess[idx,],ylab="Essential.B.S.",
+		P9=ViolinView(dd_loess[idx,idx_distr],ylab="Essential.B.S.",
 		               main="Loess  normalized",
 		               filename=file.path(
 		                 outputDir1,"violin_ess_loess_normalized.png"))
-		P10=DensityView(dd_loess[idx,],xlab="Essential.B.S.",
+		P10=DensityView(dd_loess[idx,idx_distr],xlab="Essential.B.S.",
 		                 main="Loess  normalized",
 		                 filename=file.path(
 		                   outputDir1,"density_ess_loess_normalized.png"))
-		P11=CellCycleView(dd_loess,ylab="Beta Score",
+		P11=CellCycleView(dd_loess[,idx_distr], ctrlname, ylab="Beta Score",
 		                 main="Loess  normalized",
 		                 filename=file.path(
 		                   outputDir3,"Linear_all_loess_normalized.png"))
-		P12=CellCycleView(dd_loess[idx,],ylab="Essential.B.S.",
+		P12=CellCycleView(dd_loess[idx,idx_distr], ctrlname, ylab="Essential.B.S.",
 		                 main="Loess  normalized",
 		                 filename=file.path(
 		                   outputDir3,"Linear_ess_loess_normalized.png"))
@@ -252,6 +252,15 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }
 	}
 
+  dd$Control = rowMeans(dd[,ctrlname])
+  dd$Treatment = rowMeans(dd[,treatname])
+  dd$diff = dd$Treatment - dd$Control
+  dd_essential$Control = rowMeans(dd_essential[,ctrlname])
+  dd_essential$Treatment = rowMeans(dd_essential[,treatname])
+  dd_essential$diff = dd_essential$Treatment - dd_essential$Control
+  dd_loess$Control = rowMeans(dd_loess[,ctrlname])
+  dd_loess$Treatment = rowMeans(dd_loess[,treatname])
+  dd_loess$diff = dd_loess$Treatment - dd_loess$Control
 
 	# =========drug-targeted genes=================================
 	{

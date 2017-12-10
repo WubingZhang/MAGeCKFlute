@@ -53,8 +53,8 @@
 # \dontrun{
 #   data(MLE_Data)
 #'  # Read beta score from gene summary table in MAGeCK MLE results
-#   dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-#   E1 = EnrichSquare(dd, pvalue=0.05, adjust="BH", enrich_method="ORT", organism="hsa")
+#   dd = ReadBeta(MLE_Data, organism="hsa")
+#   E1 = EnrichSquare(dd, ctrlname = "D7_R1", treatname = "PLX7_R1", pvalue=0.05, adjust="BH", enrich_method="ORT", organism="hsa")
 #   print(E1$kegg1$gridPlot)
 # }
 #

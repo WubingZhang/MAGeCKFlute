@@ -47,6 +47,7 @@ Users should find it easy to customize this function.
 \seealso{
 \code{\link{EnrichSquare}}
 
+
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 }

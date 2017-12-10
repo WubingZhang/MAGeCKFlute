@@ -7,9 +7,8 @@
 #' @rdname ViolinView
 #' @aliases violinview
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname character, specifying the name of control sample.
-#' @param treatname character, specifying the name of treatment sample.
+#' @param beta data frame, which has columns of 'Gene', \code{samples}.
+#' @param samples character, specifying the name of samples to be compared
 #' @param main as in 'plot'.
 #' @param ylab as in 'plot'.
 #' @param filename figure file name to create on disk. Default filename="NULL", which means
@@ -35,7 +34,8 @@
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' dd = dd[,-2]
 #' ViolinView(dd)
 #'
 #'
@@ -46,14 +46,14 @@
 #'
 
 #===Distribution of beta scores======================================
-ViolinView <- function(beta, ctrlname="Control",treatname="Treatment",
-                        main=NULL,ylab="Beta Score",filename=NULL){
+ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=NULL){
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 
   dd1=beta
   loginfo(paste("Violin plot for", main, ylab, "..."))
-  dd1 = dd1[,c("Gene", ctrlname, treatname)]
+  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[,c("Gene", samples)]}
+
   dd1 = melt(dd1,id="Gene")
   #======
   p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))

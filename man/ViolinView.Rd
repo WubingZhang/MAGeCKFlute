@@ -6,15 +6,13 @@
 \alias{violinview}
 \title{Violin plot}
 \usage{
-ViolinView(beta, ctrlname = "Control", treatname = "Treatment",
-  main = NULL, ylab = "Beta Score", filename = NULL)
+ViolinView(beta, samples = NULL, main = NULL, ylab = "Beta Score",
+  filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{data frame, which has columns of 'Gene', \code{samples}.}
 
-\item{ctrlname}{character, specifying the name of control sample.}
-
-\item{treatname}{character, specifying the name of treatment sample.}
+\item{samples}{character, specifying the name of samples to be compared}
 
 \item{main}{as in 'plot'.}
 
@@ -40,7 +38,8 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
+dd = ReadBeta(MLE_Data, organism="hsa")
+dd = dd[,-2]
 ViolinView(dd)
 
 
