@@ -10,9 +10,10 @@ NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
   posControl = NULL, minus = 0.6)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', and \code{samples} beginning from the third columns.}
+\item{beta}{data frame, which has columns of 'Gene', and \code{samples}.}
 
-\item{samples}{character vector, specifying the samples in \code{beta} to be normalized.}
+\item{samples}{character vector, specifying the samples in \code{beta} to be normalized.
+If NULL (default), use colnames of beta from the third columns to ncol.}
 
 \item{method}{character, one of 'cell_cycle'(default) and 'loess'.}
 

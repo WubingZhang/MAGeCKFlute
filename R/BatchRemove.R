@@ -58,16 +58,17 @@ BatchRemove <- function(mat, batchMat, cluster=TRUE, log2trans=FALSE, ...){
   if(log2trans) tmp2=log2(tmp2+0.000001)    #====Revised
   res <- sva::ComBat(tmp2, batch = batch[,2], mod = batch[,3])
   if(log2trans) res = 2^res  ##revised
-  if(length(var0)>0) res2=rbind(res, tmp[names(var0),colnames(res)])
-  after = res2
-  if(length(setdiff(colnames(mat), colnames(res2)))>0)
-    after = cbind(mat[rownames(res2), setdiff(colnames(mat), colnames(res2))], res2)
+
+  if(length(setdiff(colnames(mat), colnames(res)))>0)
+    res2=cbind(mat[rownames(res), setdiff(colnames(mat),colnames(res))], res)
+  if(length(setdiff(rownames(mat), rownames(res2)))>0)
+    after = rbind(res2, mat[setdiff(rownames(mat),rownames(res2)),colnames(res2)])
 
   ##====Clustering========
   if(cluster){
     display_numbers = TRUE
     if(ncol(dt)>10){display_numbers = FALSE}
-    HeatmapView(res2, filename = 'ClusterAfterBatchRemove.pdf', display_numbers = display_numbers, ...)
+    HeatmapView(res2[, colnames(dt)], filename = 'ClusterAfterBatchRemove.pdf', display_numbers = display_numbers, ...)
     HeatmapView(dt, filename = 'ClusterBeforeBatchRemove.pdf', display_numbers = display_numbers, ...)
   }
   return(after_removal=after)
