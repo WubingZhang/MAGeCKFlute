@@ -11,8 +11,7 @@ FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
   organism = "hsa", prefix = "Test", top = 10, bottom = 10,
   interestGenes = c(), pvalueCutoff = 1, adjust = "BH",
   enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
-  scale_cutoff = 1, loess = FALSE, view_allpath = FALSE,
-  workspace = ".")
+  scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{a file path or a data frame, which contains columns of 'Gene',
@@ -33,7 +32,7 @@ and "mmu" or "Mouse"}
 
 \item{interestGenes}{a character vector, specifying interested genes labeled in rank figure.}
 
-\item{pvalueCutoff}{pvalue cutoff}
+\item{pvalueCutoff}{a numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{adjust}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
@@ -53,7 +52,7 @@ or how many standard deviation will be used as cutoff.}
 
 \item{view_allpath}{boolean, whether output all pathway view figures}
 
-\item{workspace}{workspace position on disk}
+\item{outdir}{output directory on disk}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,

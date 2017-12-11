@@ -13,10 +13,9 @@
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
 #' @param organism a character, specifying organism, such as "hsa" or "Human"(default),
 #' and "mmu" or "Mouse"
-#' @param pvalueCutoff pvalue cutoff
+#' @param pvalueCutoff a numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param out.dir Path to save results to.
-#' @param workspace workspace position on disk
+#' @param outdir output directory on disk
 #'
 #'
 #' @author Wubing Zhang
@@ -56,12 +55,12 @@
 
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
-                     organism="hsa", pvalueCutoff=0.05, adjust="BH",
-                     out.dir=paste0(prefix, "_Flute_Results"), workspace="."){
+                     organism="hsa", pvalueCutoff=1, adjust="BH",
+                     out.dir=paste0(prefix, "_Flute_Results"), outdir="."){
   #=========Prepare the running environment=========
   {
     loginfo("Create output dir and pdf file...")
-    out.dir_sub=file.path(workspace, out.dir)
+    out.dir_sub=out.dir
     dir.create(file.path(out.dir_sub), showWarnings=FALSE)
     dir.create(file.path(out.dir_sub,"RRA"), showWarnings=FALSE)
 

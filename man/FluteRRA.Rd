@@ -7,8 +7,8 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "ORT",
-  organism = "hsa", pvalueCutoff = 0.05, adjust = "BH",
-  out.dir = paste0(prefix, "_Flute_Results"), workspace = ".")
+  organism = "hsa", pvalueCutoff = 1, adjust = "BH",
+  out.dir = paste0(prefix, "_Flute_Results"), outdir = ".")
 }
 \arguments{
 \item{gene_summary}{a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
@@ -21,13 +21,11 @@ FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "ORT",
 \item{organism}{a character, specifying organism, such as "hsa" or "Human"(default),
 and "mmu" or "Mouse"}
 
-\item{pvalueCutoff}{pvalue cutoff}
+\item{pvalueCutoff}{a numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{adjust}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{out.dir}{Path to save results to.}
-
-\item{workspace}{workspace position on disk}
+\item{outdir}{output directory on disk}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,

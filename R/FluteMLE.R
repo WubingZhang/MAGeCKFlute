@@ -17,7 +17,7 @@
 #' @param top an integer, specifying number of top selected genes labeled in rank figure
 #' @param bottom an integer, specifying number of bottom selected genes labeled in rank figure.
 #' @param interestGenes a character vector, specifying interested genes labeled in rank figure.
-#' @param pvalueCutoff pvalue cutoff
+#' @param pvalueCutoff a numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
@@ -29,7 +29,7 @@
 #' or how many standard deviation will be used as cutoff.
 #' @param loess boolean, whether include loess normalization in the pipeline
 #' @param view_allpath boolean, whether output all pathway view figures
-#' @param workspace workspace position on disk
+#' @param outdir output directory on disk
 #'
 #'
 #' @author Wubing Zhang
@@ -83,7 +83,7 @@
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
                      pvalueCutoff=1, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
-                     posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, workspace="."){
+                     posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, outdir="."){
 
 	#=========Prepare the running environment=========
 	{
