@@ -39,7 +39,7 @@ ReadBeta <- function(gene_summary, organism='hsa'){
 
   #=========If gene_summary is a path or a data frame====================
   if(class(gene_summary)=="character" && file.exists(gene_summary)){
-    dd=read.table(file=gene_summary,header= TRUE, stringsAsFactors = FALSE)
+    dd=read.table(file=gene_summary,header= TRUE, check.names = FALSE, stringsAsFactors = FALSE)
   }else if(class(gene_summary)=="data.frame" &&
           ("Gene"%in%names(gene_summary)) &&
           any(grepl(".beta", names(gene_summary)))){

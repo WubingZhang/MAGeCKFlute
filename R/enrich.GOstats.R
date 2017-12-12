@@ -45,7 +45,7 @@
 
 
 enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC"), organism = "hsa",
-                           pvalueCutoff = 0.05, pAdjustMethod = "BH"){
+                           pvalueCutoff = 1, pAdjustMethod = "BH"){
   requireNamespace("GOstats", quietly=TRUE) || stop("need GOstats package")
   requireNamespace("Category", quietly=TRUE) || stop("need Category package")
 

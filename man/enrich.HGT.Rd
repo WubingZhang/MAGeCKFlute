@@ -7,7 +7,7 @@
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
 enrich.HGT(gene, universe, type = "KEGG", organism = "hsa",
-  pvalueCutoff = 0.05, pAdjustMethod = "BH", minGSSize = 2,
+  pvalueCutoff = 1, pAdjustMethod = "BH", minGSSize = 2,
   maxGSSize = 500)
 }
 \arguments{

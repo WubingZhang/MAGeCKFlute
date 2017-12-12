@@ -7,7 +7,7 @@
 \title{Do enrichment analysis using over-representation test}
 \usage{
 enrich.ORT(gene, universe = NULL, type = "KEGG", organism = "hsa",
-  pvalueCutoff = 0.05, qvalueCutoff = 0.2, pAdjustMethod = "BH",
+  pvalueCutoff = 1, qvalueCutoff = 0.2, pAdjustMethod = "BH",
   minGSSize = 2, maxGSSize = 500)
 }
 \arguments{

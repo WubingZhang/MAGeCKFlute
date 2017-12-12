@@ -7,7 +7,7 @@
 \title{GSEA}
 \usage{
 enrich.GSE(geneList, type = "KEGG", organism = "hsa", minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 0.05, pAdjustMethod = "BH")
+  maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH")
 }
 \arguments{
 \item{geneList}{a order ranked numeric vector with geneid as names.}

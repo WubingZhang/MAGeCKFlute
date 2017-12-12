@@ -70,6 +70,7 @@ We will work with them in this document.
 
 **Downstream analysis pipeline for MAGeCK MLE**
 ```{r quickStart1, eval=FALSE}
+library(MAGeCKFlute)
 ##Load gene summary data in MAGeCK MLE results
 data("MLE_Data")
 ##Run the downstream analysis pipeline for MAGeCK MLE

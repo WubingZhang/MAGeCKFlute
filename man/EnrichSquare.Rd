@@ -5,7 +5,7 @@
 \alias{EnrichSquare}
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
-EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT", organism = "hsa",
+EnrichSquare(beta, pvalue = 1, enrich_method = "ORT", organism = "hsa",
   adjust = "BH", filename = NULL, out.dir = ".")
 }
 \arguments{

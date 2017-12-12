@@ -89,7 +89,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	{
 	  loginfo("Create output dir and pdf file...")
 	  out.dir=paste0(prefix, "_Flute_Results")
-	  out.dir_sub=file.path(workspace,out.dir)
+	  out.dir_sub=file.path(outdir, out.dir)
 	  dir.create(file.path(out.dir_sub), showWarnings=FALSE)
 
 	  output_pdf = paste0(prefix,"_Flute.mle_summary.pdf")
@@ -104,7 +104,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	#=========Beta Score Preparation=========================
 	{
 	  beta = ReadBeta(gene_summary, organism=organism)
-	  if(all(c(ctrlname, treatname)%in%colnames(dd))){
+	  if(all(c(ctrlname, treatname)%in%colnames(beta))){
 	    dd = beta[, c("Gene", "ENTREZID", ctrlname, treatname)]
 	  }else{ stop("No sample found!") }
 
@@ -252,15 +252,17 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }
 	}
 
-  dd$Control = rowMeans(dd[,ctrlname])
-  dd$Treatment = rowMeans(dd[,treatname])
+  dd$Control = rowMeans(dd[,ctrlname, drop=FALSE])
+  dd$Treatment = rowMeans(dd[,treatname, drop=FALSE])
   dd$diff = dd$Treatment - dd$Control
-  dd_essential$Control = rowMeans(dd_essential[,ctrlname])
-  dd_essential$Treatment = rowMeans(dd_essential[,treatname])
+  dd_essential$Control = rowMeans(dd_essential[,ctrlname, drop=FALSE])
+  dd_essential$Treatment = rowMeans(dd_essential[,treatname, drop=FALSE])
   dd_essential$diff = dd_essential$Treatment - dd_essential$Control
-  dd_loess$Control = rowMeans(dd_loess[,ctrlname])
-  dd_loess$Treatment = rowMeans(dd_loess[,treatname])
-  dd_loess$diff = dd_loess$Treatment - dd_loess$Control
+  if(loess){
+    dd_loess$Control = rowMeans(dd_loess[,ctrlname, drop=FALSE])
+    dd_loess$Treatment = rowMeans(dd_loess[,treatname, drop=FALSE])
+    dd_loess$diff = dd_loess$Treatment - dd_loess$Control
+  }
 
 	# =========drug-targeted genes=================================
 	{

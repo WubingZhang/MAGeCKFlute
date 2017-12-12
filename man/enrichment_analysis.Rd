@@ -7,7 +7,7 @@
 \title{Enrichment analysis}
 \usage{
 enrichment_analysis(geneList, universe = NULL, method = 1, type = "KEGG",
-  organism = "hsa", pvalueCutoff = 0.05, qvalueCutoff = 1,
+  organism = "hsa", pvalueCutoff = 1, qvalueCutoff = 1,
   pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500,
   plotTitle = NULL, gridColour = "blue")
 }

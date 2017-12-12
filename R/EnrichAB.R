@@ -50,7 +50,7 @@
 #' @import clusterProfiler
 
 # enrichment for GroupA and GrouB genes
-EnrichAB <- function(data, pvalue=0.05, enrich_method="ORT",
+EnrichAB <- function(data, pvalue=1, enrich_method="ORT",
                      organism="hsa", adjust="BH", filename=NULL,
                      out.dir=".", gsea=FALSE){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")

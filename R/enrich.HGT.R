@@ -46,7 +46,7 @@
 #' @export
 
 
-enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff = 0.05,
+enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff = 1,
                       pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")

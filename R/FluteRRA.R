@@ -56,11 +56,12 @@
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
                      organism="hsa", pvalueCutoff=1, adjust="BH",
-                     out.dir=paste0(prefix, "_Flute_Results"), outdir="."){
+                     outdir="."){
   #=========Prepare the running environment=========
   {
     loginfo("Create output dir and pdf file...")
-    out.dir_sub=out.dir
+
+    out.dir_sub=file.path(outdir, paste0(prefix, "_Flute_Results"))
     dir.create(file.path(out.dir_sub), showWarnings=FALSE)
     dir.create(file.path(out.dir_sub,"RRA"), showWarnings=FALSE)
 

@@ -45,7 +45,7 @@
 #' @import clusterProfiler
 #' @export
 
-enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalueCutoff = 0.05,
+enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalueCutoff = 1,
                        qvalueCutoff = 0.2, pAdjustMethod = "BH",minGSSize = 2, maxGSSize = 500){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   loginfo('Running Over-Representation Test for list of entrezIDs')

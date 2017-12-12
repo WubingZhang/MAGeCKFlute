@@ -6,7 +6,7 @@
 \alias{EnrichAB}
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
-EnrichAB(data, pvalue = 0.05, enrich_method = "ORT", organism = "hsa",
+EnrichAB(data, pvalue = 1, enrich_method = "ORT", organism = "hsa",
   adjust = "BH", filename = NULL, out.dir = ".", gsea = FALSE)
 }
 \arguments{

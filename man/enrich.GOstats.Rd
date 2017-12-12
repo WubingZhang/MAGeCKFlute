@@ -7,7 +7,7 @@
 \title{Do enrichment analysis using GOstats}
 \usage{
 enrich.GOstats(gene, universe = NULL, type = c("KEGG", "BP", "MF", "CC"),
-  organism = "hsa", pvalueCutoff = 0.05, pAdjustMethod = "BH")
+  organism = "hsa", pvalueCutoff = 1, pAdjustMethod = "BH")
 }
 \arguments{
 \item{gene}{a character vector, specifying the genelist to do enrichment analysis.}

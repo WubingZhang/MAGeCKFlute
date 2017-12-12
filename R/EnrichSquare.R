@@ -61,7 +61,7 @@
 
 
 #enrichment for square grouped genes
-EnrichSquare <- function(beta, pvalue=0.05,enrich_method="ORT",
+EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                          organism="hsa", adjust="BH", filename=NULL,
                          out.dir="."){
   loginfo("Enrichment analysis of 9 Square grouped genes ...")

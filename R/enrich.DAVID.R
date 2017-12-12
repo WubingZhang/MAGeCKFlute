@@ -54,7 +54,7 @@
 
 enrich.DAVID <- function(gene, universe=NULL, david.user, idType="ENTREZ_GENE_ID",
                          minGSSize = 2, maxGSSize = 500, annotation  = "GOTERM_BP_FAT",
-                         pvalueCutoff  = 0.05, pAdjustMethod = "BH", qvalueCutoff= 0.2){
+                         pvalueCutoff  = 1, pAdjustMethod = "BH", qvalueCutoff= 0.2){
 
   loginfo('Running DAVID for list of entrezIDs')
 

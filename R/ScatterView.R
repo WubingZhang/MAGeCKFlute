@@ -77,6 +77,8 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
                label=paste("GroupB: ",as.character(dim(data[data$group=="down",])[1]),sep=""))
   #============
   if(!is.null(filename)){
+    write.table(beta, file.path(dirname(filename), paste0("GroupAB_", main, ".txt")),
+                sep = "\t", quote = FALSE, row.names = FALSE)
     ggsave(plot=p,filename=filename,units = "in",width=5,height =4 )
   }
   return(p)

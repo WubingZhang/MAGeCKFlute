@@ -133,6 +133,8 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment",
 
   # grid.arrange(p,ncol = 1)
   if(!is.null(filename)){
+      write.table(beta, file.path(dirname(filename), paste0("Group_9Square_", main, ".txt")),
+                sep = "\t", quote = FALSE, row.names = FALSE)
       ggsave(filename, p, units="in",width=520/100,height=500/100)
   }
   return(p)

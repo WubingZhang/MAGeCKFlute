@@ -48,7 +48,7 @@
 #' @export
 
 enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, maxGSSize = 500,
-                       pvalueCutoff = 0.05, pAdjustMethod = "BH"){
+                       pvalueCutoff = 1, pAdjustMethod = "BH"){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
   geneList = sort(geneList, decreasing = TRUE)
