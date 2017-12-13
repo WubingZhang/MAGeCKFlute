@@ -9,7 +9,7 @@
 enrichment_analysis(geneList, universe = NULL, method = 1, type = "KEGG",
   organism = "hsa", pvalueCutoff = 1, qvalueCutoff = 1,
   pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500,
-  plotTitle = NULL, gridColour = "blue")
+  plotTitle = NULL, color = "#3f90f7")
 }
 \arguments{
 \item{geneList}{a character vector or a ranked numeric vector(for GSEA) with names of geneid,
@@ -36,7 +36,7 @@ specifying the genelist to do enrichment analysis.}
 
 \item{plotTitle}{same as 'title' in 'plot'.}
 
-\item{gridColour}{color of grids.}
+\item{color}{color of points.}
 }
 \value{
 a list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
@@ -58,7 +58,7 @@ universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
 genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 keggA = enrichment_analysis(geneList = genes, universe=universe,
                          method = "HGT",type = "KEGG",
-                         organism = "hsa", gridColour="#e41a1c")
+                         organism = "hsa", color="#6daf61")
 print(keggA$gridPlot)
 
 

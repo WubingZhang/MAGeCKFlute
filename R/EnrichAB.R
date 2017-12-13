@@ -67,18 +67,18 @@ EnrichAB <- function(data, pvalue=1, enrich_method="ORT",
   keggA=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
                             organism=organism,pvalueCutoff = pvalue,
-                            plotTitle="KEGG: GroupA",gridColour="#e41a1c",
+                            plotTitle="KEGG: GroupA",color="#e41a1c",
                             pAdjustMethod = adjust)
   bpA=enrichment_analysis(geneList = genes, universe=universe,
                           method = "ORT", type = "BP", organism=organism,
                           pvalueCutoff = pvalue, plotTitle="BP: GroupA",
-                          gridColour="#e41a1c", pAdjustMethod = adjust)
+                          color="#e41a1c", pAdjustMethod = adjust)
   if(gsea){
     requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
     gseA=enrichment_analysis(geneList = geneList, method = "GSEA",
                              type = "KEGG", organism=organism,
                              pvalueCutoff = pvalue, plotTitle="GSEA: GroupA",
-                             gridColour="#e41a1c", pAdjustMethod = adjust)
+                             color="#e41a1c", pAdjustMethod = adjust)
   }
   ##=============Enrichment for GroupB========================================
   idx2=gg$group=="down"
@@ -89,17 +89,17 @@ EnrichAB <- function(data, pvalue=1, enrich_method="ORT",
   keggB=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
                             organism=organism, pvalueCutoff = pvalue,
-                            plotTitle="KEGG: GroupB",gridColour="#377eb8",
+                            plotTitle="KEGG: GroupB",color="#3f90f7",
                             pAdjustMethod = adjust)
   bpB = enrichment_analysis(geneList = genes, universe=universe,
                             method = "ORT",type = "BP",organism=organism,
                             pvalueCutoff = pvalue, plotTitle="BP: GroupB",
-                            gridColour="#377eb8", pAdjustMethod = adjust)
+                            color="#3f90f7", pAdjustMethod = adjust)
   if(gsea){
     gseB=enrichment_analysis(geneList = geneList, method = "GSEA",
                              type = "KEGG", organism=organism,
                              pvalueCutoff = pvalue, plotTitle="GSEA: GroupB",
-                             gridColour="#377eb8", pAdjustMethod = adjust)
+                             color="#3f90f7", pAdjustMethod = adjust)
   }
   ##================output results=============================================
   if(!is.null(filename)){

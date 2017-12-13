@@ -9,7 +9,7 @@
 #'
 #' @param enrichment a data frame of enrichment result, with columns of ID, Description, p.adjust and Count
 #' @param plotTitle same as 'title' in 'plot'.
-#' @param gridColour color of grids.
+#' @param color color of nodes
 #' @param termNum integer, specifying number of top enriched terms to show
 #' @param charLength integer, specifying max length of enriched term name to show as coordinate lab
 #'
@@ -40,7 +40,7 @@
 #' @export
 
 
-EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,charLength=50){
+EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charLength=50){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()
@@ -80,18 +80,18 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,cha
   enrichment=enrichment[!idx,]
   enrichment$Name=factor(enrichment$Description,levels=rev(enrichment$Description))
 
-  p1=ggplot(data=enrichment,aes(x=logP,y=Name,size=Count,colour = factor(Count)))
-  p1=p1+geom_point()
-  p1=p1+guides(color= FALSE)
-  p1 <- p1+theme(panel.grid.major=element_line(colour=gridColour),
+  p1 = ggplot(data=enrichment,aes(x=logP,y=Name,size=Count))
+  p1 = p1 + geom_point(color=color)
+  p1 <- p1 + theme(panel.grid.major=element_line(colour="gray90"),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())
-  p1 <- p1+xlab("-log10(Adjust.pvalue)")+ylab("")
-  p1 <- p1+labs(title=plotTitle)
-  p1 <- p1+theme(axis.text.x=element_text(size=6, face="plain", colour='black'))
-  p1 <- p1+theme(axis.text.y=element_text(size=6, face="plain", colour='black'))
-  p1=p1+theme(legend.position="bottom")+theme(plot.title = element_text(hjust = 0.5,size=10))
-  #p1
+  p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
+  p1 <- p1 + labs(title=plotTitle)
+  p1 <- p1 + theme_bw(8)
+  p1 <- p1 + theme(axis.text.x=element_text(size=6, face="plain", colour='black'))
+  p1 <- p1 + theme(axis.text.y=element_text(size=6, face="plain", colour='black'))
+  p1 = p1 + theme(legend.position="bottom")+theme(plot.title = element_text(hjust = 0.5,size=10))
+
   return(p1)
 }
 
@@ -110,7 +110,7 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,cha
 #'
 #' @param enrichment a data frame of enrichment result, with columns of ID, Description, p.adjust and NES
 #' @param plotTitle same as 'title' in 'plot'.
-#' @param gridColour color of grids.
+#' @param color color of nodes
 #' @param termNum integer, specifying number of top enriched terms to show
 #' @param charLength integer, specifying max length of enriched term name to show as coordinate lab
 #'
@@ -140,7 +140,7 @@ EnrichedView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,cha
 #' @export
 
 ##===================
-EnrichedGSEView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,charLength=50){
+EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,charLength=50){
 
   if(nrow(enrichment)==0){
     p1=ggplot()
@@ -180,14 +180,14 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL,gridColour="blue",termNum=20,
   enrichment=enrichment[!idx,]
   enrichment$Name=factor(enrichment$Description,levels=rev(enrichment$Description))
 
-  p1=ggplot(data=enrichment,aes(x=logP,y=Name,size=NES,colour = factor(NES)))
-  p1=p1+geom_point()
-  p1=p1+guides(color= FALSE)
-  p1 <- p1+theme(panel.grid.major=element_line(colour=gridColour),
+  p1=ggplot(data=enrichment,aes(x=logP,y=Name,size=NES))
+  p1=p1+geom_point(color=color)
+  p1 <- p1+theme(panel.grid.major=element_line(colour="gray90"),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())
   p1 <- p1+xlab("-log10(Adjust.pvalue)")+ylab("")
   p1 <- p1+labs(title=plotTitle)
+  p1 <- p1 + theme_bw(8)
   p1 <- p1+theme(axis.text.x=element_text(size=6, face="plain", colour='black'))
   p1 <- p1+theme(axis.text.y=element_text(size=6, face="plain", colour='black'))
   p1=p1+theme(legend.position="bottom")+theme(plot.title = element_text(hjust = 0.5,size=10))

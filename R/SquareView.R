@@ -98,7 +98,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment",
   # gg=beta
   gg$group=factor(gg$group,levels = c("Group1","Group2","Group3","Group4","Others"))
   #===============
-  gg=gg[,c("Gene","Treatment","Control","group","ENTREZID")]
+  # gg=gg[,c("Gene","Treatment","Control","group","ENTREZID")]
   mycolour=c("Others"="aliceblue",  "Group2"="#ff7f00", "Group3"="#ffff33",
              "Group4"="#984ea3", "Group1"="#4daf4a" )
 

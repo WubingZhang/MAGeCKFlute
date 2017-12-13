@@ -13,6 +13,7 @@ output:
     highlight: pygments
     toc: true
     fig_width: 5
+    fig_height: 4
 bibliography: library.bib
 vignette: >
   %\VignetteIndexEntry{MAGeCKFlute.Rmd}

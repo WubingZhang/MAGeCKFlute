@@ -20,7 +20,7 @@
 #' @param minGSSize minimal size of each geneSet for testing.
 #' @param maxGSSize maximal size of each geneSet for analyzing.
 #' @param plotTitle same as 'title' in 'plot'.
-#' @param gridColour color of grids.
+#' @param color color of points.
 #'
 #' @return a list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
 #' a ggplot object, and \code{enrichRes} is a enrichResult instance.
@@ -46,7 +46,7 @@
 #' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
 #' keggA = enrichment_analysis(geneList = genes, universe=universe,
 #'                          method = "HGT",type = "KEGG",
-#'                          organism = "hsa", gridColour="#e41a1c")
+#'                          organism = "hsa", color="#6daf61")
 #' print(keggA$gridPlot)
 #'
 #'
@@ -55,7 +55,7 @@
 #====enrichment analysis===================================
 enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", organism="hsa",
                                pvalueCutoff = 1, qvalueCutoff = 1, pAdjustMethod = "BH",
-                               minGSSize = 2, maxGSSize = 500, plotTitle=NULL,gridColour="blue"){
+                               minGSSize = 2, maxGSSize = 500, plotTitle=NULL, color="#3f90f7"){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   result=list()
@@ -84,7 +84,7 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
     result$enrichRes = enrichRes
     if(!is.null(enrichRes)){
-      gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, gridColour=gridColour)
+      gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, color=color)
     }else{
       p1=ggplot()
       p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
@@ -131,7 +131,7 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
 
   result$enrichRes = enrichRes
   if(!is.null(enrichRes)){
-    gridPlot <- EnrichedView(enrichRes@result, plotTitle, gridColour=gridColour)
+    gridPlot <- EnrichedView(enrichRes@result, plotTitle, color=color)
   }else{
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)

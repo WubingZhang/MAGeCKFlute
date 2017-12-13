@@ -6,7 +6,7 @@
 \alias{enrichgseview}
 \title{View enriched terms in GSEA}
 \usage{
-EnrichedGSEView(enrichment, plotTitle = NULL, gridColour = "blue",
+EnrichedGSEView(enrichment, plotTitle = NULL, color = "#3f90f7",
   termNum = 20, charLength = 50)
 }
 \arguments{
@@ -14,7 +14,7 @@ EnrichedGSEView(enrichment, plotTitle = NULL, gridColour = "blue",
 
 \item{plotTitle}{same as 'title' in 'plot'.}
 
-\item{gridColour}{color of grids.}
+\item{color}{color of nodes}
 
 \item{termNum}{integer, specifying number of top enriched terms to show}
 

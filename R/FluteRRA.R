@@ -84,12 +84,12 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
     kegg.neg=enrichment_analysis(geneList=genes, universe=universe,
                                  method = enrich_kegg,type = "KEGG",
                                  organism=organism,pvalueCutoff=pvalueCutoff,
-                                 plotTitle="KEGG: neg",gridColour="#377eb8",
+                                 plotTitle="KEGG: neg",color="#3f90f7",
                                  pAdjustMethod = adjust)
     bp.neg=enrichment_analysis(geneList=genes, universe=universe, method = "ORT",
                                type = "BP", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="BP: neg",
-                               gridColour="#377eb8", pAdjustMethod = adjust)
+                               color="#3f90f7", pAdjustMethod = adjust)
 
     grid.arrange(kegg.neg$gridPlot, bp.neg$gridPlot, ncol = 2)
 
@@ -107,15 +107,15 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
     kegg.pos=enrichment_analysis(geneList=genes, universe=universe,
                                  method = enrich_kegg, type = "KEGG",
                                  organism=organism, pvalueCutoff=pvalueCutoff,
-                                 plotTitle="KEGG: pos",gridColour="#e41a1c",
+                                 plotTitle="KEGG: pos",color="#e41a1c",
                                  pAdjustMethod = adjust)
     bp.pos=enrichment_analysis(geneList=genes, universe=universe, method = "ORT",
                                type = "BP", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="BP: pos",
-                               gridColour="#e41a1c", pAdjustMethod = adjust)
+                               color="#e41a1c", pAdjustMethod = adjust)
     # gse=enrichment_analysis(geneList = geneList, genes=genes, method = "GSEA",
                               #type = "KEGG", pvalueCutoff = pvalueCutoff,
-    #                         plotTitle="GSEA: RRA",gridColour="#e41a1c",
+    #                         plotTitle="GSEA: RRA",color="#e41a1c",
     #                         pAdjustMethod = adjust)
     grid.arrange(kegg.pos$gridPlot, bp.pos$gridPlot, ncol = 2)
 
