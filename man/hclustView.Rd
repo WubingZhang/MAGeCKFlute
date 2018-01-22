@@ -25,6 +25,9 @@ hclustView(d, method = "average", label_cols = NULL, bar_cols = NULL,
 
 \item{...}{arguments to be passed to methods, such as graphical parameters (see par).}
 }
+\value{
+Just plot figure in device.
+}
 \description{
 Cluster and view cluster tree
 }
