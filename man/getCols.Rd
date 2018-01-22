@@ -8,12 +8,12 @@
 getCols(x, palette = 1)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{x}{A numeric vector.}
 
-\item{palette}{an integer}
+\item{palette}{An integer.}
 }
 \value{
-a vector of colors corresponding to input vector.
+A vector of colors corresponding to input vector.
 }
 \description{
 Map values to colors

@@ -6,90 +6,90 @@
 #' @name KeggPathwayView
 #' @rdname KeggPathwayView
 #'
-#' @param gene.data either vector (single sample) or a matrix-like data (multiple sample).
+#' @param gene.data Either vector (single sample) or a matrix-like data (multiple sample).
 #' Vector should be numeric with gene IDs as names or it may also be character of gene IDs.
 #' Character vector is treated as discrete or count data. Matrix-like data structure has
 #' genes as rows and samples as columns. Row names should be gene IDs. Here gene ID is a
 #' generic concepts, including multiple types of gene, transcript and protein uniquely
 #' mappable to KEGG gene IDs. KEGG ortholog IDs are also treated as gene IDs as to handle
 #' metagenomic data. Check details for mappable ID types. Default gene.data=NULL.
-#' @param cpd.data the same as gene.data, excpet named with IDs mappable to KEGG compound
+#' @param cpd.data The same as gene.data, excpet named with IDs mappable to KEGG compound
 #' IDs. Over 20 types of IDs included in CHEMBL database can be used here. Check details
 #' for mappable ID types. Default cpd.data=NULL. Note that gene.data and cpd.data can't
 #' be NULL simultaneously.
-#' @param pathway.id character vector, the KEGG pathway ID(s), usually 5 digit, may also
+#' @param pathway.id Character vector, the KEGG pathway ID(s), usually 5 digit, may also
 #' include the 3 letter KEGG species code.
-#' @param species character, either the kegg code, scientific name or the common name of
+#' @param species Character, either the kegg code, scientific name or the common name of
 #' the target species. This applies to both pathway and gene.data or cpd.data. When KEGG
 #' ortholog pathway is considered, species="ko". Default species="hsa", it is equivalent
 #' to use either "Homo sapiens" (scientific name) or "human" (common name).
-#' @param kegg.dir character, the directory of KEGG pathway data file (.xml) and image file
+#' @param kegg.dir Character, the directory of KEGG pathway data file (.xml) and image file
 #'  (.png). Users may supply their own data files in the same format and naming convention
 #'   of KEGG's (species code + pathway id, e.g. hsa04110.xml, hsa04110.png etc) in this
 #'   directory. Default kegg.dir="." (current working directory).
-#' @param cpd.idtype character, ID type used for the cpd.data. Default cpd.idtype="kegg"
+#' @param cpd.idtype Character, ID type used for the cpd.data. Default cpd.idtype="kegg"
 #' (include compound, glycan and drug accessions).
-#' @param gene.idtype character, ID type used for the gene.data, case insensitive. Default
+#' @param gene.idtype Character, ID type used for the gene.data, case insensitive. Default
 #' gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many
 #' common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG
 #' use other types of gene IDs. For the common model organisms (to check the list, do:
 #' data(bods); bods), you may also specify other types of valid IDs. To check the ID list,
 #'  do: data(gene.idtype.list); gene.idtype.list.
-#' @param gene.annotpkg character, the name of the annotation package to use for mapping
+#' @param gene.annotpkg Character, the name of the annotation package to use for mapping
 #' between other gene ID types including symbols and Entrez gene ID. Default gene.annotpkg=NULL.
-#' @param min.nnodes integer, minimal number of nodes of type "gene","enzyme", "compound"
+#' @param min.nnodes Integer, minimal number of nodes of type "gene","enzyme", "compound"
 #' or "ortholog" for a pathway to be considered. Default min.nnodes=3.
-#' @param kegg.native logical, whether to render pathway graph as native KEGG graph (.png)
+#' @param kegg.native Logical, whether to render pathway graph as native KEGG graph (.png)
 #'  or using graphviz layout engine (.pdf). Default kegg.native=TRUE.
-#' @param map.null logical, whether to map the NULL gene.data or cpd.data to pathway.
+#' @param map.null Logical, whether to map the NULL gene.data or cpd.data to pathway.
 #' When NULL data are mapped, the gene or compound nodes in the pathway will be rendered
 #' as actually mapped nodes, except with NA-valued color. When NULL data are not mapped,
 #' the nodes are rendered as unmapped nodes. This argument mainly affects native KEGG
 #' graph view, i.e. when kegg.native=TRUE. Default map.null=TRUE.
-#' @param expand.node logical, whether the multiple-gene nodes are expanded into
+#' @param expand.node Logical, whether the multiple-gene nodes are expanded into
 #' single-gene nodes. Each expanded single-gene nodes inherits all edges from the original
 #'  multiple-gene node. This option only affects graphviz graph view, i.e. when
 #'  kegg.native=FALSE. This option is not effective for most metabolic pathways where it
 #'  conflits with converting reactions to edges. Default expand.node=FLASE.
-#' @param split.group logical, whether split node groups are split to individual nodes.
+#' @param split.group Logical, whether split node groups are split to individual nodes.
 #' Each split member nodes inherits all edges from the node group. This option only affects
 #'  graphviz graph view, i.e. when kegg.native=FALSE. This option also effects most
 #'  metabolic pathways even without group nodes defined orginally. For these pathways,
 #'  genes involved in the same reaction are grouped automatically when converting reactions
 #'   to edges unless split.group=TRUE. d split.group=FLASE.
-#' @param map.symbol logical, whether map gene IDs to symbols for gene node labels or use
+#' @param map.symbol Logical, whether map gene IDs to symbols for gene node labels or use
 #' the graphic name from the KGML file. This option is only effective for kegg.native=FALSE
 #'  or same.layer=FALSE when kegg.native=TRUE. For same.layer=TRUE when kegg.native=TRUE,
 #'  the native KEGG labels will be kept. Default map.symbol=TRUE.
-#' @param map.cpdname logical, whether map compound IDs to formal names for compound node
+#' @param map.cpdname Logical, whether map compound IDs to formal names for compound node
 #' labels or use the graphic name from the KGML file (KEGG compound accessions). This
 #' option is only effective for kegg.native=FALSE. When kegg.native=TRUE, the native KEGG
 #' labels will be kept. Default map.cpdname=TRUE.
-#' @param node.sum character, the method name to calculate node summary given that multiple
+#' @param node.sum Character, the method name to calculate node summary given that multiple
 #'  genes or compounds are mapped to it. Poential options include "sum","mean", "median",
 #'  "max", "max.abs" and "random". Default node.sum="sum".
-#' @param discrete a list of two logical elements with "gene" and "cpd" as the names. This
+#' @param discrete A list of two logical elements with "gene" and "cpd" as the names. This
 #'  argument tells whether gene.data or cpd.data should be treated as discrete. Default
 #'  dsicrete=list(gene=FALSE, cpd=FALSE), i.e. both data should be treated as continuous.
-#' @param limit a list of two numeric elements with "gene" and "cpd" as the names. This
+#' @param limit A list of two numeric elements with "gene" and "cpd" as the names. This
 #' argument specifies the limit values for gene.data and cpd.data when converting them to
 #' pseudo colors. Each element of the list could be of length 1 or 2. Length 1 suggests
 #' discrete data or 1 directional (positive-valued) data, or the absolute limit for 2
 #' directional data. Length 2 suggests 2 directional data. Default limit=list(gene=1, cpd=1).
-#' @param bins a list of two integer elements with "gene" and "cpd" as the names. This
+#' @param bins A list of two integer elements with "gene" and "cpd" as the names. This
 #' argument specifies the number of levels or bins for gene.data and cpd.data when
 #' converting them to pseudo colors. Default limit=list(gene=10, cpd=10).
-#' @param both.dirs a list of two logical elements with "gene" and "cpd" as the names.
+#' @param both.dirs A list of two logical elements with "gene" and "cpd" as the names.
 #' This argument specifies whether gene.data and cpd.data are 1 directional or 2 directional
 #' data when converting them to pseudo colors. Default limit=list(gene=TRUE, cpd=TRUE).
-#' @param trans.fun a list of two function (not character) elements with "gene" and "cpd"
+#' @param trans.fun A list of two function (not character) elements with "gene" and "cpd"
 #' as the names. This argument specifies whether and how gene.data and cpd.data are transformed.
 #' Examples are log, abs or users' own functions. Default limit=list(gene=NULL, cpd=NULL).
-#' @param low a list of two colors with "gene" and "cpd" as the names.
-#' @param mid a list of two colors with "gene" and "cpd" as the names.
-#' @param high a list of two colors with "gene" and "cpd" as the names.
-#' @param na.col color used for NA's or missing values in gene.data and cpd.data. d na.col="transparent".
-#' @param \dots extra arguments passed to keggview.native or keggview.graph function.
+#' @param low A list of two colors with "gene" and "cpd" as the names.
+#' @param mid A list of two colors with "gene" and "cpd" as the names.
+#' @param high A list of two colors with "gene" and "cpd" as the names.
+#' @param na.col Color used for NA's or missing values in gene.data and cpd.data. d na.col="transparent".
+#' @param \dots Extra arguments passed to keggview.native or keggview.graph function.
 #'
 #' @details The function KeggPathwayView is a revised version of pathview function in pathview package.
 #' KeggPathwayView maps and renders user data on relevant pathway graphs. KeggPathwayView

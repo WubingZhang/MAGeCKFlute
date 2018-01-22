@@ -8,15 +8,15 @@
 #' @rdname RankView
 #' @aliases rankview
 #'
-#' @param beta data frame containing columns of "Gene" and "diff".
-#' @param genelist character vector, specifying labeled genes besides top and bottom labeled genes.
-#' @param top integer, specifying top number of genes to be labeled.
-#' @param bottom integer, specifying bottom number of genes to be labeled.
-#' @param cutoff numeric, cutoff of \code{diff}
-#' @param main as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
-#' @param ... other available parameters in function 'geom_label_repel'
-#' no output.
+#' @param beta Data frame containing columns of "Gene" and "diff".
+#' @param genelist Character vector, specifying labeled genes besides top and bottom labeled genes.
+#' @param top Integer, specifying top number of genes to be labeled.
+#' @param bottom Integer, specifying bottom number of genes to be labeled.
+#' @param cutoff Numeric, cutoff of \code{diff}.
+#' @param main As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
+#' @param ... Other available parameters in function 'geom_label_repel'.
+#'
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'

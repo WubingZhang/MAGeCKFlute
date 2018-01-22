@@ -14,45 +14,45 @@ FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
   scale_cutoff = 1.2, loess = FALSE, view_allpath = FALSE, outdir = ".")
 }
 \arguments{
-\item{gene_summary}{a file path or a data frame, which contains columns of 'Gene',
-\code{ctrlname}.beta and \code{treatname}.beta.}
+\item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
+\code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.}
 
-\item{ctrlname}{a character vector, specifying the name of control samples.}
+\item{ctrlname}{A character vector, specifying the name of control samples.}
 
-\item{treatname}{a character vector, specifying the name of treatment samples.}
+\item{treatname}{A character vector, specifying the name of treatment samples.}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default),
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
 and "mmu" or "Mouse"}
 
-\item{prefix}{a character, indicating the prefix of output file name.}
+\item{prefix}{A character, indicating the prefix of output file name.}
 
-\item{top}{an integer, specifying number of top selected genes labeled in rank figure}
+\item{top}{An integer, specifying number of top selected genes labeled in rank figure}
 
-\item{bottom}{an integer, specifying number of bottom selected genes labeled in rank figure.}
+\item{bottom}{An integer, specifying number of bottom selected genes labeled in rank figure.}
 
-\item{interestGenes}{a character vector, specifying interested genes labeled in rank figure.}
+\item{interestGenes}{A character vector, specifying interested genes labeled in rank figure.}
 
-\item{pvalueCutoff}{a numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
+\item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
-\item{adjust}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.}
 
-\item{gsea}{boolean, indicating whether GSEA analysis is needed for positive and
+\item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and
 negative selection genes.}
 
-\item{posControl}{a file path or a character vector, specifying positive control genes used
+\item{posControl}{A file path or a character vector, specifying positive control genes used
 for cell cycle normalization}
 
-\item{scale_cutoff}{boolean or numeric, whether scale cutoff to whole genome level,
+\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
 
-\item{loess}{boolean, whether include loess normalization in the pipeline}
+\item{loess}{Boolean, whether include loess normalization in the pipeline}
 
-\item{view_allpath}{boolean, whether output all pathway view figures}
+\item{view_allpath}{Boolean, whether output all pathway view figures}
 
-\item{outdir}{output directory on disk}
+\item{outdir}{Output directory on disk}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,

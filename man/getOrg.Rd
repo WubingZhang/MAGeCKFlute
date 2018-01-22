@@ -8,12 +8,12 @@
 getOrg(organism)
 }
 \arguments{
-\item{organism}{character, KEGG species code, or the common species name, used to determine
+\item{organism}{Character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 and can also be "human" (case insensitive).}
 }
 \value{
-a list containing three elements:
+A list containing three elements:
 \item{organism}{species}
 \code{pkg}{annotation package name}
 \code{Symbol_Entrez}{a data frame, mapping between gene symbol and entrez id}

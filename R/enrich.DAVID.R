@@ -10,16 +10,16 @@
 #' @rdname enrich.DAVID
 #' @aliases enrichDAVID
 #'
-#' @param gene character vector, specifying the genelist to do enrichment analysis.
-#' @param universe character vector, specifying the backgound genelist, default is whole genome.
-#' @param david.user character, specifying a valid DAVID user account.
-#' @param idType character, indicating the gene id type of input genelist, such as "ENTREZ_GENE_ID"(default).
-#' @param minGSSize minimal size of each geneSet for testing.
-#' @param maxGSSize maximal size of each geneSet for analyzing.
-#' @param annotation geneset category for testing, GOTERM_BP_FAT(default).
-#' @param pvalueCutoff pvalue cutoff.
-#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param qvalueCutoff qvalue cutoff.
+#' @param gene Character vector, specifying the genelist to do enrichment analysis.
+#' @param universe Character vector, specifying the backgound genelist, default is whole genome.
+#' @param david.user Character, specifying a valid DAVID user account.
+#' @param idType Character, indicating the gene id type of input genelist, such as "ENTREZ_GENE_ID"(default).
+#' @param minGSSize Minimal size of each geneSet for testing.
+#' @param maxGSSize Maximal size of each geneSet for analyzing.
+#' @param annotation Geneset category for testing, GOTERM_BP_FAT(default).
+#' @param pvalueCutoff Pvalue cutoff.
+#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param qvalueCutoff Qvalue cutoff.
 #'
 #' @return A enrichResult instance.
 #'

@@ -9,13 +9,13 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta data frame, which has columns of 'Gene', and \code{samples}.
-#' @param samples character vector, specifying the samples in \code{beta} to be normalized.
+#' @param beta Data frame, which has columns of 'Gene', and \code{samples}.
+#' @param samples Character vector, specifying the samples in \code{beta} to be normalized.
 #' If NULL (default), use colnames of beta from the third columns to ncol.
-#' @param method character, one of 'cell_cycle'(default) and 'loess'.
-#' @param posControl a file path or a character vector, specifying positive control genes used
+#' @param method Character, one of 'cell_cycle'(default) and 'loess'.
+#' @param posControl A file path or a character vector, specifying positive control genes used
 #' for cell cycle normalization.
-#' @param minus numeric, scale for cell cycle normalization. Between 0 and 1.
+#' @param minus Numeric, scale for cell cycle normalization. Between 0 and 1.
 #'
 #' @return A data frame with same format as input data \code{beta}.
 #'

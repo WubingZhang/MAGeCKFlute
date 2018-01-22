@@ -7,12 +7,12 @@
 #' @rdname TransGeneID
 #' @aliases transGeneID
 #'
-#' @param genes a character vector, input genes to be converted.
-#' @param fromType the input ID type, "SYMBOL" (default) or "ENTREZID".
-#' @param toType the output ID type, "SYMBOL" or "ENTREZID" (default).
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param genes A character vector, input genes to be converted.
+#' @param fromType The input ID type, "SYMBOL" (default) or "ENTREZID".
+#' @param toType The output ID type, "SYMBOL" or "ENTREZID" (default).
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
 #'
-#' @return a character vector, named by unique input gene ids.
+#' @return A character vector, named by unique input gene ids.
 #'
 #' @author Wubing Zhang
 #'
@@ -23,7 +23,6 @@
 #' Users should find it easy to customize this function.
 #'
 #' @seealso \code{\link[pathview]{eg2id}}
-#' @seealso \code{\link[pathview]{id2eg}}
 #'
 #' @examples
 #' data(MLE_Data)

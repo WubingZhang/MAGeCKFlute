@@ -10,21 +10,21 @@ BatchRemove(mat, batchMat, cov = FALSE, log2trans = FALSE, pca = TRUE,
   cluster = TRUE, prefix = NA, outdir = ".")
 }
 \arguments{
-\item{mat}{data frame or matrix, in which each column represents one sample.}
+\item{mat}{Matrix, or file path of data.}
 
-\item{batchMat}{data frame or matrix, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.}
+\item{batchMat}{Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.}
 
-\item{cov}{boolean, specifying if provide mod in ComBat}
+\item{cov}{Boolean, specifying if provide mod in ComBat.}
 
-\item{log2trans}{boolean, specifying whether do log2 transition before batch removal}
+\item{log2trans}{Boolean, specifying whether do log2 transition before batch removal.}
 
-\item{pca}{boolean, specifying whether do principle component analysis before and after batch removal}
+\item{pca}{Boolean, specifying whether do principle component analysis before and after batch removal.}
 
-\item{cluster}{boolean, specifing whether do cluster analysis before and after batch removal}
+\item{cluster}{Boolean, specifing whether do cluster analysis before and after batch removal.}
 
-\item{prefix}{character, specifying prefix of output figures, only needed if cluster/pca is TRUE.}
+\item{prefix}{Character, specifying prefix of output figures, only needed if cluster/pca is TRUE.}
 
-\item{outdir}{output directory on disk}
+\item{outdir}{Output directory on disk.}
 }
 \value{
 matrix of data after batch removal.

@@ -10,19 +10,19 @@ enrich.GSE(geneList, type = "KEGG", organism = "hsa", minGSSize = 10,
   maxGSSize = 500, pvalueCutoff = 1, pAdjustMethod = "BH")
 }
 \arguments{
-\item{geneList}{a order ranked numeric vector with geneid as names.}
+\item{geneList}{A order ranked numeric vector with geneid as names.}
 
-\item{type}{a character, indicating geneset category for testing, "KEGG"(default).}
+\item{type}{A character, indicating geneset category for testing, "KEGG"(default).}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
 
-\item{minGSSize}{minimal size of each geneSet for testing.}
+\item{minGSSize}{Minimal size of each geneSet for testing.}
 
-\item{maxGSSize}{maximal size of each geneSet for analyzing.}
+\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
 
-\item{pvalueCutoff}{pvalue cutoff.}
+\item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 }
 \value{
 A enrichResult instance.

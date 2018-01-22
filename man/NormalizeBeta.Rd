@@ -10,17 +10,17 @@ NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
   posControl = NULL, minus = 0.6)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', and \code{samples}.}
+\item{beta}{Data frame, which has columns of 'Gene', and \code{samples}.}
 
-\item{samples}{character vector, specifying the samples in \code{beta} to be normalized.
+\item{samples}{Character vector, specifying the samples in \code{beta} to be normalized.
 If NULL (default), use colnames of beta from the third columns to ncol.}
 
-\item{method}{character, one of 'cell_cycle'(default) and 'loess'.}
+\item{method}{Character, one of 'cell_cycle'(default) and 'loess'.}
 
-\item{posControl}{a file path or a character vector, specifying positive control genes used
+\item{posControl}{A file path or a character vector, specifying positive control genes used
 for cell cycle normalization.}
 
-\item{minus}{numeric, scale for cell cycle normalization. Between 0 and 1.}
+\item{minus}{Numeric, scale for cell cycle normalization. Between 0 and 1.}
 }
 \value{
 A data frame with same format as input data \code{beta}.

@@ -9,15 +9,15 @@ DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
   main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
 
-\item{ctrlname}{a character, specifying the name of control sample.}
+\item{ctrlname}{A character, specifying the name of control sample.}
 
-\item{treatname}{a character, specifying the name of treatment sample.}
+\item{treatname}{A character, specifying the name of treatment sample.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}
 }
 \value{

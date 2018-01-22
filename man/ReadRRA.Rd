@@ -9,14 +9,14 @@
 ReadRRA(gene_summary, organism = "hsa")
 }
 \arguments{
-\item{gene_summary}{a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
+\item{gene_summary}{A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
 
-\item{organism}{character, KEGG species code, or the common species name, used to determine
+\item{organism}{Character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 and can also be "human" (case insensitive).}
 }
 \value{
-a data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and "ENTREZID".
+A data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and "ENTREZID".
 }
 \description{
 Read pvalue of gene selection from file or data frame

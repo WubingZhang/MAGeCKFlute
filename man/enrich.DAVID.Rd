@@ -11,25 +11,25 @@ enrich.DAVID(gene, universe = NULL, david.user, idType = "ENTREZ_GENE_ID",
   pvalueCutoff = 1, pAdjustMethod = "BH", qvalueCutoff = 0.2)
 }
 \arguments{
-\item{gene}{character vector, specifying the genelist to do enrichment analysis.}
+\item{gene}{Character vector, specifying the genelist to do enrichment analysis.}
 
-\item{universe}{character vector, specifying the backgound genelist, default is whole genome.}
+\item{universe}{Character vector, specifying the backgound genelist, default is whole genome.}
 
-\item{david.user}{character, specifying a valid DAVID user account.}
+\item{david.user}{Character, specifying a valid DAVID user account.}
 
-\item{idType}{character, indicating the gene id type of input genelist, such as "ENTREZ_GENE_ID"(default).}
+\item{idType}{Character, indicating the gene id type of input genelist, such as "ENTREZ_GENE_ID"(default).}
 
-\item{minGSSize}{minimal size of each geneSet for testing.}
+\item{minGSSize}{Minimal size of each geneSet for testing.}
 
-\item{maxGSSize}{maximal size of each geneSet for analyzing.}
+\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
 
-\item{annotation}{geneset category for testing, GOTERM_BP_FAT(default).}
+\item{annotation}{Geneset category for testing, GOTERM_BP_FAT(default).}
 
-\item{pvalueCutoff}{pvalue cutoff.}
+\item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{qvalueCutoff}{qvalue cutoff.}
+\item{qvalueCutoff}{Qvalue cutoff.}
 }
 \value{
 A enrichResult instance.

@@ -6,16 +6,16 @@
 #' @name EnrichSquare
 #' @rdname EnrichSquare
 #'
-#' @param beta data frame, which has columns of 'ENTREZID' and 'group'.
-#' @param pvalue pvalue cutoff.
+#' @param beta Data frame, which has columns of 'ENTREZID' and 'group'.
+#' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
-#' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param filename suffix of output file name. NULL(default) means no output.
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param filename Suffix of output file name. NULL(default) means no output.
 #' @param out.dir Path to save plot to (combined with filename).
 #'
-#' @return a list containing enrichment results for each group genes. This list contains several elements:
+#' @return A list containing enrichment results for each group genes. This list contains several elements:
 #' \item{kegg1}{a list record enriched KEGG pathways for Group1 genes in 9-Square}
 #' \item{kegg2}{a list record enriched KEGG pathways for Group2 genes in 9-Square}
 #' \item{kegg3}{a list record enriched KEGG pathways for Group3 genes in 9-Square}

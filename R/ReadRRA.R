@@ -7,12 +7,12 @@
 #' @rdname ReadRRA
 #' @aliases readrra
 #'
-#' @param gene_summary a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.
-#' @param organism character, KEGG species code, or the common species name, used to determine
+#' @param gene_summary A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.
+#' @param organism Character, KEGG species code, or the common species name, used to determine
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
 #'
-#' @return a data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and "ENTREZID".
+#' @return A data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and "ENTREZID".
 #'
 #' @author Wubing Zhang
 #'

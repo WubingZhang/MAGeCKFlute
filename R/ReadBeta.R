@@ -7,13 +7,13 @@
 #' @rdname ReadBeta
 #' @aliases readbeta
 #'
-#' @param gene_summary a file path or a data frame, data frame, which has columns of 'Gene',
+#' @param gene_summary A file path or a data frame, data frame, which has columns of 'Gene',
 #' \code{ctrlname}.beta and \code{treatname}.beta.
-#' @param organism character, KEGG species code, or the common species name, used to determine
+#' @param organism Character, KEGG species code, or the common species name, used to determine
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
 #'
-#' @return a data frame including four columns, named "Gene", "Control", "Treatment", and "ENTREZID".
+#' @return A data frame including four columns, named "Gene", "Control", "Treatment", and "ENTREZID".
 #'
 #' @author Wubing Zhang
 #'

@@ -10,16 +10,16 @@ TransGeneID(genes, fromType = "SYMBOL", toType = "ENTREZID",
   organism = "hsa")
 }
 \arguments{
-\item{genes}{a character vector, input genes to be converted.}
+\item{genes}{A character vector, input genes to be converted.}
 
-\item{fromType}{the input ID type, "SYMBOL" (default) or "ENTREZID".}
+\item{fromType}{The input ID type, "SYMBOL" (default) or "ENTREZID".}
 
-\item{toType}{the output ID type, "SYMBOL" or "ENTREZID" (default).}
+\item{toType}{The output ID type, "SYMBOL" or "ENTREZID" (default).}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
 }
 \value{
-a character vector, named by unique input gene ids.
+A character vector, named by unique input gene ids.
 }
 \description{
 Gene ID conversion between ENTREZID and SYMBOL
@@ -37,8 +37,6 @@ TransGeneID(MLE_Data$Gene[1:10], fromType="SYMBOL", toType="ENTREZID", organism=
 }
 \seealso{
 \code{\link[pathview]{eg2id}}
-
-\code{\link[pathview]{id2eg}}
 }
 \author{
 Wubing Zhang

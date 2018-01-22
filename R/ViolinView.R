@@ -7,11 +7,11 @@
 #' @rdname ViolinView
 #' @aliases violinview
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{samples}.
-#' @param samples character, specifying the name of samples to be compared
-#' @param main as in 'plot'.
-#' @param ylab as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param beta Data frame, which has columns of 'Gene', \code{samples}.
+#' @param samples Character, specifying the name of samples to be compared.
+#' @param main As in 'plot'.
+#' @param ylab As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.

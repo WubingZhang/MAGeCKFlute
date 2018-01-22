@@ -6,10 +6,10 @@
 #' @name getCols
 #' @rdname getCols
 #'
-#' @param x a numeric vector
-#' @param palette an integer
+#' @param x A numeric vector.
+#' @param palette An integer.
 #'
-#' @return a vector of colors corresponding to input vector.
+#' @return A vector of colors corresponding to input vector.
 #'
 #' @author Wubing Zhang
 #'

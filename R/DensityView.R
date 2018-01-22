@@ -6,11 +6,11 @@
 #' @name DensityView
 #' @rdname DensityView
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{samples} beginning from the second column.
-#' @param samples character, specifying sample names in \code{beta}.
-#' @param main as in 'plot'.
-#' @param xlab as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param beta Data frame, which has columns of 'Gene', \code{samples} beginning from the second column.
+#' @param samples Character, specifying sample names in \code{beta}.
+#' @param main As in 'plot'.
+#' @param xlab As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.

@@ -10,20 +10,20 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
 
-\item{ctrlname}{a character, specifying the names of control samples.}
+\item{ctrlname}{A character, specifying the names of control samples.}
 
-\item{treatname}{a character, specifying the name of treatment samples.}
+\item{treatname}{A character, specifying the name of treatment samples.}
 
-\item{genelist}{character vector, specifying labeled genes.}
+\item{genelist}{Character vector, specifying labeled genes.}
 
-\item{scale_cutoff}{boolean or numeric, whether scale cutoff to whole genome level,
+\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
 }
 \value{

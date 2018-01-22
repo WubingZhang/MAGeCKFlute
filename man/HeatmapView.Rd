@@ -11,32 +11,32 @@ HeatmapView(beta, method = "pearson", breaks = NA, cluster_rows = TRUE,
   display_numbers = TRUE, filename = NA, width = NA, height = NA, ...)
 }
 \arguments{
-\item{beta}{data frame or matrix, in which each column represents one sample.}
+\item{beta}{Data frame or matrix, in which each column represents one sample.}
 
-\item{method}{character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
+\item{method}{Character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
 "manhattan", "canberra", "binary", or "minkowski".}
 
-\item{breaks}{the same as that in pheatmap}
+\item{breaks}{The same as that in pheatmap}
 
-\item{cluster_rows}{the same as that in pheatmap}
+\item{cluster_rows}{The same as that in pheatmap}
 
-\item{cluster_cols}{the same as that in pheatmap}
+\item{cluster_cols}{The same as that in pheatmap}
 
-\item{legend}{the same as that in pheatmap}
+\item{legend}{The same as that in pheatmap}
 
-\item{main}{the same as that in pheatmap}
+\item{main}{The same as that in pheatmap}
 
-\item{fontsize}{the same as that in pheatmap}
+\item{fontsize}{The same as that in pheatmap}
 
-\item{display_numbers}{the same as that in pheatmap}
+\item{display_numbers}{The same as that in pheatmap}
 
-\item{filename}{the same as that in pheatmap}
+\item{filename}{The same as that in pheatmap}
 
-\item{width}{the same as that in pheatmap}
+\item{width}{The same as that in pheatmap}
 
-\item{height}{the same as that in pheatmap}
+\item{height}{The same as that in pheatmap}
 
-\item{...}{other parameters in pheatmap}
+\item{...}{Other parameters in pheatmap}
 }
 \value{
 The same as pheatmap

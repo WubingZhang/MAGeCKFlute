@@ -7,13 +7,13 @@
 #' @rdname enrich.GSE
 #' @aliases enrichGSE
 #'
-#' @param geneList a order ranked numeric vector with geneid as names.
-#' @param type a character, indicating geneset category for testing, "KEGG"(default).
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
-#' @param minGSSize minimal size of each geneSet for testing.
-#' @param maxGSSize maximal size of each geneSet for analyzing.
-#' @param pvalueCutoff pvalue cutoff.
-#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param geneList A order ranked numeric vector with geneid as names.
+#' @param type A character, indicating geneset category for testing, "KEGG"(default).
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param minGSSize Minimal size of each geneSet for testing.
+#' @param maxGSSize Maximal size of each geneSet for analyzing.
+#' @param pvalueCutoff Pvalue cutoff.
+#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #'
 #' @return A enrichResult instance.
 #'

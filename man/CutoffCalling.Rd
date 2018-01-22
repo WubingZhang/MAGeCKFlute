@@ -8,12 +8,12 @@
 CutoffCalling(d, scale = FALSE)
 }
 \arguments{
-\item{d}{a numeric vector.}
+\item{d}{A numeric vector.}
 
-\item{scale}{boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.}
+\item{scale}{Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.}
 }
 \value{
-a numeric value
+A numeric value.
 }
 \description{
 Calculate standard deviation as cutoff for a numeric vector

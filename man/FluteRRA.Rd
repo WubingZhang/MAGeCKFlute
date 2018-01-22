@@ -10,21 +10,21 @@ FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "ORT",
   organism = "hsa", pvalueCutoff = 0.25, adjust = "BH", outdir = ".")
 }
 \arguments{
-\item{gene_summary}{a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
+\item{gene_summary}{A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
 
-\item{prefix}{a character, indicating the prefix of output file name.}
+\item{prefix}{A character, indicating the prefix of output file name.}
 
 \item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default),
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
 and "mmu" or "Mouse"}
 
-\item{pvalueCutoff}{a numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
+\item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
-\item{adjust}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{outdir}{output directory on disk}
+\item{outdir}{Output directory on disk}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,

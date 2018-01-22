@@ -6,24 +6,24 @@
 #' @name MAView
 #' @rdname MAView
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname character vector, specifying the name of control sample.
-#' @param treatname character vector, specifying the name of treatment sample.
-#' @param main as in "ma.plot".
-#' @param subset as in "ma.plot".
-#' @param show.statistics as in "ma.plot".
-#' @param span as in "ma.plot".
-#' @param family.loess as in "ma.plot".
-#' @param cex as in "ma.plot".
-#' @param cex.lab as in "ma.plot".
-#' @param cex.axis as in "ma.plot".
-#' @param cex.main as in "ma.plot".
-#' @param plot.method as in "ma.plot".
-#' @param add.loess as in "ma.plot".
-#' @param lwd as in "ma.plot".
-#' @param lty as in "ma.plot".
-#' @param loess.col as in "ma.plot".
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param ctrlname Character vector, specifying the name of control sample.
+#' @param treatname Character vector, specifying the name of treatment sample.
+#' @param main As in "ma.plot".
+#' @param subset As in "ma.plot".
+#' @param show.statistics As in "ma.plot".
+#' @param span As in "ma.plot".
+#' @param family.loess As in "ma.plot".
+#' @param cex As in "ma.plot".
+#' @param cex.lab As in "ma.plot".
+#' @param cex.axis As in "ma.plot".
+#' @param cex.main As in "ma.plot".
+#' @param plot.method As in "ma.plot".
+#' @param add.loess As in "ma.plot".
+#' @param lwd As in "ma.plot".
+#' @param lty As in "ma.plot".
+#' @param loess.col As in "ma.plot".
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' no output.
 #'
 #' @author Wubing Zhang

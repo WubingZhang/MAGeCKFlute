@@ -6,15 +6,16 @@
 #' @name hclustView
 #' @rdname hclustView
 #'
-#' @param d a dissimilarity structure as produced by dist.
-#' @param method the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
-#' @param label_cols a vector to be used as label's colors for the dendrogram.
-#' @param bar_cols either a vector or a matrix, which will be plotted as a colored bar.
-#' @param main as in 'plot'.
-#' @param xlab as in 'plot'.
-#' @param horiz logical indicating if the dendrogram should be drawn horizontally or not.
-#' @param ... arguments to be passed to methods, such as graphical parameters (see par).
+#' @param d A dissimilarity structure as produced by dist.
+#' @param method The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
+#' @param label_cols A vector to be used as label's colors for the dendrogram.
+#' @param bar_cols Either a vector or a matrix, which will be plotted as a colored bar.
+#' @param main As in 'plot'.
+#' @param xlab As in 'plot'.
+#' @param horiz Logical indicating if the dendrogram should be drawn horizontally or not.
+#' @param ... Arguments to be passed to methods, such as graphical parameters (see par).
 #'
+#' @return Just plot figure in device.
 #'
 #' @author Wubing Zhang
 #'

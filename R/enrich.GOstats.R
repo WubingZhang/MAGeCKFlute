@@ -7,12 +7,12 @@
 #' @rdname enrich.GOstats
 #' @aliases enrichGOstats
 #'
-#' @param gene a character vector, specifying the genelist to do enrichment analysis.
-#' @param universe a character vector, specifying the backgound genelist, default is whole genome.
-#' @param type geneset category for testing, KEGG(default).
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
-#' @param pvalueCutoff pvalue cutoff.
-#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param gene A character vector, specifying the genelist to do enrichment analysis.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
+#' @param type Geneset category for testing, KEGG(default).
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param pvalueCutoff Pvalue cutoff.
+#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #'
 #' @return A enrichResult instance.
 #'

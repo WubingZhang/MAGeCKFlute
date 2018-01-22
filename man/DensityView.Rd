@@ -9,15 +9,15 @@ DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
   filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{samples} beginning from the second column.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{samples} beginning from the second column.}
 
-\item{samples}{character, specifying sample names in \code{beta}.}
+\item{samples}{Character, specifying sample names in \code{beta}.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{xlab}{as in 'plot'.}
+\item{xlab}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
 }
 \value{

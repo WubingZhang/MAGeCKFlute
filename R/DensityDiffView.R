@@ -5,11 +5,11 @@
 #' @docType methods
 #' @name DensityDiffView
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname a character, specifying the name of control sample.
-#' @param treatname a character, specifying the name of treatment sample.
-#' @param main as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param ctrlname A character, specifying the name of control sample.
+#' @param treatname A character, specifying the name of treatment sample.
+#' @param main As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' no output.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.

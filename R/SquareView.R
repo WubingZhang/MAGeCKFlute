@@ -8,14 +8,14 @@
 #' @rdname SquareView
 #' @aliases squareview
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname a character, specifying the names of control samples.
-#' @param treatname a character, specifying the name of treatment samples.
-#' @param genelist character vector, specifying labeled genes.
-#' @param scale_cutoff boolean or numeric, whether scale cutoff to whole genome level,
+#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param ctrlname A character, specifying the names of control samples.
+#' @param treatname A character, specifying the name of treatment samples.
+#' @param genelist Character vector, specifying labeled genes.
+#' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
-#' @param main as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param main As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.

@@ -7,15 +7,15 @@
 #' @rdname FluteRRA
 #' @aliases RRApipeline
 #'
-#' @param gene_summary a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.
-#' @param prefix a character, indicating the prefix of output file name.
+#' @param gene_summary A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.
+#' @param prefix A character, indicating the prefix of output file name.
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default),
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
 #' and "mmu" or "Mouse"
-#' @param pvalueCutoff a numeric, specifying pvalue cutoff of enrichment analysis, default 1.
-#' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param outdir output directory on disk
+#' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
+#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param outdir Output directory on disk
 #'
 #'
 #' @author Wubing Zhang

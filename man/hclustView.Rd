@@ -9,21 +9,21 @@ hclustView(d, method = "average", label_cols = NULL, bar_cols = NULL,
   main = NA, xlab = NA, horiz = TRUE, ...)
 }
 \arguments{
-\item{d}{a dissimilarity structure as produced by dist.}
+\item{d}{A dissimilarity structure as produced by dist.}
 
-\item{method}{the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).}
+\item{method}{The agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).}
 
-\item{label_cols}{a vector to be used as label's colors for the dendrogram.}
+\item{label_cols}{A vector to be used as label's colors for the dendrogram.}
 
-\item{bar_cols}{either a vector or a matrix, which will be plotted as a colored bar.}
+\item{bar_cols}{Either a vector or a matrix, which will be plotted as a colored bar.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{xlab}{as in 'plot'.}
+\item{xlab}{As in 'plot'.}
 
-\item{horiz}{logical indicating if the dendrogram should be drawn horizontally or not.}
+\item{horiz}{Logical indicating if the dendrogram should be drawn horizontally or not.}
 
-\item{...}{arguments to be passed to methods, such as graphical parameters (see par).}
+\item{...}{Arguments to be passed to methods, such as graphical parameters (see par).}
 }
 \value{
 Just plot figure in device.

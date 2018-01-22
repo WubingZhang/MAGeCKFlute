@@ -14,41 +14,41 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
   filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
 
-\item{ctrlname}{character vector, specifying the name of control sample.}
+\item{ctrlname}{Character vector, specifying the name of control sample.}
 
-\item{treatname}{character vector, specifying the name of treatment sample.}
+\item{treatname}{Character vector, specifying the name of treatment sample.}
 
-\item{main}{as in "ma.plot".}
+\item{main}{As in "ma.plot".}
 
-\item{subset}{as in "ma.plot".}
+\item{subset}{As in "ma.plot".}
 
-\item{show.statistics}{as in "ma.plot".}
+\item{show.statistics}{As in "ma.plot".}
 
-\item{span}{as in "ma.plot".}
+\item{span}{As in "ma.plot".}
 
-\item{family.loess}{as in "ma.plot".}
+\item{family.loess}{As in "ma.plot".}
 
-\item{cex}{as in "ma.plot".}
+\item{cex}{As in "ma.plot".}
 
-\item{cex.lab}{as in "ma.plot".}
+\item{cex.lab}{As in "ma.plot".}
 
-\item{cex.axis}{as in "ma.plot".}
+\item{cex.axis}{As in "ma.plot".}
 
-\item{cex.main}{as in "ma.plot".}
+\item{cex.main}{As in "ma.plot".}
 
-\item{plot.method}{as in "ma.plot".}
+\item{plot.method}{As in "ma.plot".}
 
-\item{add.loess}{as in "ma.plot".}
+\item{add.loess}{As in "ma.plot".}
 
-\item{lwd}{as in "ma.plot".}
+\item{lwd}{As in "ma.plot".}
 
-\item{lty}{as in "ma.plot".}
+\item{lty}{As in "ma.plot".}
 
-\item{loess.col}{as in "ma.plot".}
+\item{loess.col}{As in "ma.plot".}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}
 }
 \value{

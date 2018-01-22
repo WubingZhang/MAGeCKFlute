@@ -7,29 +7,29 @@
 #' @rdname FluteMLE
 #' @aliases MLEpipeline, MAGeCKFlute-method
 #'
-#' @param gene_summary a file path or a data frame, which contains columns of 'Gene',
-#' \code{ctrlname}.beta and \code{treatname}.beta.
-#' @param ctrlname a character vector, specifying the name of control samples.
-#' @param treatname a character vector, specifying the name of treatment samples.
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default),
+#' @param gene_summary Either a file path or a data frame, which contains columns of 'Gene',
+#' \code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.
+#' @param ctrlname A character vector, specifying the name of control samples.
+#' @param treatname A character vector, specifying the name of treatment samples.
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
 #' and "mmu" or "Mouse"
-#' @param prefix a character, indicating the prefix of output file name.
-#' @param top an integer, specifying number of top selected genes labeled in rank figure
-#' @param bottom an integer, specifying number of bottom selected genes labeled in rank figure.
-#' @param interestGenes a character vector, specifying interested genes labeled in rank figure.
-#' @param pvalueCutoff a numeric, specifying pvalue cutoff of enrichment analysis, default 1.
-#' @param adjust one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param prefix A character, indicating the prefix of output file name.
+#' @param top An integer, specifying number of top selected genes labeled in rank figure
+#' @param bottom An integer, specifying number of bottom selected genes labeled in rank figure.
+#' @param interestGenes A character vector, specifying interested genes labeled in rank figure.
+#' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
+#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
-#' @param gsea boolean, indicating whether GSEA analysis is needed for positive and
+#' @param gsea Boolean, indicating whether GSEA analysis is needed for positive and
 #' negative selection genes.
-#' @param posControl a file path or a character vector, specifying positive control genes used
+#' @param posControl A file path or a character vector, specifying positive control genes used
 #' for cell cycle normalization
-#' @param scale_cutoff boolean or numeric, whether scale cutoff to whole genome level,
+#' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
-#' @param loess boolean, whether include loess normalization in the pipeline
-#' @param view_allpath boolean, whether output all pathway view figures
-#' @param outdir output directory on disk
+#' @param loess Boolean, whether include loess normalization in the pipeline
+#' @param view_allpath Boolean, whether output all pathway view figures
+#' @param outdir Output directory on disk
 #'
 #'
 #' @author Wubing Zhang

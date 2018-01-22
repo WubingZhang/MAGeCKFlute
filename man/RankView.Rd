@@ -11,22 +11,21 @@ RankView(beta, genelist = c(), top = 20, bottom = 20,
   ...)
 }
 \arguments{
-\item{beta}{data frame containing columns of "Gene" and "diff".}
+\item{beta}{Data frame containing columns of "Gene" and "diff".}
 
-\item{genelist}{character vector, specifying labeled genes besides top and bottom labeled genes.}
+\item{genelist}{Character vector, specifying labeled genes besides top and bottom labeled genes.}
 
-\item{top}{integer, specifying top number of genes to be labeled.}
+\item{top}{Integer, specifying top number of genes to be labeled.}
 
-\item{bottom}{integer, specifying bottom number of genes to be labeled.}
+\item{bottom}{Integer, specifying bottom number of genes to be labeled.}
 
-\item{cutoff}{numeric, cutoff of \code{diff}}
+\item{cutoff}{Numeric, cutoff of \code{diff}.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means}
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
 
-\item{...}{other available parameters in function 'geom_label_repel'
-no output.}
+\item{...}{Other available parameters in function 'geom_label_repel'.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

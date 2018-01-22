@@ -7,20 +7,20 @@
 #' @rdname HeatmapView
 #' @aliases heatmapview
 #'
-#' @param beta data frame or matrix, in which each column represents one sample.
-#' @param method character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
+#' @param beta Data frame or matrix, in which each column represents one sample.
+#' @param method Character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
 #' "manhattan", "canberra", "binary", or "minkowski".
-#' @param breaks the same as that in pheatmap
-#' @param cluster_rows the same as that in pheatmap
-#' @param cluster_cols the same as that in pheatmap
-#' @param legend the same as that in pheatmap
-#' @param main the same as that in pheatmap
-#' @param fontsize the same as that in pheatmap
-#' @param display_numbers the same as that in pheatmap
-#' @param filename the same as that in pheatmap
-#' @param width the same as that in pheatmap
-#' @param height the same as that in pheatmap
-#' @param ... other parameters in pheatmap
+#' @param breaks The same as that in pheatmap
+#' @param cluster_rows The same as that in pheatmap
+#' @param cluster_cols The same as that in pheatmap
+#' @param legend The same as that in pheatmap
+#' @param main The same as that in pheatmap
+#' @param fontsize The same as that in pheatmap
+#' @param display_numbers The same as that in pheatmap
+#' @param filename The same as that in pheatmap
+#' @param width The same as that in pheatmap
+#' @param height The same as that in pheatmap
+#' @param ... Other parameters in pheatmap
 #'
 #' @return The same as pheatmap
 #'

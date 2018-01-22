@@ -6,11 +6,11 @@
 #' @name getOrg
 #' @rdname getOrg
 #'
-#' @param organism character, KEGG species code, or the common species name, used to determine
+#' @param organism Character, KEGG species code, or the common species name, used to determine
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
 #'
-#' @return a list containing three elements:
+#' @return A list containing three elements:
 #' \item{organism}{species}
 #' \code{pkg}{annotation package name}
 #' \code{Symbol_Entrez}{a data frame, mapping between gene symbol and entrez id}

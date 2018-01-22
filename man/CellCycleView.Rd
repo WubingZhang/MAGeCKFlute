@@ -9,13 +9,13 @@
 CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and other samples.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and other samples.}
 
-\item{ctrlname}{character vector, specifying the name of control sample.}
+\item{ctrlname}{Character vector, specifying the name of control sample.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}
 }
 \value{

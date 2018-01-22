@@ -10,25 +10,25 @@ EnrichAB(data, pvalue = 1, enrich_method = "ORT", organism = "hsa",
   adjust = "BH", filename = NULL, out.dir = ".", gsea = FALSE)
 }
 \arguments{
-\item{data}{a data frame containing columns of "ENTREZID" and "diff".}
+\item{data}{A data frame containing columns of "ENTREZID" and "diff".}
 
-\item{pvalue}{pvalue cutoff.}
+\item{pvalue}{Pvalue cutoff.}
 
 \item{enrich_method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
 
-\item{adjust}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{filename}{suffix of output file name. NULL(default) means no output.}
+\item{filename}{Suffix of output file name. NULL(default) means no output.}
 
 \item{out.dir}{Path to save plot to (combined with filename).}
 
-\item{gsea}{boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea=FALSE.}
+\item{gsea}{Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea=FALSE.}
 }
 \value{
-a list containing enrichment results for each group genes. This list contains items four
+A list containing enrichment results for each group genes. This list contains items four
 items, \code{keggA}, \code{keggB}, \code{bpA}, \code{bpB}. Four items are all list object, containing
 subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
 \code{enrichRes} is a enrichResult instance

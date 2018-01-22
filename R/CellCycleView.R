@@ -8,10 +8,10 @@
 #' @rdname CellCycleView
 #' @aliases CellCycle,MAGeCKFlute-method
 #'
-#' @param beta data frame, which has columns of 'Gene', \code{ctrlname} and other samples.
-#' @param ctrlname character vector, specifying the name of control sample.
-#' @param main as in 'plot'.
-#' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and other samples.
+#' @param ctrlname Character vector, specifying the name of control sample.
+#' @param main As in 'plot'.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' no output.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.

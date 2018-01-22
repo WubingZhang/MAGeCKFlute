@@ -9,10 +9,10 @@
 loginfo(msg)
 }
 \arguments{
-\item{msg}{a character, specifying log message.}
+\item{msg}{A character, specifying log message.}
 }
 \value{
-print log message on stdout.
+Print log message on stdout.
 }
 \description{
 Write log message on console

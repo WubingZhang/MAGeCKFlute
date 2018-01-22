@@ -7,14 +7,14 @@
 #' @rdname enrich.HGT
 #' @aliases Hypergeometric
 #'
-#' @param gene a character vector, specifying the genelist to do enrichment analysis.
-#' @param universe a character vector, specifying the backgound genelist, default is whole genome.
-#' @param type geneset category for testing, KEGG(default).
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
-#' @param pvalueCutoff pvalue cutoff.
-#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param minGSSize minimal size of each geneSet for testing.
-#' @param maxGSSize maximal size of each geneSet for analyzing.
+#' @param gene A character vector, specifying the genelist to do enrichment analysis.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
+#' @param type Geneset category for testing, KEGG(default).
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param pvalueCutoff Pvalue cutoff.
+#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param minGSSize Minimal size of each geneSet for testing.
+#' @param maxGSSize Maximal size of each geneSet for analyzing.
 #'
 #' @return A enrichResult instance.
 #'

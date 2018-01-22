@@ -6,10 +6,10 @@
 #' @name CutoffCalling
 #' @rdname CutoffCalling
 #'
-#' @param d a numeric vector.
-#' @param scale boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.
+#' @param d A numeric vector.
+#' @param scale Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.
 #'
-#' @return a numeric value
+#' @return A numeric value.
 #'
 #' @author Wubing Zhang
 #'

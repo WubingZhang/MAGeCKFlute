@@ -7,14 +7,14 @@
 #' @rdname BatchRemove
 #' @aliases batchremove
 #'
-#' @param mat data frame or matrix, in which each column represents one sample.
-#' @param batchMat data frame or matrix, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.
-#' @param cov boolean, specifying if provide mod in ComBat
-#' @param log2trans boolean, specifying whether do log2 transition before batch removal
-#' @param pca boolean, specifying whether do principle component analysis before and after batch removal
-#' @param cluster boolean, specifing whether do cluster analysis before and after batch removal
-#' @param prefix character, specifying prefix of output figures, only needed if cluster/pca is TRUE.
-#' @param outdir  output directory on disk
+#' @param mat Matrix, or file path of data.
+#' @param batchMat Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.
+#' @param cov Boolean, specifying if provide mod in ComBat.
+#' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
+#' @param pca Boolean, specifying whether do principle component analysis before and after batch removal.
+#' @param cluster Boolean, specifing whether do cluster analysis before and after batch removal.
+#' @param prefix Character, specifying prefix of output figures, only needed if cluster/pca is TRUE.
+#' @param outdir  Output directory on disk.
 #'
 #' @return matrix of data after batch removal.
 #'
@@ -42,6 +42,12 @@
 #'
 
 BatchRemove <- function(mat, batchMat, cov=FALSE, log2trans=FALSE, pca=TRUE, cluster=TRUE, prefix=NA, outdir="."){
+  if(class(mat)=="character" && file.exists(mat)){
+    mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+  }
+  if(class(batchMat)=="character" && file.exists(batchMat)){
+    batchMat = read.table(batchMat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+  }
   requireNamespace("sva")
   batch = as.matrix(batchMat)
   rownames(batch) = batch[,1]

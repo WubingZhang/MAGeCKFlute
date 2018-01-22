@@ -7,11 +7,11 @@
 #' @rdname EnrichedView
 #' @aliases enrichview
 #'
-#' @param enrichment a data frame of enrichment result, with columns of ID, Description, p.adjust and Count
-#' @param plotTitle same as 'title' in 'plot'.
-#' @param color color of nodes
-#' @param termNum integer, specifying number of top enriched terms to show
-#' @param charLength integer, specifying max length of enriched term name to show as coordinate lab
+#' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.
+#' @param plotTitle Same as 'title' in 'plot'.
+#' @param color Color of nodes.
+#' @param termNum Integer, specifying number of top enriched terms to show.
+#' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'

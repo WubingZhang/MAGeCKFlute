@@ -10,15 +10,15 @@ ViolinView(beta, samples = NULL, main = NULL, ylab = "Beta Score",
   filename = NULL)
 }
 \arguments{
-\item{beta}{data frame, which has columns of 'Gene', \code{samples}.}
+\item{beta}{Data frame, which has columns of 'Gene', \code{samples}.}
 
-\item{samples}{character, specifying the name of samples to be compared}
+\item{samples}{Character, specifying the name of samples to be compared.}
 
-\item{main}{as in 'plot'.}
+\item{main}{As in 'plot'.}
 
-\item{ylab}{as in 'plot'.}
+\item{ylab}{As in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
 }
 \value{

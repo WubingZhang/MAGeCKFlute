@@ -7,22 +7,22 @@
 #' @rdname enrichment_analysis
 #' @aliases enrichment
 #'
-#' @param geneList a character vector or a ranked numeric vector(for GSEA) with names of geneid,
+#' @param geneList A character vector or a ranked numeric vector(for GSEA) with names of geneid,
 #' specifying the genelist to do enrichment analysis.
-#' @param universe a character vector, specifying the backgound genelist, default is whole genome.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
 #' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5
-#' @param type geneset category for testing, KEGG(default).
-#' @param organism a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
-#' @param pvalueCutoff pvalue cutoff.
-#' @param qvalueCutoff qvalue cutoff.
-#' @param pAdjustMethod one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param minGSSize minimal size of each geneSet for testing.
-#' @param maxGSSize maximal size of each geneSet for analyzing.
-#' @param plotTitle same as 'title' in 'plot'.
-#' @param color color of points.
+#' @param type Geneset category for testing, KEGG(default).
+#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param pvalueCutoff Pvalue cutoff.
+#' @param qvalueCutoff Qvalue cutoff.
+#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param minGSSize Minimal size of each geneSet for testing.
+#' @param maxGSSize Maximal size of each geneSet for analyzing.
+#' @param plotTitle Same as 'title' in 'plot'.
+#' @param color Color of points.
 #'
-#' @return a list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
+#' @return A list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
 #' a ggplot object, and \code{enrichRes} is a enrichResult instance.
 #'
 #' @author Feizhen Wu

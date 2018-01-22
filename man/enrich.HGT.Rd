@@ -11,21 +11,21 @@ enrich.HGT(gene, universe, type = "KEGG", organism = "hsa",
   maxGSSize = 500)
 }
 \arguments{
-\item{gene}{a character vector, specifying the genelist to do enrichment analysis.}
+\item{gene}{A character vector, specifying the genelist to do enrichment analysis.}
 
-\item{universe}{a character vector, specifying the backgound genelist, default is whole genome.}
+\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
-\item{type}{geneset category for testing, KEGG(default).}
+\item{type}{Geneset category for testing, KEGG(default).}
 
-\item{organism}{a character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
 
-\item{pvalueCutoff}{pvalue cutoff.}
+\item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{one of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{minGSSize}{minimal size of each geneSet for testing.}
+\item{minGSSize}{Minimal size of each geneSet for testing.}
 
-\item{maxGSSize}{maximal size of each geneSet for analyzing.}
+\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
 }
 \value{
 A enrichResult instance.

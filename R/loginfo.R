@@ -7,7 +7,7 @@
 #' @rdname loginfo
 #' @aliases log
 #'
-#' @param msg a character, specifying log message.
+#' @param msg A character, specifying log message.
 #'
 #' @author Binbin Wang
 #'
@@ -17,7 +17,7 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/loginfo.R}
 #' Users should find it easy to customize this function.
 #'
-#' @return print log message on stdout.
+#' @return Print log message on stdout.
 #' @examples
 #' loginfo("Test the loginfo function ...")
 #'
