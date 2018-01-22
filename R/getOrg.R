@@ -68,6 +68,7 @@ getOrg <- function(organism){
     idx2 = duplicated(mapping$ENTREZID)
     mapping = mapping[!(idx1&idx2),]
     mapping$SYMBOL = toupper(mapping$SYMBOL)
+    mapping$ENTREZID = as.character(mapping$ENTREZID)
     res$Symbol_Entrez = mapping
     write.table(mapping, tmpFile, sep = "\t", row.names = FALSE)
   }else{

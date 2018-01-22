@@ -6,8 +6,7 @@
 \alias{CellCycle,MAGeCKFlute-method}
 \title{Plot of linear fitting lines for beta scores in Control and Treatment sample}
 \usage{
-CellCycleView(beta, ctrlname = "Control", main = NULL,
-  ylab = "Beta score", filename = NULL)
+CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL)
 }
 \arguments{
 \item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and other samples.}
@@ -15,8 +14,6 @@ CellCycleView(beta, ctrlname = "Control", main = NULL,
 \item{ctrlname}{character vector, specifying the name of control sample.}
 
 \item{main}{as in 'plot'.}
-
-\item{ylab}{as in 'plot'.}
 
 \item{filename}{figure file name to create on disk. Default filename="NULL", which means
 no output.}
@@ -40,7 +37,7 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
-CellCycleView(dd, ctrlname = "D7_R1", ylab = "Beta Score", main = "Negative control normalized")
+CellCycleView(dd, ctrlname = c("D7_R1", "D7_R2"))
 
 }
 \seealso{

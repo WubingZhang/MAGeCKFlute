@@ -11,7 +11,7 @@ FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
   organism = "hsa", prefix = "Test", top = 10, bottom = 10,
   interestGenes = c(), pvalueCutoff = 1, adjust = "BH",
   enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
-  scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
+  scale_cutoff = 1.2, loess = FALSE, view_allpath = FALSE, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{a file path or a data frame, which contains columns of 'Gene',

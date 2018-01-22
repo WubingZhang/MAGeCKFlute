@@ -7,7 +7,7 @@
 \title{Scatter plot of 9-Square}
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
-  scale_cutoff = 1, main = NULL, filename = NULL)
+  genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL)
 }
 \arguments{
 \item{beta}{data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
@@ -15,6 +15,8 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{ctrlname}{a character, specifying the names of control samples.}
 
 \item{treatname}{a character, specifying the name of treatment samples.}
+
+\item{genelist}{character vector, specifying labeled genes.}
 
 \item{scale_cutoff}{boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}

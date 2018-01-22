@@ -7,7 +7,7 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "ORT",
-  organism = "hsa", pvalueCutoff = 1, adjust = "BH", outdir = ".")
+  organism = "hsa", pvalueCutoff = 0.25, adjust = "BH", outdir = ".")
 }
 \arguments{
 \item{gene_summary}{a file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}

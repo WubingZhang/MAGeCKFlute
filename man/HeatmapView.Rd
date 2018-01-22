@@ -6,19 +6,15 @@
 \alias{heatmapview}
 \title{Calculate the similarity between samples and plot heatmap}
 \usage{
-HeatmapView(beta, method = "pearson",
-  color = rev(colorRampPalette(RColorBrewer::brewer.pal(7, "RdYlBu"))(200)),
-  breaks = NA, cluster_rows = TRUE, cluster_cols = TRUE, legend = TRUE,
-  main = NA, fontsize = 10, display_numbers = TRUE, filename = NA,
-  width = NA, height = NA, ...)
+HeatmapView(beta, method = "pearson", breaks = NA, cluster_rows = TRUE,
+  cluster_cols = TRUE, legend = TRUE, main = NA, fontsize = 10,
+  display_numbers = TRUE, filename = NA, width = NA, height = NA, ...)
 }
 \arguments{
 \item{beta}{data frame or matrix, in which each column represents one sample.}
 
 \item{method}{character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
 "manhattan", "canberra", "binary", or "minkowski".}
-
-\item{color}{the same as that in pheatmap}
 
 \item{breaks}{the same as that in pheatmap}
 

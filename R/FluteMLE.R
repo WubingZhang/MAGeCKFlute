@@ -83,7 +83,7 @@
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
                      pvalueCutoff=1, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
-                     posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, outdir="."){
+                     posControl=NULL, scale_cutoff=1.2, loess=FALSE, view_allpath=FALSE, outdir="."){
 
 	#=========Prepare the running environment=========
 	{
@@ -199,14 +199,10 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	                  main="Negative control normalized",
 	                  filename=file.path(
 	                    outputDir1,"density_ess_negative_normalized.png"))
-	  P3=CellCycleView(dd[,idx_distr], ctrlname, ylab="Beta Score",
-	                  main="Negative control normalized",
-	                  filename=file.path(
-	                    outputDir3,"Linear_all_negative_normalized.png"))
-	  P4=CellCycleView(dd[idx,idx_distr], ctrlname, ylab="Essential.B.S.",
-	                  main="Negative control normalized",
-	                  filename=file.path(
-	                    outputDir3,"Linear_ess_negative_normalized.png"))
+	  P3=CellCycleView(dd[,idx_distr], ctrlname, main="Negative control normalized",
+	                  filename=file.path(outputDir3,"Linear_all_negative_normalized.png"))
+	  P4=CellCycleView(dd[idx,idx_distr], ctrlname, main="Negative control normalized",
+	                  filename=file.path(outputDir3,"Linear_ess_negative_normalized.png"))
 	  #Essential normalized
 	  P5=ViolinView(dd_essential[idx,idx_distr],ylab="Essential.B.S.",
 	                 main="Cell cycle  normalized",
@@ -216,14 +212,10 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	                  main="Cell cycle  normalized",
 	                  filename=file.path(
 	                    outputDir1,"density_ess_essential_normalized.png"))
-	  P7=CellCycleView(dd_essential[,idx_distr], ctrlname, ylab="Beta Score",
-	                  main="Cell cycle  normalized",
-	                  filename=file.path(
-	                    outputDir3,"Linear_all_essential_normalized.png"))
-	  P8=CellCycleView(dd_essential[idx,idx_distr], ctrlname,ylab="Essential.B.S.",
-	                  main="Cell cycle  normalized",
-	                  filename=file.path(
-	                    outputDir3,"Linear_ess_essential_normalized.png"))
+	  P7=CellCycleView(dd_essential[,idx_distr], ctrlname, main="Cell cycle  normalized",
+	                  filename=file.path(outputDir3,"Linear_all_essential_normalized.png"))
+	  P8=CellCycleView(dd_essential[idx,idx_distr], ctrlname, main="Cell cycle  normalized",
+	                  filename=file.path(outputDir3,"Linear_ess_essential_normalized.png"))
 
 	  #loess normalized
 	  if(loess){
@@ -235,14 +227,10 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 		                 main="Loess  normalized",
 		                 filename=file.path(
 		                   outputDir1,"density_ess_loess_normalized.png"))
-		P11=CellCycleView(dd_loess[,idx_distr], ctrlname, ylab="Beta Score",
-		                 main="Loess  normalized",
-		                 filename=file.path(
-		                   outputDir3,"Linear_all_loess_normalized.png"))
-		P12=CellCycleView(dd_loess[idx,idx_distr], ctrlname, ylab="Essential.B.S.",
-		                 main="Loess  normalized",
-		                 filename=file.path(
-		                   outputDir3,"Linear_ess_loess_normalized.png"))
+		P11=CellCycleView(dd_loess[,idx_distr], ctrlname, main="Loess  normalized",
+		                 filename=file.path(outputDir3,"Linear_all_loess_normalized.png"))
+		P12=CellCycleView(dd_loess[idx,idx_distr], ctrlname, main="Loess  normalized",
+		                 filename=file.path(outputDir3,"Linear_ess_loess_normalized.png"))
 
 		grid.arrange(P1,P5,P9,P2,P6,P10, ncol=3)
 		grid.arrange(P3,P7,P11,P4,P8,P12, ncol=3)

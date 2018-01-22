@@ -55,7 +55,7 @@
 
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
-                     organism="hsa", pvalueCutoff=1, adjust="BH",
+                     organism="hsa", pvalueCutoff=0.25, adjust="BH",
                      outdir="."){
   #=========Prepare the running environment=========
   {

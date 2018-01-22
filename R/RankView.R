@@ -15,6 +15,7 @@
 #' @param cutoff numeric, cutoff of \code{diff}
 #' @param main as in 'plot'.
 #' @param filename figure file name to create on disk. Default filename="NULL", which means
+#' @param ... other available parameters in function 'geom_label_repel'
 #' no output.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
@@ -25,14 +26,9 @@
 #' Note that the source code of \code{RankView} is very simple.
 #' The source can be found by typing \code{MAGeCKFlute:::RankView}
 #' or \code{getMethod("RankView")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CellCycleView.R}
+#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/RankView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{MAView}}    \code{\link{ScatterView}}
 #'
 #' @examples
 #' data(MLE_Data)
@@ -47,8 +43,8 @@
 #' @export
 #'
 
-RankView <- function(beta, genelist=c(), top=10, bottom=10,
-                     cutoff=c(sd(beta$diff), -sd(beta$diff)), main=NULL,filename=NULL){
+RankView <- function(beta, genelist=c(), top=20, bottom=20,cutoff=c(-sd(beta$diff), sd(beta$diff)),
+                     main=NULL,filename=NULL, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   loginfo(paste("Rank genes and plot..."))
@@ -59,8 +55,8 @@ RankView <- function(beta, genelist=c(), top=10, bottom=10,
   data$Gene = beta$Gene
   data$group = "no"
   data = as.data.frame(data, stringsAsFactors=FALSE)
-  data$group[data$diff>cutoff[1]] = "up"
-  data$group[data$diff<cutoff[2]] = "down"
+  data$group[data$diff>cutoff[2]] = "up"
+  data$group[data$diff<cutoff[1]] = "down"
 
 
   idx=(data$Rank<=bottom) | (data$Rank>(max(data$Rank)-top)) | (data$Gene %in% genelist)
@@ -73,14 +69,14 @@ RankView <- function(beta, genelist=c(), top=10, bottom=10,
   p=p+theme(panel.background = element_rect(fill='white', colour='black'))
   p=p+geom_vline(xintercept = 0,linetype = "dotted")+geom_vline(xintercept = cutoff,linetype = "dotted")
   p=p+geom_label_repel(aes(x=diff, y=Rank,fill=group,label = Gene),data=data[idx,],
-                       fontface = 'bold', color = 'white',size = 2.5,force=8,
+                       fontface = 'bold', color = 'white',size = 2.5,
                        box.padding = unit(0.4, "lines"), segment.color = 'grey50',
-                       point.padding = unit(0.3, "lines"), segment.size = 0.3)
+                       point.padding = unit(0.3, "lines"), segment.size = 0.3, ...)
   p=p+scale_fill_manual(values=mycolour)
   p=p+labs(x="Treatment-Control Beta Score",y="Rank",title=main)
   p=p+theme(legend.position="none")#+ylim(-1000,7000)
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=5,height=4 )
+    ggsave(plot=p,filename=filename,units = "in",width=5,height=4)
   }
   return(p)
 }

@@ -6,8 +6,9 @@
 \alias{rankview}
 \title{Plot rank of gene points}
 \usage{
-RankView(beta, genelist = c(), top = 10, bottom = 10,
-  cutoff = c(sd(beta$diff), -sd(beta$diff)), main = NULL, filename = NULL)
+RankView(beta, genelist = c(), top = 20, bottom = 20,
+  cutoff = c(-sd(beta$diff), sd(beta$diff)), main = NULL, filename = NULL,
+  ...)
 }
 \arguments{
 \item{beta}{data frame containing columns of "Gene" and "diff".}
@@ -22,7 +23,9 @@ RankView(beta, genelist = c(), top = 10, bottom = 10,
 
 \item{main}{as in 'plot'.}
 
-\item{filename}{figure file name to create on disk. Default filename="NULL", which means
+\item{filename}{figure file name to create on disk. Default filename="NULL", which means}
+
+\item{...}{other available parameters in function 'geom_label_repel'
 no output.}
 }
 \value{
@@ -37,7 +40,7 @@ See the vignette for an example of CellCycleView.
 Note that the source code of \code{RankView} is very simple.
 The source can be found by typing \code{MAGeCKFlute:::RankView}
 or \code{getMethod("RankView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CellCycleView.R}
+browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/RankView.R}
 Users should find it easy to customize this function.
 }
 \examples{
@@ -47,17 +50,6 @@ dd = ReadBeta(MLE_Data, organism="hsa")
 dd$diff = dd$PLX7_R1 - dd$D7_R1
 RankView(dd[,c("Gene", "diff")])
 
-}
-\seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{MAView}}    \code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

@@ -23,8 +23,12 @@ CHANGES IN VERSION 0.99.18
 -------------------------
 
     o Add HeatmapView and BatchRemove.
-    o Change view distribution functions which allow more than two samples
-    o Change function ReadBeta to be more friendly
+    o Change view distribution functions which show samples separately.
+    o Change function ReadBeta to be more friendly.
+    o Label top ten essential genes in SquareView.
+    o Change some default parameter values to be better.
+
+
 
 
 

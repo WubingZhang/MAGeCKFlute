@@ -6,18 +6,25 @@
 \alias{batchremove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, cluster = TRUE, log2trans = FALSE, ...)
+BatchRemove(mat, batchMat, cov = FALSE, log2trans = FALSE, pca = TRUE,
+  cluster = TRUE, prefix = NA, outdir = ".")
 }
 \arguments{
 \item{mat}{data frame or matrix, in which each column represents one sample.}
 
-\item{batchMat}{data frame or matrix, which has three columns of Samples matched colname of mat, Batch, and Covariate.}
+\item{batchMat}{data frame or matrix, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.}
+
+\item{cov}{boolean, specifying if provide mod in ComBat}
+
+\item{log2trans}{boolean, specifying whether do log2 transition before batch removal}
+
+\item{pca}{boolean, specifying whether do principle component analysis before and after batch removal}
 
 \item{cluster}{boolean, specifing whether do cluster analysis before and after batch removal}
 
-\item{log2trans}{boolean, specifing whether do log2 transition before batch removal}
+\item{prefix}{character, specifying prefix of output figures, only needed if cluster/pca is TRUE.}
 
-\item{...}{other parameters in pheatmap}
+\item{outdir}{output directory on disk}
 }
 \value{
 matrix of data after batch removal.
@@ -37,7 +44,8 @@ Users should find it easy to customize this function.
 beta = ReadBeta(MLE_Data, organism="hsa")
 batchMat = data.frame(samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"),
                       batch = c(1,2,1,2), cov = c(1,1,2,2))
-res = BatchRemove(beta, batchMat, cluster = FALSE)
+res = BatchRemove(beta, batchMat, prefix="Test")
+
 }
 \seealso{
 \code{\link[sva]{ComBat}}

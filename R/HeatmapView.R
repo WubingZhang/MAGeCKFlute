@@ -10,7 +10,6 @@
 #' @param beta data frame or matrix, in which each column represents one sample.
 #' @param method character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
 #' "manhattan", "canberra", "binary", or "minkowski".
-#' @param color the same as that in pheatmap
 #' @param breaks the same as that in pheatmap
 #' @param cluster_rows the same as that in pheatmap
 #' @param cluster_cols the same as that in pheatmap
@@ -49,19 +48,19 @@
 #' @export
 #'
 
-HeatmapView <- function(beta, method = "pearson", color = rev(colorRampPalette(RColorBrewer::brewer.pal(7, "RdYlBu"))(200)),
-                        breaks = NA, cluster_rows = TRUE, cluster_cols = TRUE, legend = TRUE,
-                        main = NA, fontsize = 10, display_numbers = TRUE, filename = NA, width = NA,
-                        height = NA,...){
-
+HeatmapView <- function(beta, method = "pearson", breaks = NA, cluster_rows = TRUE, cluster_cols = TRUE,
+                        legend = TRUE, main = NA, fontsize = 10, display_numbers = TRUE,
+                        filename = NA, width = NA, height = NA, ...){
   if(method%in%c("pearson", "kendall", "spearman")){
     mat = cor(beta, method=method)
-    breaks = seq(-1,1,0.01)
+    if(is.na(breaks[1])) breaks = seq(-1, 1, length.out = 200)
+    color = rev(colorRampPalette(RColorBrewer::brewer.pal(7, "RdBu"))(length(breaks)-1))
   }else if(method %in% c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")){
     mat = as.matrix(dist(t(beta), method=method))
+    if(is.na(breaks[1])) breaks = seq(min(mat),max(mat), length.out = 200)
+    color = rev(colorRampPalette(RColorBrewer::brewer.pal(7, "Reds"))(length(breaks)-1))
   }
   pheatmap::pheatmap(mat, color=color, breaks=breaks, cluster_rows=cluster_rows,
            cluster_cols=cluster_cols, legend=legend, main = main, fontsize=fontsize,
            display_numbers=display_numbers, filename=filename, width=width, height = height,...)
-
 }

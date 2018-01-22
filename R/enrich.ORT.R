@@ -46,7 +46,7 @@
 #' @export
 
 enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalueCutoff = 1,
-                       qvalueCutoff = 0.2, pAdjustMethod = "BH",minGSSize = 2, maxGSSize = 500){
+                       qvalueCutoff = 1, pAdjustMethod = "BH",minGSSize = 2, maxGSSize = 500){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   loginfo('Running Over-Representation Test for list of entrezIDs')
   gene = unique(as.character(gene))
@@ -64,7 +64,7 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
   if(type == "KEGG"){
     enrichedRes = enrichKEGG(gene=gene,  universe=universe, organism = organism,
                              pAdjustMethod = pAdjustMethod, pvalueCutoff = pvalueCutoff, qvalueCutoff=qvalueCutoff,
-                             minGSSize = minGSSize, maxGSSize = maxGSSize, use_internal_data=TRUE)
+                             minGSSize = minGSSize, maxGSSize = maxGSSize)
   }
   if(type == "DO"){
     enrichedRes = enrichDO(gene=gene,  universe=universe, pAdjustMethod = pAdjustMethod,pvalueCutoff = pvalueCutoff,
