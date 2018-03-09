@@ -6,7 +6,7 @@
 #' @name DensityView
 #' @rdname DensityView
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{samples} beginning from the second column.
+#' @param beta Data frame, including all \code{samples} as columns.
 #' @param samples Character, specifying sample names in \code{beta}.
 #' @param main As in 'plot'.
 #' @param xlab As in 'plot'.
@@ -24,18 +24,15 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/DensityView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
+#' @seealso \code{\link{ViolinView}}
 #'
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
-#' DensityView(dd)
-#'
+#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#' #or
+#' DensityView(dd[, 3:6])
 #'
 #' @importFrom reshape melt
 #' @importFrom ggsci scale_color_npg
@@ -46,8 +43,8 @@
 DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename=NULL){
   dd1 = beta
   loginfo(paste("Density plot for", main, xlab, "..."))
-  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[,c("Gene", samples)]}
-  dd1 = melt(dd1,id="Gene")
+  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[, samples]}
+  dd1 = melt(dd1,id=NULL)
   #==========
   p=ggplot(data=dd1,aes(x=value,color=variable,group=variable))
   p=p+geom_density()

@@ -36,7 +36,7 @@
 #' @examples
 #' data(MLE_Data)
 #' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = universe[1:50]
 #' enrichRes <- enrich.HGT(genes, universe)
 #' head(enrichRes@result)
 #'
@@ -46,13 +46,11 @@
 #' @export
 
 
-enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff = 1,
+enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCutoff = 1,
                       pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
 
-  gene = unique(as.character(gene))
-  universe = unique(as.character(universe))
   # download Kegg data
   organism = getOrg(organism)$org
   pathwayFiles <- c(file.path(temp_dir(), paste0("pathways_", organism)),
@@ -78,6 +76,10 @@ enrich.HGT = function(gene, universe, type="KEGG", organism='hsa', pvalueCutoff 
     pathways=read.table(pathwayFiles[1], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
     gene2path=read.table(pathwayFiles[2], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
+
+  gene = unique(as.character(gene))
+  if(!is.null(universe)){universe = unique(as.character(universe))
+  }else{universe = unique(c(gene, gene2path$EntrezID))}
 
   #============
   loginfo(paste('Running KEGG patwhay for list of entrezIDs'))

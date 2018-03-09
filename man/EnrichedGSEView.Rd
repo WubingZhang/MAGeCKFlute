@@ -10,15 +10,15 @@ EnrichedGSEView(enrichment, plotTitle = NULL, color = "#3f90f7",
   termNum = 20, charLength = 50)
 }
 \arguments{
-\item{enrichment}{a data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
+\item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
 
-\item{plotTitle}{same as 'title' in 'plot'.}
+\item{plotTitle}{Same as 'title' in 'plot'.}
 
-\item{color}{color of nodes}
+\item{color}{Color of nodes}
 
-\item{termNum}{integer, specifying number of top enriched terms to show}
+\item{termNum}{Integer, specifying number of top enriched terms to show}
 
-\item{charLength}{integer, specifying max length of enriched term name to show as coordinate lab}
+\item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

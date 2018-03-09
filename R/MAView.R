@@ -6,7 +6,7 @@
 #' @name MAView
 #' @rdname MAView
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param beta Data frame, including \code{ctrlname} and \code{treatname} as columns.
 #' @param ctrlname Character vector, specifying the name of control sample.
 #' @param treatname Character vector, specifying the name of treatment sample.
 #' @param main As in "ma.plot".
@@ -37,16 +37,11 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/MAView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
 #'
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
+#' dd = ReadBeta(MLE_Data, organism="hsa")
 #' MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1", cex=1)
 #'
 #' @importFrom affy ma.plot

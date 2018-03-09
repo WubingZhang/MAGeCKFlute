@@ -6,25 +6,16 @@
 \alias{batchremove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, cov = FALSE, log2trans = FALSE, pca = TRUE,
-  cluster = TRUE, prefix = NA, outdir = ".")
+BatchRemove(mat, batchMat, log2trans = FALSE, pca = TRUE)
 }
 \arguments{
 \item{mat}{Matrix, or file path of data.}
 
 \item{batchMat}{Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.}
 
-\item{cov}{Boolean, specifying if provide mod in ComBat.}
-
 \item{log2trans}{Boolean, specifying whether do log2 transition before batch removal.}
 
 \item{pca}{Boolean, specifying whether do principle component analysis before and after batch removal.}
-
-\item{cluster}{Boolean, specifing whether do cluster analysis before and after batch removal.}
-
-\item{prefix}{Character, specifying prefix of output figures, only needed if cluster/pca is TRUE.}
-
-\item{outdir}{Output directory on disk.}
 }
 \value{
 matrix of data after batch removal.
@@ -43,8 +34,8 @@ Users should find it easy to customize this function.
 \examples{
 beta = ReadBeta(MLE_Data, organism="hsa")
 batchMat = data.frame(samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"),
-                      batch = c(1,2,1,2), cov = c(1,1,2,2))
-res = BatchRemove(beta, batchMat, prefix="Test")
+                      batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))
+res = BatchRemove(beta, batchMat)
 
 }
 \seealso{

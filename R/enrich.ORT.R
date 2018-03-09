@@ -37,7 +37,7 @@
 #' @examples
 #' data(MLE_Data)
 #' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = universe[1:50]
 #' enrichRes <- enrich.ORT(genes, universe)
 #' head(enrichRes@result)
 #'
@@ -50,7 +50,7 @@ enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalue
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   loginfo('Running Over-Representation Test for list of entrezIDs')
   gene = unique(as.character(gene))
-  universe = unique(as.character(universe))
+  if(!is.null(universe)) universe = unique(as.character(universe))
   organism = getOrg(organism)$org
   orgdb = getOrg(organism)$pkg
   #=======================

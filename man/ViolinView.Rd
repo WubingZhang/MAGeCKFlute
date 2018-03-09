@@ -10,7 +10,7 @@ ViolinView(beta, samples = NULL, main = NULL, ylab = "Beta Score",
   filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{samples}.}
+\item{beta}{Data frame, , including all \code{samples} as columns.}
 
 \item{samples}{Character, specifying the name of samples to be compared.}
 
@@ -39,21 +39,14 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-dd = dd[,-2]
-ViolinView(dd)
+ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#or
+ViolinView(dd[, 3:6])
 
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{MAView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
+\code{\link{DensityView}}
 }
 \author{
 Wubing Zhang

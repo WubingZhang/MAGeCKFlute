@@ -5,7 +5,7 @@
 #' @docType methods
 #' @name DensityDiffView
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param beta Data frame, including \code{ctrlname} and \code{treatname} as columns.
 #' @param ctrlname A character, specifying the name of control sample.
 #' @param treatname A character, specifying the name of treatment sample.
 #' @param main As in 'plot'.
@@ -23,11 +23,6 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/DensityDiffView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{KeggPathwayView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
 #'
 #' @examples
 #' data(MLE_Data)
@@ -41,8 +36,7 @@
 
 #===Distribution of beta scores======================================
 
-DensityDiffView <- function(beta, ctrlname="Control",
-                         treatname="Treatment",main=NULL,filename=NULL){
+DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", main=NULL, filename=NULL){
 
   loginfo(paste("Density plot for", main, "treat-control beta scores..."))
   d=beta
@@ -58,8 +52,7 @@ DensityDiffView <- function(beta, ctrlname="Control",
   #+ggtitle("Normalization with")
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=300/100,
-           height =270/100 )
+    ggsave(plot=p,filename=filename,units = "in",width=3, height = 2.7)
   }
   return(p)
 }

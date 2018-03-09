@@ -6,7 +6,7 @@
 \alias{Hypergeometric}
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
-enrich.HGT(gene, universe, type = "KEGG", organism = "hsa",
+enrich.HGT(gene, universe = NULL, type = "KEGG", organism = "hsa",
   pvalueCutoff = 1, pAdjustMethod = "BH", minGSSize = 2,
   maxGSSize = 500)
 }
@@ -43,7 +43,7 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+genes = universe[1:50]
 enrichRes <- enrich.HGT(genes, universe)
 head(enrichRes@result)
 

@@ -11,7 +11,7 @@ FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
   organism = "hsa", prefix = "Test", top = 10, bottom = 10,
   interestGenes = c(), pvalueCutoff = 1, adjust = "BH",
   enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
-  scale_cutoff = 1.2, loess = FALSE, view_allpath = FALSE, outdir = ".")
+  scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
@@ -22,11 +22,11 @@ FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
 \item{treatname}{A character vector, specifying the name of treatment samples.}
 
 \item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
-and "mmu" or "Mouse"}
+and "mmu" or "Mouse".}
 
-\item{prefix}{A character, indicating the prefix of output file name.}
+\item{prefix}{A character, indicating the prefix of output file name, which can't contain special characters.}
 
-\item{top}{An integer, specifying number of top selected genes labeled in rank figure}
+\item{top}{An integer, specifying number of top selected genes labeled in rank figure.}
 
 \item{bottom}{An integer, specifying number of bottom selected genes labeled in rank figure.}
 
@@ -36,23 +36,23 @@ and "mmu" or "Mouse"}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-"GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.}
+\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test),
+specifying enrichment method used for kegg enrichment analysis.}
 
 \item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and
 negative selection genes.}
 
-\item{posControl}{A file path or a character vector, specifying positive control genes used
-for cell cycle normalization}
+\item{posControl}{A file path or a character vector, specifying a list of gene entrezid as positive controls
+used for cell cycle normalization.}
 
 \item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
 
-\item{loess}{Boolean, whether include loess normalization in the pipeline}
+\item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
-\item{view_allpath}{Boolean, whether output all pathway view figures}
+\item{view_allpath}{Boolean, whether output all pathway view figures.}
 
-\item{outdir}{Output directory on disk}
+\item{outdir}{Output directory on disk.}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,

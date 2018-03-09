@@ -12,24 +12,24 @@
 #' @param ctrlname A character vector, specifying the name of control samples.
 #' @param treatname A character vector, specifying the name of treatment samples.
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
-#' and "mmu" or "Mouse"
-#' @param prefix A character, indicating the prefix of output file name.
-#' @param top An integer, specifying number of top selected genes labeled in rank figure
+#' and "mmu" or "Mouse".
+#' @param prefix A character, indicating the prefix of output file name, which can't contain special characters.
+#' @param top An integer, specifying number of top selected genes labeled in rank figure.
 #' @param bottom An integer, specifying number of bottom selected genes labeled in rank figure.
 #' @param interestGenes A character vector, specifying interested genes labeled in rank figure.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-#' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
+#' @param enrich_kegg One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test),
+#' specifying enrichment method used for kegg enrichment analysis.
 #' @param gsea Boolean, indicating whether GSEA analysis is needed for positive and
 #' negative selection genes.
-#' @param posControl A file path or a character vector, specifying positive control genes used
-#' for cell cycle normalization
+#' @param posControl A file path or a character vector, specifying a list of gene entrezid as positive controls
+#'  used for cell cycle normalization.
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
-#' @param loess Boolean, whether include loess normalization in the pipeline
-#' @param view_allpath Boolean, whether output all pathway view figures
-#' @param outdir Output directory on disk
+#' @param loess Boolean, whether include loess normalization in the pipeline.
+#' @param view_allpath Boolean, whether output all pathway view figures.
+#' @param outdir Output directory on disk.
 #'
 #'
 #' @author Wubing Zhang
@@ -83,21 +83,18 @@
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
                      pvalueCutoff=1, adjust="BH", enrich_kegg="ORT", gsea=FALSE,
-                     posControl=NULL, scale_cutoff=1.2, loess=FALSE, view_allpath=FALSE, outdir="."){
+                     posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, outdir="."){
 
 	#=========Prepare the running environment=========
 	{
 	  loginfo("Create output dir and pdf file...")
-	  out.dir=paste0(prefix, "_Flute_Results")
-	  out.dir_sub=file.path(outdir, out.dir)
-	  dir.create(file.path(out.dir_sub), showWarnings=FALSE)
 
-	  output_pdf = paste0(prefix,"_Flute.mle_summary.pdf")
-	  if(loess){
-		pdf(file.path(out.dir_sub, output_pdf),width=15,height = 7)
-	  }else{
-		pdf(file.path(out.dir_sub, output_pdf),width=9,height = 6)
-	  }
+	  outdir = file.path(outdir, paste0(prefix, "_Flute_Results"))
+	  dir.create(file.path(outdir), showWarnings=FALSE)
+
+	  output_pdf = file.path(outdir, paste0(prefix,"_Flute.mle_summary.pdf"))
+	  if(loess){ pdf(output_pdf, width=15, height = 7)}else{
+		pdf(file.path(outdir, output_pdf),width=9,height = 6)}
 	  organism = getOrg(organism)$org
 	}
 
@@ -110,52 +107,43 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
 	                               method="cell_cycle", posControl=posControl)
-	  if(loess){ dd_loess = NormalizeBeta(dd, method="loess")}
+	  if(loess){ dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method="loess")}
 	}
 
 	# ========distribution of all genes================================
 	{
-	  outputDir1 <- file.path(out.dir_sub,"Distribution_of_BetaScores")
+	  outputDir1 <- file.path(outdir,"Distribution_of_BetaScores")
 	  dir.create(outputDir1, showWarnings=FALSE)
-	  idx_distr = c("Gene", ctrlname, treatname)
+	  idx_distr = c(ctrlname, treatname)
 	  #Negative normalization
 	  P1=ViolinView(dd[,idx_distr], main="Negative control normalized",
-	                 filename=file.path(outputDir1,
-	                                    "violin_all_negative_normalized.png"))
+	                 filename=file.path(outputDir1,"violin_all_negative_normalized.png"))
 	  P2=DensityView(dd[,idx_distr], main="Negative control normalized",
-	                  filename=file.path(outputDir1,
-	                                     "density_all_negative_normalized.png"))
+	                  filename=file.path(outputDir1, "density_all_negative_normalized.png"))
 	  P3=DensityDiffView(dd, ctrlname, treatname, main="Negative control normalized",
-	                  filename=file.path(
-	                    outputDir1, "density_all_treat-ctrl_negative_normalized.png"))
+	                  filename=file.path(outputDir1, "density_all_treat-ctrl_negative_normalized.png"))
 	  #Essential gene normalization
 	  P4=ViolinView(dd_essential[,idx_distr], main="Cell cycle normalized",
-	                 filename=file.path(outputDir1,
-	                                    "violin_all_essential_normalized.png"))
+	                 filename=file.path(outputDir1, "violin_all_essential_normalized.png"))
 	  P5=DensityView(dd_essential[,idx_distr], main="Cell cycle normalized",
-	                  filename=file.path(
-	                    outputDir1,"density_all_essential_normalized.png"))
+	                  filename=file.path(outputDir1,"density_all_essential_normalized.png"))
 	  P6=DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized",
-	                  filename=file.path(
-	                    outputDir1, "density_all_treat-ctrl_essential_normalized.png"))
+	                  filename=file.path(outputDir1, "density_all_treat-ctrl_essential_normalized.png"))
 	  #Loess normalization
 	  if(loess){
 		P7=ViolinView(dd_loess[,idx_distr],main="Loess normalized",
-		               filename=file.path(
-		                 outputDir1,"violin_all_loess_normalized.png"))
+		               filename=file.path(outputDir1,"violin_all_loess_normalized.png"))
 		P8=DensityView(dd_loess[,idx_distr],main="Loess normalized",
-		                filename=file.path(
-		                  outputDir1,"density_all_loess_normalized.png"))
+		                filename=file.path(outputDir1,"density_all_loess_normalized.png"))
 		P9=DensityDiffView(dd_loess, ctrlname, treatname, main="Loess normalized",
-		                filename=file.path(
-		                  outputDir1,"density_all_treat-ctrl_loess_normalized.png"))
+		                filename=file.path(outputDir1,"density_all_treat-ctrl_loess_normalized.png"))
 		grid.arrange(P1,P4,P7,P2,P5,P8, ncol = 3)
 	  }else{grid.arrange(P1,P4,P2,P5, ncol = 2)}
 	}
 
 	#========MAplot of treatment and control beta scores==================
 	{
-	  outputDir2 <- file.path(out.dir_sub,"MAplot")
+	  outputDir2 <- file.path(outdir,"MAplot")
 	  dir.create(outputDir2, showWarnings=FALSE)
 
 	  if(loess){
@@ -186,32 +174,24 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#=============distribution of essential genes====================
 	{
-	  outputDir3=file.path(out.dir_sub,"Linear_Fitting_of_BetaScores")
+	  outputDir3=file.path(outdir,"Linear_Fitting_of_BetaScores")
 	  dir.create(outputDir3, showWarnings=FALSE)
-	  data(Core_Essential)
-	  idx=which(dd$Gene %in% Core_Essential)
+	  data(Zuber_Essential)
+	  idx=which(dd$ENTREZID %in% Zuber_Essential$EntrezID)
 	  #Negative control normalized
-	  P1=ViolinView(dd[idx,idx_distr],ylab="Essential.B.S.",
-	                 main="Negative control normalized",
-	                 filename=file.path(
-	                   outputDir1,"violin_ess_negative_normalized.png"))
-	  P2=DensityView(dd[idx,idx_distr],xlab="Essential.B.S.",
-	                  main="Negative control normalized",
-	                  filename=file.path(
-	                    outputDir1,"density_ess_negative_normalized.png"))
+	  P1=ViolinView(dd[idx,idx_distr],ylab="Essential.B.S.", main="Negative control normalized",
+	                 filename=file.path(outputDir1,"violin_ess_negative_normalized.png"))
+	  P2=DensityView(dd[idx,idx_distr],xlab="Essential.B.S.",main="Negative control normalized",
+	                  filename=file.path(outputDir1,"density_ess_negative_normalized.png"))
 	  P3=CellCycleView(dd[,idx_distr], ctrlname, main="Negative control normalized",
 	                  filename=file.path(outputDir3,"Linear_all_negative_normalized.png"))
 	  P4=CellCycleView(dd[idx,idx_distr], ctrlname, main="Negative control normalized",
 	                  filename=file.path(outputDir3,"Linear_ess_negative_normalized.png"))
 	  #Essential normalized
-	  P5=ViolinView(dd_essential[idx,idx_distr],ylab="Essential.B.S.",
-	                 main="Cell cycle  normalized",
-	                 filename=file.path(
-	                   outputDir1,"violin_ess_essential_normalized.png"))
-	  P6=DensityView(dd_essential[idx,idx_distr],xlab="Essential.B.S.",
-	                  main="Cell cycle  normalized",
-	                  filename=file.path(
-	                    outputDir1,"density_ess_essential_normalized.png"))
+	  P5=ViolinView(dd_essential[idx,idx_distr],ylab="Essential.B.S.",main="Cell cycle  normalized",
+	                 filename=file.path(outputDir1,"violin_ess_essential_normalized.png"))
+	  P6=DensityView(dd_essential[idx,idx_distr],xlab="Essential.B.S.",main="Cell cycle  normalized",
+	                  filename=file.path(outputDir1,"density_ess_essential_normalized.png"))
 	  P7=CellCycleView(dd_essential[,idx_distr], ctrlname, main="Cell cycle  normalized",
 	                  filename=file.path(outputDir3,"Linear_all_essential_normalized.png"))
 	  P8=CellCycleView(dd_essential[idx,idx_distr], ctrlname, main="Cell cycle  normalized",
@@ -219,14 +199,10 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	  #loess normalized
 	  if(loess){
-		P9=ViolinView(dd_loess[idx,idx_distr],ylab="Essential.B.S.",
-		               main="Loess  normalized",
-		               filename=file.path(
-		                 outputDir1,"violin_ess_loess_normalized.png"))
-		P10=DensityView(dd_loess[idx,idx_distr],xlab="Essential.B.S.",
-		                 main="Loess  normalized",
-		                 filename=file.path(
-		                   outputDir1,"density_ess_loess_normalized.png"))
+		P9=ViolinView(dd_loess[idx,idx_distr],ylab="Essential.B.S.", main="Loess  normalized",
+		               filename=file.path(outputDir1,"violin_ess_loess_normalized.png"))
+		P10=DensityView(dd_loess[idx,idx_distr],xlab="Essential.B.S.", main="Loess  normalized",
+		                 filename=file.path(outputDir1,"density_ess_loess_normalized.png"))
 		P11=CellCycleView(dd_loess[,idx_distr], ctrlname, main="Loess  normalized",
 		                 filename=file.path(outputDir3,"Linear_all_loess_normalized.png"))
 		P12=CellCycleView(dd_loess[idx,idx_distr], ctrlname, main="Loess  normalized",
@@ -240,8 +216,8 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }
 	}
 
-  dd$Control = rowMeans(dd[,ctrlname, drop=FALSE])
-  dd$Treatment = rowMeans(dd[,treatname, drop=FALSE])
+  dd$Control = rowMeans(dd[, ctrlname, drop=FALSE])
+  dd$Treatment = rowMeans(dd[, treatname, drop=FALSE])
   dd$diff = dd$Treatment - dd$Control
   dd_essential$Control = rowMeans(dd_essential[,ctrlname, drop=FALSE])
   dd_essential$Treatment = rowMeans(dd_essential[,treatname, drop=FALSE])
@@ -254,19 +230,17 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	# =========drug-targeted genes=================================
 	{
-	  outputDir4 = file.path(out.dir_sub,"Scatter_Treat_Ctrl")
+	  outputDir4 = file.path(outdir,"Scatter_Treat_Ctrl")
 	  dir.create(outputDir4, showWarnings=FALSE)
 
 	  #Negative normalized
-	  P1=ScatterView(dd,main="Negative control normalized",
-	               scale_cutoff=scale_cutoff,
+	  P1=ScatterView(dd,main="Negative control normalized", scale_cutoff=scale_cutoff,
 	               filename=file.path(outputDir4,"Scatter_Treat-Ctrl_negative_normalized.png"))
 	  P2=RankView(dd, genelist=interestGenes, top=top, bottom=bottom, main="Negative control normalized",
 	            cutoff=c(CutoffCalling(dd$diff,scale=scale_cutoff), -CutoffCalling(dd$diff,scale=scale_cutoff)),
 	            filename=file.path(outputDir4,"Rank_Treat-Ctrl_negative_normalized.png"))
 	  #Essential normalized
-	  P3=ScatterView(dd_essential,main="Cell cycle normalized",
-	               scale_cutoff=scale_cutoff,
+	  P3=ScatterView(dd_essential,main="Cell cycle normalized", scale_cutoff=scale_cutoff,
 	               filename=file.path(outputDir4,"Scatter_Treat-Ctrl_essential_normalized.png"))
 	  P4=RankView(dd_essential,genelist=interestGenes, top=top, bottom=bottom, main="Cell cycle  normalized",
 	            cutoff=c(CutoffCalling(dd_essential$diff,scale=scale_cutoff),
@@ -289,7 +263,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#==========enrichment AB group genes=========================
 	{
-	  outputDir5 = file.path(out.dir_sub,"Enrichment_Treat-Ctrl/")
+	  outputDir5 = file.path(outdir,"Enrichment_Treat-Ctrl/")
 	  dir.create(outputDir5, showWarnings=FALSE)
 
 	  E1 = EnrichAB(P1$data,pvalue=pvalueCutoff,enrich_method = enrich_kegg,
@@ -332,47 +306,47 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#======Pathview for GroupA and GroupB significant enriched pathways
 	{
-	  dir.create(file.path(out.dir_sub,"Pathview_Treat_Ctrl"), showWarnings=FALSE)
+	  dir.create(file.path(outdir,"Pathview_Treat_Ctrl"), showWarnings=FALSE)
 	  #Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes@result)>0)
   	  arrangePathview(dd, E1$keggA$enrichRes@result$ID, "Group A",
   	              "Negative control normalized",organism=organism,
   	              view_allpath=view_allpath, output=file.path(
-  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+  	                outdir,"Pathview_Treat_Ctrl"))
 	  if(!is.null(E1$keggB$enrichRes) && nrow(E1$keggB$enrichRes@result)>0)
   	  arrangePathview(dd, E1$keggB$enrichRes@result$ID, "Group B",
   	              "Negative control normalized",organism=organism,
   	              view_allpath=view_allpath, output=file.path(
-  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+  	                outdir,"Pathview_Treat_Ctrl"))
 	  if(!is.null(E2$keggA$enrichRes) && nrow(E2$keggA$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$keggA$enrichRes@result$ID, "Group A",
   	              "Cell cycle normalized",organism=organism,
   	              view_allpath=view_allpath, output=file.path(
-  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+  	                outdir,"Pathview_Treat_Ctrl"))
 	  if(!is.null(E2$keggB$enrichRes) && nrow(E2$keggB$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$keggB$enrichRes@result$ID, "Group B",
   	              "Cell cycle normalized",organism=organism,
   	              view_allpath=view_allpath, output=file.path(
-  	                out.dir_sub,"Pathview_Treat_Ctrl"))
+  	                outdir,"Pathview_Treat_Ctrl"))
 
 	  if(loess){
 	    if(!is.null(E3$keggA$enrichRes) && nrow(E3$keggA$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$keggA$enrichRes@result$ID, "Group A",
     		            "Loess normalized",organism=organism,
     		            view_allpath=view_allpath, output=file.path(
-    		              out.dir_sub,"Pathview_Treat_Ctrl"))
+    		              outdir,"Pathview_Treat_Ctrl"))
 	    if(!is.null(E3$keggB$enrichRes) && nrow(E3$keggB$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$keggB$enrichRes@result$ID, "Group B",
     		            "Loess normalized",organism=organism,
     		            view_allpath=view_allpath, output=file.path(
-    		              out.dir_sub,"Pathview_Treat_Ctrl"))
+    		              outdir,"Pathview_Treat_Ctrl"))
 	  }
 	}
 
 	# ===============9 squares=====================================
 	{
-	  dir.create(file.path(out.dir_sub,"Scatter_9Square"), showWarnings=FALSE)
-	  outputDir6 <- file.path(out.dir_sub,"Scatter_9Square/Square9_")
+	  dir.create(file.path(outdir,"Scatter_9Square"), showWarnings=FALSE)
+	  outputDir6 <- file.path(outdir,"Scatter_9Square/Square9_")
 
 	  P1=SquareView(dd, main="Negative control normalized", scale_cutoff=scale_cutoff,
 	                 filename=paste0(outputDir6,"scatter_negative_normalized.png"))
@@ -389,19 +363,19 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#==============9 Square grouped gene enrichment======================
 	{
-	  dir.create(file.path(out.dir_sub,"Enrichment_9Square"), showWarnings=FALSE)
+	  dir.create(file.path(outdir,"Enrichment_9Square"), showWarnings=FALSE)
 	  E1 = EnrichSquare(P1$data, pvalue = pvalueCutoff,adjust = adjust,
 	                    enrich_method = enrich_kegg, organism=organism,
         						 filename="negative_normalized",
-        						 out.dir=file.path(out.dir_sub,"Enrichment_9Square"))
+        						 out.dir=file.path(outdir,"Enrichment_9Square"))
 	  E2 = EnrichSquare(P2$data, pvalue=pvalueCutoff,adjust=adjust, enrich_method=enrich_kegg,
 	                    organism=organism, filename="essential_normalized",
-        						 out.dir = file.path(out.dir_sub,"Enrichment_9Square"))
+        						 out.dir = file.path(outdir,"Enrichment_9Square"))
 
 	  if(loess){
 		E3 = EnrichSquare(P3$data, pvalue=pvalueCutoff,adjust=adjust, organism=organism,
 		                  enrich_method=enrich_kegg, filename="loess_normalized",
-      						   out.dir=file.path(out.dir_sub,"Enrichment_9Square"))
+      						   out.dir=file.path(outdir,"Enrichment_9Square"))
 
 		grid.arrange(E1$kegg1$gridPlot, E2$kegg1$gridPlot, E3$kegg1$gridPlot,
 		             E1$bp1$gridPlot, E2$bp1$gridPlot, E3$bp1$gridPlot, ncol = 3)
@@ -445,125 +419,125 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	#========Pathway view for 9 square genesets================
 	{
-	  dir.create(file.path(out.dir_sub,"Pathview_9Square"), showWarnings=FALSE)
+	  dir.create(file.path(outdir,"Pathview_9Square"), showWarnings=FALSE)
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg1$enrichRes@result$ID,"Group 1",
   	              "Negative control normalized",organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg1$enrichRes) && nrow(E2$kegg1$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg1$enrichRes@result$ID,"Group 1",
   	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg2$enrichRes) && nrow(E1$kegg2$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg2$enrichRes@result$ID,"Group 2",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg2$enrichRes) && nrow(E2$kegg2$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg2$enrichRes@result$ID,"Group 2",
   	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg3$enrichRes) && nrow(E1$kegg3$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg3$enrichRes@result$ID,"Group 3",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg3$enrichRes) && nrow(E2$kegg3$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg3$enrichRes@result$ID,"Group 3",
   	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg4$enrichRes) && nrow(E1$kegg4$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg4$enrichRes@result$ID,"Group 4",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg4$enrichRes) && nrow(E2$kegg4$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg4$enrichRes@result$ID,"Group 4",
   	              "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg13$enrichRes) && nrow(E1$kegg13$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg13$enrichRes@result$ID,"Group 1 & Group 3",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg13$enrichRes) && nrow(E2$kegg13$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg13$enrichRes@result$ID,
   	              "Group 1 & Group 3","Cell cycle normalized",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg14$enrichRes) && nrow(E1$kegg14$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg14$enrichRes@result$ID,"Group 1 & Group 4",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg14$enrichRes) && nrow(E2$kegg14$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg14$enrichRes@result$ID,
   	              "Group 1 & Group 4","Cell cycle normalized",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg23$enrichRes) && nrow(E1$kegg23$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg23$enrichRes@result$ID,"Group 2 & Group 3",
   	              "Negative control normalized",organism=organism,
-  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg23$enrichRes) && nrow(E2$kegg23$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg23$enrichRes@result$ID,
   	              "Group 2 & Group 3","Cell cycle normalized",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg24$enrichRes) && nrow(E1$kegg24$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg24$enrichRes@result$ID,
   	              "Group 2 & Group 4","Negative control normalized",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg24$enrichRes) && nrow(E2$kegg24$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg24$enrichRes@result$ID,
   	              "Group 2 & Group 4","Cell cycle normalized",
   	              organism=organism, view_allpath=view_allpath,
-  	              output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E1$kegg1234$enrichRes) && nrow(E1$kegg1234$enrichRes@result)>0)
   	  arrangePathview(dd, E1$kegg1234$enrichRes@result$ID,
   	              "Group 1 & Group 2 & Group 3 & Group 4",
   	              "Negative control normalized",organism=organism,
-  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	  if(!is.null(E2$kegg1234$enrichRes) && nrow(E2$kegg1234$enrichRes@result)>0)
   	  arrangePathview(dd_essential, E2$kegg1234$enrichRes@result$ID,
   	              "Group 1 & Group 2 & Group 3 & Group 4",
   	              "Cell cycle normalized",organism=organism,
-  	              view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+  	              view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 
 	  if(loess){
 	    if(!is.null(E3$kegg1$enrichRes) && nrow(E3$kegg1$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$kegg1$enrichRes@result$ID,"Group 1",
     		            "Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg2$enrichRes) && nrow(E3$kegg2$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$kegg2$enrichRes@result$ID,"Group 2",
     		            "Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg3$enrichRes) && nrow(E3$kegg3$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$kegg3$enrichRes@result$ID,"Group 3",
     		            "Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg4$enrichRes) && nrow(E3$kegg4$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$kegg4$enrichRes@result$ID,"Group 4",
     		            "Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg13$enrichRes) && nrow(E3$kegg13$enrichRes@result)>0)
 	      arrangePathview(dd_loess, E3$kegg13$enrichRes@result$ID,
     		            "Group 1 & Group 3","Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg14$enrichRes) && nrow(E3$kegg14$enrichRes@result)>0)
     		arrangePathview(dd_loess, E3$kegg14$enrichRes@result$ID,
     		            "Group 1 & Group 4","Loess normalized",organism=organism,
-    		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+    		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg23$enrichRes) && nrow(E3$kegg23$enrichRes@result)>0)
   	    arrangePathview(dd_loess, E3$kegg23$enrichRes@result$ID,
       		            "Group 2 & Group 3","Loess normalized",organism=organism,
-      		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+      		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg24$enrichRes) && nrow(E3$kegg24$enrichRes@result)>0)
   	    arrangePathview(dd_loess, E3$kegg24$enrichRes@result$ID,
       		            "Group 2 & Group 4","Loess normalized",organism=organism,
-      		            view_allpath=view_allpath, output=file.path(out.dir_sub,"Pathview_9Square"))
+      		            view_allpath=view_allpath, output=file.path(outdir,"Pathview_9Square"))
 	    if(!is.null(E3$kegg1234$enrichRes) && nrow(E3$kegg1234$enrichRes@result)>0)
   	    arrangePathview(dd_loess, E3$kegg1234$enrichRes@result$ID,
       		            "Group 1 & Group 2 & Group 3 & Group 4","Loess normalized",
       		            organism=organism,view_allpath=view_allpath,
-      		            output=file.path(out.dir_sub,"Pathview_9Square"))
+      		            output=file.path(outdir,"Pathview_9Square"))
 	  }
 	}
 	dev.off()

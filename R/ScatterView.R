@@ -8,9 +8,9 @@
 #' @rdname ScatterView
 #' @aliases scatterview
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
-#' @param ctrlname A character, specifying the name of control sample.
-#' @param treatname A character, specifying the name of treatment sample.
+#' @param beta Data frame, including \code{ctrlname} and \code{treatname} as columns.
+#' @param ctrlname A character, specifying the names of control samples.
+#' @param treatname A character, specifying the names of treatment samples.
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
 #' @param main As in 'plot'.
@@ -28,11 +28,8 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ScatterView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{RankView}}    \code{\link{MAView}}
+#' @seealso \code{\link{SquareView}}
+#'
 #'
 #' @examples
 #' data(MLE_Data)
@@ -45,7 +42,7 @@
 #'
 
 ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=1,
-                     main=NULL,filename=NULL){
+                        main=NULL,filename=NULL){
 
   beta$Control=rowMeans(beta[,ctrlname,drop= FALSE])
   beta$Treatment=rowMeans(beta[,treatname,drop= FALSE])

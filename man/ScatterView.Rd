@@ -10,11 +10,11 @@ ScatterView(beta, ctrlname = "Control", treatname = "Treatment",
   scale_cutoff = 1, main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
 
-\item{ctrlname}{A character, specifying the name of control sample.}
+\item{ctrlname}{A character, specifying the names of control samples.}
 
-\item{treatname}{A character, specifying the name of treatment sample.}
+\item{treatname}{A character, specifying the names of treatment samples.}
 
 \item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
@@ -48,15 +48,7 @@ ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{RankView}}    \code{\link{MAView}}
+\code{\link{SquareView}}
 }
 \author{
 Wubing Zhang

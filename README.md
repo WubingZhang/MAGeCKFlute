@@ -15,7 +15,7 @@ biocLite("MAGeCKFlute")
 #or
 install.packages("devtools")
 library(devtools)
-install_github("WubingZhang/MAGeCKFlute")
+install_bitbucket("liulab/MAGeCKFlute")
 ~~~
 
 ## Quick start

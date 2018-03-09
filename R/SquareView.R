@@ -8,7 +8,7 @@
 #' @rdname SquareView
 #' @aliases squareview
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param beta Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.
 #' @param ctrlname A character, specifying the names of control samples.
 #' @param treatname A character, specifying the name of treatment samples.
 #' @param genelist Character vector, specifying labeled genes.
@@ -29,11 +29,7 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/SquareView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{MAView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
+#' @seealso \code{\link{ScatterView}}
 #'
 #' @examples
 #' data(MLE_Data)
@@ -136,7 +132,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", genelist=c(
                label=paste("",as.character(dim(beta[beta$group=="Group1",])[1]),sep=""),
                x=x_min, y=0,vjust=0.5,hjust = 0)
   p=suppressWarnings(ggExtra::ggMarginal(p, type="histogram",bins=50))
-  p$data = gg[, c("Gene", "ENTREZID", ctrlname, treatname, "group")]
+  p$data = gg
   p$data = p$data[order(p$data$group),]
   # grid.arrange(p,ncol = 1)
   if(!is.null(filename)){

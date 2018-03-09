@@ -11,15 +11,16 @@ RankView(beta, genelist = c(), top = 20, bottom = 20,
   ...)
 }
 \arguments{
-\item{beta}{Data frame containing columns of "Gene" and "diff".}
+\item{beta}{Data frame containing two columns. The first column is label of points, and the second column
+includes numeric values to be ranked.}
 
-\item{genelist}{Character vector, specifying labeled genes besides top and bottom labeled genes.}
+\item{genelist}{Character vector, specifying genes to be labeled in figure.}
 
-\item{top}{Integer, specifying top number of genes to be labeled.}
+\item{top}{Integer, specifying number of top genes to be labeled.}
 
-\item{bottom}{Integer, specifying bottom number of genes to be labeled.}
+\item{bottom}{Integer, specifying number of bottom genes to be labeled.}
 
-\item{cutoff}{Numeric, cutoff of \code{diff}.}
+\item{cutoff}{A two-length numeric vector, in which first value is bottom cutoff, and second value is top cutoff.}
 
 \item{main}{As in 'plot'.}
 

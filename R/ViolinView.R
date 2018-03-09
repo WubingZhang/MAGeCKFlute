@@ -7,7 +7,7 @@
 #' @rdname ViolinView
 #' @aliases violinview
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{samples}.
+#' @param beta Data frame, , including all \code{samples} as columns.
 #' @param samples Character, specifying the name of samples to be compared.
 #' @param main As in 'plot'.
 #' @param ylab As in 'plot'.
@@ -25,18 +25,15 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ViolinView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{MAView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
+#' @seealso \code{\link{DensityView}}
 #'
 #' @examples
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(MLE_Data, organism="hsa")
-#' dd = dd[,-2]
-#' ViolinView(dd)
+#' ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#' #or
+#' ViolinView(dd[, 3:6])
 #'
 #'
 #' @importFrom reshape melt
@@ -52,9 +49,9 @@ ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=
 
   dd1=beta
   loginfo(paste("Violin plot for", main, ylab, "..."))
-  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[,c("Gene", samples)]}
+  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[, samples]}
 
-  dd1 = melt(dd1,id="Gene")
+  dd1 = melt(dd1, id=NULL)
   #======
   p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)

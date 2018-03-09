@@ -9,7 +9,7 @@ DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
   filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{samples} beginning from the second column.}
+\item{beta}{Data frame, including all \code{samples} as columns.}
 
 \item{samples}{Character, specifying sample names in \code{beta}.}
 
@@ -37,21 +37,14 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
-DensityView(dd)
-
+dd = ReadBeta(MLE_Data, organism="hsa")
+DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#or
+DensityView(dd[, 3:6])
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{KeggPathwayView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
+\code{\link{ViolinView}}
 }
 \author{
 Wubing Zhang

@@ -9,12 +9,12 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta Data frame, which has columns of 'Gene', and \code{samples}.
+#' @param beta Data frame, which has columns of 'ENTREZID', and \code{samples}.
 #' @param samples Character vector, specifying the samples in \code{beta} to be normalized.
-#' If NULL (default), use colnames of beta from the third columns to ncol.
+#' If NULL (default), normalize beta score of all samples in \code{beta}.
 #' @param method Character, one of 'cell_cycle'(default) and 'loess'.
-#' @param posControl A file path or a character vector, specifying positive control genes used
-#' for cell cycle normalization.
+#' @param posControl A file path or a character vector, specifying a list of gene entrezids as positive
+#' controls used for cell cycle normalization
 #' @param minus Numeric, scale for cell cycle normalization. Between 0 and 1.
 #'
 #' @return A data frame with same format as input data \code{beta}.
@@ -41,12 +41,13 @@
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(MLE_Data, organism="hsa")
+#' samples=colnames(dd)[3:6]
 #' #Cell Cycle normalization
-#' dd_essential = NormalizeBeta(dd, method="cell_cycle")
+#' dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
 #' head(dd_essential)
 #'
 #' #Optional loess normalization
-#' dd_loess = NormalizeBeta(dd, method="loess")
+#' dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
 #' head(dd_loess)
 #'
 #' @importFrom Biobase rowMedians
@@ -59,17 +60,17 @@ NormalizeBeta <- function(beta, samples=NULL,
                           method="cell_cycle", posControl=NULL, minus=0.6){
   loginfo("Normalize beta scores ...")
   requireNamespace("Biobase", quietly=TRUE) || stop("need Biobase package")
-  if(is.null(samples)) samples = colnames(beta)[3:ncol(beta)]
+  if(is.null(samples)) samples = setdiff(colnames(beta), "ENTREZID")
 
   if(method=="cell_cycle"){
     if(!is.null(posControl) && class(posControl)=="character" && file.exists(posControl)[1]){
       tmp = read.table(posControl, sep = "\t", header = FALSE)
       posControl = as.character(unlist(tmp))
     }else{
-      data(Core_Essential)
-      posControl=Core_Essential
+      data(Zuber_Essential)
+      posControl=Zuber_Essential
     }
-    idx = which(beta$Gene %in% posControl)
+    idx = which(as.numeric(beta$ENTREZID) %in% as.numeric(posControl$EntrezID))
     normalized = as.matrix(beta[,samples])
     mid = rowMedians(t(normalized[idx,]))
     mid = abs(mid - minus)

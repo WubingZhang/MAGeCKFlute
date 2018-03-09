@@ -38,7 +38,7 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+genes = universe[1:50]
 enrichRes <- enrich.GOstats(genes, universe, type="BP")
 head(enrichRes@result)
 

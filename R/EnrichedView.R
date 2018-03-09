@@ -23,16 +23,13 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichedView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{KeggPathwayView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
+#' @seealso \code{\link{KeggPathwayView}}
+#' @seealso \code{\link{EnrichedGSEView}}
 #'
 #' @examples
 #' data(MLE_Data)
 #' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = universe[1:50]
 #' enrichRes <- enrich.HGT(genes, universe)
 #' EnrichedView(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
 #'
@@ -40,15 +37,13 @@
 #' @export
 
 
-EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charLength=50){
+EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charLength=40){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)
-    p1=p1+theme(plot.title = element_text(size=10))
-    p1=p1+theme_void()
-    p1=p1+theme(plot.title = element_text(hjust = 0.5))
+    p1=p1+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
     return(p1)
   }
 
@@ -88,9 +83,10 @@ EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charL
   p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
   p1 <- p1 + labs(title=plotTitle)
   p1 <- p1 + theme_bw(8)
-  p1 <- p1 + theme(axis.text.x=element_text(size=6, face="plain", colour='black'))
-  p1 <- p1 + theme(axis.text.y=element_text(size=6, face="plain", colour='black'))
-  p1 = p1 + theme(legend.position="bottom")+theme(plot.title = element_text(hjust = 0.5,size=10))
+  # p1 <- p1 + theme(axis.text.x=element_text(size=8, face="plain", colour='black'))
+  # p1 <- p1 + theme(axis.text.y=element_text(size=8, face="plain", colour='black'))
+  p1 = p1 + theme(legend.position="bottom")
+  p1 = p1 + theme_bw(14) + theme(plot.title = element_text(hjust = 0.5,size=12))
 
   return(p1)
 }
@@ -108,11 +104,11 @@ EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charL
 #' @rdname EnrichedGSEView
 #' @aliases enrichgseview
 #'
-#' @param enrichment a data frame of enrichment result, with columns of ID, Description, p.adjust and NES
-#' @param plotTitle same as 'title' in 'plot'.
-#' @param color color of nodes
-#' @param termNum integer, specifying number of top enriched terms to show
-#' @param charLength integer, specifying max length of enriched term name to show as coordinate lab
+#' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and NES
+#' @param plotTitle Same as 'title' in 'plot'.
+#' @param color Color of nodes
+#' @param termNum Integer, specifying number of top enriched terms to show
+#' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -146,9 +142,8 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)
-    p1=p1+theme(plot.title = element_text(size=10))
-    p1=p1+theme_void()
-    p1=p1+theme(plot.title = element_text(hjust = 0.5))
+    p1=p1+theme(plot.title = element_text(size=12))
+    p1=p1+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
     return(p1)
   }
 
@@ -185,12 +180,11 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
   p1 <- p1+theme(panel.grid.major=element_line(colour="gray90"),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())
-  p1 <- p1+xlab("-log10(Adjust.pvalue)")+ylab("")
-  p1 <- p1+labs(title=plotTitle)
+  p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
+  p1 <- p1 + labs(title=plotTitle)
   p1 <- p1 + theme_bw(8)
-  p1 <- p1+theme(axis.text.x=element_text(size=6, face="plain", colour='black'))
-  p1 <- p1+theme(axis.text.y=element_text(size=6, face="plain", colour='black'))
-  p1=p1+theme(legend.position="bottom")+theme(plot.title = element_text(hjust = 0.5,size=10))
+  p1 = p1 + theme(legend.position="bottom")
+  p1 = p1 + theme_bw(14) + theme(plot.title = element_text(hjust = 0.5,size=12))
   #p1
   return(p1)
 }

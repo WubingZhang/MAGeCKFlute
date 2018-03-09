@@ -8,8 +8,7 @@
 #'
 #' @param beta Data frame, which has columns of 'ENTREZID' and 'group'.
 #' @param pvalue Pvalue cutoff.
-#' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-#' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5
+#' @param enrich_method One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param filename Suffix of output file name. NULL(default) means no output.

@@ -13,8 +13,7 @@ EnrichSquare(beta, pvalue = 1, enrich_method = "ORT", organism = "hsa",
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-"GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5}
+\item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
 
 \item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
 

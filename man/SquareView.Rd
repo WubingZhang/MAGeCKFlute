@@ -10,7 +10,7 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.}
 
 \item{ctrlname}{A character, specifying the names of control samples.}
 
@@ -50,15 +50,7 @@ SquareView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{MAView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
+\code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

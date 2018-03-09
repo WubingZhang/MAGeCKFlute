@@ -14,7 +14,7 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
   filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
 
 \item{ctrlname}{Character vector, specifying the name of control sample.}
 
@@ -68,20 +68,9 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")[,-2]
+dd = ReadBeta(MLE_Data, organism="hsa")
 MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1", cex=1)
 
-}
-\seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

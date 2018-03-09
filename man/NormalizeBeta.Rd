@@ -10,15 +10,15 @@ NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
   posControl = NULL, minus = 0.6)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', and \code{samples}.}
+\item{beta}{Data frame, which has columns of 'ENTREZID', and \code{samples}.}
 
 \item{samples}{Character vector, specifying the samples in \code{beta} to be normalized.
-If NULL (default), use colnames of beta from the third columns to ncol.}
+If NULL (default), normalize beta score of all samples in \code{beta}.}
 
 \item{method}{Character, one of 'cell_cycle'(default) and 'loess'.}
 
-\item{posControl}{A file path or a character vector, specifying positive control genes used
-for cell cycle normalization.}
+\item{posControl}{A file path or a character vector, specifying a list of gene entrezids as positive
+controls used for cell cycle normalization}
 
 \item{minus}{Numeric, scale for cell cycle normalization. Between 0 and 1.}
 }
@@ -51,12 +51,13 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
+samples=colnames(dd)[3:6]
 #Cell Cycle normalization
-dd_essential = NormalizeBeta(dd, method="cell_cycle")
+dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
 head(dd_essential)
 
 #Optional loess normalization
-dd_loess = NormalizeBeta(dd, method="loess")
+dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
 head(dd_loess)
 
 }

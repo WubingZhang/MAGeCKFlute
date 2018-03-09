@@ -43,10 +43,9 @@
 #' @examples
 #' data(MLE_Data)
 #' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
-#' keggA = enrichment_analysis(geneList = genes, universe=universe,
-#'                          method = "HGT",type = "KEGG",
-#'                          organism = "hsa", color="#6daf61")
+#' genes = universe[1:50]
+#' keggA = enrichment_analysis(geneList = genes, universe=universe, method = "HGT",
+#'                           type = "KEGG", organism = "hsa", color="#6daf61")
 #' print(keggA$gridPlot)
 #'
 #'

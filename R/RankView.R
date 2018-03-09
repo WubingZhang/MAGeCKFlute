@@ -8,11 +8,12 @@
 #' @rdname RankView
 #' @aliases rankview
 #'
-#' @param beta Data frame containing columns of "Gene" and "diff".
-#' @param genelist Character vector, specifying labeled genes besides top and bottom labeled genes.
-#' @param top Integer, specifying top number of genes to be labeled.
-#' @param bottom Integer, specifying bottom number of genes to be labeled.
-#' @param cutoff Numeric, cutoff of \code{diff}.
+#' @param beta Data frame containing two columns. The first column is label of points, and the second column
+#' includes numeric values to be ranked.
+#' @param genelist Character vector, specifying genes to be labeled in figure.
+#' @param top Integer, specifying number of top genes to be labeled.
+#' @param bottom Integer, specifying number of bottom genes to be labeled.
+#' @param cutoff A two-length numeric vector, in which first value is bottom cutoff, and second value is top cutoff.
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
 #' @param ... Other available parameters in function 'geom_label_repel'.
@@ -48,11 +49,10 @@ RankView <- function(beta, genelist=c(), top=20, bottom=20,cutoff=c(-sd(beta$dif
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   loginfo(paste("Rank genes and plot..."))
-  diff = as.numeric(beta$diff)
   data = list()
-  data$diff = diff
-  data$Rank = rank(diff)
-  data$Gene = beta$Gene
+  data$diff = as.numeric(beta[,2])
+  data$Rank = rank(data$diff)
+  data$Gene = beta[,1]
   data$group = "no"
   data = as.data.frame(data, stringsAsFactors=FALSE)
   data$group[data$diff>cutoff[2]] = "up"

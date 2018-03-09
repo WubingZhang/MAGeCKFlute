@@ -133,11 +133,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
 #' @seealso \code{\link{pathview}}
 #'
 #' @examples

@@ -186,16 +186,6 @@ pv.out <- KeggPathwayView(gene.data = gse16873.d[, 1],
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
-
 \code{\link{pathview}}
 }
 \author{

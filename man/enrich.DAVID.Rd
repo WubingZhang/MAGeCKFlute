@@ -48,7 +48,7 @@ Users should find it easy to customize this function.
 \dontrun{
  data(MLE_Data)
  universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
- genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+ genes = universe[1:50]
 	# Before running this example, you need to have a david account.
 	enrichRes <- enrich.DAVID(genes, universe, david.user="david.user@edu.com")
 	head(enrichRes@result)

@@ -34,7 +34,7 @@
 #' @examples
 #' data(MLE_Data)
 #' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+#' genes = universe[1:50]
 #' enrichRes <- enrich.GOstats(genes, universe, type="BP")
 #' head(enrichRes@result)
 #'
@@ -50,7 +50,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   requireNamespace("Category", quietly=TRUE) || stop("need Category package")
 
   gene = unique(as.character(gene))
-  universe = unique(as.character(universe))
+  if(!is.null(universe)) universe = unique(as.character(universe))
   #======
   DS = toupper(type[1])
   over.sum=data.frame()
@@ -58,8 +58,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   #========
   if(DS == "KEGG"){
     loginfo('Running KEGG for list of entrezIDs')
-    params <- new("KEGGHyperGParams", categoryName="KEGG",
-                  geneIds=gene, universeGeneIds=universe,
+    params <- new("KEGGHyperGParams", categoryName="KEGG", geneIds=gene, universeGeneIds=universe,
                   annotation=orgdb, pvalueCutoff=pvalueCutoff,testDirection="over")
     #loginfo('    Starting HyperG test')
     over <- hyperGTest(params)

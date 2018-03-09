@@ -7,7 +7,7 @@
 \title{View enriched terms}
 \usage{
 EnrichedView(enrichment, plotTitle = NULL, color = "#3f90f7",
-  termNum = 20, charLength = 50)
+  termNum = 20, charLength = 40)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.}
@@ -36,22 +36,16 @@ Users should find it easy to customize this function.
 \examples{
 data(MLE_Data)
 universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+genes = universe[1:50]
 enrichRes <- enrich.HGT(genes, universe)
 EnrichedView(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
 
 
 }
 \seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
+\code{\link{KeggPathwayView}}
 
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{KeggPathwayView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
+\code{\link{EnrichedGSEView}}
 }
 \author{
 Feizhen Wu

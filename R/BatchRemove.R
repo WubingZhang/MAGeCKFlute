@@ -9,12 +9,8 @@
 #'
 #' @param mat Matrix, or file path of data.
 #' @param batchMat Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.
-#' @param cov Boolean, specifying if provide mod in ComBat.
 #' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
 #' @param pca Boolean, specifying whether do principle component analysis before and after batch removal.
-#' @param cluster Boolean, specifing whether do cluster analysis before and after batch removal.
-#' @param prefix Character, specifying prefix of output figures, only needed if cluster/pca is TRUE.
-#' @param outdir  Output directory on disk.
 #'
 #' @return matrix of data after batch removal.
 #'
@@ -32,16 +28,15 @@
 #' @examples
 #' beta = ReadBeta(MLE_Data, organism="hsa")
 #' batchMat = data.frame(samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"),
-#'                       batch = c(1,2,1,2), cov = c(1,1,2,2))
-#' res = BatchRemove(beta, batchMat, prefix="Test")
+#'                       batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))
+#' res = BatchRemove(beta, batchMat)
 #'
-#' @importFrom sva ComBat
 #' @importFrom sva ComBat
 #'
 #' @export
 #'
 
-BatchRemove <- function(mat, batchMat, cov=FALSE, log2trans=FALSE, pca=TRUE, cluster=TRUE, prefix=NA, outdir="."){
+BatchRemove <- function(mat, batchMat, log2trans=FALSE, pca=TRUE){
   if(class(mat)=="character" && file.exists(mat)){
     mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
@@ -69,13 +64,14 @@ BatchRemove <- function(mat, batchMat, cov=FALSE, log2trans=FALSE, pca=TRUE, clu
   }
   tmp2 = tmp
   if(length(var0)>0) tmp2=tmp[setdiff(1:nrow(tmp2),var0),]
-  if(cov){
+  if(ncol(batch)>2){
     mod = as.data.frame(batch[,3:ncol(batch)])
     mod = model.matrix(~., data=mod)
   }else mod = NULL
   if(length(unique(batch[,2]))<2){
     res = tmp2
   }else{res <- sva::ComBat(tmp2, batch = batch[,2], mod = mod)}
+  res[res<0] = 0
   if(length(setdiff(colnames(mat), colnames(res)))>0)
     res=cbind(mat[rownames(res), setdiff(colnames(mat),colnames(res))], res)
   if(length(setdiff(rownames(mat), rownames(res)))>0)
@@ -104,30 +100,33 @@ BatchRemove <- function(mat, batchMat, cov=FALSE, log2trans=FALSE, pca=TRUE, clu
     #====plot PC1 and PC2=====
     p1 = ggplot(gg)
     p1 = p1 + geom_point(aes(x=PC1, y=PC2, color=col, shape=shape),size = 1)
+    p1 = p1 + scale_color_discrete(name="Batch", breaks = unique(gg$col))
+    p1 = p1 + scale_shape_discrete(name="Batch", breaks = unique(gg$col))
     p1 = p1 + theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
     p1 = p1 + facet_grid(~group, switch = "y", scales="free")
     p1 = p1 + theme(legend.title=element_blank())
-    ggsave(file.path(outdir, paste0(prefix, "_PCA_BatchRemoval.png")), p1, width = 10, height = 4)
+    # ggsave(file.path(outdir, paste0(prefix, "_PCA_BatchRemoval.png")), p1, width = 10, height = 4)
   }
 
   ##====Clustering========
-  if(cluster){
-    filename = file.path(outdir, paste0(prefix, "_hclust_batchremoval.pdf"))
-
-    pdf(filename, height=0.2*nrow(batch)+2, width=0.02*nrow(batch)+3)
-    cc2 = cor(dt)
-    cc=cor(dt2)
-    if(ncol(batch)>2){
-      hclustView(cc2, label_cols = batch[rownames(cc2),3], bar_cols = batch[rownames(cc2),2:ncol(batch)], main = "Before batch removal")
-      hclustView(cc, label_cols = batch[rownames(cc),3], bar_cols = batch[rownames(cc),2:ncol(batch)], main = "After batch removal")
-
-    }else{
-      hclustView(cc2, label_cols = batch[rownames(cc2),2], main = "Before batch removal")
-      hclustView(cc, label_cols = batch[rownames(cc),2], main = "After batch removal")
-    }
-    dev.off()
-
-    loginfo("DONE!")
-  }
+  # if(cluster){
+  #   filename = file.path(outdir, paste0(prefix, "_hclust_batchremoval.pdf"))
+  #   if(is.na(hclust.height) | is.na(hclust.width))
+  #     pdf(filename, height=0.5*nrow(batch)+2, width=0.05*nrow(batch)+3)
+  #   else
+  #     pdf(filename, height=hclust.height, width=hclust.width)
+  #   cc2 = cor(dt)
+  #   cc=cor(dt2)
+  #   if(ncol(batch)>2){
+  #     hclustView(cc2, label_cols = batch[rownames(cc2),3], bar_cols = batch[rownames(cc2),2:ncol(batch)], main = "Before batch removal")
+  #     hclustView(cc, label_cols = batch[rownames(cc),3], bar_cols = batch[rownames(cc),2:ncol(batch)], main = "After batch removal")
+  #
+  #   }else{
+  #     hclustView(cc2, label_cols = batch[rownames(cc2),2], main = "Before batch removal")
+  #     hclustView(cc, label_cols = batch[rownames(cc),2], main = "After batch removal")
+  #   }
+  #   dev.off()
+  # }
+  loginfo("DONE!")
   return(list(data=res, pca1=pca1, pca2=pca2, p=p1))
 }

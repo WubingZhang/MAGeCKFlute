@@ -9,7 +9,7 @@ DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
   main = NULL, filename = NULL)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
 
 \item{ctrlname}{A character, specifying the name of control sample.}
 
@@ -42,17 +42,6 @@ dd = ReadBeta(MLE_Data, organism="hsa")
 DensityDiffView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 
 
-}
-\seealso{
-\code{\link{KeggPathwayView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{CellCycleView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

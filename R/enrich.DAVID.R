@@ -42,7 +42,7 @@
 #' \dontrun{
 #'  data(MLE_Data)
 #'  universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#'  genes = TransGeneID(Core_Essential[1:200], "SYMBOL", "ENTREZID", organism = "hsa")
+#'  genes = universe[1:50]
 #' 	# Before running this example, you need to have a david account.
 #' 	enrichRes <- enrich.DAVID(genes, universe, david.user="david.user@edu.com")
 #' 	head(enrichRes@result)
@@ -57,13 +57,13 @@ enrich.DAVID <- function(gene, universe=NULL, david.user, idType="ENTREZ_GENE_ID
                          pvalueCutoff  = 1, pAdjustMethod = "BH", qvalueCutoff= 0.2){
 
   loginfo('Running DAVID for list of entrezIDs')
-
+  ## user:ma.tongji@gmail.com
   david.pkg <- "RDAVIDWebService"
   pkgs <- installed.packages()[,1]
   if (! david.pkg %in% pkgs) {
     stop("Install RDAVIDWebService package before using enrichDAVID...")
   }
-
+  # requireNamespace(david.pkg)
   Count <- List.Total <- Pop.Hits <- Pop.Total <- NULL
 
   pAdjustMethod <- match.arg(pAdjustMethod, c("bonferroni", "BH"))
