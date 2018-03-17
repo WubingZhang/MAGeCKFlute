@@ -16,6 +16,9 @@
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in function 'ggsave'.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -42,7 +45,7 @@
 #'
 
 ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=1,
-                        main=NULL,filename=NULL){
+                        main=NULL, filename=NULL, width=5, height=4, ...){
 
   beta$Control=rowMeans(beta[,ctrlname,drop= FALSE])
   beta$Treatment=rowMeans(beta[,treatname,drop= FALSE])
@@ -76,7 +79,7 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
   if(!is.null(filename)){
     write.table(beta, file.path(dirname(filename), paste0("GroupAB_", main, ".txt")),
                 sep = "\t", quote = FALSE, row.names = FALSE)
-    ggsave(plot=p,filename=filename,units = "in",width=5,height =4 )
+    ggsave(plot=p,filename=filename,units = "in", width=width, height =height, ...)
   }
   return(p)
 }

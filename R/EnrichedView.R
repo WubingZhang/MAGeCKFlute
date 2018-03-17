@@ -37,7 +37,7 @@
 #' @export
 
 
-EnrichedView=function(enrichment,plotTitle=NULL,color="#3f90f7",termNum=20,charLength=40){
+EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, charLength=40){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()

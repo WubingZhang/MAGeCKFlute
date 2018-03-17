@@ -6,19 +6,18 @@
 \alias{batchremove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, log2trans = FALSE, pca = TRUE)
+BatchRemove(mat, batchMat, log2trans = FALSE)
 }
 \arguments{
-\item{mat}{Matrix, or file path of data.}
+\item{mat}{Matrix like data object, or a file path of data.}
 
-\item{batchMat}{Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.}
+\item{batchMat}{Matrix like data object or a file path of batch table, which has at least two columns,
+including Samples(matched colname of mat) and Batch. It can have the third column, which should be Covariate.}
 
 \item{log2trans}{Boolean, specifying whether do log2 transition before batch removal.}
-
-\item{pca}{Boolean, specifying whether do principle component analysis before and after batch removal.}
 }
 \value{
-matrix of data after batch removal.
+A list contrains two objects, including \code{data} and \code{p}.
 }
 \description{
 Remove batch effect

@@ -7,7 +7,8 @@
 \title{Scatter plot of 9-Square}
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
-  genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL)
+  genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL,
+  width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.}
@@ -25,6 +26,12 @@ or how many standard deviation will be used as cutoff.}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other available parameters in function 'ggsave'.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

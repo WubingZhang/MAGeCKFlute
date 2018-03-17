@@ -11,7 +11,7 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
   family.loess = "gaussian", cex = 1, cex.lab = 1.2, cex.axis = 1,
   cex.main = 1.2, plot.method = c("normal", "smoothScatter", "add"),
   add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",
-  filename = NULL)
+  filename = NULL, width = 5, height = 4)
 }
 \arguments{
 \item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
@@ -48,8 +48,11 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
 
 \item{loess.col}{As in "ma.plot".}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-no output.}
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
+
+\item{width}{As in 'png'.}
+
+\item{height}{As in 'png'.}
 }
 \value{
 plot on current device

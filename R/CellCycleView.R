@@ -1,4 +1,4 @@
-#' Plot of linear fitting lines for beta scores in Control and Treatment sample
+#' Estimate cell cycle time for all samples compared to control sample and view.
 #'
 #' Estimate cell cycle time in different samples by linear fitting of beta scores, and plot fitting lines,
 #' in which x-axis is control beta score and y-axis is beta score of all samples.
@@ -13,6 +13,9 @@
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' no output.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in ggsave.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -25,11 +28,6 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CellCycleView.R}
 #' Users should find it easy to customize this function.
 #'
-#' @seealso \code{\link{DensityDiffView}}   \code{\link{DensityView}}
-#' @seealso \code{\link{ViolinView}}   \code{\link{SquareView}}
-#' @seealso \code{\link{KeggPathwayView}}  \code{\link{EnrichedView}}
-#' @seealso \code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-#' @seealso \code{\link{RankView}}    \code{\link{ScatterView}}
 #'
 #' @examples
 #' data(MLE_Data)
@@ -42,7 +40,7 @@
 #' @export
 
 #===Distribution of beta scores======================================
-CellCycleView <- function(beta, ctrlname="Control", main=NULL, filename=NULL){
+CellCycleView <- function(beta, ctrlname="Control", main=NULL, filename=NULL, width=5, height = 4, ...){
   loginfo(paste("Cell cycle fitting of treatments compaired to",
                 paste(ctrlname, collapse = "&")))
   # dd2 = beta[,c("Gene", ctrlname, treatname)]
@@ -61,7 +59,7 @@ CellCycleView <- function(beta, ctrlname="Control", main=NULL, filename=NULL){
   p=p+theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=300/100,height =270/100 )
+    ggsave(plot=p,filename=filename, units = "in", width=width, height = height, ...)
   }
   return(p)
 }

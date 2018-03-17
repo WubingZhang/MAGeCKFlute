@@ -2,7 +2,6 @@
 
 export(BatchRemove)
 export(CellCycleView)
-export(CutoffCalling)
 export(DensityDiffView)
 export(DensityView)
 export(EnrichedGSEView)

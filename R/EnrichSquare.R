@@ -13,6 +13,9 @@
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param filename Suffix of output file name. NULL(default) means no output.
 #' @param out.dir Path to save plot to (combined with filename).
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in ggsave.
 #'
 #' @return A list containing enrichment results for each group genes. This list contains several elements:
 #' \item{kegg1}{a list record enriched KEGG pathways for Group1 genes in 9-Square}
@@ -60,9 +63,8 @@
 
 
 #enrichment for square grouped genes
-EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
-                         organism="hsa", adjust="BH", filename=NULL,
-                         out.dir="."){
+EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", adjust="BH",
+                         filename=NULL, out.dir=".", width=5, height=4, ...){
   loginfo("Enrichment analysis of 9 Square grouped genes ...")
 
   ## ===========Enrichment===================
@@ -198,7 +200,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg1$gridPlot,
              filename=file.path(out.dir,paste0("Group1_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp1$enrichRes)){
       write.table(bp1$enrichRes@result,
@@ -206,7 +208,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp1$gridPlot,
              filename=file.path(out.dir,paste0("Group1_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg2$enrichRes)){
       write.table(kegg2$enrichRes@result,
@@ -214,7 +216,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg2$gridPlot,
              filename=file.path(out.dir,paste0("Group2_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp2$enrichRes)){
         write.table(bp2$enrichRes@result,
@@ -222,7 +224,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                     sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
         ggsave(bp2$gridPlot,
                filename=file.path(out.dir,paste0("Group2_bp_",filename,".png")),
-               units = "in",width=400/100,height =270/100 )
+               units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg3$enrichRes)){
       write.table(kegg3$enrichRes@result,
@@ -230,7 +232,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg3$gridPlot,
              filename=file.path(out.dir,paste0("Group3_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp3$enrichRes)){
       write.table(bp3$enrichRes@result,
@@ -238,7 +240,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp3$gridPlot,
              filename=file.path(out.dir,paste0("Group3_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg4$enrichRes)){
       write.table(kegg4$enrichRes@result,
@@ -246,7 +248,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg4$gridPlot,
              filename=file.path(out.dir,paste0("Group4_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp4$enrichRes)){
       write.table(bp4$enrichRes@result,
@@ -254,7 +256,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp4$gridPlot,
              filename=file.path(out.dir,paste0("Group4_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg13$enrichRes)){
       write.table(kegg13$enrichRes@result,
@@ -262,7 +264,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg13$gridPlot,
              filename=file.path(out.dir,paste0("Group1&3_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp13$enrichRes)){
       write.table(bp13$enrichRes@result,
@@ -270,7 +272,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp13$gridPlot,
              filename=file.path(out.dir,paste0("Group1&3_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg14$enrichRes)){
       write.table(kegg14$enrichRes@result,
@@ -278,7 +280,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg14$gridPlot,
              filename=file.path(out.dir,paste0("Group1&4_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp14$enrichRes)){
       write.table(bp14$enrichRes@result,
@@ -286,7 +288,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp14$gridPlot,
              filename=file.path(out.dir,paste0("Group1&4_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg23$enrichRes)){
       write.table(kegg23$enrichRes@result,
@@ -294,7 +296,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg23$gridPlot,
              filename=file.path(out.dir,paste0("Group2&3_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp23$enrichRes)){
       write.table(bp23$enrichRes@result,
@@ -302,7 +304,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp23$gridPlot,
              filename=file.path(out.dir,paste0("Group2&3_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg24$enrichRes)){
       write.table(kegg24$enrichRes@result,
@@ -310,7 +312,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg24$gridPlot,
              filename=file.path(out.dir,paste0("Group2&4_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp24$enrichRes)){
       write.table(bp24$enrichRes@result,
@@ -318,7 +320,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp24$gridPlot,
              filename=file.path(out.dir,paste0("Group2&4_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg1234$enrichRes)){
       write.table(kegg1234$enrichRes@result,
@@ -326,7 +328,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(kegg1234$gridPlot,
              filename=file.path(out.dir,paste0("Group1&2&3&4_kegg_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
     if(!is.null(bp1234$enrichRes)){
       write.table(bp1234$enrichRes@result,
@@ -334,7 +336,7 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT",
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
       ggsave(bp1234$gridPlot,
              filename=file.path(out.dir,paste0("Group1&2&3&4_bp_",filename,".png")),
-             units = "in",width=400/100,height =270/100 )
+             units = "in", width=width, height=height, ...)
     }
   }
   return(list(kegg1=kegg1, kegg2=kegg2, kegg3=kegg3, kegg4=kegg4,

@@ -13,6 +13,9 @@
 #' @param ylab As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in function 'ggsave'.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -43,7 +46,7 @@
 #'
 
 #===Distribution of beta scores======================================
-ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=NULL){
+ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=NULL, width=5, height=4, ...){
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 
@@ -62,7 +65,7 @@ ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=
   p=p+labs(x="Sample",y=ylab,title=main)
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=300/100,height =270/100 )
+    ggsave(plot=p,filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

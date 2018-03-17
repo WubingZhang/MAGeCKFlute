@@ -6,7 +6,8 @@
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
 EnrichSquare(beta, pvalue = 1, enrich_method = "ORT", organism = "hsa",
-  adjust = "BH", filename = NULL, out.dir = ".")
+  adjust = "BH", filename = NULL, out.dir = ".", width = 5,
+  height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, which has columns of 'ENTREZID' and 'group'.}
@@ -22,6 +23,12 @@ EnrichSquare(beta, pvalue = 1, enrich_method = "ORT", organism = "hsa",
 \item{filename}{Suffix of output file name. NULL(default) means no output.}
 
 \item{out.dir}{Path to save plot to (combined with filename).}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other available parameters in ggsave.}
 }
 \value{
 A list containing enrichment results for each group genes. This list contains several elements:

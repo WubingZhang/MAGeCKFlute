@@ -6,7 +6,7 @@
 \title{Density plot for gene beta scores in Control and Treatment}
 \usage{
 DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
-  filename = NULL)
+  filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including all \code{samples} as columns.}
@@ -19,6 +19,12 @@ DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other available parameters in ggsave.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

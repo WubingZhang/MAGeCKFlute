@@ -17,6 +17,9 @@
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in function 'ggsave'.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -46,7 +49,7 @@
 
 #Plot square
 SquareView<-function(beta, ctrlname="Control",treatname="Treatment", genelist=c(),
-                     scale_cutoff=1.2, main=NULL, filename=NULL){
+                     scale_cutoff=1.2, main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggExtra", quietly=TRUE) || stop("need ggExtra package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
@@ -138,7 +141,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", genelist=c(
   if(!is.null(filename)){
       write.table(p$data, gsub("\\....$", ".txt", filename),
                 sep = "\t", quote = FALSE, row.names = FALSE)
-      ggsave(filename, p, units="in",width=10,height=8)
+      ggsave(filename, p, units="in", width=width, height=height, ...)
   }
   return(p)
 }

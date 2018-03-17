@@ -9,8 +9,10 @@
 #' @param ctrlname A character, specifying the name of control sample.
 #' @param treatname A character, specifying the name of treatment sample.
 #' @param main As in 'plot'.
-#' @param filename Figure file name to create on disk. Default filename="NULL", which means
-#' no output.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other parameters in ggsave.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -36,7 +38,8 @@
 
 #===Distribution of beta scores======================================
 
-DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", main=NULL, filename=NULL){
+DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", main=NULL,
+                            filename=NULL, width = 5, height = 4, ...){
 
   loginfo(paste("Density plot for", main, "treat-control beta scores..."))
   d=beta
@@ -52,7 +55,7 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
   #+ggtitle("Normalization with")
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=3, height = 2.7)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

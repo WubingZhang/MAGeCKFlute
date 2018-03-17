@@ -1,4 +1,4 @@
-#' Plot rank of gene points
+#' View the rank of gene points
 #'
 #' Rank all genes according to beta score deviation, and label top and bottom meaningful genes.
 #' Some other interested genes can be labeled too.
@@ -16,14 +16,16 @@
 #' @param cutoff A two-length numeric vector, in which first value is bottom cutoff, and second value is top cutoff.
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
-#' @param ... Other available parameters in function 'geom_label_repel'.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in function 'ggsave'.
 #'
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
 #' @author Wubing Zhang
 #'
-#' @note See the vignette for an example of CellCycleView.
+#' @note See the vignette for an example of RankView.
 #' Note that the source code of \code{RankView} is very simple.
 #' The source can be found by typing \code{MAGeCKFlute:::RankView}
 #' or \code{getMethod("RankView")}, or
@@ -45,7 +47,7 @@
 #'
 
 RankView <- function(beta, genelist=c(), top=20, bottom=20,cutoff=c(-sd(beta$diff), sd(beta$diff)),
-                     main=NULL,filename=NULL, ...){
+                     main=NULL,filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   loginfo(paste("Rank genes and plot..."))
@@ -76,7 +78,7 @@ RankView <- function(beta, genelist=c(), top=20, bottom=20,cutoff=c(-sd(beta$dif
   p=p+labs(x="Treatment-Control Beta Score",y="Rank",title=main)
   p=p+theme(legend.position="none")#+ylim(-1000,7000)
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename,units = "in",width=5,height=4)
+    ggsave(plot=p,filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

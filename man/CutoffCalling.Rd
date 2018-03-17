@@ -26,11 +26,6 @@ or \code{getMethod("CutoffCalling")}, or
 browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CutoffCalling.R}
 Users should find it easy to customize this function.
 }
-\examples{
-cutoff=CutoffCalling(rnorm(18000), scale = TRUE)
-print(cutoff)
-
-}
 \author{
 Wubing Zhang
 }

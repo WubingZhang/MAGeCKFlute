@@ -6,7 +6,7 @@
 \title{Density plot for beta score deviation between Control and Treatment}
 \usage{
 DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
-  main = NULL, filename = NULL)
+  main = NULL, filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
@@ -17,8 +17,13 @@ DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
 
 \item{main}{As in 'plot'.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-no output.}
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other parameters in ggsave.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

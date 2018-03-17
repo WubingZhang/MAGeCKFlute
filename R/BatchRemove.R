@@ -7,12 +7,12 @@
 #' @rdname BatchRemove
 #' @aliases batchremove
 #'
-#' @param mat Matrix, or file path of data.
-#' @param batchMat Matrix or file path of batch table, which has at least three columns, including Samples matched colname of mat, Batch, and Covariates.
+#' @param mat Matrix like data object, or a file path of data.
+#' @param batchMat Matrix like data object or a file path of batch table, which has at least two columns,
+#' including Samples(matched colname of mat) and Batch. It can have the third column, which should be Covariate.
 #' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
-#' @param pca Boolean, specifying whether do principle component analysis before and after batch removal.
 #'
-#' @return matrix of data after batch removal.
+#' @return A list contrains two objects, including \code{data} and \code{p}.
 #'
 #' @author Wubing Zhang
 #'
@@ -36,7 +36,7 @@
 #' @export
 #'
 
-BatchRemove <- function(mat, batchMat, log2trans=FALSE, pca=TRUE){
+BatchRemove <- function(mat, batchMat, log2trans=FALSE){
   if(class(mat)=="character" && file.exists(mat)){
     mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
@@ -63,7 +63,7 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, pca=TRUE){
     }
   }
   tmp2 = tmp
-  if(length(var0)>0) tmp2=tmp[setdiff(1:nrow(tmp2),var0),]
+  if(length(var0)>0) tmp2=tmp[setdiff(1:nrow(tmp),var0),]
   if(ncol(batch)>2){
     mod = as.data.frame(batch[,3:ncol(batch)])
     mod = model.matrix(~., data=mod)
@@ -73,40 +73,39 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, pca=TRUE){
   }else{res <- sva::ComBat(tmp2, batch = batch[,2], mod = mod)}
   res[res<0] = 0
   if(length(setdiff(colnames(mat), colnames(res)))>0)
-    res=cbind(mat[rownames(res), setdiff(colnames(mat),colnames(res))], res)
-  if(length(setdiff(rownames(mat), rownames(res)))>0)
-    res = rbind(res, mat[setdiff(rownames(mat),rownames(res)),colnames(res)])
+    res=cbind(mat[setdiff(1:nrow(tmp),var0), setdiff(colnames(mat),colnames(res))], res)
+  if(length(var0)>0)
+    res = rbind(res, mat[var0,colnames(res)])
 
   dt2 = as.matrix(res[,index])
   pca1 = NULL
   pca2 = NULL
   p1 = NULL
-  if(pca){
-    pca1 = prcomp(t(dt))$x[,1:2]
-    pca2 = prcomp(t(dt2))$x[,1:2]
 
-    gg1 = as.data.frame(pca1, stringsAsFactors=FALSE)
-    gg1$col = batch[rownames(gg1),2]
-    gg1$group = factor("Before batch removal", "Before batch removal")
-    gg2 = as.data.frame(pca2,stringsAsFactors=FALSE)
-    gg2$col = batch[rownames(gg2),2]
-    gg2$group = factor("After batch removal", "After batch removal")
-    if(ncol(batch)>2){
-      gg1$shape = as.character(batch[rownames(gg1),3])
-      gg2$shape = batch[rownames(gg2),3]
-    }else{ gg1$shape = "NA"; gg2$shape = "NA" }
-    gg = rbind.data.frame(gg1, gg2)
+  pca1 = prcomp(t(dt))$x[,1:2]
+  pca2 = prcomp(t(dt2))$x[,1:2]
 
-    #====plot PC1 and PC2=====
-    p1 = ggplot(gg)
-    p1 = p1 + geom_point(aes(x=PC1, y=PC2, color=col, shape=shape),size = 1)
-    p1 = p1 + scale_color_discrete(name="Batch", breaks = unique(gg$col))
-    p1 = p1 + scale_shape_discrete(name="Batch", breaks = unique(gg$col))
-    p1 = p1 + theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
-    p1 = p1 + facet_grid(~group, switch = "y", scales="free")
-    p1 = p1 + theme(legend.title=element_blank())
-    # ggsave(file.path(outdir, paste0(prefix, "_PCA_BatchRemoval.png")), p1, width = 10, height = 4)
-  }
+  gg1 = as.data.frame(pca1, stringsAsFactors=FALSE)
+  gg1$col = batch[rownames(gg1),2]
+  gg1$group = factor("Before batch removal", "Before batch removal")
+  gg2 = as.data.frame(pca2,stringsAsFactors=FALSE)
+  gg2$col = batch[rownames(gg2),2]
+  gg2$group = factor("After batch removal", "After batch removal")
+  if(ncol(batch)>2){
+    gg1$shape = as.character(batch[rownames(gg1),3])
+    gg2$shape = batch[rownames(gg2),3]
+  }else{ gg1$shape = "NA"; gg2$shape = "NA" }
+  gg = rbind.data.frame(gg1, gg2)
+
+  #====plot PC1 and PC2=====
+  p1 = ggplot(gg)
+  p1 = p1 + geom_point(aes(x=PC1, y=PC2, color=col, shape=shape),size = 1)
+  p1 = p1 + scale_color_discrete(name="Batch", breaks = unique(gg$col))
+  p1 = p1 + scale_shape_discrete(name="Batch", breaks = unique(gg$col))
+  p1 = p1 + theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+  p1 = p1 + facet_grid(~group, switch = "y", scales="free")
+  p1 = p1 + theme(legend.title=element_blank())
+  # ggsave(file.path(outdir, paste0(prefix, "_PCA_BatchRemoval.png")), p1, width = 10, height = 4)
 
   ##====Clustering========
   # if(cluster){
@@ -128,5 +127,5 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, pca=TRUE){
   #   dev.off()
   # }
   loginfo("DONE!")
-  return(list(data=res, pca1=pca1, pca2=pca2, p=p1))
+  return(list(data=res, p=p1))
 }

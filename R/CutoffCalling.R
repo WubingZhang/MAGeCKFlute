@@ -20,11 +20,7 @@
 #' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CutoffCalling.R}
 #' Users should find it easy to customize this function.
 #'
-#' @examples
-#' cutoff=CutoffCalling(rnorm(18000), scale = TRUE)
-#' print(cutoff)
 #'
-#' @export
 
 CutoffCalling=function(d, scale=FALSE){
   param=1

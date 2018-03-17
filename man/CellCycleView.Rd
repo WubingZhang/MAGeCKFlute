@@ -4,9 +4,10 @@
 \name{CellCycleView}
 \alias{CellCycleView}
 \alias{CellCycle,MAGeCKFlute-method}
-\title{Plot of linear fitting lines for beta scores in Control and Treatment sample}
+\title{Estimate cell cycle time for all samples compared to control sample and view.}
 \usage{
-CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL)
+CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL,
+  width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and other samples.}
@@ -17,6 +18,12 @@ CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL)
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other available parameters in ggsave.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.
@@ -39,17 +46,6 @@ data(MLE_Data)
 dd = ReadBeta(MLE_Data, organism="hsa")
 CellCycleView(dd, ctrlname = c("D7_R1", "D7_R2"))
 
-}
-\seealso{
-\code{\link{DensityDiffView}}   \code{\link{DensityView}}
-
-\code{\link{ViolinView}}   \code{\link{SquareView}}
-
-\code{\link{KeggPathwayView}}  \code{\link{EnrichedView}}
-
-\code{\link{EnrichedGSEView}}  \code{\link{MAView}}
-
-\code{\link{RankView}}    \code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang
