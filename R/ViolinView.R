@@ -59,10 +59,16 @@ ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=
   p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)
   #p=p+ylim(-1.5,1)
-  p=p+scale_color_npg()+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+  p=p+scale_color_npg()
+  p = p + theme(text = element_text(colour="black",size = 14),
+                plot.title = element_text(hjust = 0.5, size=18),
+                axis.text = element_text(colour="gray10"),
+                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
   p=p+theme(legend.position = "none")
-  p=p+theme(axis.text.x = element_text(angle = 30, hjust = 1, size=8))
-  p=p+labs(x="Sample",y=ylab,title=main)
+  p=p+labs(x=NULL,y=ylab,title=main)
 
   if(!is.null(filename)){
     ggsave(plot=p,filename=filename, units = "in", width=width, height=height, ...)

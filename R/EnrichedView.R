@@ -43,7 +43,13 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)
-    p1=p1+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+    p1 = p1 + theme(text = element_text(colour="black",size = 14),
+                  plot.title = element_text(hjust = 0.5, size=18),
+                  axis.text = element_text(colour="gray10"),
+                  axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+    p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
+                  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                  panel.border = element_blank(), panel.background = element_blank())
     return(p1)
   }
 
@@ -82,11 +88,16 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
                  panel.background=element_blank())
   p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
   p1 <- p1 + labs(title=plotTitle)
-  p1 <- p1 + theme_bw(8)
   # p1 <- p1 + theme(axis.text.x=element_text(size=8, face="plain", colour='black'))
   # p1 <- p1 + theme(axis.text.y=element_text(size=8, face="plain", colour='black'))
   p1 = p1 + theme(legend.position="bottom")
-  p1 = p1 + theme_bw(14) + theme(plot.title = element_text(hjust = 0.5,size=12))
+  p1 = p1 + theme(text = element_text(colour="black",size = 14),
+                plot.title = element_text(hjust = 0.5, size=18),
+                axis.text = element_text(colour="gray10"),
+                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+  p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
 
   return(p1)
 }
@@ -143,7 +154,13 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)
     p1=p1+theme(plot.title = element_text(size=12))
-    p1=p1+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+    p1 = p1 + theme(text = element_text(colour="black",size = 14),
+                  plot.title = element_text(hjust = 0.5, size=18),
+                  axis.text = element_text(colour="gray10"),
+                  axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+    p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
+                  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                  panel.border = element_blank(), panel.background = element_blank())
     return(p1)
   }
 
@@ -182,9 +199,14 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
                  panel.background=element_blank())
   p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
   p1 <- p1 + labs(title=plotTitle)
-  p1 <- p1 + theme_bw(8)
   p1 = p1 + theme(legend.position="bottom")
-  p1 = p1 + theme_bw(14) + theme(plot.title = element_text(hjust = 0.5,size=12))
+  p1 = p1 + theme(text = element_text(colour="black",size = 14),
+                plot.title = element_text(hjust = 0.5, size=18),
+                axis.text = element_text(colour="gray10"),
+                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+  p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
   #p1
   return(p1)
 }

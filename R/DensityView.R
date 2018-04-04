@@ -52,11 +52,17 @@ DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename
   p=ggplot(data=dd1,aes(x=value,color=variable,group=variable))
   p=p+geom_density()
   # p=p+facet_wrap(~variable,nrow=1)
-  p=p+scale_color_npg()+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+  p=p+scale_color_npg()
   p=p+labs(color=NULL)
   p=p+theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
   # p=p+theme(legend.text = element_text(size=8))
   p=p+labs(x=xlab, y="Density", title=main)
+  p = p + theme(text = element_text(colour="black",size = 10),
+                plot.title = element_text(hjust = 0.5, size=14),
+                axis.text = element_text(colour="gray10"))
+  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
 
   if(!is.null(filename)){
     ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)

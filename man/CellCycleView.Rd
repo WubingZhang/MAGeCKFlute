@@ -44,7 +44,7 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-CellCycleView(dd, ctrlname = c("D7_R1", "D7_R2"))
+CellCycleView(dd[,-2], ctrlname = c("D7_R1", "D7_R2"))
 
 }
 \author{

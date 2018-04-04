@@ -50,7 +50,12 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
   p=p+geom_density(colour="black")
   p=p+geom_density(aes(x=r,y=..density..),linetype="dashed",colour="red")
   p=p+geom_vline(xintercept = 0,linetype="dashed")
-  p=p+theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))
+  p = p + theme(text = element_text(colour="black",size = 10),
+                plot.title = element_text(hjust = 0.5, size=14),
+                axis.text = element_text(colour="gray10"))
+  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
   p=p+labs(x="Treat-Control Beta Score",y="Density",title=main)
   #+ggtitle("Normalization with")
 
