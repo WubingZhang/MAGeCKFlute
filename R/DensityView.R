@@ -57,7 +57,7 @@ DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename
   p=p+theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
   # p=p+theme(legend.text = element_text(size=8))
   p=p+labs(x=xlab, y="Density", title=main)
-  p = p + theme(text = element_text(colour="black",size = 10),
+  p = p + theme(text = element_text(colour="black",size = 10, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=14),
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
@@ -65,7 +65,7 @@ DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename
                 panel.border = element_blank(), panel.background = element_blank())
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
   }
   return(p)
 }

@@ -12,6 +12,11 @@
 #' @param color Color of nodes.
 #' @param termNum Integer, specifying number of top enriched terms to show.
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
+#' no output.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in ggsave.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -37,7 +42,8 @@
 #' @export
 
 
-EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, charLength=40){
+EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, charLength=40,
+                      filename=NULL, width=5, height=4, ...){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1=ggplot()
@@ -45,11 +51,13 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
     p1=p1+labs(title=plotTitle)
     p1 = p1 + theme(text = element_text(colour="black",size = 14),
                   plot.title = element_text(hjust = 0.5, size=18),
-                  axis.text = element_text(colour="gray10"),
-                  axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+                  axis.text = element_text(colour="gray10"))
     p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
                   panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                   panel.border = element_blank(), panel.background = element_blank())
+    if(!is.null(filename)){
+      ggsave(plot=p1,filename=filename, units = "in", width=width, height=height, ...)
+    }
     return(p1)
   }
 
@@ -90,15 +98,17 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
   p1 <- p1 + labs(title=plotTitle)
   # p1 <- p1 + theme(axis.text.x=element_text(size=8, face="plain", colour='black'))
   # p1 <- p1 + theme(axis.text.y=element_text(size=8, face="plain", colour='black'))
-  p1 = p1 + theme(legend.position="bottom")
+  p1 = p1 + theme(legend.position="right")
+  p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
   p1 = p1 + theme(text = element_text(colour="black",size = 14),
                 plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"),
-                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+                axis.text = element_text(colour="gray10"))
   p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank())
-
+  if(!is.null(filename)){
+    ggsave(plot=p1,filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+  }
   return(p1)
 }
 
@@ -120,6 +130,11 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
 #' @param color Color of nodes
 #' @param termNum Integer, specifying number of top enriched terms to show
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
+#' no output.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in ggsave.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
@@ -147,20 +162,23 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
 #' @export
 
 ##===================
-EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,charLength=50){
+EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,charLength=40,
+                         filename=NULL, width=5, height=4, ...){
 
   if(nrow(enrichment)==0){
     p1=ggplot()
     p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
     p1=p1+labs(title=plotTitle)
     p1=p1+theme(plot.title = element_text(size=12))
-    p1 = p1 + theme(text = element_text(colour="black",size = 14),
+    p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                   plot.title = element_text(hjust = 0.5, size=18),
-                  axis.text = element_text(colour="gray10"),
-                  axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+                  axis.text = element_text(colour="gray10"))
     p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
                   panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                   panel.border = element_blank(), panel.background = element_blank())
+    if(!is.null(filename)){
+      ggsave(plot=p1,filename=filename, units = "in", width=width, height=height, ...)
+    }
     return(p1)
   }
 
@@ -199,15 +217,17 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
                  panel.background=element_blank())
   p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
   p1 <- p1 + labs(title=plotTitle)
-  p1 = p1 + theme(legend.position="bottom")
-  p1 = p1 + theme(text = element_text(colour="black",size = 14),
+  p1 = p1 + theme(legend.position="right")
+  p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
+  p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"),
-                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+                axis.text = element_text(colour="gray10"))
   p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank())
-  #p1
+  if(!is.null(filename)){
+    ggsave(plot=p1,filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+  }
   return(p1)
 }
 

@@ -50,7 +50,7 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
   p=p+geom_density(colour="black")
   p=p+geom_density(aes(x=r,y=..density..),linetype="dashed",colour="red")
   p=p+geom_vline(xintercept = 0,linetype="dashed")
-  p = p + theme(text = element_text(colour="black",size = 10),
+  p = p + theme(text = element_text(colour="black",size = 10, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=14),
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
@@ -60,7 +60,7 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
   #+ggtitle("Normalization with")
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
   }
   return(p)
 }

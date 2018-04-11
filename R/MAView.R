@@ -26,6 +26,8 @@
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
 #' @param width As in 'png'.
 #' @param height As in 'png'.
+#' @param res As in 'png'.
+#' @param ... Other parameters in par.
 #'
 #' @author Wubing Zhang
 #'
@@ -51,10 +53,10 @@
 #'
 #' @export
 
-MAView <- function(beta, ctrlname="Control",treatname="Treatment", main="Negative control normalized", subset = sample(1:length(M), min(c(10000, length(M)))),
+MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL, subset = sample(1:length(M), min(c(10000, length(M)))),
                     show.statistics = TRUE, span = 2/3, family.loess = "gaussian",
                     cex = 1, cex.lab=1.2, cex.axis=1, cex.main=1.2, plot.method = c("normal","smoothScatter","add"),
-                    add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",filename=NULL, width=5, height=4){
+                    add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",filename=NULL, width=5, height=4, res=600, ...){
   requireNamespace("graphics", quietly=TRUE) || stop("need graphics package")
   requireNamespace("grid", quietly=TRUE) || stop("need grid package")
   requireNamespace("affy", quietly=TRUE) || stop("need affy package")
@@ -63,13 +65,13 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main="Negativ
   loginfo(paste("MAplot for", main, "beta scores ..."))
   A = rowMeans(dd[,c(ctrlname, treatname)])
   M = rowMeans(dd[,treatname,drop= FALSE])-rowMeans(dd[,ctrlname,drop= FALSE])
-  par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main)
+  par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main, ...)
   ma.plot(A, M, main=main, subset=subset, show.statistics=show.statistics, span=span,
           family.loess=family.loess, cex=cex, plot.method=plot.method, add.loess=add.loess,
           lwd=lwd, lty=lty, loess.col=loess.col)
   if(!is.null(filename)){
-    png(filename, units = "in", width=width, height=height, res=300)
-    par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main)
+    png(filename, units = "in", width=width, height=height, res=res)
+    par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main, ...)
     ma.plot(A, M, main=main, subset=subset, show.statistics=show.statistics, span=span,
             family.loess=family.loess, cex=cex, plot.method=plot.method, add.loess=add.loess,
             lwd=lwd, lty=lty, loess.col=loess.col)

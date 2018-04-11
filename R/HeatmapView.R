@@ -61,6 +61,6 @@ HeatmapView <- function(beta, method = "pearson", breaks = NA, cluster_rows = TR
     color = rev(colorRampPalette(RColorBrewer::brewer.pal(7, "Reds"))(length(breaks)-1))
   }
   pheatmap::pheatmap(mat, color=color, breaks=breaks, cluster_rows=cluster_rows,
-           cluster_cols=cluster_cols, legend=legend, main = main, fontsize=fontsize,
+           cluster_cols=cluster_cols, legend=legend, main = main, fontsize=fontsize, fontfamily = "Helvetica",
            display_numbers=display_numbers, filename=filename, width=width, height = height,...)
 }

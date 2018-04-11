@@ -50,21 +50,22 @@ CellCycleView <- function(beta, ctrlname="Control", main=NULL, filename=NULL, wi
   dd2 = melt(dd2[,!idx], id="Gene")
   dd2$x = rep(rowMeans(beta[,ctrlname,drop=FALSE]), nrow(dd2)/nrow(beta))
 
-  p=ggplot(dd2,aes(x,value,color=variable,group=variable))
-  p=p+geom_point(alpha=4/10,size=0.8)
-  p=p+geom_smooth(method='lm',se=FALSE)
-  p=p+geom_abline(slope = 1, intercept = 0, color="gray50", linetype=2)
-  p=p+labs(x="Control", y="Treatment", title=main, color=NULL)
-  p = p + theme(text = element_text(colour="black",size = 10),
+  p = ggplot(dd2,aes(x,value,color=variable,group=variable))
+  p = p + geom_point(alpha=4/10,size=0.5)
+  p = p + geom_smooth(method='lm',se=FALSE, size=0.5)
+  p = p + geom_abline(slope = 1, intercept = 0, color="gray50", linetype=2)
+  p = p + labs(x="Control", y="Treatment", title=main, color=NULL)
+  p = p + theme(legend.key = element_rect(fill = "transparent"))
+  p = p + theme(text = element_text(colour="black",size = 10, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=14),
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank())
-  p=p+theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
+  p = p + theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename, units = "in", width=width, height = height, ...)
+    ggsave(plot=p,filename=filename, units = "in", dpi=600, width=width, height = height, ...)
   }
   return(p)
 }

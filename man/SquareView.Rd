@@ -7,8 +7,8 @@
 \title{Scatter plot of 9-Square}
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
-  genelist = c(), scale_cutoff = 1.2, main = NULL, filename = NULL,
-  width = 5, height = 4, ...)
+  label.top = TRUE, genelist = c(), scale_cutoff = 1, main = NULL,
+  filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.}
@@ -16,6 +16,8 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{ctrlname}{A character, specifying the names of control samples.}
 
 \item{treatname}{A character, specifying the name of treatment samples.}
+
+\item{label.top}{Boolean, whether label the top selected genes, default label the top 10 genes in each group.}
 
 \item{genelist}{Character vector, specifying labeled genes.}
 

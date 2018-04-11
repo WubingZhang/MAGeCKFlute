@@ -7,7 +7,8 @@
 \title{View enriched terms in GSEA}
 \usage{
 EnrichedGSEView(enrichment, plotTitle = NULL, color = "#3f90f7",
-  termNum = 20, charLength = 50)
+  termNum = 20, charLength = 40, filename = NULL, width = 5,
+  height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
@@ -19,6 +20,15 @@ EnrichedGSEView(enrichment, plotTitle = NULL, color = "#3f90f7",
 \item{termNum}{Integer, specifying number of top enriched terms to show}
 
 \item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab}
+
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
+no output.}
+
+\item{width}{As in ggsave.}
+
+\item{height}{As in ggsave.}
+
+\item{...}{Other available parameters in ggsave.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

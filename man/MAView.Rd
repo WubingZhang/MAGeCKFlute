@@ -5,13 +5,13 @@
 \alias{MAView}
 \title{MAplot of gene beta scores}
 \usage{
-MAView(beta, ctrlname = "Control", treatname = "Treatment",
-  main = "Negative control normalized", subset = sample(1:length(M),
-  min(c(10000, length(M)))), show.statistics = TRUE, span = 2/3,
-  family.loess = "gaussian", cex = 1, cex.lab = 1.2, cex.axis = 1,
-  cex.main = 1.2, plot.method = c("normal", "smoothScatter", "add"),
-  add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",
-  filename = NULL, width = 5, height = 4)
+MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
+  subset = sample(1:length(M), min(c(10000, length(M)))),
+  show.statistics = TRUE, span = 2/3, family.loess = "gaussian",
+  cex = 1, cex.lab = 1.2, cex.axis = 1, cex.main = 1.2,
+  plot.method = c("normal", "smoothScatter", "add"), add.loess = TRUE,
+  lwd = 1, lty = 1, loess.col = "red", filename = NULL, width = 5,
+  height = 4, res = 600, ...)
 }
 \arguments{
 \item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
@@ -53,6 +53,10 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{width}{As in 'png'.}
 
 \item{height}{As in 'png'.}
+
+\item{res}{As in 'png'.}
+
+\item{...}{Other parameters in par.}
 }
 \value{
 plot on current device

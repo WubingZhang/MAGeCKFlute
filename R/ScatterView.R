@@ -67,10 +67,9 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
   p=p+geom_point(position = "identity",shape=".",alpha=1/100,size = 0.01,show.legend = FALSE)
   p=p+scale_color_manual(values=mycolour)
   p=p+geom_jitter(position = "jitter",show.legend = FALSE)
-  p = p + theme(text = element_text(colour="black",size = 14),
+  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"),
-                axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
+                axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank())
@@ -85,7 +84,7 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
   if(!is.null(filename)){
     write.table(beta, file.path(dirname(filename), paste0("GroupAB_", main, ".txt")),
                 sep = "\t", quote = FALSE, row.names = FALSE)
-    ggsave(plot=p,filename=filename,units = "in", width=width, height =height, ...)
+    ggsave(plot=p,filename=filename,units = "in", dpi=600, width=width, height =height, ...)
   }
   return(p)
 }
