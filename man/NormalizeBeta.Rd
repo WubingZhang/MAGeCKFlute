@@ -7,7 +7,7 @@
 \title{Normalize gene beta scores}
 \usage{
 NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
-  posControl = NULL, minus = 0.6)
+  posControl = NULL, minus = 0)
 }
 \arguments{
 \item{beta}{Data frame, which has columns of 'ENTREZID', and \code{samples}.}

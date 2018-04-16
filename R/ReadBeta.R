@@ -50,10 +50,10 @@ ReadBeta <- function(gene_summary, organism='hsa'){
   #=========Remove non-target control sgRNA==============================
   idx=grepl("^CTRL",dd$Gene,ignore.case = TRUE)
   dd=dd[!idx,]
-  idx=grepl("beta",names(dd))
+  idx=grepl("\\|beta",names(dd))
   idx[1]= TRUE
   dd=dd[,idx]
-  names(dd)=gsub(".beta","",names(dd))
+  names(dd)=gsub("\\|beta","",names(dd))
   dd$ENTREZID = TransGeneID(dd$Gene, "SYMBOL", "ENTREZID", organism = organism)
   #==============Deal with replicates and convert geneid==================
   # dd1 = list()

@@ -56,7 +56,7 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0.6){
+NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0){
   loginfo("Normalize beta scores ...")
   requireNamespace("Biobase", quietly=TRUE) || stop("need Biobase package")
   if(is.null(samples)) samples = setdiff(colnames(beta), "ENTREZID")

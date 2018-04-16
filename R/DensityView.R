@@ -54,7 +54,7 @@ DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename
   # p=p+facet_wrap(~variable,nrow=1)
   p=p+scale_color_npg()
   p=p+labs(color=NULL)
-  p=p+theme(legend.justification = c(0, 1), legend.position = c(0.01, 0.99))
+  p=p+theme(legend.justification = c(1, 1), legend.position = c(0.99, 0.99))
   # p=p+theme(legend.text = element_text(size=8))
   p=p+labs(x=xlab, y="Density", title=main)
   p = p + theme(text = element_text(colour="black",size = 10, family = "Helvetica"),
