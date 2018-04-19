@@ -75,7 +75,7 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
                 panel.border = element_blank(), panel.background = element_blank())
   p=p+geom_abline(intercept = -intercept)
   p=p+geom_abline(intercept = +intercept)
-  p=p+labs(x="Control beta.score",y="Treatment beta.score",title=main)
+  p=p+labs(x="Control beta score",y="Treatment beta score",title=main)
   p=p+annotate("text",color="#e41a1c",x=xmin, y=ymax,hjust = 0,
                label=paste("GroupA: ",as.character(dim(data[data$group=="up",])[1]),sep=""))
   p=p+annotate("text",color="#377eb8",x=xmax, y=ymin,hjust = 1,

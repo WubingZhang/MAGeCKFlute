@@ -6,12 +6,9 @@
 \title{MAplot of gene beta scores}
 \usage{
 MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
-  subset = sample(1:length(M), min(c(10000, length(M)))),
-  show.statistics = TRUE, span = 2/3, family.loess = "gaussian",
-  cex = 1, cex.lab = 1.2, cex.axis = 1, cex.main = 1.2,
-  plot.method = c("normal", "smoothScatter", "add"), add.loess = TRUE,
-  lwd = 1, lty = 1, loess.col = "red", filename = NULL, width = 5,
-  height = 4, res = 600, ...)
+  show.statistics = TRUE, add.smooth = TRUE, lty = 1,
+  smooth.col = "red", plot.method = c("auto", "lm", "glm", "gam", "loess",
+  "rlm"), filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
@@ -20,43 +17,26 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
 
 \item{treatname}{Character vector, specifying the name of treatment sample.}
 
-\item{main}{As in "ma.plot".}
+\item{main}{As in plot.}
 
-\item{subset}{As in "ma.plot".}
+\item{show.statistics}{Show statistics .}
 
-\item{show.statistics}{As in "ma.plot".}
+\item{add.smooth}{Whether add a smooth line to the plot.}
 
-\item{span}{As in "ma.plot".}
+\item{lty}{Line type for smooth line.}
 
-\item{family.loess}{As in "ma.plot".}
+\item{smooth.col}{Color of smooth line.}
 
-\item{cex}{As in "ma.plot".}
+\item{plot.method}{A string specifying the method to fit smooth line, which should be one of "auto", "lm", "glm", "gam", "loess", and "rlm".}
 
-\item{cex.lab}{As in "ma.plot".}
+\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
+don't save the figure on disk.}
 
-\item{cex.axis}{As in "ma.plot".}
+\item{width}{As in ggsave.}
 
-\item{cex.main}{As in "ma.plot".}
+\item{height}{As in ggsave.}
 
-\item{plot.method}{As in "ma.plot".}
-
-\item{add.loess}{As in "ma.plot".}
-
-\item{lwd}{As in "ma.plot".}
-
-\item{lty}{As in "ma.plot".}
-
-\item{loess.col}{As in "ma.plot".}
-
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
-
-\item{width}{As in 'png'.}
-
-\item{height}{As in 'png'.}
-
-\item{res}{As in 'png'.}
-
-\item{...}{Other parameters in par.}
+\item{...}{Other available parameters in function 'ggsave'.}
 }
 \value{
 plot on current device
@@ -76,7 +56,7 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1", cex=1)
+MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 
 }
 \author{

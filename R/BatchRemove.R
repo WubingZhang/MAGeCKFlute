@@ -126,6 +126,5 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE){
   #   }
   #   dev.off()
   # }
-  loginfo("DONE!")
   return(list(data=res, p=p1))
 }

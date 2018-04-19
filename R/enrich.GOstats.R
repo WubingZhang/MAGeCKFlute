@@ -38,17 +38,15 @@
 #' enrichRes <- enrich.GOstats(genes, universe, type="BP")
 #' head(enrichRes@result)
 #'
+#' @import GOstats Category
 #'
-#' @import Category
-#' @importFrom GOstats hyperGTest
 #' @export
 
 
 enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC"), organism = "hsa",
                            pvalueCutoff = 1, pAdjustMethod = "BH"){
-  requireNamespace("GOstats", quietly=TRUE) || stop("need GOstats package")
-  requireNamespace("Category", quietly=TRUE) || stop("need Category package")
-
+  requireNamespace("GOstats", quietly = TRUE)
+  requireNamespace("Category", quietly = TRUE)
   gene = unique(as.character(gene))
   if(!is.null(universe)) universe = unique(as.character(universe))
   #======
@@ -88,8 +86,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
 
   #==================
   result = list()
-  boo=!is.null(over.sum) & (nrow(over.sum)>0)
-  if(boo){
+  if(!is.null(over.sum) & (nrow(over.sum)>0)){
     glist <- geneIdsByCategory(over)
     glist <- sapply(glist, function(.ids) {
       .sym <- .ids

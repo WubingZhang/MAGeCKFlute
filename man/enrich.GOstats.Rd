@@ -42,7 +42,6 @@ genes = universe[1:50]
 enrichRes <- enrich.GOstats(genes, universe, type="BP")
 head(enrichRes@result)
 
-
 }
 \seealso{
 \code{\link{enrich.HGT}}

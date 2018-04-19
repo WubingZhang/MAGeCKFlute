@@ -94,13 +94,13 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
   p1 <- p1 + theme(panel.grid.major=element_line(colour="gray90"),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())
-  p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
+  p1 <- p1 + xlab(expression(-Log["10"](Adjust.pvalue)))+ylab("")
   p1 <- p1 + labs(title=plotTitle)
   # p1 <- p1 + theme(axis.text.x=element_text(size=8, face="plain", colour='black'))
   # p1 <- p1 + theme(axis.text.y=element_text(size=8, face="plain", colour='black'))
   p1 = p1 + theme(legend.position="right")
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
-  p1 = p1 + theme(text = element_text(colour="black",size = 14),
+  p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))
   p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
@@ -215,7 +215,7 @@ EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,c
   p1 <- p1+theme(panel.grid.major=element_line(colour="gray90"),
                  panel.grid.minor=element_blank(),
                  panel.background=element_blank())
-  p1 <- p1 + xlab("-log10(Adjust.pvalue)")+ylab("")
+  p1 <- p1 + xlab(expression(-Log["10"](Adjust.pvalue)))+ylab("")
   p1 <- p1 + labs(title=plotTitle)
   p1 = p1 + theme(legend.position="right")
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))

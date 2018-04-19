@@ -7,7 +7,7 @@
 #' @rdname ReadBeta
 #' @aliases readbeta
 #'
-#' @param gene_summary A file path or a data frame, data frame, which has columns of 'Gene' and '*.beta'.
+#' @param gene_summary A file path or a data frame, data frame, which has columns of 'Gene' and '*|beta'.
 #' @param organism Character, KEGG species code, or the common species name, used to determine
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).

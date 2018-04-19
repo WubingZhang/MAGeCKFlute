@@ -50,15 +50,12 @@
 #' dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
 #' head(dd_loess)
 #'
-#' @importFrom Biobase rowMedians
-#' @importFrom affy normalize.loess
 #'
 #' @export
 
 #===normalize function=====================================
 NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0){
   loginfo("Normalize beta scores ...")
-  requireNamespace("Biobase", quietly=TRUE) || stop("need Biobase package")
   if(is.null(samples)) samples = setdiff(colnames(beta), "ENTREZID")
 
   if(method=="cell_cycle"){
@@ -71,16 +68,101 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
     }
     idx = which(as.numeric(beta$ENTREZID) %in% as.numeric(posControl$EntrezID))
     normalized = as.matrix(beta[,samples])
-    mid = rowMedians(t(normalized[idx,]))
+    mid = apply(normalized[idx,], 2, median)
     mid = abs(mid - minus)
     normalized = t(t(normalized) / mid)
   }
   if(method=="loess"){
-    requireNamespace("affy", quietly=TRUE) || stop("need affy package")
     normalized = as.matrix(beta[,samples])
-    normalized = normalize.loess(normalized,log.it = FALSE, verbose=FALSE)
+    normalized = normalize.loess(normalized, log.it = FALSE, verbose=FALSE)
   }
   beta[,samples] = normalized
 
   return(beta)
+}
+
+
+#' normalize.loess
+#'
+#' Loess normalization method.
+#'
+#' @docType methods
+#' @name normalize.loess
+#' @rdname normalize.loess
+#' @aliases loess.normalize
+#'
+#' @param mat A matrix with columns containing the values of the chips to normalize.
+#' @param subset A subset of the data to fit a loess to.
+#' @param epsilon A tolerance value (supposed to be a small value - used as a stopping criterion).
+#' @param maxit Maximum number of iterations.
+#' @param log.it Logical. If \code{TRUE} it takes the log2 of \code{mat}.
+#' @param verbose Logical. If \code{TRUE} displays current pair of chip being worked on.
+#' @param span Parameter to be passed the function \code{\link[stats]{loess}}
+#' @param family.loess Parameter to be passed the function \code{\link[stats]{loess}}.
+#' \code{"gaussian"} or \code{"symmetric"} are acceptable values for this parameter.
+#' @param ... Any of the options of normalize.loess you would like to modify (described above).
+#'
+#' @return A matrix similar as \code{mat}.
+#'
+#' @author Wubing Zhang
+#'
+#' @seealso \code{\link{loess}}
+#' @seealso \code{\link{NormalizeBeta}}
+#'
+#' @examples
+#' beta = ReadBeta(MLE_Data, organism="hsa")
+#' beta_loess = normalize.loess(beta[,3:6])
+#'
+#' @export
+#'
+normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),
+                            epsilon=10^-2, maxit=1, log.it=TRUE, verbose=TRUE, span=2/3,
+                            family.loess="symmetric", ...){
+
+  J <- dim(mat)[2]
+  II <- dim(mat)[1]
+  if(log.it){
+    mat <- log2(mat)
+  }
+
+  change <- epsilon +1
+  iter <- 0
+  w <- c(0, rep(1,length(subset)), 0) ##this way we give 0 weight to the
+  ##extremes added so that we can interpolate
+
+  while(iter < maxit){
+    iter <- iter + 1
+    means <- matrix(0,II,J) ##contains temp of what we substract
+
+    for (j in 1:(J-1)){
+      for (k in (j+1):J){
+        y <- mat[,j] - mat[,k]
+        x <- (mat[,j] + mat[,k]) / 2
+        index <- c(order(x)[1], subset, order(-x)[1])
+        ##put endpoints in so we can interpolate
+        xx <- x[index]
+        yy <- y[index]
+        aux <-loess(yy~xx, span=span, degree=1, weights=w, family=family.loess)
+        aux <- predict(aux, data.frame(xx=x)) / J
+        means[, j] <- means[, j] + aux
+        means[, k] <- means[, k] - aux
+        if (verbose)
+          cat("Done with",j,"vs",k,"in iteration",iter,"\n")
+      }
+    }
+    mat <- mat - means
+    change <- max(colMeans((means[subset,])^2))
+
+    if(verbose)
+      cat(iter, change,"\n")
+
+  }
+
+  if ((change > epsilon) & (maxit > 1))
+    warning(paste("No convergence after", maxit, "iterations.\n"))
+
+  if(log.it) {
+    return(2^mat)
+  } else
+    return(mat)
 }

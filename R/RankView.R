@@ -80,7 +80,7 @@ RankView <- function(beta, genelist=c(), top=20, bottom=20,cutoff=c(-sd(beta$dif
                        box.padding = unit(0.4, "lines"), segment.color = 'grey50',
                        point.padding = unit(0.3, "lines"), segment.size = 0.3)
   p = p + scale_fill_manual(values=mycolour)
-  p = p + labs(x="Treatment-Control Beta Score",y="Rank",title=main)
+  p = p + labs(x="Treatment-Control beta score",y="Rank",title=main)
   p = p + theme(legend.position="none")#+ylim(-1000,7000)
 
   if(!is.null(filename)){

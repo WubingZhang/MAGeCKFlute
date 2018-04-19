@@ -60,6 +60,7 @@ head(dd_essential)
 dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
 head(dd_loess)
 
+
 }
 \author{
 Wubing Zhang

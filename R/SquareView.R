@@ -12,6 +12,7 @@
 #' @param ctrlname A character, specifying the names of control samples.
 #' @param treatname A character, specifying the name of treatment samples.
 #' @param label.top Boolean, whether label the top selected genes, default label the top 10 genes in each group.
+#' @param top Integer, specifying the number of top selected genes to be labeled. Default is 5.
 #' @param genelist Character vector, specifying labeled genes.
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
@@ -49,7 +50,7 @@
 #'
 
 #Plot square
-SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top = TRUE, genelist=c(),
+SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top = TRUE, top=5, genelist=c(),
                      scale_cutoff=1, main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggExtra", quietly=TRUE) || stop("need ggExtra package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
@@ -72,29 +73,29 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group2" #proliferation
   beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = TRUE)],]
-  beta$text[which(idx)[rank(beta$Treatment[idx])<(length(beta$Treatment[idx])-9)]] = NA
+  beta$text[which(idx)[rank(beta$Treatment[idx])<(length(beta$Treatment[idx])-top+1)]] = NA
   beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = TRUE)],]
   idx3=beta$Treatment<(-drug_cutoff)
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group4" #anti-proliferation
-  beta$text[which(idx)[rank(beta$Treatment[idx])>10]] = NA
+  beta$text[which(idx)[rank(beta$Treatment[idx])>top]] = NA
   beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = FALSE)],]
   idx1=-drug_cutoff<beta$Treatment
   idx2=beta$Treatment<drug_cutoff
   idx3=beta$Control>Control_cutoff
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group3" #proliferation
-  beta$text[which(idx)[rank(beta$Control[idx])<(length(beta$Control[idx])-9)]] = NA
+  beta$text[which(idx)[rank(beta$Control[idx])<(length(beta$Control[idx])-top+1)]] = NA
   beta[idx,] = beta[which(idx)[order(beta$Control[idx], decreasing = TRUE)],]
   idx3=beta$Control<(-Control_cutoff)
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group1" #anti-proliferation
-  beta$text[which(idx)[rank(beta$Control[idx])>10]] = NA
+  beta$text[which(idx)[rank(beta$Control[idx])>top]] = NA
   beta[idx,] = beta[which(idx)[order(beta$Control[idx], decreasing = FALSE)],]
   #===================
-  tmp = ifelse(label.top, 0.1, 0.2)
-  x_min = round(min(beta$Control[beta$group != "Others"]),2) + tmp
-  x_max = round(max(beta$Control[beta$group != "Others"]),2) - tmp
+  tmp = ifelse(label.top, 0.1, 0.4)
+  x_min = round(min(beta$Control[beta$group != "Others"]),2) - tmp
+  x_max = round(max(beta$Control[beta$group != "Others"]),2) + tmp
   y_min = round(min(beta$Treatment[beta$group != "Others"]),2) - tmp
   y_max = round(max(beta$Treatment[beta$group != "Others"]),2) + tmp
 
@@ -114,7 +115,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   idx1 = gg$Gene %in% genelist
   idx2 = !(gg$group=="Others" | is.na(gg$text))
   label_gg = gg[idx1|idx2,]
-  col_label = rep("DeepSkyBlue4",nrow(label_gg))
+  col_label = rep("#004b84",nrow(label_gg))
   col_label[label_gg$group=="Others"]="gray60"
   p=ggplot(gg,aes(x=Control,y=Treatment,colour=group,fill=group))
   p=p+geom_point(shape=".",alpha=1/1,size = 1)+scale_color_manual(values=mycolour)
@@ -125,10 +126,12 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   p=p+geom_hline(yintercept = -drug_cutoff,linetype = "dotted")
   p=p+geom_abline(slope=1, intercept=+intercept,linetype = "dotted")
   p=p+geom_abline(slope=1, intercept=-intercept,linetype = "dotted")
-  p=p+labs(x=paste0(ctrlname, collapse = " & "), y=paste0(treatname, collapse = " & "), title=main)
-  p=p+guides(col = guide_legend(ncol = 3,byrow = TRUE))
+  p = p + labs(x="Control beta score", y = "Treatment beta score")
+  # p=p+labs(x=paste0(ctrlname, collapse = " & "), y=paste0(treatname, collapse = " & "), title=main)
+  p=p+guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)
     p = p + ggrepel::geom_text_repel(aes(x=Control,y=Treatment,label=Gene), color=col_label, data=label_gg)
+
   # p=p+xlim(x_min,x_max)+ylim(y_min,y_max)
   p=p+annotate("text",color="red",
                label=paste("",as.character(dim(beta[beta$group=="Group2",])[1]),sep=""),
@@ -149,7 +152,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank())
-  p=p+theme(legend.position="bottom")+theme(legend.title=element_blank())
+  p=p+theme(legend.position="none")+theme(legend.title=element_blank())
 
   p=suppressWarnings(ggExtra::ggMarginal(p, type="histogram",bins=50))
   p$data = gg

@@ -28,6 +28,11 @@ CHANGES IN VERSION 0.99.18
     o Label top ten essential genes in SquareView.
     o Change some default parameter values to be better.
 
+CHANGES IN VERSION 0.99.19
+-------------------------
+
+    o Beutify figures.
+    o Remove some unnecessary dependencies.
 
 
 

@@ -41,8 +41,7 @@
 #' dd = dd[,3:ncol(dd)]
 #' HeatmapView(dd, method = "pearson")
 #'
-#' @importFrom pheatmap pheatmap
-#' @importFrom RColorBrewer brewer.pal
+#' @import pheatmap
 #' @importFrom grDevices colorRampPalette
 #'
 #' @export

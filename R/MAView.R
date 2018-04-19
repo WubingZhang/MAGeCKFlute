@@ -9,25 +9,17 @@
 #' @param beta Data frame, including \code{ctrlname} and \code{treatname} as columns.
 #' @param ctrlname Character vector, specifying the name of control sample.
 #' @param treatname Character vector, specifying the name of treatment sample.
-#' @param main As in "ma.plot".
-#' @param subset As in "ma.plot".
-#' @param show.statistics As in "ma.plot".
-#' @param span As in "ma.plot".
-#' @param family.loess As in "ma.plot".
-#' @param cex As in "ma.plot".
-#' @param cex.lab As in "ma.plot".
-#' @param cex.axis As in "ma.plot".
-#' @param cex.main As in "ma.plot".
-#' @param plot.method As in "ma.plot".
-#' @param add.loess As in "ma.plot".
-#' @param lwd As in "ma.plot".
-#' @param lty As in "ma.plot".
-#' @param loess.col As in "ma.plot".
-#' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
-#' @param width As in 'png'.
-#' @param height As in 'png'.
-#' @param res As in 'png'.
-#' @param ... Other parameters in par.
+#' @param main As in plot.
+#' @param show.statistics Show statistics .
+#' @param add.smooth Whether add a smooth line to the plot.
+#' @param lty Line type for smooth line.
+#' @param smooth.col Color of smooth line.
+#' @param plot.method A string specifying the method to fit smooth line, which should be one of "auto", "lm", "glm", "gam", and "loess".
+#' @param filename Figure file name to create on disk. Default filename="NULL", which means
+#' don't save the figure on disk.
+#' @param width As in ggsave.
+#' @param height As in ggsave.
+#' @param ... Other available parameters in function 'ggsave'.
 #'
 #' @author Wubing Zhang
 #'
@@ -45,36 +37,45 @@
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(MLE_Data, organism="hsa")
-#' MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1", cex=1)
-#'
-#' @importFrom affy ma.plot
-#' @importFrom graphics par plot.new
-#' @importFrom grid viewport
+#' MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
 #'
 #' @export
 
-MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL, subset = sample(1:length(M), min(c(10000, length(M)))),
-                    show.statistics = TRUE, span = 2/3, family.loess = "gaussian",
-                    cex = 1, cex.lab=1.2, cex.axis=1, cex.main=1.2, plot.method = c("normal","smoothScatter","add"),
-                    add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red",filename=NULL, width=5, height=4, res=600, ...){
-  requireNamespace("graphics", quietly=TRUE) || stop("need graphics package")
-  requireNamespace("grid", quietly=TRUE) || stop("need grid package")
-  requireNamespace("affy", quietly=TRUE) || stop("need affy package")
-
+MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
+                    show.statistics = TRUE, add.smooth = TRUE, lty = 1, smooth.col = "red",
+                    plot.method = c("auto", "lm", "glm", "gam", "loess"),
+                    filename=NULL, width=5, height=4, ...){
   dd=beta
   loginfo(paste("MAplot for", main, "beta scores ..."))
   A = rowMeans(dd[,c(ctrlname, treatname)])
   M = rowMeans(dd[,treatname,drop= FALSE])-rowMeans(dd[,ctrlname,drop= FALSE])
-  par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main, ...)
-  ma.plot(A, M, main=main, subset=subset, show.statistics=show.statistics, span=span,
-          family.loess=family.loess, cex=cex, plot.method=plot.method, add.loess=add.loess,
-          lwd=lwd, lty=lty, loess.col=loess.col)
-  if(!is.null(filename)){
-    png(filename, units = "in", width=width, height=height, res=res)
-    par(cex.axis=cex.axis, cex.lab=cex.lab,cex.main=cex.main, ...)
-    ma.plot(A, M, main=main, subset=subset, show.statistics=show.statistics, span=span,
-            family.loess=family.loess, cex=cex, plot.method=plot.method, add.loess=add.loess,
-            lwd=lwd, lty=lty, loess.col=loess.col)
-    dev.off()
+  subset = sample(1:length(M), min(c(10000, length(M))))
+  A = A[subset]
+  M = M[subset]
+  Mid = paste("Median: ", round(median(M),4), sep="")
+  IQR = round(quantile(M, 0.75) - quantile(M, 0.25), 4)
+  IQR = paste("IQR: ", IQR, sep="")
+  gg = data.frame(M=M, A=A)
+  p = ggplot(gg, aes(x=A, y=M))
+  p = p + geom_point(shape=1, size=0.5, alpha = 0.6)
+  p = p + geom_hline(yintercept = 0, color="blue")
+  if(add.smooth)
+    p = p + geom_smooth(method = plot.method[1], color=smooth.col, linetype=lty)
+  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
+                plot.title = element_text(hjust = 0.5, size=18),
+                axis.text = element_text(colour="gray10"))
+  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
+  p = p + labs(title=main)
+  if(show.statistics){
+    xmax = max(gg$A)
+    ymax = max(gg$M)
+    p = p + annotate("text", color="black", x=xmax, y=ymax, hjust = 1, vjust = 1,
+                     label=paste(Mid, IQR, sep="\n"))
   }
+  if(!is.null(filename)){
+    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height =height, ...)
+  }
+  return(p)
 }

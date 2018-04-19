@@ -50,8 +50,8 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
   p=p+geom_density(colour="black")
   p=p+geom_density(aes(x=r,y=..density..),linetype="dashed",colour="red")
   p=p+geom_vline(xintercept = 0,linetype="dashed")
-  p = p + theme(text = element_text(colour="black",size = 10, family = "Helvetica"),
-                plot.title = element_text(hjust = 0.5, size=14),
+  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
+                plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
