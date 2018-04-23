@@ -9,7 +9,7 @@
 ReadBeta(gene_summary, organism = "hsa")
 }
 \arguments{
-\item{gene_summary}{A file path or a data frame, data frame, which has columns of 'Gene' and '*.beta'.}
+\item{gene_summary}{A file path or a data frame, data frame, which has columns of 'Gene' and '*|beta'.}
 
 \item{organism}{Character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
