@@ -8,9 +8,12 @@
 #' @aliases transGeneID
 #'
 #' @param genes A character vector, input genes to be converted.
-#' @param fromType The input ID type, "SYMBOL" (default) or "ENTREZID".
-#' @param toType The output ID type, "SYMBOL" or "ENTREZID" (default).
-#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param fromType The input ID type, one of "SYMBOL" (default), "ENTREZID",
+#' "ENSEMBL", "HGNC", "FULLNAME" and "TYPE".
+#' @param toType The output ID type, one of "SYMBOL", "ENTREZID" (default),
+#' "ENSEMBL", "HGNC", "FULLNAME" and "TYPE".
+#' @param organism A character, specifying organism, one of "hsa"(or 'Human'),
+#' "mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".
 #'
 #' @return A character vector, named by unique input gene ids.
 #'
@@ -39,8 +42,8 @@ TransGeneID <- function(genes, fromType="SYMBOL", toType="ENTREZID", organism="h
   tmpGene = toupper(genes)
   #=====================
   GeneID_Convert = getOrg(organism)$Symbol_Entrez
-  idx = duplicated(GeneID_Convert[,fromType])
-  convert = GeneID_Convert[!idx,toType]
+  idx = duplicated(GeneID_Convert[, fromType])
+  convert = GeneID_Convert[!idx, toType]
   names(convert) = GeneID_Convert[!idx,fromType]
   gene_after=convert[tmpGene]
   names(gene_after)=genes

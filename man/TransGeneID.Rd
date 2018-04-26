@@ -12,11 +12,14 @@ TransGeneID(genes, fromType = "SYMBOL", toType = "ENTREZID",
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}
 
-\item{fromType}{The input ID type, "SYMBOL" (default) or "ENTREZID".}
+\item{fromType}{The input ID type, one of "SYMBOL" (default), "ENTREZID",
+"ENSEMBL", "HGNC", "FULLNAME" and "TYPE".}
 
-\item{toType}{The output ID type, "SYMBOL" or "ENTREZID" (default).}
+\item{toType}{The output ID type, one of "SYMBOL", "ENTREZID" (default),
+"ENSEMBL", "HGNC", "FULLNAME" and "TYPE".}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, one of "hsa"(or 'Human'),
+"mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
 }
 \value{
 A character vector, named by unique input gene ids.

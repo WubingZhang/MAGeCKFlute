@@ -64,7 +64,7 @@ ReadBeta <- function(gene_summary, organism='hsa'){
   # dd1=as.data.frame(dd1, stringsAsFactors= FALSE)
 
   ##==============Remove NAs=============================================
-  idx = is.na(dd$ENTREZID)
+  idx = is.na(dd$ENTREZID) | duplicated(dd$ENTREZID)
   dd = dd[!idx,]
   dd = dd[, c(1,ncol(dd), 2:(ncol(dd)-1))]
   return(dd)
