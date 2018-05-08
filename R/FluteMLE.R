@@ -94,7 +94,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 
 	  output_pdf = file.path(outdir, paste0(prefix,"_Flute.mle_summary.pdf"))
 	  if(loess){ pdf(output_pdf, width=15, height = 7)}else{
-		pdf(file.path(outdir, output_pdf),width=9,height = 6)}
+		pdf(output_pdf,width=9,height = 6)}
 	  organism = getOrg(organism)$org
 	}
 
