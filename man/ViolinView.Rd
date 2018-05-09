@@ -10,7 +10,7 @@ ViolinView(beta, samples = NULL, main = NULL, ylab = "Beta Score",
   filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, , including all \code{samples} as columns.}
+\item{beta}{Data frame, , including \code{samples} as columns.}
 
 \item{samples}{Character, specifying the name of samples to be compared.}
 
@@ -47,7 +47,7 @@ data(MLE_Data)
 dd = ReadBeta(MLE_Data, organism="hsa")
 ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
 #or
-ViolinView(dd[, 3:6])
+ViolinView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 
 
 }

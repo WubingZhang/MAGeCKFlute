@@ -6,13 +6,12 @@
 \alias{rankview}
 \title{View the rank of gene points}
 \usage{
-RankView(beta, genelist = c(), top = 20, bottom = 20,
-  cutoff = c(-sd(beta$diff), sd(beta$diff)), main = NULL, filename = NULL,
+RankView(rankdata, genelist = c(), top = 20, bottom = 20,
+  cutoff = c(-sd(rankdata), sd(rankdata)), main = NULL, filename = NULL,
   width = 5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame containing two columns. The first column is label of points, and the second column
-includes numeric values to be ranked.}
+\item{rankdata}{Numeric vector, with gene as names.}
 
 \item{genelist}{Character vector, specifying genes to be labeled in figure.}
 
@@ -51,8 +50,9 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-dd$diff = dd$PLX7_R1 - dd$D7_R1
-RankView(dd[,c("Gene", "diff")])
+rankdata = dd$PLX7_R1 - dd$D7_R1
+names(rankdata) = rownames(dd)
+RankView(rankdata)
 
 }
 \author{

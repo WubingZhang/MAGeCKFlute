@@ -55,7 +55,6 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   orgdb = getOrg(organism)$pkg
   #========
   if(DS == "KEGG"){
-    loginfo('Running KEGG for list of entrezIDs')
     params <- new("KEGGHyperGParams", categoryName="KEGG", geneIds=gene, universeGeneIds=universe,
                   annotation=orgdb, pvalueCutoff=pvalueCutoff,testDirection="over")
     #loginfo('    Starting HyperG test')
@@ -76,7 +75,6 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
 
   if(DS %in% c("BP", "CC", "MF")){
     # gene ontology background
-    loginfo(paste('Running GO', DS, 'for list of entrezIDs'))
     params <- new("GOHyperGParams", annotation=orgdb,
                   geneIds = gene, universeGeneIds = universe,
                   ontology=DS, pvalueCutoff=pvalueCutoff, testDirection="over")

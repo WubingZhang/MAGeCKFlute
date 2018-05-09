@@ -14,7 +14,7 @@
 #' @param add.smooth Whether add a smooth line to the plot.
 #' @param lty Line type for smooth line.
 #' @param smooth.col Color of smooth line.
-#' @param plot.method A string specifying the method to fit smooth line, which should be one of "auto", "lm", "glm", "gam", and "loess".
+#' @param plot.method A string specifying the method to fit smooth line, which should be one of "gam" (default), "lm", "glm" and "loess".
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
 #' @param width As in ggsave.
@@ -23,7 +23,7 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @return plot on current device
+#' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
 #' @note See the vignette for an example of MAView.
 #' Note that the source code of \code{MAView} is very simple.
@@ -43,7 +43,7 @@
 
 MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                     show.statistics = TRUE, add.smooth = TRUE, lty = 1, smooth.col = "red",
-                    plot.method = c("auto", "lm", "glm", "gam", "loess"),
+                    plot.method = c("gam", "lm", "glm", "loess"),
                     filename=NULL, width=5, height=4, ...){
   dd=beta
   loginfo(paste("MAplot for", main, "beta scores ..."))

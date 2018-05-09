@@ -48,7 +48,6 @@
 enrich.ORT <- function(gene, universe=NULL, type="KEGG", organism = "hsa",pvalueCutoff = 1,
                        qvalueCutoff = 1, pAdjustMethod = "BH",minGSSize = 2, maxGSSize = 500){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
-  loginfo('Running Over-Representation Test for list of entrezIDs')
   gene = unique(as.character(gene))
   if(!is.null(universe)) universe = unique(as.character(universe))
   organism = getOrg(organism)$org

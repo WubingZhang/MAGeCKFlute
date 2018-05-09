@@ -7,7 +7,7 @@
 #' @rdname ViolinView
 #' @aliases violinview
 #'
-#' @param beta Data frame, , including all \code{samples} as columns.
+#' @param beta Data frame, , including \code{samples} as columns.
 #' @param samples Character, specifying the name of samples to be compared.
 #' @param main As in 'plot'.
 #' @param ylab As in 'plot'.
@@ -36,7 +36,7 @@
 #' dd = ReadBeta(MLE_Data, organism="hsa")
 #' ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
 #' #or
-#' ViolinView(dd[, 3:6])
+#' ViolinView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 #'
 #'
 #' @importFrom reshape melt

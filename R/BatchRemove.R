@@ -7,10 +7,11 @@
 #' @rdname BatchRemove
 #' @aliases batchremove
 #'
-#' @param mat Matrix like data object, or a file path of data.
+#' @param mat Matrix, or a file path of data.
 #' @param batchMat Matrix like data object or a file path of batch table, which has at least two columns,
 #' including Samples(matched colname of mat) and Batch. It can have the third column, which should be Covariate.
 #' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
+#' @param positive Boolean, specifying whether all values should be positive.
 #'
 #' @return A list contrains two objects, including \code{data} and \code{p}.
 #'
@@ -27,16 +28,16 @@
 #'
 #' @examples
 #' beta = ReadBeta(MLE_Data, organism="hsa")
-#' batchMat = data.frame(samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"),
-#'                       batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))
-#' res = BatchRemove(beta, batchMat)
+#' samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
+#' batchMat = data.frame(samples = samples, batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))
+#' res = BatchRemove(beta[, samples], batchMat)
 #'
 #' @importFrom sva ComBat
 #'
 #' @export
 #'
 
-BatchRemove <- function(mat, batchMat, log2trans=FALSE){
+BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
   if(class(mat)=="character" && file.exists(mat)){
     mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
@@ -44,11 +45,14 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE){
     batchMat = read.table(batchMat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
   requireNamespace("sva")
+  mat = as.matrix(mat)
+  if(mode(mat)!="numeric") stop("Numeric data matrix is needed!")
   batch = as.matrix(batchMat)
   rownames(batch) = batch[,1]
   ## load batch matrix
   index=intersect(batch[,1], colnames(mat))
-  dt=as.matrix(mat[,index])
+  if(length(index)<2) stop("Less than two samples found in data matrix.")
+  dt=mat[,index]
   if(log2trans) dt = log(dt+1)
   ##
   tmp=dt
@@ -71,13 +75,19 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE){
   if(length(unique(batch[,2]))<2){
     res = tmp2
   }else{res <- sva::ComBat(tmp2, batch = batch[,2], mod = mod)}
-  res[res<0] = 0
-  if(length(setdiff(colnames(mat), colnames(res)))>0)
+  if(positive) res[res<0] = 0
+  if(length(setdiff(colnames(mat), colnames(res)))>0){
     res=cbind(mat[setdiff(1:nrow(tmp),var0), setdiff(colnames(mat),colnames(res))], res)
-  if(length(var0)>0)
-    res = rbind(res, mat[var0,colnames(res)])
+    colnames(res)[1:length(setdiff(colnames(mat), colnames(res)))] = setdiff(colnames(mat),colnames(res))
+  }
+  if(length(var0)>0){
+    res = rbind(res, mat[var0, colnames(res)])
+  }
 
-  dt2 = as.matrix(res[,index])
+  # dt2 = matrix(as.numeric(res[,index]), ncol = length(index))
+  # colnames(dt2) = index
+  # rownames(dt2) = rownames(res)
+  dt2 = res[,index]
   pca1 = NULL
   pca2 = NULL
   p1 = NULL

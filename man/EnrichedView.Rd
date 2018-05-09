@@ -7,7 +7,7 @@
 \title{View enriched terms}
 \usage{
 EnrichedView(enrichment, plotTitle = NULL, color = "#3f90f7",
-  termNum = 20, charLength = 40, filename = NULL, width = 5,
+  termNum = 15, charLength = 40, filename = NULL, width = 5,
   height = 4, ...)
 }
 \arguments{

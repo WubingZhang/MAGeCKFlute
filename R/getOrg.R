@@ -54,7 +54,7 @@ getOrg <- function(organism){
     locfname <- file.path(temp_dir(), gzfile[res$org])
     if(!file.exists(locfname)){
       remfname <- paste0("ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/", gzfile[res$org])
-      download.file(remfname, locfname)
+      download.file(remfname, locfname, quiet = TRUE)
     }
     data = read.table(gzfile(locfname), sep = "\t", header = TRUE,
                       quote = "", stringsAsFactors = FALSE, comment.char = "")

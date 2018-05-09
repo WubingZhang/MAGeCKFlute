@@ -7,10 +7,10 @@
 \title{Normalize gene beta scores}
 \usage{
 NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
-  posControl = NULL, minus = 0)
+  posControl = NULL, minus = 0.2)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'ENTREZID', and \code{samples}.}
+\item{beta}{Data frame, including 'ENTREZID' and \code{samples} as columns.}
 
 \item{samples}{Character vector, specifying the samples in \code{beta} to be normalized.
 If NULL (default), normalize beta score of all samples in \code{beta}.}
@@ -51,7 +51,7 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-samples=colnames(dd)[3:6]
+samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
 head(dd_essential)

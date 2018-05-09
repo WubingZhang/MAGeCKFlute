@@ -82,7 +82,6 @@ enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCu
   }else{universe = unique(c(gene, gene2path$EntrezID))}
 
   #============
-  loginfo(paste('Running KEGG patwhay for list of entrezIDs'))
   if(type=="KEGG"){
     m=length(gene)
     n=length(universe)-m

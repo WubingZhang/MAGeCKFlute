@@ -9,7 +9,7 @@ DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
   filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, including all \code{samples} as columns.}
+\item{beta}{Data frame, including \code{samples} as columns.}
 
 \item{samples}{Character, specifying sample names in \code{beta}.}
 
@@ -46,7 +46,7 @@ data(MLE_Data)
 dd = ReadBeta(MLE_Data, organism="hsa")
 DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
 #or
-DensityView(dd[, 3:6])
+DensityView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 
 }
 \seealso{

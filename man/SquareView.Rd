@@ -11,7 +11,7 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   main = NULL, filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.}
+\item{beta}{Data frame, including columns of \code{ctrlname} and \code{treatname}, with Gene Symbol as rowname.}
 
 \item{ctrlname}{A character, specifying the names of control samples.}
 

@@ -8,7 +8,7 @@
 #' @rdname CellCycleView
 #' @aliases CellCycle,MAGeCKFlute-method
 #'
-#' @param beta Data frame, which has columns of 'Gene', \code{ctrlname} and other samples.
+#' @param beta Data frame, which has columns of \code{ctrlname} and other samples.
 #' @param ctrlname Character vector, specifying the name of control sample.
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
@@ -33,7 +33,7 @@
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(MLE_Data, organism="hsa")
-#' CellCycleView(dd[,-2], ctrlname = c("D7_R1", "D7_R2"))
+#' CellCycleView(dd[,-1], ctrlname = c("D7_R1", "D7_R2"))
 #'
 #' @importFrom reshape melt
 #'
@@ -43,11 +43,11 @@
 CellCycleView <- function(beta, ctrlname="Control", main=NULL, filename=NULL, width=5, height = 4, ...){
   loginfo(paste("Cell cycle fitting of treatments compaired to",
                 paste(ctrlname, collapse = "&")))
-  # dd2 = beta[,c("Gene", ctrlname, treatname)]
+
   requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
   dd2 = beta
   idx = colnames(beta) %in% ctrlname
-  dd2 = melt(dd2[,!idx], id="Gene")
+  dd2 = suppressMessages(melt(dd2[,!idx]))
   dd2$x = rep(rowMeans(beta[,ctrlname,drop=FALSE]), nrow(dd2)/nrow(beta))
 
   p = ggplot(dd2,aes(x,value,color=variable,group=variable))

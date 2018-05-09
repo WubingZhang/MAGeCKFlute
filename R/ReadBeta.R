@@ -12,7 +12,7 @@
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
 #'
-#' @return A data frame including four columns, named "Gene", "Control", "Treatment", and "ENTREZID".
+#' @return A data frame, in which the first column is ENTREZID, and the later columns are beta score for each samples.
 #'
 #' @author Wubing Zhang
 #'
@@ -67,5 +67,7 @@ ReadBeta <- function(gene_summary, organism='hsa'){
   idx = is.na(dd$ENTREZID) | duplicated(dd$ENTREZID)
   dd = dd[!idx,]
   dd = dd[, c(1,ncol(dd), 2:(ncol(dd)-1))]
+  rownames(dd) = dd$Gene
+  dd = dd[, -1]
   return(dd)
 }

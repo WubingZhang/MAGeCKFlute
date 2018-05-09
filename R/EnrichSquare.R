@@ -26,7 +26,6 @@
 #' \item{kegg14}{a list record enriched KEGG pathways for Group1&Group4 genes in 9-Square}
 #' \item{kegg23}{a list record enriched KEGG pathways for Group2&Group3 genes in 9-Square}
 #' \item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
-#' \item{kegg1234}{a list record enriched KEGG pathways for Group1&Group2&Group3&Group4 genes in 9-Square}
 #' \item{bp1}{a list record enriched GO BP terms for Group1 genes in 9-Square}
 #' \item{bp2}{a list record enriched GO BP terms for Group2 genes in 9-Square}
 #' \item{bp3}{a list record enriched GO BP terms for Group3 genes in 9-Square}
@@ -35,7 +34,7 @@
 #' \item{bp14}{a list record enriched GO BP terms for Group1&Group4 genes in 9-Square}
 #' \item{bp23}{a list record enriched GO BP terms for Group2&Group3 genes in 9-Square}
 #' \item{bp24}{a list record enriched GO BP terms for Group2&Group4 genes in 9-Square}
-#' \item{bp1234}{a list record enriched GO BP terms for Group1&Group2&Group3&Group4 genes in 9-Square}
+#'
 #' Each item in the returned list has two sub items:
 #' \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}
 #' \item{enrichRes}{a enrichResult instance.}
@@ -63,8 +62,8 @@
 
 
 #enrichment for square grouped genes
-EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", adjust="BH",
-                         filename=NULL, out.dir=".", width=5, height=4, ...){
+EnrichSquare <- function(beta, pvalue = 1, enrich_method="ORT", organism="hsa", adjust="BH",
+                         filename=NULL, out.dir=".", width=6.5, height=4, ...){
   loginfo("Enrichment analysis of 9 Square grouped genes ...")
 
   ## ===========Enrichment===================
@@ -77,12 +76,12 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   #====GO_KEGG_enrichment=====
   kegg1=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
-                            organism=organism, pvalueCutoff = pvalue,color="#e41a1c",
+                            organism=organism, pvalueCutoff = pvalue,color="#4daf4a",
                             plotTitle="KEGG: Group1", pAdjustMethod = adjust)
   bp1=enrichment_analysis(geneList = genes, universe=universe,
                           method = "ORT", type = "BP",organism=organism,
                           pvalueCutoff = pvalue, plotTitle="BP: Group1",
-                          color="#e41a1c", pAdjustMethod = adjust)
+                          color="#4daf4a", pAdjustMethod = adjust)
 
 
   idx=gg$group=="Group2"
@@ -90,10 +89,10 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   #====GO_KEGG_enrichment=====
   kegg2=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
-                            organism=organism, pvalueCutoff=pvalue, color="#e41a1c",
+                            organism=organism, pvalueCutoff=pvalue, color="#ff7f00",
                             plotTitle="KEGG: Group2", pAdjustMethod=adjust)
   bp2=enrichment_analysis(geneList = genes, universe=universe, method="ORT",
-                          type = "BP",organism=organism, pvalueCutoff=pvalue, color="#e41a1c",
+                          type = "BP",organism=organism, pvalueCutoff=pvalue, color="#ff7f00",
                           plotTitle="BP: Group2", pAdjustMethod = adjust)
 
   idx=gg$group=="Group3"
@@ -102,10 +101,10 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg3=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
                             organism=organism, pvalueCutoff = pvalue,
-                            color="#3f90f7", plotTitle="KEGG: Group3", pAdjustMethod = adjust)
+                            color="#005CB7", plotTitle="KEGG: Group3", pAdjustMethod = adjust)
   bp3=enrichment_analysis(geneList = genes, universe=universe, method = "ORT",
                           type = "BP",organism=organism, pvalueCutoff=pvalue,
-                          color="#3f90f7", plotTitle="BP: Group3", pAdjustMethod = adjust)
+                          color="#005CB7", plotTitle="BP: Group3", pAdjustMethod = adjust)
 
   idx=gg$group=="Group4"
   genes=as.character(gg$ENTREZID[idx])
@@ -113,10 +112,10 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg4=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
                             organism=organism, pvalueCutoff = pvalue,
-                            color="#3f90f7", plotTitle="KEGG: Group4", pAdjustMethod=adjust)
+                            color="#984ea3", plotTitle="KEGG: Group4", pAdjustMethod=adjust)
   bp4=enrichment_analysis(geneList = genes, universe=universe, method="ORT",
                           type = "BP",organism=organism, pvalueCutoff=pvalue,
-                          color="#3f90f7", plotTitle="BP: Group4", pAdjustMethod = adjust)
+                          color="#984ea3", plotTitle="BP: Group4", pAdjustMethod = adjust)
 
   idx1=gg$group=="Group1"
   idx2=gg$group=="Group3"
@@ -126,11 +125,11 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg13=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
                              organism=organism, pvalueCutoff = pvalue,
-                             color="#6daf61", plotTitle="KEGG: Group1&3", pAdjustMethod = adjust)
+                             color="#e41a1c", plotTitle="KEGG: Group1&3", pAdjustMethod = adjust)
   bp13=enrichment_analysis(geneList = genes, universe=universe,
                            method = "ORT", type = "BP",organism=organism,
                            pvalueCutoff = pvalue, plotTitle="BP: Group1&3",
-                           color="#6daf61", pAdjustMethod = adjust)
+                           color="#e41a1c", pAdjustMethod = adjust)
 
 
   idx1=gg$group=="Group1"
@@ -141,11 +140,11 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg14=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
                              organism=organism, pvalueCutoff = pvalue,
-                             color="#6daf61", plotTitle="KEGG: Group1&4", pAdjustMethod=adjust)
+                             color="#e41a1c", plotTitle="KEGG: Group1&4", pAdjustMethod=adjust)
   bp14=enrichment_analysis(geneList = genes, universe=universe,
                            method = "ORT", type = "BP",organism=organism,
                            pvalueCutoff = pvalue, plotTitle="BP: Group1&4",
-                           color="#6daf61", pAdjustMethod = adjust)
+                           color="#e41a1c", pAdjustMethod = adjust)
 
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group3"
@@ -155,11 +154,11 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg23=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
                              organism=organism, pvalueCutoff = pvalue,
-                             color="#6daf61", plotTitle="KEGG: Group2&3", pAdjustMethod = adjust)
+                             color="#377eb8", plotTitle="KEGG: Group2&3", pAdjustMethod = adjust)
   bp23=enrichment_analysis(geneList = genes, universe=universe,
                            method = "ORT", type = "BP",organism=organism,
                            pvalueCutoff = pvalue, plotTitle="BP: Group2&3",
-                           color="#6daf61", pAdjustMethod = adjust)
+                           color="#377eb8", pAdjustMethod = adjust)
 
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group4"
@@ -170,28 +169,28 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
   kegg24=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
                              organism=organism,pvalueCutoff = pvalue,
-                             color="#6daf61", plotTitle="KEGG: Group2&4", pAdjustMethod = adjust)
+                             color="#377eb8", plotTitle="KEGG: Group2&4", pAdjustMethod = adjust)
   bp24=enrichment_analysis(geneList = genes, universe=universe,
                            method = "ORT", type = "BP",organism=organism,
                            pvalueCutoff = pvalue, plotTitle="BP: Group2&4",
-                           color="#6daf61", pAdjustMethod = adjust)
+                           color="#377eb8", pAdjustMethod = adjust)
 
-  idx1=gg$group=="Group1"
-  idx2=gg$group=="Group2"
-  idx3=gg$group=="Group3"
-  idx4=gg$group=="Group4"
-  idx = idx1|idx2|idx3|idx4
-  genes=as.character(gg$ENTREZID[idx])
-  #====GO_KEGG_enrichment=====
-  kegg1234=enrichment_analysis(geneList = genes, universe=universe,
-                               method = enrich_method,type = "KEGG",
-                               organism=organism, pvalueCutoff = pvalue,
-                               plotTitle="KEGG: Group1&2&3&4",
-                               color="#6daf61", pAdjustMethod = adjust)
-  bp1234=enrichment_analysis(geneList = genes, universe=universe,
-                             method = "ORT", type = "BP",organism=organism,
-                             pvalueCutoff = pvalue, plotTitle="BP: Group1&2&3&4",
-                             color="#6daf61", pAdjustMethod = adjust)
+  # idx1=gg$group=="Group1"
+  # idx2=gg$group=="Group2"
+  # idx3=gg$group=="Group3"
+  # idx4=gg$group=="Group4"
+  # idx = idx1|idx2|idx3|idx4
+  # genes=as.character(gg$ENTREZID[idx])
+  # #====GO_KEGG_enrichment=====
+  # kegg1234=enrichment_analysis(geneList = genes, universe=universe,
+  #                              method = enrich_method,type = "KEGG",
+  #                              organism=organism, pvalueCutoff = pvalue,
+  #                              plotTitle="KEGG: Group1&2&3&4",
+  #                              color="#6daf61", pAdjustMethod = adjust)
+  # bp1234=enrichment_analysis(geneList = genes, universe=universe,
+  #                            method = "ORT", type = "BP",organism=organism,
+  #                            pvalueCutoff = pvalue, plotTitle="BP: Group1&2&3&4",
+  #                            color="#6daf61", pAdjustMethod = adjust)
   ###========Output results=================================================
   if(!is.null(filename)){
     if(!is.null(kegg1$enrichRes)){
@@ -322,27 +321,30 @@ EnrichSquare <- function(beta, pvalue = 1,enrich_method="ORT", organism="hsa", a
              filename=file.path(out.dir,paste0("Group2&4_bp_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
-    if(!is.null(kegg1234$enrichRes)){
-      write.table(kegg1234$enrichRes@result,
-                  file.path(out.dir,paste0("Group1&2&3&4_kegg_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(kegg1234$gridPlot,
-             filename=file.path(out.dir,paste0("Group1&2&3&4_kegg_",filename,".png")),
-             units = "in", width=width, height=height, ...)
-    }
-    if(!is.null(bp1234$enrichRes)){
-      write.table(bp1234$enrichRes@result,
-                  file.path(out.dir,paste0("Group1&2&3&4_bp_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(bp1234$gridPlot,
-             filename=file.path(out.dir,paste0("Group1&2&3&4_bp_",filename,".png")),
-             units = "in", width=width, height=height, ...)
-    }
+    # if(!is.null(kegg1234$enrichRes)){
+    #   write.table(kegg1234$enrichRes@result,
+    #               file.path(out.dir,paste0("Group1&2&3&4_kegg_",filename,".txt")),
+    #               sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
+    #   ggsave(kegg1234$gridPlot,
+    #          filename=file.path(out.dir,paste0("Group1&2&3&4_kegg_",filename,".png")),
+    #          units = "in", width=width, height=height, ...)
+    # }
+    # if(!is.null(bp1234$enrichRes)){
+    #   write.table(bp1234$enrichRes@result,
+    #               file.path(out.dir,paste0("Group1&2&3&4_bp_",filename,".txt")),
+    #               sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
+    #   ggsave(bp1234$gridPlot,
+    #          filename=file.path(out.dir,paste0("Group1&2&3&4_bp_",filename,".png")),
+    #          units = "in", width=width, height=height, ...)
+    # }
   }
+  # return(list(kegg1=kegg1, kegg2=kegg2, kegg3=kegg3, kegg4=kegg4,
+  #             kegg13=kegg13, kegg14=kegg14, kegg23=kegg23, kegg24=kegg24,
+  #             kegg1234=kegg1234, bp1=bp1, bp2=bp2, bp3=bp3, bp4=bp4,
+  #             bp13=bp13, bp14=bp14, bp23=bp23, bp24=bp24, bp1234=bp1234))
   return(list(kegg1=kegg1, kegg2=kegg2, kegg3=kegg3, kegg4=kegg4,
               kegg13=kegg13, kegg14=kegg14, kegg23=kegg23, kegg24=kegg24,
-              kegg1234=kegg1234, bp1=bp1, bp2=bp2, bp3=bp3, bp4=bp4,
-              bp13=bp13, bp14=bp14, bp23=bp23, bp24=bp24, bp1234=bp1234))
-
+              bp1=bp1, bp2=bp2, bp3=bp3, bp4=bp4,
+              bp13=bp13, bp14=bp14, bp23=bp23, bp24=bp24))
 }
 

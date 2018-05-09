@@ -7,7 +7,7 @@
 \title{normalize.loess}
 \usage{
 normalize.loess(mat, subset = sample(1:(dim(mat)[1]), min(c(5000,
-  nrow(mat)))), epsilon = 10^-2, maxit = 1, log.it = TRUE,
+  nrow(mat)))), epsilon = 10^-2, maxit = 1, log.it = FALSE,
   verbose = TRUE, span = 2/3, family.loess = "symmetric", ...)
 }
 \arguments{
@@ -38,7 +38,7 @@ Loess normalization method.
 }
 \examples{
 beta = ReadBeta(MLE_Data, organism="hsa")
-beta_loess = normalize.loess(beta[,3:6])
+beta_loess = normalize.loess(beta[,c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 
 }
 \seealso{

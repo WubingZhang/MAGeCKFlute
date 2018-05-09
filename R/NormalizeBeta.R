@@ -9,7 +9,7 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta Data frame, which has columns of 'ENTREZID', and \code{samples}.
+#' @param beta Data frame, including 'ENTREZID' and \code{samples} as columns.
 #' @param samples Character vector, specifying the samples in \code{beta} to be normalized.
 #' If NULL (default), normalize beta score of all samples in \code{beta}.
 #' @param method Character, one of 'cell_cycle'(default) and 'loess'.
@@ -41,7 +41,7 @@
 #' data(MLE_Data)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(MLE_Data, organism="hsa")
-#' samples=colnames(dd)[3:6]
+#' samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
 #' head(dd_essential)
@@ -54,7 +54,7 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0){
+NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0.2){
   loginfo("Normalize beta scores ...")
   if(is.null(samples)) samples = setdiff(colnames(beta), "ENTREZID")
 
@@ -111,12 +111,12 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
 #'
 #' @examples
 #' beta = ReadBeta(MLE_Data, organism="hsa")
-#' beta_loess = normalize.loess(beta[,3:6])
+#' beta_loess = normalize.loess(beta[,c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 #'
 #' @export
 #'
 normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),
-                            epsilon=10^-2, maxit=1, log.it=TRUE, verbose=TRUE, span=2/3,
+                            epsilon=10^-2, maxit=1, log.it=FALSE, verbose=TRUE, span=2/3,
                             family.loess="symmetric", ...){
 
   J <- dim(mat)[2]

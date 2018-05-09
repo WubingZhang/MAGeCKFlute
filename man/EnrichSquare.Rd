@@ -6,7 +6,7 @@
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
 EnrichSquare(beta, pvalue = 1, enrich_method = "ORT", organism = "hsa",
-  adjust = "BH", filename = NULL, out.dir = ".", width = 5,
+  adjust = "BH", filename = NULL, out.dir = ".", width = 6.5,
   height = 4, ...)
 }
 \arguments{
@@ -40,7 +40,6 @@ A list containing enrichment results for each group genes. This list contains se
 \item{kegg14}{a list record enriched KEGG pathways for Group1&Group4 genes in 9-Square}
 \item{kegg23}{a list record enriched KEGG pathways for Group2&Group3 genes in 9-Square}
 \item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
-\item{kegg1234}{a list record enriched KEGG pathways for Group1&Group2&Group3&Group4 genes in 9-Square}
 \item{bp1}{a list record enriched GO BP terms for Group1 genes in 9-Square}
 \item{bp2}{a list record enriched GO BP terms for Group2 genes in 9-Square}
 \item{bp3}{a list record enriched GO BP terms for Group3 genes in 9-Square}
@@ -49,7 +48,7 @@ A list containing enrichment results for each group genes. This list contains se
 \item{bp14}{a list record enriched GO BP terms for Group1&Group4 genes in 9-Square}
 \item{bp23}{a list record enriched GO BP terms for Group2&Group3 genes in 9-Square}
 \item{bp24}{a list record enriched GO BP terms for Group2&Group4 genes in 9-Square}
-\item{bp1234}{a list record enriched GO BP terms for Group1&Group2&Group3&Group4 genes in 9-Square}
+
 Each item in the returned list has two sub items:
 \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}
 \item{enrichRes}{a enrichResult instance.}

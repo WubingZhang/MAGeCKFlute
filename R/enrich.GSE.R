@@ -52,7 +52,6 @@ enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, m
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
   geneList = sort(geneList, decreasing = TRUE)
-  loginfo('Running GSEA for list of entrezIDs')
   #geneList:	order ranked geneList
   if(type == "KEGG"){
     # download Kegg data

@@ -130,9 +130,9 @@ package, we provide `HeatmapView` to ensure whether batch effect exists in data,
 ##Before batch removal
 HeatmapView(dd[,c(ctrlname, treatname)])
 batchMat = data.frame(samples = c(ctrlname, treatname), batch = c(1,2,1,2), cov = c(1,1,2,2))
-dd1 = BatchRemove(dd, batchMat)$data
+dd1 = BatchRemove(dd[,c(ctrlname, treatname)], batchMat)$data
 
-##After batch removal
+## After batch removal
 HeatmapView(dd1[,c(ctrlname, treatname)])
 ```
 
@@ -172,7 +172,7 @@ After normalization, the cell cycle time in different condition should be almost
 
 ```{r EstimateCellCycle}
 ##Fitting beta score of all genes
-CellCycleView(dd_essential[,-2], ctrlname, main="Cell cycle normalized")
+CellCycleView(dd_essential[,c(ctrlname, treatname)], ctrlname, main="Cell cycle normalized")
 ```
 
 ### Positive selection and negative selection
@@ -192,9 +192,10 @@ print(p1)
 ## Add column of 'diff'
 dd_essential$Control = rowMeans(dd_essential[,ctrlname])
 dd_essential$Treatment = rowMeans(dd_essential[,treatname])
-dd_essential$diff = dd_essential$Treatment - dd_essential$Control
 
-p2 = RankView(dd_essential[, c("Gene", "diff")], main="Cell cycle normalized")
+rankdata = dd_essential$Treatment - dd_essential$Control
+names(rankdata) = rownames(dd_essential)
+p2 = RankView(rankdata, main="Cell cycle normalized")
 print(p2)
 ```
 

@@ -10,7 +10,7 @@ CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL,
   width = 5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'Gene', \code{ctrlname} and other samples.}
+\item{beta}{Data frame, which has columns of \code{ctrlname} and other samples.}
 
 \item{ctrlname}{Character vector, specifying the name of control sample.}
 
@@ -44,7 +44,7 @@ Users should find it easy to customize this function.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-CellCycleView(dd[,-2], ctrlname = c("D7_R1", "D7_R2"))
+CellCycleView(dd[,-1], ctrlname = c("D7_R1", "D7_R2"))
 
 }
 \author{

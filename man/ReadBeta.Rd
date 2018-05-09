@@ -16,7 +16,7 @@ the gene annotation package. For all potential values check: data(bods); bods. D
 and can also be "human" (case insensitive).}
 }
 \value{
-A data frame including four columns, named "Gene", "Control", "Treatment", and "ENTREZID".
+A data frame, in which the first column is ENTREZID, and the later columns are beta score for each samples.
 }
 \description{
 Read gene beta scores from file or data frame

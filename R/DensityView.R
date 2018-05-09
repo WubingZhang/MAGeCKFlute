@@ -6,7 +6,7 @@
 #' @name DensityView
 #' @rdname DensityView
 #'
-#' @param beta Data frame, including all \code{samples} as columns.
+#' @param beta Data frame, including \code{samples} as columns.
 #' @param samples Character, specifying sample names in \code{beta}.
 #' @param main As in 'plot'.
 #' @param xlab As in 'plot'.
@@ -35,7 +35,7 @@
 #' dd = ReadBeta(MLE_Data, organism="hsa")
 #' DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
 #' #or
-#' DensityView(dd[, 3:6])
+#' DensityView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 #'
 #' @importFrom reshape melt
 #' @importFrom ggsci scale_color_npg

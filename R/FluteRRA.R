@@ -9,8 +9,8 @@
 #'
 #' @param gene_summary A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.
 #' @param prefix A character, indicating the prefix of output file name.
-#' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-#' "GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5, specifying enrichment method used for kegg enrichment analysis.
+#' @param enrich_kegg One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
+#' specifying enrichment method used for kegg enrichment analysis.
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
 #' and "mmu" or "Mouse"
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
@@ -54,7 +54,7 @@
 
 
 #===read RRA results=====================================
-FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
+FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
                      organism="hsa", pvalueCutoff=0.25, adjust="BH",
                      outdir="."){
   #=========Prepare the running environment=========
@@ -66,7 +66,7 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
     dir.create(file.path(out.dir_sub,"RRA"), showWarnings=FALSE)
 
     output_pdf = paste0(prefix,"_Flute.rra_summary.pdf")
-    pdf(file.path(out.dir_sub, output_pdf),width=9,height = 4)
+    pdf(file.path(out.dir_sub, output_pdf),width=11, height = 6)
   }
 
   #=========Input data=========
@@ -93,11 +93,10 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
 
     grid.arrange(kegg.neg$gridPlot, bp.neg$gridPlot, ncol = 2)
 
-    ggsave(kegg.neg$gridPlot,filename=
-             file.path(out.dir_sub,"RRA/kegg.neg.png"),units = "in",
-           width=400/100,height =270/100 )
+    ggsave(kegg.neg$gridPlot, filename = file.path(out.dir_sub,"RRA/kegg.neg.png"),
+           units = "in", width = 6.5, height = 4)
     ggsave(bp.neg$gridPlot,filename=file.path(out.dir_sub,"RRA/bp.neg.png"),
-           units = "in",width=400/100,height =270/100 )
+           units = "in", width = 6.5, height = 4)
 
     idx=dd$pos.fdr<pvalueCutoff
     genes = dd[idx, "ENTREZID"]
@@ -119,12 +118,10 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="ORT",
     #                         pAdjustMethod = adjust)
     grid.arrange(kegg.pos$gridPlot, bp.pos$gridPlot, ncol = 2)
 
-    ggsave(kegg.pos$gridPlot,filename=
-             file.path(out.dir_sub,"RRA/kegg.pos.png"),units = "in",
-           width=400/100,height =270/100 )
-    ggsave(bp.pos$gridPlot,filename=
-             file.path(out.dir_sub,"RRA/bp.pos.png"),units = "in",
-           width=400/100,height =270/100 )
+    ggsave(kegg.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/kegg.pos.png"),
+           units = "in", width = 6.5, height = 4)
+    ggsave(bp.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/bp.pos.png"),
+           units = "in", width = 6.5, height = 4)
 
   }
   dev.off()

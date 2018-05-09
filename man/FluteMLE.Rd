@@ -10,7 +10,7 @@
 FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
   organism = "hsa", prefix = "Test", top = 10, bottom = 10,
   interestGenes = c(), pvalueCutoff = 1, adjust = "BH",
-  enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
+  enrich_kegg = "HGT", gsea = FALSE, posControl = NULL,
   scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
 }
 \arguments{
@@ -36,7 +36,7 @@ and "mmu" or "Mouse".}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test),
+\item{enrich_kegg}{One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
 specifying enrichment method used for kegg enrichment analysis.}
 
 \item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and

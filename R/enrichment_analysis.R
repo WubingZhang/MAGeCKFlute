@@ -78,6 +78,7 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
   }
   #====Gene Set Enrichment Analysis=======================================================
   if(method == "GSEA"){
+    loginfo(paste0('Running GSEA for ', type))
     geneList=geneList[order(geneList,decreasing = TRUE)]
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff=pvalueCutoff, pAdjustMethod = pAdjustMethod,
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
@@ -98,12 +99,14 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
   }
   #====Over-Representation Analysis======================================================
   if(method == "ORT"){
+    loginfo(paste0('Running Over-Representation Test for ', type))
     enrichRes <- enrich.ORT(gene = geneList, universe = universe, type = type, organism=organism,
                             pvalueCutoff=pvalueCutoff, qvalueCutoff = qvalueCutoff, pAdjustMethod = pAdjustMethod,
                             minGSSize = minGSSize, maxGSSize = maxGSSize)
   }
   #=============DAVID=======================================================================
   if(method == "DAVID"){
+    loginfo(paste0('Running DAVID for ', type))
     if(type == "KEGG"){
       annotation = "KEGG_PATHWAY"
     }else if(type %in% c("BP", "CC", "MF")){
@@ -118,11 +121,13 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
   }
   #===============================GOstats enrichment analysis============================
   if(method == "GOstats"){
+    loginfo(paste0('Running GOstats test for ', type))
     enrichRes = enrich.GOstats(gene = geneList, universe = universe, type  = type, organism=organism,
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod)
   }
   #==================================HyperGeometric test=================================
   if(method == "HGT"){
+    loginfo(paste0('Running Hypergeometric test for ', type))
     enrichRes = enrich.HGT(gene = geneList, universe = universe, type  = type, organism=organism,
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod,
                            minGSSize = minGSSize, maxGSSize = maxGSSize)
@@ -145,6 +150,4 @@ enrichment_analysis = function(geneList, universe=NULL, method=1, type="KEGG", o
 
   return(result)
 }
-
-
 

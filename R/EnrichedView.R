@@ -42,7 +42,7 @@
 #' @export
 
 
-EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, charLength=40,
+EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=15, charLength=40,
                       filename=NULL, width=5, height=4, ...){
 
   if(is.null(enrichment) || nrow(enrichment)==0){
@@ -162,7 +162,7 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=20, c
 #' @export
 
 ##===================
-EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=20,charLength=40,
+EnrichedGSEView=function(enrichment,plotTitle=NULL, color="#3f90f7",termNum=15,charLength=40,
                          filename=NULL, width=5, height=4, ...){
 
   if(nrow(enrichment)==0){

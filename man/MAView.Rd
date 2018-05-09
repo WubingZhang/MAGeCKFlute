@@ -7,7 +7,7 @@
 \usage{
 MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
   show.statistics = TRUE, add.smooth = TRUE, lty = 1,
-  smooth.col = "red", plot.method = c("auto", "lm", "glm", "gam", "loess"),
+  smooth.col = "red", plot.method = c("gam", "lm", "glm", "loess"),
   filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
@@ -27,7 +27,7 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
 
 \item{smooth.col}{Color of smooth line.}
 
-\item{plot.method}{A string specifying the method to fit smooth line, which should be one of "auto", "lm", "glm", "gam", and "loess".}
+\item{plot.method}{A string specifying the method to fit smooth line, which should be one of "gam" (default), "lm", "glm" and "loess".}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
@@ -39,7 +39,7 @@ don't save the figure on disk.}
 \item{...}{Other available parameters in function 'ggsave'.}
 }
 \value{
-plot on current device
+An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
 MAplot of gene beta scores in Control vs Treatment

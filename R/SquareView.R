@@ -8,7 +8,7 @@
 #' @rdname SquareView
 #' @aliases squareview
 #'
-#' @param beta Data frame, including columns of 'Gene', \code{ctrlname} and \code{treatname}.
+#' @param beta Data frame, including columns of \code{ctrlname} and \code{treatname}, with Gene Symbol as rowname.
 #' @param ctrlname A character, specifying the names of control samples.
 #' @param treatname A character, specifying the name of treatment samples.
 #' @param label.top Boolean, whether label the top selected genes, default label the top 10 genes in each group.
@@ -56,6 +56,11 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
   loginfo(paste("Square plot for",main, "beta scores ..."))
+  if(all(c(ctrlname, treatname) %in% colnames(beta))){
+    beta$Gene = rownames(beta)
+  }else{
+    stop("No sample found in the data.")
+  }
   beta$group="Others"
   beta$text = beta$Gene
   beta$Control = rowMeans(beta[, ctrlname, drop= FALSE])
@@ -108,7 +113,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
   gg$group=factor(gg$group,levels = c("Group1","Group2","Group3","Group4","Others"))
   #===============
   # gg=gg[,c("Gene","Treatment","Control","group","ENTREZID")]
-  mycolour=c("Others"="aliceblue",  "Group2"="#ff7f00", "Group3"="SlateBlue",
+  mycolour=c("Others"="aliceblue",  "Group2"="#ff7f00", "Group3"="#005CB7",
              "Group4"="#984ea3", "Group1"="#4daf4a" )
   # mycolour=c("Others"="aliceblue",  "Group2"="#DDA76A", "Group3"="#B5C27B",
   #            "Group4"="#AD6A64", "Group1"="#7995C2" )
@@ -154,8 +159,8 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label.top =
                 panel.border = element_blank(), panel.background = element_blank())
   p=p+theme(legend.position="none")+theme(legend.title=element_blank())
 
-  p=suppressWarnings(ggExtra::ggMarginal(p, type="histogram",bins=50))
-  p$data = gg
+  p=suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
+  p$data = beta
   p$data = p$data[order(p$data$group),]
   # grid.arrange(p,ncol = 1)
   if(!is.null(filename)){
