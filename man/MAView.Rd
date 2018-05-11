@@ -7,7 +7,7 @@
 \usage{
 MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
   show.statistics = TRUE, add.smooth = TRUE, lty = 1,
-  smooth.col = "red", plot.method = c("gam", "lm", "glm", "loess"),
+  smooth.col = "red", plot.method = c("loess", "lm", "glm", "gam"),
   filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
@@ -27,7 +27,7 @@ MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
 
 \item{smooth.col}{Color of smooth line.}
 
-\item{plot.method}{A string specifying the method to fit smooth line, which should be one of "gam" (default), "lm", "glm" and "loess".}
+\item{plot.method}{A string specifying the method to fit smooth line, which should be one of "loess" (default), "lm", "glm" and "gam".}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 don't save the figure on disk.}
