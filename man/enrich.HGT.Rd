@@ -7,7 +7,7 @@
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
 enrich.HGT(gene, universe = NULL, type = "KEGG", organism = "hsa",
-  pvalueCutoff = 1, pAdjustMethod = "BH", minGSSize = 2,
+  pvalueCutoff = 0.25, pAdjustMethod = "BH", minGSSize = 2,
   maxGSSize = 500)
 }
 \arguments{
@@ -41,10 +41,9 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
-data(MLE_Data)
-universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = universe[1:50]
-enrichRes <- enrich.HGT(genes, universe)
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
+enrichRes <- enrich.HGT(genes)
 head(enrichRes@result)
 
 }

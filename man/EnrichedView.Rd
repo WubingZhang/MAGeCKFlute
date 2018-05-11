@@ -44,12 +44,10 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
-data(MLE_Data)
-universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = universe[1:50]
-enrichRes <- enrich.HGT(genes, universe)
-EnrichedView(enrichment=enrichRes@result, plotTitle = "Hypergemetric test")
-
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
+enrichRes <- enrich.HGT(genes)
+EnrichedView(enrichment=enrichRes@result)
 
 }
 \seealso{

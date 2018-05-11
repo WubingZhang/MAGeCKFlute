@@ -6,10 +6,10 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-enrichment_analysis(geneList, universe = NULL, method = 1, type = "KEGG",
-  organism = "hsa", pvalueCutoff = 1, qvalueCutoff = 1,
-  pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500,
-  plotTitle = NULL, color = "#3f90f7")
+enrichment_analysis(geneList, universe = NULL, method = "ORT",
+  type = "KEGG", organism = "hsa", pvalueCutoff = 0.25,
+  qvalueCutoff = 0.2, pAdjustMethod = "BH", minGSSize = 2,
+  maxGSSize = 500, plotTitle = NULL, color = "#3f90f7")
 }
 \arguments{
 \item{geneList}{A character vector or a ranked numeric vector(for GSEA) with names of geneid,
@@ -53,11 +53,9 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
-data(MLE_Data)
-universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = universe[1:50]
-keggA = enrichment_analysis(geneList = genes, universe=universe, method = "HGT",
-                          type = "KEGG", organism = "hsa", color="#6daf61")
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
+keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
 print(keggA$gridPlot)
 
 

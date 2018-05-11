@@ -80,7 +80,7 @@
 #! /usr/bin/Rscript --vanilla
 FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
                      organism="hsa", prefix = "Test", top=10, bottom=10, interestGenes=c(),
-                     pvalueCutoff=1, adjust="BH", enrich_kegg="HGT", gsea=FALSE,
+                     pvalueCutoff=0.25, adjust="BH", enrich_kegg="HGT", gsea=FALSE,
                      posControl=NULL, scale_cutoff=1, loess=FALSE, view_allpath=FALSE, outdir="."){
 
 	#=========Prepare the running environment=========
@@ -107,6 +107,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
 	                               method="cell_cycle", posControl=posControl)
 	  if(loess){ dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method="loess")}
+	  rm(output_pdf, beta)
 	}
 
 	#========distribution of all genes================================
@@ -138,6 +139,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 		                filename=file.path(outputDir1,"density_all_treat-ctrl_loess_normalized.png"))
 		grid.arrange(P1,P4,P7,P2,P5,P8, ncol = 3)
 	  }else{grid.arrange(P1,P4,P2,P5, ncol = 2)}
+	  suppressWarnings(rm(P1, P2, P4, P5, P7, P8))
 	}
 
 	#========MAplot of treatment and control beta scores==================
@@ -156,7 +158,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 	  }else{
 	    grid.arrange(P3, P6, P1, P2, ncol = 2)
 	  }
-
+	  suppressWarnings(rm(P1, P2, P3, P4, outputDir2))
 	}
 
 	#=============distribution of essential genes====================
@@ -201,6 +203,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
 		grid.arrange(P1,P5,P2,P6, ncol=2)
 		grid.arrange(P3,P7,P4,P8, ncol=2)
 	  }
+	  suppressWarnings(rm(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, outputDir3, idx))
 	}
 
   dd$Control = rowMeans(dd[, ctrlname, drop=FALSE])
@@ -334,6 +337,7 @@ FluteMLE <- function(gene_summary, ctrlname="Control", treatname="Treatment",
     		            view_allpath=view_allpath, output=file.path(
     		              outdir,"Pathview_Treat_Ctrl"))
 	  }
+	  suppressWarnings(rm(E1, E2, E3, outputDir5))
 	}
 
 	# ===============9 squares=====================================

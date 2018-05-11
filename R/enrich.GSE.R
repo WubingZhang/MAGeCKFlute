@@ -33,11 +33,7 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#' data(MLE_Data)
-#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' geneList = MLE_Data$D7_R1.beta
-#' names(geneList) = universe
-#' geneList = geneList[!is.na(universe)]
+#' data(geneList, package = "DOSE")
 #' enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 #' head(enrichRes@result)
 #'
@@ -48,7 +44,7 @@
 #' @export
 
 enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, maxGSSize = 500,
-                       pvalueCutoff = 1, pAdjustMethod = "BH"){
+                       pvalueCutoff = 0.25, pAdjustMethod = "BH"){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
   geneList = sort(geneList, decreasing = TRUE)
@@ -106,8 +102,9 @@ enrich.GSE <- function(geneList, type= "KEGG", organism='hsa', minGSSize = 10, m
   }
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     geneID = strsplit(enrichedRes@result$core_enrichment, "/")
+    allsymbol = TransGeneID(names(geneList), "ENTREZID", "SYMBOL", organism = organism)
     geneName = lapply(geneID, function(gid){
-      SYMBOL = TransGeneID(gid, "ENTREZID", "SYMBOL", organism = organism)
+      SYMBOL = allsymbol[gid]
       paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)

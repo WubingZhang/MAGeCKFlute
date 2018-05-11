@@ -91,8 +91,6 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
                                pvalueCutoff = pvalueCutoff, plotTitle="BP: neg",
                                color="#3f90f7", pAdjustMethod = adjust)
 
-    grid.arrange(kegg.neg$gridPlot, bp.neg$gridPlot, ncol = 2)
-
     ggsave(kegg.neg$gridPlot, filename = file.path(out.dir_sub,"RRA/kegg.neg.png"),
            units = "in", width = 6.5, height = 4)
     ggsave(bp.neg$gridPlot,filename=file.path(out.dir_sub,"RRA/bp.neg.png"),
@@ -116,7 +114,7 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
                               #type = "KEGG", pvalueCutoff = pvalueCutoff,
     #                         plotTitle="GSEA: RRA",color="#e41a1c",
     #                         pAdjustMethod = adjust)
-    grid.arrange(kegg.pos$gridPlot, bp.pos$gridPlot, ncol = 2)
+    grid.arrange(kegg.neg$gridPlot, bp.neg$gridPlot, kegg.pos$gridPlot, bp.pos$gridPlot, ncol = 2)
 
     ggsave(kegg.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/kegg.pos.png"),
            units = "in", width = 6.5, height = 4)

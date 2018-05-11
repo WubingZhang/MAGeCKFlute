@@ -32,10 +32,9 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#' data(MLE_Data)
-#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = universe[1:50]
-#' enrichRes <- enrich.GOstats(genes, universe, type="BP")
+#' data(geneList, package = "DOSE")
+#' genes <- names(geneList)[1:100]
+#' enrichRes <- enrich.GOstats(genes, type="BP")
 #' head(enrichRes@result)
 #'
 #' @import GOstats Category
@@ -44,7 +43,7 @@
 
 
 enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC"), organism = "hsa",
-                           pvalueCutoff = 1, pAdjustMethod = "BH"){
+                           pvalueCutoff = 0.25, pAdjustMethod = "BH"){
   requireNamespace("GOstats", quietly = TRUE)
   requireNamespace("Category", quietly = TRUE)
   gene = unique(as.character(gene))
@@ -94,8 +93,9 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
     })
     over.sum$geneID <- glist[as.character(over.sum[,1])]
     geneID = strsplit(over.sum$geneID, "/")
+    allsymbol = TransGeneID(gene, "ENTREZID", "SYMBOL", organism = organism)
     geneName = lapply(geneID, function(gid){
-      SYMBOL = TransGeneID(gid, "ENTREZID", "SYMBOL", organism = organism)
+      SYMBOL = allsymbol[gid]
       paste(SYMBOL, collapse = "/")
     })
     over.sum$geneName <- unlist(geneName)

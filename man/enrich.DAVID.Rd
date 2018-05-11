@@ -8,7 +8,7 @@
 \usage{
 enrich.DAVID(gene, universe = NULL, david.user, idType = "ENTREZ_GENE_ID",
   minGSSize = 2, maxGSSize = 500, annotation = "GOTERM_BP_FAT",
-  pvalueCutoff = 1, pAdjustMethod = "BH", qvalueCutoff = 0.2)
+  pvalueCutoff = 0.25, pAdjustMethod = "BH", qvalueCutoff = 0.2)
 }
 \arguments{
 \item{gene}{Character vector, specifying the genelist to do enrichment analysis.}
@@ -46,11 +46,10 @@ Users should find it easy to customize this function.
 }
 \examples{
 \dontrun{
- data(MLE_Data)
- universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
- genes = universe[1:50]
+ data(geneList, package = "DOSE")
+ genes <- names(geneList)[1:100]
 	# Before running this example, you need to have a david account.
-	enrichRes <- enrich.DAVID(genes, universe, david.user="david.user@edu.com")
+	enrichRes <- enrich.DAVID(genes, david.user="david.user@edu.com")
 	head(enrichRes@result)
 }
 

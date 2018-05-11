@@ -34,10 +34,9 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#' data(MLE_Data)
-#' universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-#' genes = universe[1:50]
-#' enrichRes <- enrich.HGT(genes, universe)
+#' data(geneList, package = "DOSE")
+#' genes <- names(geneList)[1:100]
+#' enrichRes <- enrich.HGT(genes)
 #' head(enrichRes@result)
 #'
 #' @importFrom data.table fread
@@ -46,7 +45,7 @@
 #' @export
 
 
-enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCutoff = 1,
+enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCutoff = 0.25,
                       pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
@@ -78,6 +77,7 @@ enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCu
   }
 
   gene = unique(as.character(gene))
+  allsymbol = TransGeneID(gene, "ENTREZID", "SYMBOL", organism = organism)
   if(!is.null(universe)){universe = unique(as.character(universe))
   }else{universe = unique(c(gene, gene2path$EntrezID))}
 
@@ -105,7 +105,7 @@ enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCu
         res[kk,"pvalue"]=pvalue
         res[kk,"geneID"]=geneID
 
-        SYMBOL = TransGeneID(universe[idx1&idx2], "ENTREZID", "SYMBOL", organism = organism)
+        SYMBOL = allsymbol[universe[idx1&idx2]]
         geneName = paste(SYMBOL, collapse = "/")
         res[kk,"geneName"]=geneName
         res[kk,"Count"]=q

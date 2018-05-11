@@ -7,7 +7,7 @@
 \title{Do enrichment analysis using GOstats}
 \usage{
 enrich.GOstats(gene, universe = NULL, type = c("KEGG", "BP", "MF", "CC"),
-  organism = "hsa", pvalueCutoff = 1, pAdjustMethod = "BH")
+  organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH")
 }
 \arguments{
 \item{gene}{A character vector, specifying the genelist to do enrichment analysis.}
@@ -36,10 +36,9 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
-data(MLE_Data)
-universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-genes = universe[1:50]
-enrichRes <- enrich.GOstats(genes, universe, type="BP")
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
+enrichRes <- enrich.GOstats(genes, type="BP")
 head(enrichRes@result)
 
 }

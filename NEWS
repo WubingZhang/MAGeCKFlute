@@ -34,7 +34,8 @@ CHANGES IN VERSION 0.99.19
     o Beutify figures.
     o Remove some unnecessary dependencies.
 
+CHANGES IN VERSION 1.0.1
+-------------------------
 
-
-
-
+    o Speed up the enrichment analysis.
+    o Release memory in time.

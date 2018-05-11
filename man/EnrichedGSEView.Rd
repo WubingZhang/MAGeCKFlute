@@ -44,15 +44,9 @@ browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master
 Users should find it easy to customize this function.
 }
 \examples{
-data(MLE_Data)
-universe = TransGeneID(MLE_Data$Gene, "SYMBOL", "ENTREZID", organism = "hsa")
-geneList = MLE_Data$D7_R1.beta
-names(geneList) = universe
-geneList = geneList[!is.na(universe)]
+data(geneList, package = "DOSE")
 enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
-
-
 
 }
 \seealso{

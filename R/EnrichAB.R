@@ -52,7 +52,7 @@
 #' @import clusterProfiler
 
 # enrichment for GroupA and GrouB genes
-EnrichAB <- function(data, pvalue=1, enrich_method="ORT",
+EnrichAB <- function(data, pvalue=0.25, enrich_method="ORT",
                      organism="hsa", adjust="BH", filename=NULL,
                      out.dir=".", gsea=FALSE, width=6.5, height=4, ...){
 
@@ -194,7 +194,7 @@ EnrichAB <- function(data, pvalue=1, enrich_method="ORT",
     if(!is.null(bpB$enrichRes)){
       write.table(bpB$enrichRes@result,
                   file.path(out.dir,paste0("GroupB_bp_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
+                  sep="\t", row.names = FALSE, col.names = TRUE, quote=FALSE)
       ggsave(bpB$gridPlot,
              filename=file.path(out.dir,paste0("GroupB_bp_",filename,".png")),
              units = "in", width=6.5, height=4)
