@@ -10,7 +10,7 @@ EnrichAB(data, pvalue = 0.25, enrich_method = "ORT", organism = "hsa",
   width = 6.5, height = 4, ...)
 }
 \arguments{
-\item{data}{A data frame containing columns of "ENTREZID" and "diff".}
+\item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
 
 \item{pvalue}{Pvalue cutoff.}
 
@@ -41,13 +41,6 @@ subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot ob
 \description{
 Do enrichment analysis for selected genes, in which positive selection and negative selection
 are termed as GroupA and GroupB
-}
-\note{
-See the vignette for an example of EnrichAB
-The source can be found by typing \code{MAGeCKFlute:::EnrichAB}
-or \code{getMethod("EnrichAB")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichAB.R}
-Users should find it easy to customize this function.
 }
 \seealso{
 \code{\link{EnrichSquare}}

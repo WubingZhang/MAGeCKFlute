@@ -18,14 +18,6 @@ A numeric value.
 \description{
 Calculate standard deviation as cutoff for a numeric vector
 }
-\note{
-See the vignette for an example of cutoff calling.
-Note that the source code of \code{CutoffCalling} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::CutoffCalling}
-or \code{getMethod("CutoffCalling")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/CutoffCalling.R}
-Users should find it easy to customize this function.
-}
 \author{
 Wubing Zhang
 }

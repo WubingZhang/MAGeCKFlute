@@ -33,14 +33,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 \description{
 Plots the violin of beta scores in Control and Treatment samples.
 }
-\note{
-See the vignette for an example of density plot for beta score deviation.
-Note that the source code of \code{ViolinView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::ViolinView}
-or \code{getMethod("ViolinView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ViolinView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results

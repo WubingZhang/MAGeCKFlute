@@ -24,13 +24,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note See the vignette for an example of RankView.
-#' Note that the source code of \code{RankView} is very simple.
-#' The source can be found by typing \code{MAGeCKFlute:::RankView}
-#' or \code{getMethod("RankView")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/RankView.R}
-#' Users should find it easy to customize this function.
-#'
 #'
 #' @examples
 #' data(MLE_Data)
@@ -40,7 +33,6 @@
 #' names(rankdata) = rownames(dd)
 #' RankView(rankdata)
 #'
-#' @importFrom reshape melt
 #' @importFrom ggrepel geom_label_repel
 #'
 #' @export
@@ -49,8 +41,7 @@
 RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rankdata), sd(rankdata)),
                      main=NULL,filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
-  requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
-  loginfo(paste("Rank genes and plot..."))
+  message(Sys.time(), " # Rank genes and plot...")
   data = data.frame(Gene = names(rankdata), diff = rankdata, stringsAsFactors=FALSE)
   data$Rank = rank(data$diff)
   data$group = "no"

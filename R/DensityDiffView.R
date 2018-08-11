@@ -18,13 +18,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note See the vignette for an example of density plot for beta score deviation.
-#' Note that the source code of \code{DensityDiffView} is very simple.
-#' The source can be found by typing \code{MAGeCKFlute:::DensityDiffView}
-#' or \code{getMethod("DensityDiffView")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/DensityDiffView.R}
-#' Users should find it easy to customize this function.
-#'
 #'
 #' @examples
 #' data(MLE_Data)
@@ -41,7 +34,7 @@
 DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", main=NULL,
                             filename=NULL, width = 5, height = 4, ...){
 
-  loginfo(paste("Density plot for", main, "treat-control beta scores..."))
+  message(Sys.time(), " # Density plot for ", main, " treat-control beta scores...")
   d=beta
   d$Diff=rowMeans(d[,treatname,drop=FALSE])-rowMeans(d[,ctrlname,drop=FALSE])
   d$r <- rnorm(length(d$Diff), mean=0, sd=sd(d$Diff)-0.01)
@@ -55,7 +48,8 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
+                panel.border = element_blank(), panel.background = element_blank(),
+                legend.key = element_rect(fill = "transparent"))
   p=p+labs(x="Treat-Control Beta Score",y="Density",title=main)
   #+ggtitle("Normalization with")
 

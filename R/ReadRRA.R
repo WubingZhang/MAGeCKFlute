@@ -16,12 +16,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note
-#' The source can be found by typing \code{MAGeCKFlute:::ReadRRA}
-#' or \code{getMethod("ReadRRA")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ReadRRA.R}
-#' Users should find it easy to customize this function.
-#'
 #'
 #' @examples
 #' data(RRA_Data)
@@ -36,7 +30,7 @@
 
 #===read gene summary file=====================================
 ReadRRA <- function(gene_summary, organism="hsa"){
-  loginfo("Read gene summary file ...")
+  message(Sys.time(), " # Read gene summary file ...")
   if(class(gene_summary)=="character" && file.exists(gene_summary)){
     dd=read.table(file=gene_summary,header= TRUE)
   }else if(class(gene_summary)=="data.frame" &&
@@ -51,7 +45,7 @@ ReadRRA <- function(gene_summary, organism="hsa"){
   dd=dd[!idx,]
 
   dd=dd[,c("id","neg.fdr","pos.fdr")]
-  dd$ENTREZID = TransGeneID(dd$id, "SYMBOL", "ENTREZID", organism = organism)
+  dd$ENTREZID = TransGeneID(dd$id, "Symbol", "Entrez", organism = organism)
   idx=is.na(dd$ENTREZID)
   dd=dd[!idx,]
   colnames(dd) = c("Official", "neg.fdr", "pos.fdr", "ENTREZID")

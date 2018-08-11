@@ -27,12 +27,6 @@
 #'
 #' @author Feizhen Wu
 #'
-#' @note  See the vignette for an example of enrichment analysis
-#' The source can be found by typing \code{MAGeCKFlute:::enrichment_analysis}
-#' or \code{getMethod("enrichment_analysis")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrichment_analysis.R}
-#' Users should find it easy to customize this function.
-#'
 #' @seealso \code{\link{enrich.GOstats}}
 #' @seealso \code{\link{enrich.DAVID}}
 #' @seealso \code{\link{enrich.GSE}}
@@ -46,7 +40,7 @@
 #' keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
 #' print(keggA$gridPlot)
 #'
-#'
+#' @import DOSE
 #' @export
 
 #====enrichment analysis===================================
@@ -76,13 +70,13 @@ enrichment_analysis = function(geneList, universe=NULL, method="ORT", type="KEGG
   }
   #====Gene Set Enrichment Analysis=======================================================
   if(method == "GSEA"){
-    loginfo(paste0('Running GSEA for ', type))
+    message(Sys.time(), "# Running GSEA for ", type)
     geneList=geneList[order(geneList,decreasing = TRUE)]
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff=pvalueCutoff, pAdjustMethod = pAdjustMethod,
                             organism=organism, minGSSize = minGSSize, maxGSSize = maxGSSize)
     result$enrichRes = enrichRes
     if(!is.null(enrichRes)){
-      gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle, color=color)
+      gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle)
     }else{
       p1=ggplot()
       p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
@@ -97,14 +91,14 @@ enrichment_analysis = function(geneList, universe=NULL, method="ORT", type="KEGG
   }
   #====Over-Representation Analysis======================================================
   if(method == "ORT"){
-    loginfo(paste0('Running Over-Representation Test for ', type))
+    message(Sys.time(), "# Running Over-Representation Test for ", type)
     enrichRes <- enrich.ORT(gene = geneList, universe = universe, type = type, organism=organism,
                             pvalueCutoff=pvalueCutoff, qvalueCutoff = qvalueCutoff, pAdjustMethod = pAdjustMethod,
                             minGSSize = minGSSize, maxGSSize = maxGSSize)
   }
   #=============DAVID=======================================================================
   if(method == "DAVID"){
-    loginfo(paste0('Running DAVID for ', type))
+    message(Sys.time(), "# Running DAVID for ", type)
     if(type == "KEGG"){
       annotation = "KEGG_PATHWAY"
     }else if(type %in% c("BP", "CC", "MF")){
@@ -119,13 +113,13 @@ enrichment_analysis = function(geneList, universe=NULL, method="ORT", type="KEGG
   }
   #===============================GOstats enrichment analysis============================
   if(method == "GOstats"){
-    loginfo(paste0('Running GOstats test for ', type))
+    message(Sys.time(), "# Running GOstats test for ", type)
     enrichRes = enrich.GOstats(gene = geneList, universe = universe, type  = type, organism=organism,
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod)
   }
   #==================================HyperGeometric test=================================
   if(method == "HGT"){
-    loginfo(paste0('Running Hypergeometric test for ', type))
+    message(Sys.time(), "# Running Hypergeometric test for ", type)
     enrichRes = enrich.HGT(gene = geneList, universe = universe, type  = type, organism=organism,
                              pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod,
                            minGSSize = minGSSize, maxGSSize = maxGSSize)

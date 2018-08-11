@@ -21,12 +21,6 @@ A data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and 
 \description{
 Read pvalue of gene selection from file or data frame
 }
-\note{
-The source can be found by typing \code{MAGeCKFlute:::ReadRRA}
-or \code{getMethod("ReadRRA")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ReadRRA.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(RRA_Data)
 dd.rra = ReadRRA(RRA_Data, organism="hsa")

@@ -21,13 +21,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note See the vignette for an example of density plot for beta score deviation.
-#' Note that the source code of \code{ViolinView} is very simple.
-#' The source can be found by typing \code{MAGeCKFlute:::ViolinView}
-#' or \code{getMethod("ViolinView")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ViolinView.R}
-#' Users should find it easy to customize this function.
-#'
 #' @seealso \code{\link{DensityView}}
 #'
 #' @examples
@@ -39,7 +32,7 @@
 #' ViolinView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
 #'
 #'
-#' @importFrom reshape melt
+#' @importFrom data.table melt
 #' @importFrom ggsci scale_color_npg
 #'
 #' @export
@@ -47,14 +40,16 @@
 
 #===Distribution of beta scores======================================
 ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=NULL, width=5, height=4, ...){
-  requireNamespace("reshape", quietly=TRUE) || stop("need reshape package")
+  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 
-  dd1=beta
-  loginfo(paste("Violin plot for", main, ylab, "..."))
-  if(!is.null(samples) && length(samples)>1){ dd1 = dd1[, samples]}
+  message(Sys.time(), " # Violin plot for ", main, " ", ylab, " ...")
+  if(!is.null(samples) && length(samples)>1){ beta = beta[, samples]}
 
-  dd1 = melt(dd1, id=NULL)
+  dd1 = melt(beta, id=NULL)
+  if(!"variable" %in% colnames(dd1)){
+    dd1$variable = colnames(beta)
+  }
   #======
   p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)
@@ -65,7 +60,8 @@ ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
+                panel.border = element_blank(), panel.background = element_blank(),
+                legend.key = element_rect(fill = "transparent"))
   p=p+theme(legend.position = "none")
   p=p+labs(x=NULL,y=ylab,title=main)
 

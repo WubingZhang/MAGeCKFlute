@@ -6,7 +6,7 @@
 \alias{squareview}
 \title{Scatter plot of 9-Square}
 \usage{
-SquareView(beta, ctrlname = "Control", treatname = "Treatment",
+SquareView(beta, ctrlname = "Control", treatname = "Treatment", label = 0,
   label.top = TRUE, top = 5, genelist = c(), scale_cutoff = 1,
   main = NULL, filename = NULL, width = 5, height = 4, ...)
 }
@@ -16,6 +16,8 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{ctrlname}{A character, specifying the names of control samples.}
 
 \item{treatname}{A character, specifying the name of treatment samples.}
+
+\item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
 \item{label.top}{Boolean, whether label the top selected genes, default label the top 10 genes in each group.}
 
@@ -43,14 +45,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 \description{
 Plot a scatter plot with Control beta score as x-axis and Treatment beta score as y-axis,
 and colored treatment related genes.
-}
-\note{
-See the vignette for an example of SquareView.
-Note that the source code of \code{SquareView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::SquareView}
-or \code{getMethod("SquareView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/SquareView.R}
-Users should find it easy to customize this function.
 }
 \examples{
 data(MLE_Data)

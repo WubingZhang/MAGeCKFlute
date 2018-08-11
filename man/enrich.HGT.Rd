@@ -33,13 +33,6 @@ A enrichResult instance.
 \description{
 Do enrichment analysis using Hypergeometric test
 }
-\note{
-See the vignette for an example of enrichment analysis using hypergemetric test
-The source can be found by typing \code{MAGeCKFlute:::enrich.HGT}
-or \code{getMethod("enrich.HGT")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.HGT.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 genes <- names(geneList)[1:100]

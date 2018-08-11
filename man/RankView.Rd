@@ -38,14 +38,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Rank all genes according to beta score deviation, and label top and bottom meaningful genes.
 Some other interested genes can be labeled too.
 }
-\note{
-See the vignette for an example of RankView.
-Note that the source code of \code{RankView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::RankView}
-or \code{getMethod("RankView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/RankView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results

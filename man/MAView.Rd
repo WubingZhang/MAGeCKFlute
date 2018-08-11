@@ -44,14 +44,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 \description{
 MAplot of gene beta scores in Control vs Treatment
 }
-\note{
-See the vignette for an example of MAView.
-Note that the source code of \code{MAView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::MAView}
-or \code{getMethod("MAView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/MAView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results

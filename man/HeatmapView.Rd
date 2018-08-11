@@ -44,14 +44,6 @@ The same as pheatmap
 \description{
 Calculate the similarity between samples and plot heatmap
 }
-\note{
-See the vignette for an example of HeatmapView
-Note that the source code of \code{HeatmapView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::HeatmapView}
-or \code{getMethod("HeatmapView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/HeatmapView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 dd = ReadBeta(MLE_Data, organism="hsa")

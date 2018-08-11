@@ -20,12 +20,6 @@
 #'
 #' @author Feizhen Wu
 #'
-#' @note  See the vignette for an example of enrichment analysis using hypergemetric test
-#' The source can be found by typing \code{MAGeCKFlute:::enrich.HGT}
-#' or \code{getMethod("enrich.HGT")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.HGT.R}
-#' Users should find it easy to customize this function.
-#'
 #' @seealso \code{\link{enrich.GOstats}}
 #' @seealso \code{\link{enrich.DAVID}}
 #' @seealso \code{\link{enrich.GSE}}
@@ -39,8 +33,8 @@
 #' enrichRes <- enrich.HGT(genes)
 #' head(enrichRes@result)
 #'
+#' @import DOSE
 #' @importFrom data.table fread
-#' @importFrom pathological temp_dir
 #'
 #' @export
 
@@ -48,36 +42,31 @@
 enrich.HGT = function(gene, universe=NULL, type="KEGG", organism='hsa', pvalueCutoff = 0.25,
                       pAdjustMethod = "BH", minGSSize = 2, maxGSSize = 500){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
-  requireNamespace("pathological", quietly=TRUE) || stop("need pathological package")
-
   # download Kegg data
   organism = getOrg(organism)$org
-  pathwayFiles <- c(file.path(temp_dir(), paste0("pathways_", organism)),
-                    file.path(temp_dir(), paste0("gene2path_", organism)))
-
+  pathwayFiles <- c(file.path(system.file("extdata", package = "MAGeCKFlute"),
+                              paste0("pathways_", organism)),
+                    file.path(system.file("extdata", package = "MAGeCKFlute"),
+                              paste0("gene2path_", organism)))
   if(!all(file.exists(pathwayFiles))){
-    gene2path=fread(paste0("http://rest.kegg.jp/link/pathway/",organism),
-                    header = FALSE, showProgress = FALSE)
-    names(gene2path)=c("EntrezID","PathwayID")
-    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
-    gene2path$EntrezID=gsub(paste0(organism,":"),"",gene2path$EntrezID)
-
-    pathways=fread(paste0("http://rest.kegg.jp/list/pathway/",organism),
-                   header = FALSE, showProgress = FALSE)
-    names(pathways)=c("PathwayID","PathwayName")
-
-    pathways$PathwayID=gsub("path:","",pathways$PathwayID)
-    pathways$PathwayName=gsub(" - .*", "", pathways$PathwayName)
-
-    write.table(pathways, pathwayFiles[1], sep="\t", row.names = FALSE)
-    write.table(gene2path, pathwayFiles[2], sep="\t", row.names = FALSE)
-  }else{
-    pathways=read.table(pathwayFiles[1], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-    gene2path=read.table(pathwayFiles[2], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+    ## Download pathway annotation
+    remfname1 <- paste0("http://rest.kegg.jp/link/pathway/",organism)
+    remfname2 <- paste0("http://rest.kegg.jp/list/pathway/",organism)
+    download.file(remfname1, pathwayFiles[1], quiet = TRUE)
+    download.file(remfname2, pathwayFiles[2], quiet = TRUE)
   }
-
+  ## Read and preprocess pathway annotation
+  gene2path = data.table::fread(pathwayFiles[1], header = FALSE, showProgress = FALSE)
+  names(gene2path)=c("EntrezID","PathwayID")
+  gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
+  gene2path$EntrezID=gsub(paste0(organism,":"),"",gene2path$EntrezID)
+  pathways=data.table::fread(pathwayFiles[2], header = FALSE, showProgress = FALSE)
+  names(pathways)=c("PathwayID","PathwayName")
+  pathways$PathwayID=gsub("path:","",pathways$PathwayID)
+  pathways$PathwayName=gsub(" - .*", "", pathways$PathwayName)
+  ##==========
   gene = unique(as.character(gene))
-  allsymbol = TransGeneID(gene, "ENTREZID", "SYMBOL", organism = organism)
+  allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
   if(!is.null(universe)){universe = unique(as.character(universe))
   }else{universe = unique(c(gene, gene2path$EntrezID))}
 

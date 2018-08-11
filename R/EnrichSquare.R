@@ -6,7 +6,7 @@
 #' @name EnrichSquare
 #' @rdname EnrichSquare
 #'
-#' @param beta Data frame, which has columns of 'ENTREZID' and 'group'.
+#' @param beta Data frame, which contains column of 'group'.
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
@@ -41,11 +41,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note  See the vignette for an example of EnrichSquare
-#' The source can be found by typing \code{MAGeCKFlute:::EnrichSquare}
-#' or \code{getMethod("EnrichSquare")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichSquare.R}
-#' Users should find it easy to customize this function.
 #'
 #' @seealso \code{\link{SquareView}}
 #' @seealso \code{\link{EnrichSquare}}
@@ -64,14 +59,14 @@
 #enrichment for square grouped genes
 EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa", adjust="BH",
                          filename=NULL, out.dir=".", width=6.5, height=4, ...){
-  loginfo("Enrichment analysis of 9 Square grouped genes ...")
+  message(Sys.time(), " # Enrichment analysis of 9 Square grouped genes ...")
 
   ## ===========Enrichment===================
   gg=beta
 
   idx=gg$group=="Group1"
-  genes=as.character(gg$ENTREZID[idx])
-  universe=as.character(gg$ENTREZID)
+  genes = rownames(gg)[idx]
+  universe = rownames(gg)
 
   #====GO_KEGG_enrichment=====
   kegg1=enrichment_analysis(geneList = genes, universe=universe,
@@ -85,7 +80,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
 
 
   idx=gg$group=="Group2"
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg2=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
@@ -96,7 +91,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                           plotTitle="BP: Group2", pAdjustMethod = adjust)
 
   idx=gg$group=="Group3"
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg3=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
@@ -107,7 +102,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                           color="#005CB7", plotTitle="BP: Group3", pAdjustMethod = adjust)
 
   idx=gg$group=="Group4"
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg4=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",
@@ -120,7 +115,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   idx1=gg$group=="Group1"
   idx2=gg$group=="Group3"
   idx = idx1|idx2
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg13=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
@@ -135,7 +130,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   idx1=gg$group=="Group1"
   idx2=gg$group=="Group4"
   idx = idx1|idx2
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg14=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
@@ -149,7 +144,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group3"
   idx = idx1|idx2
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
   #====GO_KEGG_enrichment=====
   kegg23=enrichment_analysis(geneList = genes, universe=universe,
                              method = enrich_method,type = "KEGG",
@@ -163,7 +158,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group4"
   idx = idx1|idx2
-  genes=as.character(gg$ENTREZID[idx])
+  genes=rownames(gg)[idx]
 
   #====GO_KEGG_enrichment=====
   kegg24=enrichment_analysis(geneList = genes, universe=universe,

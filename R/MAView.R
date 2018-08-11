@@ -25,13 +25,6 @@
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
-#' @note See the vignette for an example of MAView.
-#' Note that the source code of \code{MAView} is very simple.
-#' The source can be found by typing \code{MAGeCKFlute:::MAView}
-#' or \code{getMethod("MAView")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/MAView.R}
-#' Users should find it easy to customize this function.
-#'
 #'
 #' @examples
 #' data(MLE_Data)
@@ -45,8 +38,9 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                     show.statistics = TRUE, add.smooth = TRUE, lty = 1, smooth.col = "red",
                     plot.method = c("loess", "lm", "glm", "gam"),
                     filename=NULL, width=5, height=4, ...){
-  dd=beta
-  loginfo(paste("MAplot for", main, "beta scores ..."))
+  dd = beta
+  dd[is.na(dd)] = 0
+  message(Sys.time(), " # MAplot for ", main, " beta scores ...")
   A = rowMeans(dd[,c(ctrlname, treatname)])
   M = rowMeans(dd[,treatname,drop= FALSE])-rowMeans(dd[,ctrlname,drop= FALSE])
   subset = sample(1:length(M), min(c(10000, length(M))))
@@ -66,7 +60,8 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                 axis.text = element_text(colour="gray10"))
   p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
+                panel.border = element_blank(), panel.background = element_blank(),
+                legend.key = element_rect(fill = "transparent"))
   p = p + labs(title=main)
   if(show.statistics){
     xmax = max(gg$A)

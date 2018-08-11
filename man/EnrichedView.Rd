@@ -36,13 +36,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 \description{
 Grid plot for enriched terms
 }
-\note{
-See the vignette for an example of EnrichedView
-The source can be found by typing \code{MAGeCKFlute:::EnrichedView}
-or \code{getMethod("EnrichedView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichedView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 genes <- names(geneList)[1:100]

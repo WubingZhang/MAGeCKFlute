@@ -10,7 +10,7 @@ NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
   posControl = NULL, minus = 0.2)
 }
 \arguments{
-\item{beta}{Data frame, including 'ENTREZID' and \code{samples} as columns.}
+\item{beta}{Data frame, in which rows are EntrezID, columns are samples.}
 
 \item{samples}{Character vector, specifying the samples in \code{beta} to be normalized.
 If NULL (default), normalize beta score of all samples in \code{beta}.}
@@ -39,18 +39,13 @@ in MAGeCKFlute normalizes the beta scores of all genes based on the median beta 
 After normalization, the beta scores are comparable across samples. \code{loess} is another
 optional normalization method, which is used to normalize array data before.
 }
-\note{
-See the vignette for an example of NormalizeBeta.
-Note that the source code of \code{NormalizeBeta} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::NormalizeBeta}
-or \code{getMethod("NormalizeBeta")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/NormalizeBeta.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
+tmp = TransGeneID(rownames(dd), "Symbol", "Entrez")
+dd = dd[!(duplicated(tmp)|is.na(tmp)), ]
+rownames(dd) = tmp[!(duplicated(tmp)|is.na(tmp))]
 samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")

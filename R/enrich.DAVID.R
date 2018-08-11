@@ -25,12 +25,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note This function depends on network and DAVID account, so don't show in the vignette.
-#' The source can be found by typing \code{MAGeCKFlute:::enrich.DAVID}
-#' or \code{getMethod("enrich.DAVID")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.DAVID.R}
-#' Users should find it easy to customize this function.
-#'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.GOstats}}
 #' @seealso \code{\link{enrich.GSE}}
@@ -46,8 +40,6 @@
 #' 	enrichRes <- enrich.DAVID(genes, david.user="david.user@edu.com")
 #' 	head(enrichRes@result)
 #' }
-#'
-#'
 #' @export
 
 

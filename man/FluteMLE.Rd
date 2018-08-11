@@ -3,12 +3,11 @@
 \docType{methods}
 \name{FluteMLE}
 \alias{FluteMLE}
-\alias{MLEpipeline,}
-\alias{MAGeCKFlute-method}
+\alias{flutemle}
 \title{Downstream analysis based on MAGeCK-MLE result}
 \usage{
 FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
-  organism = "hsa", prefix = "Test", top = 10, bottom = 10,
+  organism = "hsa", prefix = "", top = 10, bottom = 10,
   interestGenes = c(), pvalueCutoff = 0.25, adjust = "BH",
   enrich_kegg = "HGT", gsea = FALSE, posControl = NULL,
   scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
@@ -83,13 +82,6 @@ beta score indicates a positive selection, and a negative beta score indicates a
 The downstream analysis includes identifying essential, non-essential, and target-associated genes,
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 The function also visualizes genes in the context of pathways to benefit users exploring screening data.
-}
-\note{
-See the vignette for an example of FluteMLE
-The source can be found by typing \code{MAGeCKFlute:::FluteMLE}
-or \code{getMethod("FluteMLE")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/FluteMLE.R}
-Users should find it easy to customize this function.
 }
 \examples{
 \dontrun{

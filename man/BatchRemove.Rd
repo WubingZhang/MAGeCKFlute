@@ -24,15 +24,8 @@ A list contrains two objects, including \code{data} and \code{p}.
 \description{
 Remove batch effect
 }
-\note{
-See the vignette for an example of BatchRemove
-Note that the source code of \code{BatchRemove} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::BatchRemove}
-or \code{getMethod("BatchRemove")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/BatchRemove.R}
-Users should find it easy to customize this function.
-}
 \examples{
+data(MLE_Data)
 beta = ReadBeta(MLE_Data, organism="hsa")
 samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
 batchMat = data.frame(samples = samples, batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))

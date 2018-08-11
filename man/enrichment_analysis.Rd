@@ -45,19 +45,11 @@ a ggplot object, and \code{enrichRes} is a enrichResult instance.
 \description{
 Enrichment analysis
 }
-\note{
-See the vignette for an example of enrichment analysis
-The source can be found by typing \code{MAGeCKFlute:::enrichment_analysis}
-or \code{getMethod("enrichment_analysis")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrichment_analysis.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 genes <- names(geneList)[1:100]
 keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
 print(keggA$gridPlot)
-
 
 }
 \seealso{

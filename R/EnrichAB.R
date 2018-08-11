@@ -7,7 +7,7 @@
 #' @name EnrichAB
 #' @rdname EnrichAB
 #'
-#' @param data A data frame containing columns of "ENTREZID" and "diff".
+#' @param data A data frame containing columns "diff", with rownames of Entrez IDs.
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
@@ -26,12 +26,6 @@
 #' \code{enrichRes} is a enrichResult instance
 #'
 #' @author Binbin Wang
-#'
-#' @note  See the vignette for an example of EnrichAB
-#' The source can be found by typing \code{MAGeCKFlute:::EnrichAB}
-#' or \code{getMethod("EnrichAB")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichAB.R}
-#' Users should find it easy to customize this function.
 #'
 #' @seealso \code{\link{EnrichSquare}}
 #'
@@ -57,14 +51,14 @@ EnrichAB <- function(data, pvalue=0.25, enrich_method="ORT",
                      out.dir=".", gsea=FALSE, width=6.5, height=4, ...){
 
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("Need clusterProfiler package")
-  loginfo("Enrichment analysis of GroupA and GroupB genes ...")
+  message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
   gg=data
   ##===================enrichment for GroupA==============================
-  idx1=gg$group=="up"
-  genes=as.character(gg$ENTREZID[idx1])
-  geneList=gg$diff[idx1]
-  names(geneList)=genes
-  universe=as.character(gg$ENTREZID)
+  idx1 = gg$group=="up"
+  genes = rownames(gg)[idx1]
+  geneList = gg$diff[idx1]
+  names(geneList) = genes
+  universe = rownames(gg)
 
   #====GO_KEGG_enrichment=====
   keggA=enrichment_analysis(geneList = genes, universe=universe,
@@ -84,10 +78,10 @@ EnrichAB <- function(data, pvalue=0.25, enrich_method="ORT",
                              color="#e41a1c", pAdjustMethod = adjust)
   }
   ##=============Enrichment for GroupB========================================
-  idx2=gg$group=="down"
-  genes=gg$ENTREZID[idx2]
-  geneList=gg$diff
-  names(geneList)=gg$ENTREZID
+  idx2 = gg$group=="down"
+  genes = rownames(gg)[idx2]
+  geneList = gg$diff
+  names(geneList) = rownames(gg)
   #====GO_KEGG_enrichment=====
   keggB=enrichment_analysis(geneList = genes, universe=universe,
                             method = enrich_method,type = "KEGG",

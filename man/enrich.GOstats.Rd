@@ -28,13 +28,6 @@ A enrichResult instance.
 \description{
 Do enrichment analysis using GOstats method
 }
-\note{
-See the vignette for an example of enrichment analysis using GOstats.
-The source can be found by typing \code{MAGeCKFlute:::enrich.GOstats}
-or \code{getMethod("enrich.GOstats")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.GOstats.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 genes <- names(geneList)[1:100]

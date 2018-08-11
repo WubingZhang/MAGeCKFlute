@@ -226,10 +226,10 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     msg.fmt = "Only KEGG ortholog gene ID is supported,
       make sure it looks like \"%s\"!"
     msg = sprintf(msg.fmt, species.data["kegg.geneid"])
-    loginfo(paste0("    Note: ", msg))
+    message(Sys.time(), " # Note: ", msg)
   }
   if (length(dim(species.data)) == 2) {
-    loginfo(paste0("    Note: ", "More than two valide species!"))
+    message(Sys.time(), " # Note: More than two valide species!")
     species.data = species.data[1, ]
   }
   species = species.data["kegg.code"]
@@ -239,7 +239,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
       msg.fmt = "Only native KEGG gene ID is supported for this species,
       \nmake sure it looks like \"%s\"!"
       msg = sprintf(msg.fmt, species.data["kegg.geneid"])
-      loginfo(paste0("    Note: ", msg))
+      message(Sys.time(), " #  Note: ", msg)
     }else {
       stop("This species is not annotated in KEGG!")
     }
@@ -257,9 +257,9 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     gene.idtype = "ENTREZ"
   }
   if (gene.idtype == "ENTREZ" & !entrez.gnodes & !is.null(gene.data)) {
-    loginfo("    Info: Getting gene ID data from KEGG...")
+    message(Sys.time(), " #  Info: Getting gene ID data from KEGG...")
     gene.idmap = keggConv("ncbi-geneid", species)
-    loginfo("    Info: Done with data retrieval!")
+    message(Sys.time(), " #  Info: Done with data retrieval!")
     kegg.ids = gsub(paste(species, ":", sep = ""), "", names(gene.idmap))
     ncbi.ids = gsub("ncbi-geneid:", "", gene.idmap)
     gene.idmap = cbind(ncbi.ids, kegg.ids)
@@ -375,7 +375,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
         }else {
           #=====My revised===========
           plot.data.gene$labels = TransGeneID(as.character(
-            plot.data.gene$kegg.names),"ENTREZID", "SYMBOL", organism = species)[as.character(plot.data.gene$kegg.names)]
+            plot.data.gene$kegg.names),"Entrez", "Symbol", organism = species)[as.character(plot.data.gene$kegg.names)]
           #==========================
           mapped.gnodes = rownames(plot.data.gene)
           node.data$labels[mapped.gnodes] = plot.data.gene$labels
@@ -508,9 +508,6 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @importFrom png readPNG
 #' @importFrom grid grid.raster
 
-
-
-
 arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath= FALSE,
                         title="Group A", sub="Negative control normalized",
                         output=".", path.archive=".", kegg.native = TRUE){
@@ -531,7 +528,7 @@ arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath
     keggID=pathways[1:4]
   }
 
-  loginfo(paste('Starting plot kegg pathways for',sub, title))
+  message(Sys.time(), " # Starting plot kegg pathways for ", sub, title)
   idx=duplicated(genelist$ENTREZID)
   genelist=genelist[!idx,]
   rownames(genelist)=genelist$ENTREZID

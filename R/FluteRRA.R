@@ -20,11 +20,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note  See the vignette for an example of FluteRRA
-#' The source can be found by typing \code{MAGeCKFlute:::FluteRRA}
-#' or \code{getMethod("FluteRRA")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/FluteRRA.R}
-#' Users should find it easy to customize this function.
 #'
 #' @return  All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
 #' which includes a pdf file and a folder named 'RRA'.
@@ -59,7 +54,7 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
                      outdir="."){
   #=========Prepare the running environment=========
   {
-    loginfo("Create output dir and pdf file...")
+    message(Sys.time(), " # Create output dir and pdf file ...")
 
     out.dir_sub=file.path(outdir, paste0(prefix, "_Flute_Results"))
     dir.create(file.path(out.dir_sub), showWarnings=FALSE)
@@ -70,7 +65,7 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
   }
 
   #=========Input data=========
-  loginfo("Read RRA result ...")
+  message(Sys.time(), " # Read RRA result ...")
   dd = ReadRRA(gene_summary, organism=organism)
 
   #enrichment analysis

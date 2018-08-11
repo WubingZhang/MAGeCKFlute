@@ -6,20 +6,26 @@
 \alias{transGeneID}
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
-TransGeneID(genes, fromType = "SYMBOL", toType = "ENTREZID",
-  organism = "hsa")
+TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
+  organism = "hsa", useBiomart = FALSE, ensemblHost = "www.ensembl.org")
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}
 
-\item{fromType}{The input ID type, one of "SYMBOL" (default), "ENTREZID",
-"ENSEMBL", "HGNC", "FULLNAME" and "TYPE".}
+\item{fromType}{The input ID type, one of "Symbol" (default), "Entrez",
+"Ensembl", "FULLNAME" and "TYPE". you can e.g. do: mart = useMart("ensembl", dataset="hsapiens_gene_ensembl"),
+followed by listAttributes(mart) to get valid attribute names.}
 
-\item{toType}{The output ID type, one of "SYMBOL", "ENTREZID" (default),
-"ENSEMBL", "HGNC", "FULLNAME" and "TYPE".}
+\item{toType}{The output ID type, one of "Symbol", "Entrez" (default),
+"Ensembl", "FULLNAME" and "TYPE".}
 
 \item{organism}{A character, specifying organism, one of "hsa"(or 'Human'),
 "mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
+
+\item{useBiomart}{Boolean, indicating whether use Biomart to do the transformation.}
+
+\item{ensemblHost}{String, specifying ensembl host, you can use `listEnsemblArchives()`
+to show all available Ensembl archives hosts.}
 }
 \value{
 A character vector, named by unique input gene ids.
@@ -27,16 +33,11 @@ A character vector, named by unique input gene ids.
 \description{
 Gene ID conversion between ENTREZID and SYMBOL
 }
-\note{
-The source can be found by typing \code{MAGeCKFlute:::TransGeneID}
-or \code{getMethod("TransGeneID")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/TransGeneID.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
-TransGeneID(MLE_Data$Gene[1:10], fromType="SYMBOL", toType="ENTREZID", organism="hsa")
-
+TransGeneID(MLE_Data$Gene[1:10], organism="hsa")
+TransGeneID(MLE_Data$Gene[1:10], organism="hsa", useBiomart = TRUE,
+            fromType = "hgnc_symbol", toType = "entrezgene")
 }
 \seealso{
 \code{\link[pathview]{eg2id}}

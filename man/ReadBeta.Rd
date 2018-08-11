@@ -21,12 +21,6 @@ A data frame, in which the first column is ENTREZID, and the later columns are b
 \description{
 Read gene beta scores from file or data frame
 }
-\note{
-The source can be found by typing \code{MAGeCKFlute:::ReadBeta}
-or \code{getMethod("ReadBeta")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ReadBeta.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 dd = ReadBeta(MLE_Data, organism="hsa")

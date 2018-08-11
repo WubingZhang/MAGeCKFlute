@@ -38,14 +38,6 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Scatter plot of all genes, in which x-axis is mean beta score in Control samples, y-axis
 is mean beta scores in Treatment samples.
 }
-\note{
-See the vignette for an example of ScatterView.
-Note that the source code of \code{ScatterView} is very simple.
-The source can be found by typing \code{MAGeCKFlute:::ScatterView}
-or \code{getMethod("ScatterView")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/ScatterView.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results

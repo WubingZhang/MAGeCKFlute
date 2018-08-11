@@ -35,19 +35,11 @@ A enrichResult instance.
 \description{
 Do enrichment analysis using over-representation test
 }
-\note{
-See the vignette for an example of enrichment analysis using over-representation test
-The source can be found by typing \code{MAGeCKFlute:::enrich.ORT}
-or \code{getMethod("enrich.ORT")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.ORT.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 genes <- names(geneList)[1:100]
 enrichRes <- enrich.ORT(genes)
 head(enrichRes@result)
-
 
 }
 \seealso{

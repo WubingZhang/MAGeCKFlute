@@ -18,12 +18,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @note  See the vignette for an example of enrichment analysis using GOstats.
-#' The source can be found by typing \code{MAGeCKFlute:::enrich.GOstats}
-#' or \code{getMethod("enrich.GOstats")}, or
-#' browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.GOstats.R}
-#' Users should find it easy to customize this function.
-#'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.DAVID}}
 #' @seealso \code{\link{enrich.GSE}}
@@ -38,6 +32,7 @@
 #' head(enrichRes@result)
 #'
 #' @import GOstats Category
+#' @import DOSE
 #'
 #' @export
 
@@ -56,9 +51,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
   if(DS == "KEGG"){
     params <- new("KEGGHyperGParams", categoryName="KEGG", geneIds=gene, universeGeneIds=universe,
                   annotation=orgdb, pvalueCutoff=pvalueCutoff,testDirection="over")
-    #loginfo('    Starting HyperG test')
     over <- hyperGTest(params)
-    #loginfo('    HyperG test done')
     over.sum <- summary(over)
 #
 #     glist <- geneIdsByCategory(over)
@@ -93,7 +86,7 @@ enrich.GOstats <- function(gene, universe=NULL, type=c("KEGG", "BP", "MF", "CC")
     })
     over.sum$geneID <- glist[as.character(over.sum[,1])]
     geneID = strsplit(over.sum$geneID, "/")
-    allsymbol = TransGeneID(gene, "ENTREZID", "SYMBOL", organism = organism)
+    allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
     geneName = lapply(geneID, function(gid){
       SYMBOL = allsymbol[gid]
       paste(SYMBOL, collapse = "/")

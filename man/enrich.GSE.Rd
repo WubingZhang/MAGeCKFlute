@@ -6,15 +6,16 @@
 \alias{enrichGSE}
 \title{GSEA}
 \usage{
-enrich.GSE(geneList, type = "KEGG", organism = "hsa", minGSSize = 10,
-  maxGSSize = 500, pvalueCutoff = 0.25, pAdjustMethod = "BH")
+enrich.GSE(geneList, type = "MsigDB_c2_h", organism = "hsa",
+  minGSSize = 10, maxGSSize = 500, pvalueCutoff = 0.25,
+  pAdjustMethod = "BH")
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
 
-\item{type}{A character, indicating geneset category for testing, "KEGG"(default).}
+\item{type}{A character, indicating geneset category for testing, "MsigDB_c2_h"(default).}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, only 'human' is available.}
 
 \item{minGSSize}{Minimal size of each geneSet for testing.}
 
@@ -30,18 +31,10 @@ A enrichResult instance.
 \description{
 A universal gene set enrichment analysis tools
 }
-\note{
-See the vignette for an example of GSEA
-The source can be found by typing \code{MAGeCKFlute:::enrich.GSE}
-or \code{getMethod("enrich.GSE")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/enrich.GSE.R}
-Users should find it easy to customize this function.
-}
 \examples{
 data(geneList, package = "DOSE")
 enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 head(enrichRes@result)
-
 
 }
 \seealso{

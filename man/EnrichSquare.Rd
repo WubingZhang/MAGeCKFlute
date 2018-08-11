@@ -10,7 +10,7 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT", organism = "hsa",
   height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, which has columns of 'ENTREZID' and 'group'.}
+\item{beta}{Data frame, which contains column of 'group'.}
 
 \item{pvalue}{Pvalue cutoff.}
 
@@ -55,13 +55,6 @@ Each item in the returned list has two sub items:
 }
 \description{
 Do enrichment analysis for selected treatment related genes in 9-squares
-}
-\note{
-See the vignette for an example of EnrichSquare
-The source can be found by typing \code{MAGeCKFlute:::EnrichSquare}
-or \code{getMethod("EnrichSquare")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/EnrichSquare.R}
-Users should find it easy to customize this function.
 }
 \seealso{
 \code{\link{SquareView}}

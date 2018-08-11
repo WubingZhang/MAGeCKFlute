@@ -5,12 +5,14 @@
 \alias{getOrg}
 \title{Determine the gene annotation package.}
 \usage{
-getOrg(organism)
+getOrg(organism, update = FALSE)
 }
 \arguments{
 \item{organism}{Character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 and can also be "human" (case insensitive).}
+
+\item{update}{Boolean, indicating whether download recent annotation from NCBI.}
 }
 \value{
 A list containing three elements:
@@ -21,15 +23,9 @@ A list containing three elements:
 \description{
 Determine the gene annotation package. for specific organism
 }
-\note{
-The source can be found by typing \code{MAGeCKFlute:::getOrg}
-or \code{getMethod("getOrg")}, or
-browsed on github at \url{https://github.com/WubingZhang/MAGeCKFlute/tree/master/R/getOrg.R}
-Users should find it easy to customize this function.
-}
 \examples{
-ann_pkg = getOrg("human")$pkg
-print(ann_pkg)
+ann = getOrg("human")
+print(ann$pkg)
 
 }
 \author{
