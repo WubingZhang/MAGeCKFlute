@@ -36,7 +36,8 @@
 #' @export
 
 #===Distribution of beta scores======================================
-DensityView <- function(beta, samples=NULL, main=NULL,xlab="Beta Score",filename=NULL, width=5, height =4, ...){
+DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
+                        filename = NULL, width = 5, height = 4, ...){
   message(Sys.time(), " # Density plot for ", main, " ", xlab, " ...")
   if(!is.null(samples) && length(samples)>1){ beta = beta[, samples]}
   dd1 = data.table::melt(beta,id=NULL)
