@@ -136,9 +136,11 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=15, c
 #' @seealso \code{\link{EnrichedView}}
 #'
 #' @examples
-#' data(geneList, package = "DOSE")
-#' enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-#' EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+#' \dontrun{
+#'     data(geneList, package = "DOSE")
+#'     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+#'     EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+#' }
 #'
 #' @export
 

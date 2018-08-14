@@ -26,10 +26,12 @@
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
-#' data(geneList, package = "DOSE")
-#' genes <- names(geneList)[1:100]
-#' enrichRes <- enrich.GOstats(genes, type="BP")
-#' head(enrichRes@result)
+#' \dontrun{
+#'     data(geneList, package = "DOSE")
+#'     genes <- names(geneList)[1:100]
+#'     enrichRes <- enrich.GOstats(genes, type="BP")
+#'     head(enrichRes@result)
+#' }
 #'
 #' @import GOstats Category
 #' @import DOSE

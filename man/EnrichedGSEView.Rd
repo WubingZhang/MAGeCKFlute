@@ -34,9 +34,11 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Grid plot for enriched terms in GSEA
 }
 \examples{
-data(geneList, package = "DOSE")
-enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+\dontrun{
+    data(geneList, package = "DOSE")
+    enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+    EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+}
 
 }
 \seealso{
