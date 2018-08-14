@@ -84,8 +84,8 @@ and performing biological functional category analysis and pathway enrichment an
 The function also visualizes genes in the context of pathways to benefit users exploring screening data.
 }
 \examples{
+data(MLE_Data)
 \dontrun{
-  data(MLE_Data)
   # functional analysis for MAGeCK MLE results
   FluteMLE(MLE_Data, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
            prefix="BRAF_D7", pvalueCutoff=0.05, organism="hsa")

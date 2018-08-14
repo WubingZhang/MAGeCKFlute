@@ -34,8 +34,15 @@ CHANGES IN VERSION 0.99.19
     o Beutify figures.
     o Remove some unnecessary dependencies.
 
-CHANGES IN VERSION 1.0.1
+CHANGES IN VERSION 1.1.1
 -------------------------
 
     o Speed up the enrichment analysis.
     o Release memory in time.
+
+CHANGES IN VERSION 1.1.6
+-------------------------
+
+    o Add functions to plot figures in NatureProtocol manuscript.
+    o Shorten the check time.
+

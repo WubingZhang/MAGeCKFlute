@@ -10,10 +10,6 @@
 #' @param scale Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.
 #'
 #' @return A numeric value.
-#'
-#' @author Wubing Zhang
-#'
-#' @export
 
 CutoffCalling=function(d, scale=FALSE){
   param=1

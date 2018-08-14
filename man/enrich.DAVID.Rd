@@ -38,9 +38,9 @@ A enrichResult instance.
 an update version of DAVIDWebService to do enrichment analysis
 }
 \examples{
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
 \dontrun{
- data(geneList, package = "DOSE")
- genes <- names(geneList)[1:100]
 	# Before running this example, you need to have a david account.
 	enrichRes <- enrich.DAVID(genes, david.user="david.user@edu.com")
 	head(enrichRes@result)

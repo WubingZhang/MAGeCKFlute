@@ -37,11 +37,11 @@
 #' @seealso \code{\link{FluteMLE}}
 #'
 #' @examples
-#' \dontrun{
 #' data(RRA_Data)
 #' gene_summary = RRA_Data
-#' # Run the FluteRRA pipeline
-#' FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
+#' \dontrun{
+#'     # Run the FluteRRA pipeline
+#'     FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
 #' }
 #'
 #'

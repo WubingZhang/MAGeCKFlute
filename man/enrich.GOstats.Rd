@@ -29,9 +29,9 @@ A enrichResult instance.
 Do enrichment analysis using GOstats method
 }
 \examples{
+data(geneList, package = "DOSE")
+genes <- names(geneList)[1:100]
 \dontrun{
-    data(geneList, package = "DOSE")
-    genes <- names(geneList)[1:100]
     enrichRes <- enrich.GOstats(genes, type="BP")
     head(enrichRes@result)
 }

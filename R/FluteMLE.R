@@ -62,8 +62,8 @@
 #' @seealso \code{\link{FluteRRA}}
 #'
 #' @examples
+#' data(MLE_Data)
 #' \dontrun{
-#'   data(MLE_Data)
 #'   # functional analysis for MAGeCK MLE results
 #'   FluteMLE(MLE_Data, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
 #'            prefix="BRAF_D7", pvalueCutoff=0.05, organism="hsa")

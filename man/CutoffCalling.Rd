@@ -18,6 +18,3 @@ A numeric value.
 \description{
 Calculate standard deviation as cutoff for a numeric vector
 }
-\author{
-Wubing Zhang
-}

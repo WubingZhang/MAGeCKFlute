@@ -45,11 +45,11 @@ The downstream analysis of this function includes identifying positive and negat
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 }
 \examples{
-\dontrun{
 data(RRA_Data)
 gene_summary = RRA_Data
-# Run the FluteRRA pipeline
-FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
+\dontrun{
+    # Run the FluteRRA pipeline
+    FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
 }
 
 

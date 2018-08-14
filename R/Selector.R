@@ -11,7 +11,12 @@
 #'
 #' @return An list containing two elements, first is selected signature and second is a ggplot object.
 #'
-#' @author Wubing Zhang
+#' @examples
+#' mat = matrix(rnorm(1000*30), 1000, 30)
+#' rownames(mat) = paste0("Gene", 1:1000)
+#' colnames(mat) = paste0("Sample", 1:30)
+#' hits = Selector(mat, select = 0.68)
+#' print(hits$p)
 #'
 #' @import ggsci
 #' @export

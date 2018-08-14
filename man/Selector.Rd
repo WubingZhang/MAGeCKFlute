@@ -22,6 +22,11 @@ An list containing two elements, first is selected signature and second is a ggp
 \description{
 Select signatures from candidate list (according to the consistence in most samples).
 }
-\author{
-Wubing Zhang
+\examples{
+mat = matrix(rnorm(1000*30), 1000, 30)
+rownames(mat) = paste0("Gene", 1:1000)
+colnames(mat) = paste0("Sample", 1:30)
+hits = Selector(mat, select = 0.68)
+print(hits$p)
+
 }

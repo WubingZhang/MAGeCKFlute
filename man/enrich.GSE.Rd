@@ -32,8 +32,8 @@ A enrichResult instance.
 A universal gene set enrichment analysis tools
 }
 \examples{
+data(geneList, package = "DOSE")
 \dontrun{
-    data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
     head(enrichRes@result)
 }
