@@ -49,8 +49,14 @@ Kegg pathway view and arrange grobs on page.
 \dontrun{
   data(MLE_Data)
   # Read beta score from gene summary table in MAGeCK MLE results
-  dd = ReadBeta(MLE_Data, ctrlName = "D7_R1", treatName = "PLX7_R1", organism="hsa")
-  arrangePathview(dd, pathways_hsa$PathwayID[1:2], title=NULL, sub=NULL, organism="hsa")
+  dd = ReadBeta(MLE_Data, organism="hsa")
+  tmp = TransGeneID(rownames(dd), "Symbol", "Entrez", organism = "hsa")
+  idx = is.na(tmp) | duplicated(tmp)
+  dd = dd[!idx,]
+  rownames(dd) = tmp[!idx]
+  dd$Control = rowMeans(dd[, 1:2])
+  dd$Treatment = rowMeans(dd[, 3:4])
+  arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 }
 
 }

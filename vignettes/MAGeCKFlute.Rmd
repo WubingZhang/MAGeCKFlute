@@ -1,8 +1,8 @@
 ---
 title: "Integrative analysis pipeline for pooled CRISPR functional genetic screens - MAGeCKFlute"
 author: "WubingZhang, Feizhen Wu, and Binbin Wang"
-date: "11 August 2018"
-package: "1.1.6"
+date: "21 August 2018"
+package: "1.1.7"
 abstract: >
   Genome-wide CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
   Here, We developed MAGeCKFlute for supporting downstream analysis, utilizing the data provided through MAGeCK and MAGeCK-VISPR. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis and pathway enrichment analysis of these genes. The package also visualizes genes in the context of pathways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
@@ -22,7 +22,7 @@ vignette: >
 
 <!-- This is the source document -->
 
-```{r setup, echo=FALSE, results="hide", fig.height=4, fig.width=5, dpi=300}
+```{r setup, echo=FALSE, fig.height=6, fig.width=9, dpi=300}
 knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       dev="png", message=FALSE, error=FALSE, warning=TRUE)
 ```	
@@ -131,7 +131,7 @@ head(dd)
 Is there batch effect? This is a common asked question before perform later analysis. In our
 package, we provide `HeatmapView` to ensure whether batch effect exists in data, and use `BatchRemove` to remove easily if same batch samples cluster together.
 
-```{r BatchRemove}
+```{r BatchRemove, fig.height=6, fig.width=9}
 ##Before batch removal
 HeatmapView(dd[,c(ctrlname, treatname)])
 batchMat = data.frame(samples = c(ctrlname, treatname), batch = c(1,2,1,2), cov = c(1,1,2,2))
@@ -161,7 +161,7 @@ After normalization, the distribution of beta scores in different
 conditions should be similar. We can evaluate the distribution of beta
 scores using function ‘ViolinView’, ‘DensityView’, and ‘DensityDiffView’.
 
-```{r DistributeBeta}
+```{r DistributeBeta, fig.height=6, fig.width=9}
 ViolinView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
 DensityView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
 DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
@@ -175,7 +175,7 @@ MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized")
 
 After normalization, the cell cycle time in different condition should be almost consistent. Here we use linear fitting to estimate the cell cycle time, and use function `CellCycleView` to view the cell cycle time of all samples.
 
-```{r EstimateCellCycle}
+```{r EstimateCellCycle, fig.height=6, fig.width=9}
 ##Fitting beta score of all genes
 CellCycleView(dd_essential[,c(ctrlname, treatname)], ctrlname, main="Cell cycle normalized")
 ```
@@ -188,12 +188,12 @@ and others, and visualize these three grouped genes in scatter plot.
 We can also use function `RankView` to rank the beta score deviation 
 between control and treatment and mark top selected genes in figure.
 
-```{r selection}
+```{r selection, fig.height=6, fig.width=9}
 p1 = ScatterView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
 print(p1)
 ```
 
-```{r rank}
+```{r rank, fig.height=6, fig.width=9}
 ## Add column of 'diff'
 dd_essential$Control = rowMeans(dd_essential[,ctrlname])
 dd_essential$Treatment = rowMeans(dd_essential[,treatname])
@@ -207,7 +207,7 @@ print(p2)
 ### Functional analysis of selected genes
 For gene set enrichment analysis, we provide five methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), "DAVID" [@Huang2009], "GOstats" [@Falcon2007], and "HGT"(HyperGemetric test). And gene ontology(GO) term [@GO2014] and Kyoto encyclopedia of genes and genomes (KEGG) pathway [@Minoru2014] enrichment analysis are available in this package. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, `enrich.DAVID` for DAVID, `enrich.GOstats` for GOstats, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` and `EnrichedGSEView` (for `enrich.GSE`) can be used to generate `gridPlot` from `enrichRes`easily, as shown below. 
 
-```{r EnrichAB, eval=TRUE}
+```{r EnrichAB, fig.height=6, fig.width=9}
 ## Get information of positive and negative selection genes
 groupAB = p1$data
 ## select positive selection genes
@@ -232,7 +232,7 @@ print(keggA_grid)
 
 ```
 
-```{r GSEA}
+```{r GSEA, fig.height=6, fig.width=9}
 ## Do enrichment analysis using GSEA method
 gseA = enrichment_analysis(geneList = geneList, method = "GSEA", type = "KEGG", 
                            organism="human", plotTitle="Positive selection")
@@ -251,7 +251,7 @@ print(gseA_grid)
 For enriched pathways, we can use function `KeggPathwayView` to visualize
 the beta score level in control and treatment on pathway map.[@Weijun2013]
 
-```{r pathview, eval=TRUE}
+```{r pathview, fig.height=10, fig.width=20}
 genedata = dd_essential[,c("Control","Treatment")]
 keggID = keggA$enrichRes@result$ID[1]
 #The pathway map will be located on current workspace
@@ -276,7 +276,7 @@ maybe these genes are associated with drug targets.
 In this package, use function `SquareView` can select these four
 treatment-associated subgroup genes and view them in 9-Square scatter plot.
 
-```{r Square}
+```{r Square, fig.height=8, fig.width=9}
 p3 = SquareView(dd_essential, label = "Gene", main="Cell cycle normalized")
 print(p3)
 ```
@@ -284,7 +284,7 @@ print(p3)
 ### Functional analysis for treatment-associated genes
 Same as section above. We can do enrichment analysis for treatment-associated genes.
 
-```{r EnrichSquare,eval=TRUE}
+```{r EnrichSquare, fig.height=5, fig.width=9}
 ##Get information of treatment-associated genes
 Square9 = p3$data
 ##==select group1 genes in 9-Square
@@ -301,7 +301,7 @@ print(kegg1$gridPlot)
 
 Also, pathway visualization can be done using function `KeggPathwayView`, the same as section above.
 
-```{r pathview2, eval=FALSE,eval=TRUE}
+```{r pathview2, eval=FALSE}
 genedata = dd_essential[, c("Control","Treatment")]
 keggID = kegg1$enrichRes@result$ID[1]
 KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
@@ -334,7 +334,7 @@ head(dd.rra)
 
 Take 0.05 as cutoff, get negative selection and positive selection genes and do enrichment analysis on KEGG pathway and GO BP terms.
 
-```{r selection2, eval=FALSE}
+```{r selection2, fig.height=5, fig.width=9}
 ##Negative selection
 universe=dd.rra$ENTREZID
 genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]

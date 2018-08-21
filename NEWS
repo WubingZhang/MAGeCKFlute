@@ -45,4 +45,5 @@ CHANGES IN VERSION 1.1.6
 
     o Add functions to plot figures in NatureProtocol manuscript.
     o Shorten the check time.
+    o Remove null figures in pathview part.
 

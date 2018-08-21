@@ -1,4 +1,4 @@
-## ----setup, echo=FALSE, results="hide", fig.height=4, fig.width=5, dpi=300----
+## ----setup, echo=FALSE, fig.height=6, fig.width=9, dpi=300---------------
 knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       dev="png", message=FALSE, error=FALSE, warning=TRUE)
 
@@ -38,7 +38,7 @@ dd = dd[!idx,]
 rownames(dd) = tmp[!idx]
 head(dd)
 
-## ----BatchRemove---------------------------------------------------------
+## ----BatchRemove, fig.height=6, fig.width=9------------------------------
 ##Before batch removal
 HeatmapView(dd[,c(ctrlname, treatname)])
 batchMat = data.frame(samples = c(ctrlname, treatname), batch = c(1,2,1,2), cov = c(1,1,2,2))
@@ -55,7 +55,7 @@ head(dd_essential)
 dd_loess = NormalizeBeta(dd, samples=c(ctrlname, treatname), method="loess")
 head(dd_loess)
 
-## ----DistributeBeta------------------------------------------------------
+## ----DistributeBeta, fig.height=6, fig.width=9---------------------------
 ViolinView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
 DensityView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
 DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
@@ -64,15 +64,15 @@ DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
 #beta score profile.
 MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized")
 
-## ----EstimateCellCycle---------------------------------------------------
+## ----EstimateCellCycle, fig.height=6, fig.width=9------------------------
 ##Fitting beta score of all genes
 CellCycleView(dd_essential[,c(ctrlname, treatname)], ctrlname, main="Cell cycle normalized")
 
-## ----selection-----------------------------------------------------------
+## ----selection, fig.height=6, fig.width=9--------------------------------
 p1 = ScatterView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
 print(p1)
 
-## ----rank----------------------------------------------------------------
+## ----rank, fig.height=6, fig.width=9-------------------------------------
 ## Add column of 'diff'
 dd_essential$Control = rowMeans(dd_essential[,ctrlname])
 dd_essential$Treatment = rowMeans(dd_essential[,treatname])
@@ -82,7 +82,7 @@ names(rankdata) = rownames(dd_essential)
 p2 = RankView(rankdata, main="Cell cycle normalized")
 print(p2)
 
-## ----EnrichAB, eval=TRUE-------------------------------------------------
+## ----EnrichAB, fig.height=6, fig.width=9---------------------------------
 ## Get information of positive and negative selection genes
 groupAB = p1$data
 ## select positive selection genes
@@ -106,7 +106,7 @@ head(kegg_A@result)
 print(keggA_grid)
 
 
-## ----GSEA----------------------------------------------------------------
+## ----GSEA, fig.height=6, fig.width=9-------------------------------------
 ## Do enrichment analysis using GSEA method
 gseA = enrichment_analysis(geneList = geneList, method = "GSEA", type = "KEGG", 
                            organism="human", plotTitle="Positive selection")
@@ -121,7 +121,7 @@ print(gseA$gridPlot)
 head(gse_A@result)
 print(gseA_grid)
 
-## ----pathview, eval=TRUE-------------------------------------------------
+## ----pathview, fig.height=10, fig.width=20-------------------------------
 genedata = dd_essential[,c("Control","Treatment")]
 keggID = keggA$enrichRes@result$ID[1]
 #The pathway map will be located on current workspace
@@ -131,11 +131,11 @@ pngname=paste0(keggID, ".pathview.multi.png")
 grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
 file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
 
-## ----Square--------------------------------------------------------------
+## ----Square, fig.height=8, fig.width=9-----------------------------------
 p3 = SquareView(dd_essential, label = "Gene", main="Cell cycle normalized")
 print(p3)
 
-## ----EnrichSquare,eval=TRUE----------------------------------------------
+## ----EnrichSquare, fig.height=5, fig.width=9-----------------------------
 ##Get information of treatment-associated genes
 Square9 = p3$data
 ##==select group1 genes in 9-Square
@@ -149,14 +149,14 @@ kegg1=enrichment_analysis(geneList = genes, universe = universe,
 head(kegg1$enrichRes@result)
 print(kegg1$gridPlot)
 
-## ----pathview2, eval=FALSE,eval=TRUE-------------------------------------
-genedata = dd_essential[, c("Control","Treatment")]
-keggID = kegg1$enrichRes@result$ID[1]
-KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
-##Read the figure into R
-pngname=paste0(keggID, ".pathview.multi.png")
-grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
-file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
+## ----pathview2, eval=FALSE-----------------------------------------------
+#  genedata = dd_essential[, c("Control","Treatment")]
+#  keggID = kegg1$enrichRes@result$ID[1]
+#  KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
+#  ##Read the figure into R
+#  pngname=paste0(keggID, ".pathview.multi.png")
+#  grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
+#  file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
 
 ## ----CheckRRARes---------------------------------------------------------
 data("RRA_Data")
@@ -166,27 +166,27 @@ head(RRA_Data)
 dd.rra = ReadRRA(RRA_Data, organism="hsa")
 head(dd.rra)
 
-## ----selection2, eval=FALSE----------------------------------------------
-#  ##Negative selection
-#  universe=dd.rra$ENTREZID
-#  genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
-#  kegg.neg=enrichment_analysis(geneList = genes, universe=universe,
-#                               type = "KEGG", plotTitle="KEGG: neg")
-#  bp.neg=enrichment_analysis(geneList = genes, universe=universe,
-#                             type = "BP", plotTitle="BP: neg")
-#  print(kegg.neg$gridPlot)
-#  print(bp.neg$gridPlot)
-#  
-#  ##Positive selection
-#  universe=dd.rra$ENTREZID
-#  genes = dd.rra[dd.rra$pos.fdr<0.05, "ENTREZID"]
-#  kegg.pos=enrichment_analysis(geneList = genes, universe=universe,
-#                               type = "KEGG", plotTitle="KEGG: pos")
-#  bp.pos=enrichment_analysis(geneList = genes, universe=universe,
-#                             type = "BP", plotTitle="BP: pos")
-#  print(kegg.pos$gridPlot)
-#  print(bp.pos$gridPlot)
-#  
+## ----selection2, fig.height=5, fig.width=9-------------------------------
+##Negative selection
+universe=dd.rra$ENTREZID
+genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
+kegg.neg=enrichment_analysis(geneList = genes, universe=universe, 
+                             type = "KEGG", plotTitle="KEGG: neg")
+bp.neg=enrichment_analysis(geneList = genes, universe=universe, 
+                           type = "BP", plotTitle="BP: neg")
+print(kegg.neg$gridPlot)
+print(bp.neg$gridPlot)
+
+##Positive selection
+universe=dd.rra$ENTREZID
+genes = dd.rra[dd.rra$pos.fdr<0.05, "ENTREZID"]
+kegg.pos=enrichment_analysis(geneList = genes, universe=universe, 
+                             type = "KEGG", plotTitle="KEGG: pos")
+bp.pos=enrichment_analysis(geneList = genes, universe=universe, 
+                           type = "BP", plotTitle="BP: pos")
+print(kegg.pos$gridPlot)
+print(bp.pos$gridPlot)
+
 
 ## ----sessionInfo---------------------------------------------------------
 sessionInfo()
