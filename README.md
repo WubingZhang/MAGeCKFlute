@@ -9,8 +9,9 @@ Genome-wide CRISPR (clustered regularly interspaced short palindrome repeats) co
 ## Install package MAGeCKFlute
 
 ~~~
-source("http://bioconductor.org/biocLite.R")
-biocLite("MAGeCKFlute")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("MAGeCKFlute")
 
 #or
 install.packages("devtools")
