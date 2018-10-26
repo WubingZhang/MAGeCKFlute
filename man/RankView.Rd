@@ -6,7 +6,7 @@
 \alias{rankview}
 \title{View the rank of gene points}
 \usage{
-RankView(rankdata, genelist = c(), top = 20, bottom = 20,
+RankView(rankdata, genelist = NA, top = 20, bottom = 20,
   cutoff = c(-sd(rankdata), sd(rankdata)), main = NULL, filename = NULL,
   width = 5, height = 4, ...)
 }

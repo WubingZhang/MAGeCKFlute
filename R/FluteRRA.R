@@ -13,13 +13,13 @@
 #' specifying enrichment method used for kegg enrichment analysis.
 #' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
 #' and "mmu" or "Mouse"
+#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
+#' max size of pathways for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param outdir Output directory on disk
 #'
-#'
 #' @author Wubing Zhang
-#'
 #'
 #' @return  All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
 #' which includes a pdf file and a folder named 'RRA'.
@@ -47,11 +47,10 @@
 #'
 #' @export
 
-
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
-                     organism="hsa", pvalueCutoff=0.25, adjust="BH",
-                     outdir="."){
+                     organism="hsa", pathway_limit = c(3, 50),
+                     pvalueCutoff=0.25, adjust="BH", outdir="."){
   #=========Prepare the running environment=========
   {
     message(Sys.time(), " # Create output dir and pdf file ...")
@@ -73,18 +72,18 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
     universe=dd$ENTREZID
     idx=dd$neg.fdr<pvalueCutoff
     genes = dd[idx, "ENTREZID"]
-    geneList=dd[idx, "neg.fdr"]
-    names(geneList)=genes
+    geneList= -log10(dd[idx, "neg.fdr"])
+    names(geneList) = genes
 
-    kegg.neg=enrichment_analysis(geneList=genes, universe=universe,
+    kegg.neg=enrichment_analysis(geneList=geneList, universe=universe,
                                  method = enrich_kegg,type = "KEGG",
                                  organism=organism,pvalueCutoff=pvalueCutoff,
                                  plotTitle="KEGG: neg",color="#3f90f7",
-                                 pAdjustMethod = adjust)
-    bp.neg=enrichment_analysis(geneList=genes, universe=universe, method = "ORT",
+                                 pAdjustMethod = adjust, limit = pathway_limit)
+    bp.neg=enrichment_analysis(geneList=geneList, universe=universe, method = "ORT",
                                type = "BP", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="BP: neg",
-                               color="#3f90f7", pAdjustMethod = adjust)
+                               color="#3f90f7", pAdjustMethod = adjust, limit = pathway_limit)
 
     ggsave(kegg.neg$gridPlot, filename = file.path(out.dir_sub,"RRA/kegg.neg.png"),
            units = "in", width = 6.5, height = 4)
@@ -93,22 +92,18 @@ FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
 
     idx=dd$pos.fdr<pvalueCutoff
     genes = dd[idx, "ENTREZID"]
-    geneList=dd[idx, "pos.fdr"]
-    names(geneList)=genes
+    geneList = -log10(dd[idx, "pos.fdr"])
+    names(geneList) = genes
 
-    kegg.pos=enrichment_analysis(geneList=genes, universe=universe,
+    kegg.pos=enrichment_analysis(geneList=geneList, universe=universe,
                                  method = enrich_kegg, type = "KEGG",
                                  organism=organism, pvalueCutoff=pvalueCutoff,
                                  plotTitle="KEGG: pos",color="#e41a1c",
-                                 pAdjustMethod = adjust)
-    bp.pos=enrichment_analysis(geneList=genes, universe=universe, method = "ORT",
+                                 pAdjustMethod = adjust, limit = pathway_limit)
+    bp.pos=enrichment_analysis(geneList=geneList, universe=universe, method = "ORT",
                                type = "BP", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="BP: pos",
-                               color="#e41a1c", pAdjustMethod = adjust)
-    # gse=enrichment_analysis(geneList = geneList, genes=genes, method = "GSEA",
-                              #type = "KEGG", pvalueCutoff = pvalueCutoff,
-    #                         plotTitle="GSEA: RRA",color="#e41a1c",
-    #                         pAdjustMethod = adjust)
+                               color="#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
     ggsave(kegg.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/kegg.pos.png"),
            units = "in", width = 6.5, height = 4)
     ggsave(bp.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/bp.pos.png"),

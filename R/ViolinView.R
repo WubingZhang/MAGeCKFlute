@@ -66,7 +66,7 @@ ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=
   p=p+labs(x=NULL,y=ylab,title=main)
 
   if(!is.null(filename)){
-    ggsave(plot=p,filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p,filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

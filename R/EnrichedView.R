@@ -53,25 +53,24 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=15, c
     return(p1)
   }
 
-  if(nrow(enrichment)>=termNum){
-    enrichment=enrichment[1:termNum,]
-  }
-
   #The column of Description, ID, p.adjust, and Count are neccessary.
   enrichment$logP = -log10(enrichment$p.adjust)
   enrichment = enrichment[!is.na(enrichment$ID),]
   enrichment=enrichment[!duplicated(enrichment$Description),]
   enrichment = enrichment[order(enrichment$logP,decreasing = TRUE), ]
+  if(nrow(enrichment)>=termNum){
+    enrichment=enrichment[1:termNum,]
+  }
 
   #normalize term description
   {
     terms=as.character(enrichment$Description)
     terms=lapply(terms,function(x,k){
       x=as.character(x)
-      x=paste(toupper(substr(x,1,1)),substr(x,2,nchar(x)),sep="")
+      # x=paste(toupper(substr(x,1,1)),substr(x,2,nchar(x)),sep="")
       if(nchar(x)>k){
         x=substr(x,start=1,stop=k)
-        x=gsub("(\\w+)$", "...", x)
+        # x=gsub("(\\w+)$", "...", x)
       }
       return(x)
     },charLength)
@@ -101,7 +100,7 @@ EnrichedView=function(enrichment, plotTitle=NULL, color="#3f90f7", termNum=15, c
                 legend.key = element_rect(fill = "transparent"))
 
   if(!is.null(filename)){
-    ggsave(plot=p1,filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p1,filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p1)
 }
@@ -163,23 +162,21 @@ EnrichedGSEView=function(enrichment, plotTitle=NULL, termNum=15, charLength=40,
     }
     return(p1)
   }
-  if(nrow(enrichment) >= termNum){
-    enrichment=enrichment[1:termNum,]
-  }
   # The column of Description, ID, p.adjust, and Count are neccessary.
   enrichment$logP = round(-log10(enrichment$p.adjust), 1)
   enrichment = enrichment[!is.na(enrichment$ID),]
   enrichment=enrichment[!duplicated(enrichment$Description),]
   enrichment = enrichment[order(enrichment$NES, enrichment$logP, decreasing = TRUE), ]
-
+  if(nrow(enrichment) >= termNum){
+    enrichment=enrichment[1:termNum,]
+  }
   # Normalize term description
   terms=as.character(enrichment$Description)
   terms=lapply(terms,function(x,k){
     x=as.character(x)
-    x=paste(toupper(substr(x,1,1)),substr(x,2,nchar(x)),sep="")
+    # x=paste(toupper(substr(x,1,1)),substr(x,2,nchar(x)), sep="")
     if(nchar(x)>k){
-      x=substr(x,start=1,stop=k)
-      x=gsub("(\\w+)$", "...", x)
+      x=paste0(substr(x,start=1,stop=k), "...")
     }
     return(x)
   },charLength)
@@ -208,7 +205,7 @@ EnrichedGSEView=function(enrichment, plotTitle=NULL, termNum=15, charLength=40,
                 legend.key = element_rect(fill = "transparent"))
 
   if(!is.null(filename)){
-    ggsave(plot=p1, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p1, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p1)
 }

@@ -62,7 +62,7 @@ DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
                 legend.key = element_rect(fill = "transparent"))
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

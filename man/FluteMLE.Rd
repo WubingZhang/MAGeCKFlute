@@ -6,52 +6,55 @@
 \alias{flutemle}
 \title{Downstream analysis based on MAGeCK-MLE result}
 \usage{
-FluteMLE(gene_summary, ctrlname = "Control", treatname = "Treatment",
-  organism = "hsa", prefix = "", top = 10, bottom = 10,
-  interestGenes = c(), pvalueCutoff = 0.25, adjust = "BH",
-  enrich_kegg = "HGT", gsea = FALSE, posControl = NULL,
-  scale_cutoff = 1, loess = FALSE, view_allpath = FALSE, outdir = ".")
+FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
+  organism = "hsa", scale_cutoff = 1, top = 10, bottom = 10,
+  interestGenes = NA, pathway_limit = c(3, 50), pvalueCutoff = 0.25,
+  adjust = "BH", enrich_kegg = "HGT", gsea = FALSE, posControl = NULL,
+  loess = FALSE, prefix = "", outdir = ".", view_allpath = FALSE)
 }
 \arguments{
 \item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
 \code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.}
 
-\item{ctrlname}{A character vector, specifying the name of control samples.}
+\item{ctrlname}{A character vector, specifying the names of control samples.}
 
-\item{treatname}{A character vector, specifying the name of treatment samples.}
+\item{treatname}{A character vector, specifying the names of treatment samples.}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
-and "mmu" or "Mouse".}
+\item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
 
-\item{prefix}{A character, indicating the prefix of output file name, which can't contain special characters.}
+\item{organism}{A character, specifying organism, such as "hsa"("Human"), or "mmu"("Mouse").}
 
-\item{top}{An integer, specifying number of top selected genes labeled in rank figure.}
+\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
+or how many standard deviation will be used as cutoff.}
 
-\item{bottom}{An integer, specifying number of bottom selected genes labeled in rank figure.}
+\item{top}{An integer, specifying number of top selected genes to be labeled in rank figure.}
 
-\item{interestGenes}{A character vector, specifying interested genes labeled in rank figure.}
+\item{bottom}{An integer, specifying number of bottom selected genes to be labeled in rank figure.}
+
+\item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
+
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+max size of pathways for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{enrich_kegg}{One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
-specifying enrichment method used for kegg enrichment analysis.}
+\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
 \item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and
 negative selection genes.}
 
-\item{posControl}{A file path or a character vector, specifying a list of gene entrezid as positive controls
-used for cell cycle normalization.}
-
-\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
+\item{posControl}{A file path or a character vector, specifying a list of gene entrezid as
+positive controls used for cell cycle normalization.}
 
 \item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
-\item{view_allpath}{Boolean, whether output all pathway view figures.}
+\item{prefix}{A character, indicating the prefix of output file name, which can't contain special characters.}
 
 \item{outdir}{Output directory on disk.}
+
+\item{view_allpath}{Boolean, whether output all pathway view figures.}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
@@ -87,9 +90,10 @@ The function also visualizes genes in the context of pathways to benefit users e
 data(MLE_Data)
 \dontrun{
   # functional analysis for MAGeCK MLE results
-  FluteMLE(MLE_Data, ctrlname=c("D7_R1","D7_R2"), treatname=c("PLX7_R1","PLX7_R2"),
-           prefix="BRAF_D7", pvalueCutoff=0.05, organism="hsa")
+  FluteMLE(MLE_Data, ctrlname = c("D7_R1","D7_R2"), treatname = c("PLX7_R1","PLX7_R2"),
+           prefix = "BRAF_D7", pvalueCutoff = 0.25, organism = "hsa")
 }
+
 }
 \seealso{
 \code{\link{FluteRRA}}

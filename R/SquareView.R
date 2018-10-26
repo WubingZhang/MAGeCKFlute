@@ -64,76 +64,71 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
   Control_cutoff = CutoffCalling(beta$Control, scale=scale_cutoff)
   drug_cutoff = CutoffCalling(beta$Treatment, scale=scale_cutoff)
   x=beta$Control; y=beta$Treatment
+  beta$diff = y-x
   intercept=CutoffCalling(y-x,scale=scale_cutoff/3)
   y_max=x+intercept; y_min=x-intercept
   idx0=y>y_max | y<y_min
 
+  beta$rank = nrow(beta)
   idx1 = -Control_cutoff<beta$Control
   idx2 = beta$Control<Control_cutoff
   idx3 = beta$Treatment>drug_cutoff
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group2" #proliferation
-  beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = TRUE)],]
-  beta$text[which(idx)[rank(beta$Treatment[idx])<(length(beta$Treatment[idx])-top+1)]] = NA
-  beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = TRUE)],]
+  beta$rank[idx] = sum(idx) - rank(beta$Treatment[idx]) + 1
+
   idx3=beta$Treatment<(-drug_cutoff)
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group4" #anti-proliferation
-  beta$text[which(idx)[rank(beta$Treatment[idx])>top]] = NA
-  beta[idx,] = beta[which(idx)[order(beta$Treatment[idx], decreasing = FALSE)],]
+  beta$rank[idx] = rank(beta$Treatment[idx])
+
   idx1=-drug_cutoff<beta$Treatment
   idx2=beta$Treatment<drug_cutoff
   idx3=beta$Control>Control_cutoff
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group3" #proliferation
-  beta$text[which(idx)[rank(beta$Control[idx])<(length(beta$Control[idx])-top+1)]] = NA
-  beta[idx,] = beta[which(idx)[order(beta$Control[idx], decreasing = TRUE)],]
+  beta$rank[idx] = sum(idx) - rank(beta$Control[idx]) + 1
+
   idx3=beta$Control<(-Control_cutoff)
   idx=idx0&idx1&idx2&idx3
   beta$group[idx]="Group1" #anti-proliferation
-  beta$text[which(idx)[rank(beta$Control[idx])>top]] = NA
-  beta[idx,] = beta[which(idx)[order(beta$Control[idx], decreasing = FALSE)],]
+  beta$rank[idx] = rank(beta$Control[idx])
   #===================
+  beta$text[beta$group=="Others"] = NA
+  beta$text[beta$rank > top] = NA
   tmp = ifelse(label.top, 0.1, 0.4)
   x_min = round(min(beta$Control[beta$group != "Others"]),2) - tmp
   x_max = round(max(beta$Control[beta$group != "Others"]),2) + tmp
   y_min = round(min(beta$Treatment[beta$group != "Others"]),2) - tmp
   y_max = round(max(beta$Treatment[beta$group != "Others"]),2) + tmp
 
-  idx1=(x_min<=beta$Control & beta$Control<=x_max)
-  idx2=(y_min<=beta$Treatment  & beta$Treatment<=y_max)
+  idx1 = (x_min<=beta$Control & beta$Control<=x_max)
+  idx2 = (y_min<=beta$Treatment  & beta$Treatment<=y_max)
   idx=idx1&idx2
-
-  gg=beta[idx,]
-  # gg = beta
-  gg$group=factor(gg$group,levels = c("Group1","Group2","Group3","Group4","Others"))
+  gg = beta[idx,]
+  gg$group=factor(gg$group, levels = c("Group1","Group2","Group3","Group4","Others"))
   #===============
-  # gg=gg[,c("Gene","Treatment","Control","group","ENTREZID")]
   mycolour=c("Others"="aliceblue",  "Group2"="#ff7f00", "Group3"="#005CB7",
              "Group4"="#984ea3", "Group1"="#4daf4a" )
-  # mycolour=c("Others"="aliceblue",  "Group2"="#DDA76A", "Group3"="#B5C27B",
-  #            "Group4"="#AD6A64", "Group1"="#7995C2" )
   idx1 = gg$Gene %in% genelist
   idx2 = !(gg$group=="Others" | is.na(gg$text))
   label_gg = gg[idx1|idx2,]
   col_label = rep("#004b84",nrow(label_gg))
   col_label[label_gg$group=="Others"]="gray60"
-  p=ggplot(gg,aes(x=Control,y=Treatment,colour=group,fill=group))
-  p=p+geom_point(shape=".",alpha=1/1,size = 1)+scale_color_manual(values=mycolour)
-  p=p+geom_jitter(size = 1)
-  p=p+geom_vline(xintercept = Control_cutoff,linetype = "dotted")
-  p=p+geom_vline(xintercept = -Control_cutoff,linetype = "dotted")
-  p=p+geom_hline(yintercept = drug_cutoff,linetype = "dotted")
-  p=p+geom_hline(yintercept = -drug_cutoff,linetype = "dotted")
-  p=p+geom_abline(slope=1, intercept=+intercept,linetype = "dotted")
-  p=p+geom_abline(slope=1, intercept=-intercept,linetype = "dotted")
+  p = ggplot(gg,aes(x=Control,y=Treatment,colour=group,fill=group))
+  p = p + geom_point(shape=".",alpha=1/1,size = 1)+scale_color_manual(values=mycolour)
+  p = p + geom_jitter(size = 1)
+  p = p + geom_vline(xintercept = Control_cutoff,linetype = "dotted")
+  p = p + geom_vline(xintercept = -Control_cutoff,linetype = "dotted")
+  p = p + geom_hline(yintercept = drug_cutoff,linetype = "dotted")
+  p = p + geom_hline(yintercept = -drug_cutoff,linetype = "dotted")
+  p = p + geom_abline(slope=1, intercept=+intercept,linetype = "dotted")
+  p = p + geom_abline(slope=1, intercept=-intercept,linetype = "dotted")
   p = p + labs(x="Control beta score", y = "Treatment beta score")
   # p=p+labs(x=paste0(ctrlname, collapse = " & "), y=paste0(treatname, collapse = " & "), title=main)
   p=p+guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)
     p = p + ggrepel::geom_text_repel(aes(x=Control,y=Treatment,label=Gene), color=col_label, data=label_gg)
-
-  # p=p+xlim(x_min,x_max)+ylim(y_min,y_max)
   p=p+annotate("text",color="red",
                label=paste("",as.character(dim(beta[beta$group=="Group2",])[1]),sep=""),
                x = -Control_cutoff, y=y_max,vjust=0, hjust = 0)
@@ -155,14 +150,14 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
                 panel.border = element_blank(), panel.background = element_blank())
   p=p+theme(legend.position="none")+theme(legend.title=element_blank())
 
-  p=suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
+  p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
   p$data = beta
-  p$data = p$data[order(p$data$group),]
-  # grid.arrange(p,ncol = 1)
+  p$data = p$data[order(p$data$group), ]
+
   if(!is.null(filename)){
       write.table(p$data, gsub("\\....$", ".txt", filename),
                 sep = "\t", quote = FALSE, row.names = FALSE)
-      ggsave(filename, p, units="in", dpi=600, width=width, height=height, ...)
+      ggsave(filename, p, units="in", width=width, height=height, ...)
   }
   return(p)
 }

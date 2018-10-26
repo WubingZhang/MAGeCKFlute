@@ -6,25 +6,28 @@
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT", organism = "hsa",
-  adjust = "BH", filename = NULL, out.dir = ".", gsea = FALSE,
-  width = 6.5, height = 4, ...)
+  pathway_limit = c(3, 50), adjust = "BH", filename = NULL,
+  out.dir = ".", gsea = FALSE, width = 6.5, height = 4, ...)
 }
 \arguments{
 \item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
+\item{enrich_method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{A character, specifying organism, such as "hsa"("Human") and "mmu"("Mouse").}
 
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+max size of pathways for enrichent analysis.}
 
-\item{filename}{Suffix of output file name. NULL(default) means no output.}
+\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", and "none".}
+
+\item{filename}{Suffix of output file name.}
 
 \item{out.dir}{Path to save plot to (combined with filename).}
 
-\item{gsea}{Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea=FALSE.}
+\item{gsea}{Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea = FALSE.}
 
 \item{width}{As in ggsave.}
 

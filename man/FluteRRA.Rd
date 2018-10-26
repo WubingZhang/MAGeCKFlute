@@ -7,7 +7,8 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "HGT",
-  organism = "hsa", pvalueCutoff = 0.25, adjust = "BH", outdir = ".")
+  organism = "hsa", pathway_limit = c(3, 50), pvalueCutoff = 0.25,
+  adjust = "BH", outdir = ".")
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
@@ -19,6 +20,9 @@ specifying enrichment method used for kegg enrichment analysis.}
 
 \item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
 and "mmu" or "Mouse"}
+
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+max size of pathways for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 

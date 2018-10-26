@@ -29,15 +29,6 @@ treatname = c("PLX7_R1", "PLX7_R2")
 dd=ReadBeta(gene_summary, organism="hsa")
 head(dd)
 
-## ------------------------------------------------------------------------
-# Transform gene symbol to Entrez gene id
-dd$Gene = rownames(dd)
-tmp = TransGeneID(dd$Gene, "Symbol", "Entrez")
-idx = is.na(tmp) | duplicated(tmp)
-dd = dd[!idx,]
-rownames(dd) = tmp[!idx]
-head(dd)
-
 ## ----BatchRemove, fig.height=6, fig.width=9------------------------------
 ##Before batch removal
 HeatmapView(dd[,c(ctrlname, treatname)])
@@ -66,7 +57,7 @@ MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized")
 
 ## ----EstimateCellCycle, fig.height=6, fig.width=9------------------------
 ##Fitting beta score of all genes
-CellCycleView(dd_essential[,c(ctrlname, treatname)], ctrlname, main="Cell cycle normalized")
+CellCycleView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
 
 ## ----selection, fig.height=6, fig.width=9--------------------------------
 p1 = ScatterView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
@@ -90,40 +81,29 @@ idx1=groupAB$group=="up"
 genes=rownames(groupAB)[idx1]
 geneList=groupAB$diff[idx1]
 names(geneList)=genes
+geneList = sort(geneList, decreasing = TRUE)
 universe=rownames(groupAB)
 ## Do enrichment analysis using HGT method
-keggA = enrichment_analysis(geneList = genes, universe = universe, method = "HGT",
-                          type = "KEGG", organism = "human", plotTitle = "Positive selection")
-#same as
-kegg_A = enrich.HGT(genes, universe, type = "KEGG", organism = "human")
-keggA_grid = EnrichedView(kegg_A@result, plotTitle = "Positive selection")
+keggA = enrich.HGT(geneList[1:100], universe, organism = "human", limit = c(3, 50))
+keggA_grid = EnrichedView(keggA@result, plotTitle = "Positive selection")
 
 ## look at the results
-head(keggA$enrichRes@result)
-print(keggA$gridPlot)
-#should same as
-head(kegg_A@result)
+head(keggA@result)
 print(keggA_grid)
 
 
 ## ----GSEA, fig.height=6, fig.width=9-------------------------------------
 ## Do enrichment analysis using GSEA method
-gseA = enrichment_analysis(geneList = geneList, method = "GSEA", type = "KEGG", 
-                           organism="human", plotTitle="Positive selection")
-#same as
-gse_A = enrich.GSE(geneList, type = "KEGG", organism = "human")
-gseA_grid = EnrichedGSEView(gse_A@result, plotTitle = "Positive selection")
+gseA = enrich.GSE(geneList, type = "KEGG", organism = "human", pvalueCutoff = 1)
+gseA_grid = EnrichedGSEView(gseA@result, plotTitle = "Positive selection")
 
-
-head(gseA$enrichRes@result)
-print(gseA$gridPlot)
 #should same as
-head(gse_A@result)
+head(gseA@result)
 print(gseA_grid)
 
 ## ----pathview, fig.height=10, fig.width=20-------------------------------
 genedata = dd_essential[,c("Control","Treatment")]
-keggID = keggA$enrichRes@result$ID[1]
+keggID = gseA@result$ID[1]
 #The pathway map will be located on current workspace
 KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
 ##Read the figure into R
@@ -140,14 +120,14 @@ print(p3)
 Square9 = p3$data
 ##==select group1 genes in 9-Square
 idx=Square9$group=="Group1"
-genes=rownames(Square9)[idx]
+geneList = (Square9$Treatment - Square9$Control)[idx]
+names(geneList) = rownames(Square9)[idx]
 universe=rownames(Square9)
 #====KEGG_enrichment=====
-kegg1=enrichment_analysis(geneList = genes, universe = universe, 
-                          type = "KEGG", plotTitle = "KEGG: Group1")
+kegg1=enrich.ORT(geneList = geneList, universe = universe, type = "KEGG", limit = c(3, 50))
 ## look at the results
-head(kegg1$enrichRes@result)
-print(kegg1$gridPlot)
+head(kegg1@result)
+EnrichedGSEView(kegg1@result)
 
 ## ----pathview2, eval=FALSE-----------------------------------------------
 #  genedata = dd_essential[, c("Control","Treatment")]
@@ -169,20 +149,25 @@ head(dd.rra)
 ## ----selection2, fig.height=5, fig.width=9-------------------------------
 ##Negative selection
 universe=dd.rra$ENTREZID
-genes = dd.rra[dd.rra$neg.fdr<0.05, "ENTREZID"]
-kegg.neg=enrichment_analysis(geneList = genes, universe=universe, 
+idx = dd.rra$neg.fdr<0.05
+geneList= -log10(dd.rra[idx, "neg.fdr"])
+names(geneList) = dd.rra$ENTREZID[idx]
+
+kegg.neg=enrichment_analysis(geneList = geneList, universe=universe, 
                              type = "KEGG", plotTitle="KEGG: neg")
-bp.neg=enrichment_analysis(geneList = genes, universe=universe, 
+bp.neg=enrichment_analysis(geneList = geneList, universe=universe, 
                            type = "BP", plotTitle="BP: neg")
 print(kegg.neg$gridPlot)
 print(bp.neg$gridPlot)
 
 ##Positive selection
-universe=dd.rra$ENTREZID
-genes = dd.rra[dd.rra$pos.fdr<0.05, "ENTREZID"]
-kegg.pos=enrichment_analysis(geneList = genes, universe=universe, 
+universe = dd.rra$ENTREZID
+idx = dd.rra$pos.fdr<0.05
+geneList = -log10(dd.rra[idx, "pos.fdr"])
+names(geneList) = dd.rra$ENTREZID[idx]
+kegg.pos=enrichment_analysis(geneList = geneList, universe=universe, 
                              type = "KEGG", plotTitle="KEGG: pos")
-bp.pos=enrichment_analysis(geneList = genes, universe=universe, 
+bp.pos=enrichment_analysis(geneList = geneList, universe=universe, 
                            type = "BP", plotTitle="BP: pos")
 print(kegg.pos$gridPlot)
 print(bp.pos$gridPlot)

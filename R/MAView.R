@@ -70,7 +70,7 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                      label=paste(Mid, IQR, sep="\n"))
   }
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height =height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height =height, ...)
   }
   return(p)
 }

@@ -47,3 +47,9 @@ CHANGES IN VERSION 1.1.6
     o Shorten the check time.
     o Remove null figures in pathview part.
 
+CHANGES IN VERSION 1.1.9
+-------------------------
+
+    o Add parameter 'pathway_limit' / 'limit' / 'gmtpath' in FluteRRA, FluteMLE, and all enrichment functions which enable users to customize gene sets for enrichment analysis.
+    o Remove DAVID and GOstats, which are not recommended.
+    o Add enrichment score in enrichment results from all algorithms.

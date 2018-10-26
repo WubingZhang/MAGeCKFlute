@@ -6,17 +6,20 @@
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
 EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT", organism = "hsa",
-  adjust = "BH", filename = NULL, out.dir = ".", width = 6.5,
-  height = 4, ...)
+  pathway_limit = c(3, 50), adjust = "BH", filename = NULL,
+  out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, which contains column of 'group'.}
+\item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.}
 
 \item{pvalue}{Pvalue cutoff.}
 
 \item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
 
 \item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+max size of pathways for enrichent analysis.}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
@@ -56,12 +59,20 @@ Each item in the returned list has two sub items:
 \description{
 Do enrichment analysis for selected treatment related genes in 9-squares
 }
+\examples{
+\dontrun{
+ data(MLE_Data)
+ # Read beta score from gene summary table in MAGeCK MLE results
+ dd = ReadBeta(MLE_Data, organism="hsa")
+ p = SquareView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+ E1 = EnrichSquare(p$data, organism="hsa")
+ print(E1$kegg1$gridPlot)
+}
+}
 \seealso{
 \code{\link{SquareView}}
 
 \code{\link{EnrichSquare}}
-
- # Read beta score from gene summary table in MAGeCK MLE results
 }
 \author{
 Wubing Zhang

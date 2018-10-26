@@ -61,7 +61,7 @@ CorrView <- function(gg, x, y, smoothMethod = "lm",
                      label = corr, hjust=1, vjust=1)
   }
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

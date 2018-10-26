@@ -8,6 +8,7 @@
 #' @aliases readbeta
 #'
 #' @param gene_summary A file path or a data frame, data frame, which has columns of 'Gene' and '*|beta'.
+#' @param keytype Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".
 #' @param organism Character, KEGG species code, or the common species name, used to determine
 #' the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
@@ -25,7 +26,7 @@
 
 
 #===read gene summary file=============================================
-ReadBeta <- function(gene_summary, organism='hsa'){
+ReadBeta <- function(gene_summary, keytype = "Symbol", organism = 'hsa'){
   message(Sys.time(), " # Read gene summary file ...")
 
   #=========If gene_summary is a path or a data frame=====
@@ -51,7 +52,17 @@ ReadBeta <- function(gene_summary, organism='hsa'){
   idx = is.na(dd$Gene) | duplicated(dd$Gene)
   dd = dd[!idx,]
   rownames(dd) = dd$Gene
-  dd = dd[, -1]
 
+  ##=============Gene ID conversion===============
+  if(keytype == "Symbol")
+    dd$EntrezID = TransGeneID(dd$Gene, "Symbol", "Entrez", organism = organism)
+  else{
+    dd$EntrezID = dd$Gene
+    dd$Gene = TransGeneID(dd$Gene, "Entrez", "Symbol", organism = organism)
+  }
+  idx = is.na(dd$EntrezID) | duplicated(dd$EntrezID)
+  dd = dd[!idx,]
+  rownames(dd) = dd$EntrezID
+  dd = dd[, c("Gene", "EntrezID", colnames(dd)[c(-1, -ncol(dd))])]
   return(dd)
 }

@@ -38,7 +38,7 @@
 #' @export
 #'
 
-RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rankdata), sd(rankdata)),
+RankView <- function(rankdata, genelist=NA, top=20, bottom=20,cutoff=c(-sd(rankdata), sd(rankdata)),
                      main=NULL,filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   message(Sys.time(), " # Rank genes and plot...")
@@ -72,7 +72,7 @@ RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rank
   p = p + theme(legend.position="none")#+ylim(-1000,7000)
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

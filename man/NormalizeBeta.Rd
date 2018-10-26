@@ -43,9 +43,6 @@ optional normalization method, which is used to normalize array data before.
 data(MLE_Data)
 # Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(MLE_Data, organism="hsa")
-tmp = TransGeneID(rownames(dd), "Symbol", "Entrez")
-dd = dd[!(duplicated(tmp)|is.na(tmp)), ]
-rownames(dd) = tmp[!(duplicated(tmp)|is.na(tmp))]
 samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")

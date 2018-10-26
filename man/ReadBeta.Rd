@@ -6,10 +6,12 @@
 \alias{readbeta}
 \title{Read gene beta scores}
 \usage{
-ReadBeta(gene_summary, organism = "hsa")
+ReadBeta(gene_summary, keytype = "Symbol", organism = "hsa")
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame, data frame, which has columns of 'Gene' and '*|beta'.}
+
+\item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
 
 \item{organism}{Character, KEGG species code, or the common species name, used to determine
 the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
