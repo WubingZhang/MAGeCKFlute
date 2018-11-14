@@ -12,7 +12,7 @@
 #' @param ctrlname A character vector, specifying the names of control samples.
 #' @param treatname A character vector, specifying the names of treatment samples.
 #' @param keytype Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".
-#' @param organism A character, specifying organism, such as "hsa"("Human"), or "mmu"("Mouse").
+#' @param organism "hsa" or "mmu".
 #'
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
 #' or how many standard deviation will be used as cutoff.
@@ -20,8 +20,8 @@
 #' @param bottom An integer, specifying number of bottom selected genes to be labeled in rank figure.
 #' @param interestGenes A character vector, specifying interested genes to be labeled in rank figure.
 #'
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
-#' max size of pathways for enrichent analysis.
+#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
@@ -79,8 +79,8 @@
 
 FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", organism = "hsa", # Input dataset
                      scale_cutoff = 1, top = 10, bottom = 10, interestGenes = NA, # Parameters for rank visualization
-                     pathway_limit = c(3,50), pvalueCutoff=0.25, adjust="BH", enrich_kegg = "HGT", gsea = FALSE,
-                     posControl = NULL, loess=FALSE,
+                     pathway_limit = c(3, 50), pvalueCutoff=0.25, adjust="BH", enrich_kegg = "HGT", gsea = FALSE,
+                     posControl = NULL, loess = FALSE,
                      prefix = "", outdir = ".", view_allpath = FALSE){
 
 	#=========Prepare the running environment=========
@@ -309,30 +309,30 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	  dir.create("Pathview_Treat_Ctrl", showWarnings=FALSE)
 	  #Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$keggA$enrichRes@result$ID, "Group A",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$keggA$enrichRes@result$ID), "Group A",
   	              "Negative control normalized",organism=organism,
   	              view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 	  if(!is.null(E1$keggB$enrichRes) && nrow(E1$keggB$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$keggB$enrichRes@result$ID, "Group B",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$keggB$enrichRes@result$ID), "Group B",
   	              "Negative control normalized",organism=organism,
   	              view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 	  if(!is.null(E2$keggA$enrichRes) && nrow(E2$keggA$enrichRes@result)>0)
-  	  arrangePathview(dd_essential, E2$keggA$enrichRes@result$ID, "Group A",
-  	              "Cell cycle normalized",organism=organism,
+  	  arrangePathview(dd_essential, gsub("KEGG_", "", E2$keggA$enrichRes@result$ID),
+  	                  "Group A", "Cell cycle normalized",organism=organism,
   	              view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 	  if(!is.null(E2$keggB$enrichRes) && nrow(E2$keggB$enrichRes@result)>0)
-  	  arrangePathview(dd_essential, E2$keggB$enrichRes@result$ID, "Group B",
-  	              "Cell cycle normalized",organism=organism,
+  	  arrangePathview(dd_essential, gsub("KEGG_", "", E2$keggB$enrichRes@result$ID),
+  	                  "Group B", "Cell cycle normalized",organism=organism,
   	              view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 
 	  if(loess){
 	    if(!is.null(E3$keggA$enrichRes) && nrow(E3$keggA$enrichRes@result)>0)
-    		arrangePathview(dd_loess, E3$keggA$enrichRes@result$ID, "Group A",
-    		            "Loess normalized",organism=organism,
+    		arrangePathview(dd_loess, gsub("KEGG_", "", E3$keggA$enrichRes@result$ID),
+    		                "Group A", "Loess normalized",organism=organism,
     		            view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 	    if(!is.null(E3$keggB$enrichRes) && nrow(E3$keggB$enrichRes@result)>0)
-    		arrangePathview(dd_loess, E3$keggB$enrichRes@result$ID, "Group B",
-    		            "Loess normalized",organism=organism,
+    		arrangePathview(dd_loess, gsub("KEGG_", "", E3$keggB$enrichRes@result$ID),
+    		                "Group B", "Loess normalized",organism=organism,
     		            view_allpath=view_allpath, output="Pathview_Treat_Ctrl")
 	  }
 	  suppressWarnings(rm(E1, E2, E3, outputDir5))
@@ -412,71 +412,71 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	{
 	  dir.create("Pathview_9Square", showWarnings=FALSE)
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg1$enrichRes@result$ID,"Group 1",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg1$enrichRes@result$ID), "Group 1",
   	              "Negative control normalized",organism=organism, view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg2$enrichRes) && nrow(E1$kegg2$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg2$enrichRes@result$ID,"Group 2",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg2$enrichRes@result$ID), "Group 2",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg3$enrichRes) && nrow(E1$kegg3$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg3$enrichRes@result$ID,"Group 3",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg3$enrichRes@result$ID), "Group 3",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg4$enrichRes) && nrow(E1$kegg4$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg4$enrichRes@result$ID,"Group 4",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg4$enrichRes@result$ID), "Group 4",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg13$enrichRes) && nrow(E1$kegg13$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg13$enrichRes@result$ID,"Group 1 & Group 3",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg13$enrichRes@result$ID), "Group 1 & Group 3",
   	              "Negative control normalized",organism=organism,view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg14$enrichRes) && nrow(E1$kegg14$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg14$enrichRes@result$ID,"Group 1 & Group 4",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg14$enrichRes@result$ID), "Group 1 & Group 4",
   	              organism=organism, view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E1$kegg23$enrichRes) && nrow(E1$kegg23$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg23$enrichRes@result$ID,"Group 2 & Group 3",
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg23$enrichRes@result$ID), "Group 2 & Group 3",
   	              "Negative control normalized",organism=organism,
   	              view_allpath=view_allpath, output="Pathview_9Square")
 	  if(!is.null(E1$kegg24$enrichRes) && nrow(E1$kegg24$enrichRes@result)>0)
-  	  arrangePathview(dd, E1$kegg24$enrichRes@result$ID,
+  	  arrangePathview(dd, gsub("KEGG_", "", E1$kegg24$enrichRes@result$ID),
   	              "Group 2 & Group 4","Negative control normalized",
   	              organism=organism, view_allpath=view_allpath,
   	              output="Pathview_9Square")
 	  if(!is.null(E2$kegg1$enrichRes) && nrow(E2$kegg1$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg1$enrichRes@result$ID,"Group 1",
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg1$enrichRes@result$ID), "Group 1",
 	                    "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg2$enrichRes) && nrow(E2$kegg2$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg2$enrichRes@result$ID,"Group 2",
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg2$enrichRes@result$ID), "Group 2",
 	                    "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg3$enrichRes) && nrow(E2$kegg3$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg3$enrichRes@result$ID,"Group 3",
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg3$enrichRes@result$ID), "Group 3",
 	                    "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg4$enrichRes) && nrow(E2$kegg4$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg4$enrichRes@result$ID,"Group 4",
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg4$enrichRes@result$ID), "Group 4",
 	                    "Cell cycle normalized",organism=organism,view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg13$enrichRes) && nrow(E2$kegg13$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg13$enrichRes@result$ID,
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg13$enrichRes@result$ID),
 	                    "Group 1 & Group 3","Cell cycle normalized",
 	                    organism=organism, view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg14$enrichRes) && nrow(E2$kegg14$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg14$enrichRes@result$ID,
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg14$enrichRes@result$ID),
 	                    "Group 1 & Group 4","Cell cycle normalized",
 	                    organism=organism, view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg23$enrichRes) && nrow(E2$kegg23$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg23$enrichRes@result$ID,
-	                    "Group 2 & Group 3","Cell cycle normalized",
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg23$enrichRes@result$ID),
+	                    "Group 2 & Group 3", "Cell cycle normalized",
 	                    organism=organism, view_allpath=view_allpath,
 	                    output="Pathview_9Square")
 	  if(!is.null(E2$kegg24$enrichRes) && nrow(E2$kegg24$enrichRes@result)>0)
-	    arrangePathview(dd_essential, E2$kegg24$enrichRes@result$ID,
+	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$kegg24$enrichRes@result$ID),
 	                    "Group 2 & Group 4","Cell cycle normalized",
 	                    organism=organism, view_allpath=view_allpath,
 	                    output="Pathview_9Square")

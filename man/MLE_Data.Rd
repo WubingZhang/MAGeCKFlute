@@ -11,7 +11,7 @@
   data("MLE_Data")
 }
 \format{
-  A data frame with 17419 observations on the 26 variables.
+  A data frame with 17141 observations on the 26 variables.
 }
 \references{
   \url{https://www.ncbi.nlm.nih.gov/pubmed/25494202}

@@ -6,17 +6,22 @@
 \alias{enrichgseview}
 \title{View enriched terms in GSEA}
 \usage{
-EnrichedGSEView(enrichment, plotTitle = NULL, termNum = 15,
-  charLength = 40, filename = NULL, width = 5, height = 4, ...)
+EnrichedGSEView(enrichment, decreasing = TRUE, plotTitle = NULL,
+  type = "All", termNum = 15, charLength = 40, filename = NULL,
+  width = 5, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
 
+\item{decreasing}{Logical. Should the NES sort order be increasing or decreasing?}
+
 \item{plotTitle}{Same as 'title' in 'plot'.}
 
-\item{termNum}{Integer, specifying number of top enriched terms to show}
+\item{type}{"All" (Default), enriched geneset category for visualization.}
 
-\item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab}
+\item{termNum}{Integer, specifying number of top enriched terms to show.}
+
+\item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab.}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}

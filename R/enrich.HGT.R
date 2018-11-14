@@ -8,11 +8,14 @@
 #' @param geneList A numeric vector with gene as names.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, "MsigDB" (default), "KEGG" or "Others" (`gmtpath` is required).
-#' @param organism A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"
+#' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
+#' 'KEGG', 'BIOCARTA', 'REACTOME', 'TFT', 'IMMUNOLOGIC', 'ONCOGENIC',
+#' or 'All' and any combination of them, such as 'IMMUNOLOGIC+GOBP+KEGG'.
+#' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param limit A integer vector of length two, specifying the limit of geneset size.
+#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' maximal size of gene sets for enrichent analysis.
 #' @param gmtpath The path to gmt file.
 #'
 #' @return A enrichResult instance.
@@ -27,7 +30,7 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:100]
-#' enrichRes <- enrich.HGT(genes)
+#' enrichRes <- enrich.HGT(genes, type = "KEGG")
 #' head(enrichRes@result)
 #'
 #' @import DOSE
@@ -35,58 +38,40 @@
 #'
 #' @export
 
-enrich.HGT = function(geneList, universe=NULL, keytype = "Entrez", type="MsigDB", organism='hsa',
-                      pvalueCutoff = 0.05, pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA){
+enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOBP+GOMF",
+                      organism = 'hsa', pvalueCutoff = 0.25, pAdjustMethod = "BH",
+                      limit = c(3, 50), gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
-  # download Kegg data
-  organism = getOrg(organism)$org
-  #============
-  if(type=="KEGG"){
-    # Prepare pathway annotations
-    pathwayFiles <- c(file.path(system.file("extdata", package = "MAGeCKFlute"),
-                                paste0("pathways_", organism)),
-                      file.path(system.file("extdata", package = "MAGeCKFlute"),
-                                paste0("gene2path_", organism)))
-    if(!all(file.exists(pathwayFiles))){
-      ## Download pathway annotation
-      remfname1 <- paste0("http://rest.kegg.jp/link/pathway/", organism)
-      remfname2 <- paste0("http://rest.kegg.jp/list/pathway/", organism)
-      download.file(remfname1, pathwayFiles[1], quiet = TRUE)
-      download.file(remfname2, pathwayFiles[2], quiet = TRUE)
-    }
-    ## Read and preprocess pathway annotation
-    gene2path = data.table::fread(pathwayFiles[1], header = FALSE, showProgress = FALSE)
-    names(gene2path)=c("Gene","PathwayID")
-    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
-    gene2path$Gene=gsub(paste0(organism,":"), "", gene2path$Gene)
-    pathways = data.table::fread(pathwayFiles[2], header = FALSE, showProgress = FALSE)
-    names(pathways) = c("PathwayID","PathwayName")
-    pathways$PathwayID = gsub("path:","",pathways$PathwayID)
-    pathways = as.data.frame(pathways)
-    pathways$PathwayName = gsub(" - .*", "", pathways$PathwayName)
-    rownames(pathways) = pathways$PathwayID
-    gene2path$PathwayName = pathways[gene2path$PathwayID, "PathwayName"]
-  }
-  if(type %in% c("MsigDB", "Others")){
+
+  ## Prepare gene set annotation
+  if(is.na(gmtpath)){
     msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                       paste0("MsigDB.all.v6.2.entrez.", organism, ".gmt.gz"))
-    if(type == "MsigDB"){ gmtpath = gzfile(msigdb) }
-    gene2path = readGMT(gmtpath, limit = limit)
-    names(gene2path) = c("Gene","PathwayID", "PathwayName")
-    gene2path = gene2path[!is.na(gene2path$Gene), ]
-    pathways = data.frame(PathwayID = unique(gene2path$PathwayID),
-                          PathwayName = unique(gene2path$PathwayName))
+                       paste0(organism, "_c2c3c6c7hgokegg_entrez.gmt.gz"))
+    gmtpath = gzfile(msigdb)
   }
-  ##==========
+  gene2path = readGMT(gmtpath, limit = c(1, 500))
+  close(gmtpath)
+  names(gene2path) = c("Gene","PathwayID", "PathwayName")
+  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+TFT+IMMUNOLOGIC+ONCOGENIC+GOBP+GOCC+GOMF'
+  type = unlist(strsplit(type, "\\+"))
+  idx = gsub("_.*", "", gene2path$PathwayID) %in% type
+  gene2path = gene2path[idx, ]
+  gene2path = gene2path[!is.na(gene2path$Gene), ]
+  idx = duplicated(gene2path$PathwayID)
+  pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
+                        PathwayName = gene2path$PathwayName[!idx],
+                        stringsAsFactors = FALSE)
+
+  ## Gene ID conversion
   if(keytype == "Symbol"){
     allsymbol = names(geneList)
     gene = TransGeneID(allsymbol, "Symbol", "Entrez", organism = organism)
     geneList = geneList[!duplicated(gene)]
     names(geneList) = gene[!duplicated(gene)]
     universe = TransGeneID(universe, "Symbol", "Entrez", organism = organism)
+    universe = universe[!is.na(universe)]
   }
-  universe = universe[!is.na(universe)]
   gene = names(geneList)
   allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
   gene2path$Gene = as.character(gene2path$Gene)
@@ -99,50 +84,46 @@ enrich.HGT = function(geneList, universe=NULL, keytype = "Entrez", type="MsigDB"
   # Start to do the hypergeometric test
   m = length(gene)
   n = length(universe) - m
-  res = data.frame(ID = c(), Description = c(), GeneRatio = c(), BgRatio = c(),
-                   pvalue = c(), geneID = c(),geneName = c(), Count = c())
-  kk = 1
-  for(c in pathways$PathwayID){
-    pathwayGene = gene2path$Gene[gene2path$PathwayID%in%c]
-    idx1 = universe %in% pathwayGene
+  HGT <- function(pid){
+    pGene = gene2path$Gene[gene2path$PathwayID==pid]
+    idx1 = universe %in% pGene
     k = length(universe[idx1])
     idx2 = universe %in% gene
     q = length(universe[idx1&idx2])
     geneID = paste(universe[idx1&idx2], collapse = "/")
-
+    retr <- list(ID = NA, Description = NA, NES = NA, pvalue = NA, GeneRatio = NA,
+                 BgRatio = NA, geneID = NA, geneName = NA, Count = NA)
     if(k>=limit[1] & k<=limit[2] & q>0){
-      pvalue = phyper(q,m,n,k,lower.tail = FALSE)
-      res[kk, "ID"] = c
-      res[kk, "Description"] = pathways$PathwayName[pathways$PathwayID %in% c]
-      res[kk, "GeneRatio"] = paste(q,length(which(idx1)), sep="/")
-      res[kk, "BgRatio"] = paste(length(which(idx1)), length(universe), sep="/")
-      res[kk, "pvalue"] = pvalue
-      np = -log10(pvalue); np[np>10] = 10
-      res[kk,"NES"] = sum(geneList[universe[idx1&idx2]]) * np / (sum(idx1&idx2)^0.5)
-      res[kk,"geneID"] = geneID
-      SYMBOL = allsymbol[universe[idx1&idx2]]
-      geneName = paste(SYMBOL, collapse = "/")
-      res[kk,"geneName"] = geneName
-      res[kk,"Count"] = q
-      kk = kk + 1
+      pvalue = phyper(q, m, n, k, lower.tail = FALSE)
+      retr <- list(ID = pid, Description = pathways$PathwayName[pathways$PathwayID==pid],
+                   NES = sum(geneList[universe[idx1&idx2]]) / log2(sum(idx1&idx2)+1), pvalue = pvalue,
+                   GeneRatio = paste(q, sum(idx1), sep="/"), BgRatio = paste(sum(idx1), length(pGene), sep="/"),
+                   geneID = geneID, geneName = paste(allsymbol[universe[idx1&idx2]], collapse = "/"), Count = q)
     }
+    return(retr)
   }
-  res$p.adjust = p.adjust(res$pvalue,pAdjustMethod)
+  res = sapply(pathways$PathwayID, HGT)
+  res = as.data.frame(t(res), stringsAsFactors = FALSE)
+  res = res[!is.na(res$ID), ]
+  res[, c(1:2, 5:8)] = matrix(unlist(res[, c(1:2, 5:8)]), ncol = 6)
+  res[, c(3:4, 9)] = matrix(unlist(res[, c(3:4, 9)]), ncol = 3)
+  res$p.adjust = p.adjust(res$pvalue, pAdjustMethod)
   res$nLogpvalue = -log10(res$p.adjust)
   idx = which(res$pvalue<=pvalueCutoff & res$p.adjust<=pvalueCutoff)
   if(length(idx)>0){
     res = res[idx, ]
-    res = res[order(res$NES, decreasing = TRUE), ]
-    res = res[, c("ID", "Description", "NES", "pvalue", "p.adjust", "GeneRatio",
-                 "BgRatio", "geneID", "geneName", "Count")]
+    idx = c("ID", "Description", "NES", "pvalue", "p.adjust",
+            "GeneRatio", "BgRatio", "geneID", "geneName", "Count")
+    res = res[, idx]
   }else res=data.frame()
-  # Create enrichResult object
+
+  ## Create enrichResult object
   new("enrichResult",
       result         = res,
       pvalueCutoff   = pvalueCutoff,
       pAdjustMethod  = pAdjustMethod,
       organism       = organism,
-      ontology       = type, ## as.character(x$Category[1]),
+      ontology       = type,
       gene           = as.character(gene),
       keytype        = keytype)
 }

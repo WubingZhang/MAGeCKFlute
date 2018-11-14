@@ -11,13 +11,12 @@
 #' @param prefix A character, indicating the prefix of output file name.
 #' @param enrich_kegg One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
 #' specifying enrichment method used for kegg enrichment analysis.
-#' @param organism A character, specifying organism, such as "hsa" or "Human"(default),
-#' and "mmu" or "Mouse"
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
-#' max size of pathways for enrichent analysis.
+#' @param organism "hsa" or "mmu".
+#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param outdir Output directory on disk
+#' @param outdir Output directory on disk.
 #'
 #' @author Wubing Zhang
 #'
@@ -48,9 +47,9 @@
 #' @export
 
 #===read RRA results=====================================
-FluteRRA <- function(gene_summary, prefix="Test", enrich_kegg="HGT",
-                     organism="hsa", pathway_limit = c(3, 50),
-                     pvalueCutoff=0.25, adjust="BH", outdir="."){
+FluteRRA <- function(gene_summary, prefix = "Test", enrich_kegg = "HGT",
+                     organism = "hsa", pathway_limit = c(3, 50),
+                     pvalueCutoff = 0.25, adjust = "BH", outdir = "."){
   #=========Prepare the running environment=========
   {
     message(Sys.time(), " # Create output dir and pdf file ...")

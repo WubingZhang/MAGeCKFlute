@@ -22,7 +22,7 @@ FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
 
 \item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
 
-\item{organism}{A character, specifying organism, such as "hsa"("Human"), or "mmu"("Mouse").}
+\item{organism}{"hsa" or "mmu".}
 
 \item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
@@ -33,8 +33,8 @@ or how many standard deviation will be used as cutoff.}
 
 \item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
-max size of pathways for enrichent analysis.}
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 

@@ -16,7 +16,7 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT", organism = "hsa",
 
 \item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{organism}{"hsa" or "mmu".}
 
 \item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
 max size of pathways for enrichent analysis.}

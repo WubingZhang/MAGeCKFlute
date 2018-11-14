@@ -10,7 +10,7 @@
 #' @param data A data frame containing columns "diff", with rownames of Entrez IDs.
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
-#' @param organism A character, specifying organism, such as "hsa"("Human") and "mmu"("Mouse").
+#' @param organism "hsa" or "mmu".
 #' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
 #' max size of pathways for enrichent analysis.
 #' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", and "none".
@@ -68,7 +68,7 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
                             plotTitle = "KEGG: GroupA", color = "#e41a1c",
                             pAdjustMethod = adjust, limit = pathway_limit)
   bpA=enrichment_analysis(geneList = geneList, universe = universe,
-                          method = "ORT", type = "BP", organism = organism,
+                          method = "ORT", type = "GOBP+GOMF", organism = organism,
                           pvalueCutoff = pvalue, plotTitle = "BP: GroupA",
                           color = "#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
   if(gsea){
@@ -90,7 +90,7 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
                             plotTitle = "KEGG: GroupB", color = "#377eb8",
                             pAdjustMethod = adjust, limit = pathway_limit)
   bpB = enrichment_analysis(geneList = geneList, universe = universe,
-                            method = "ORT",type = "BP",organism = organism,
+                            method = "ORT",type = "GOBP+GOMF",organism = organism,
                             pvalueCutoff = pvalue, plotTitle = "BP: GroupB",
                             color="#377eb8", pAdjustMethod = adjust, limit = pathway_limit)
   if(gsea){

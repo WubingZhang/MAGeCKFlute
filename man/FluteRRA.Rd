@@ -18,17 +18,16 @@ FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "HGT",
 \item{enrich_kegg}{One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
 specifying enrichment method used for kegg enrichment analysis.}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default),
-and "mmu" or "Mouse"}
+\item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
-max size of pathways for enrichent analysis.}
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{outdir}{Output directory on disk}
+\item{outdir}{Output directory on disk.}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
