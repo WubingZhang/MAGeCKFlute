@@ -34,12 +34,12 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Plots the violin of beta scores in Control and Treatment samples.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+ViolinView(dd, samples=c("dmso", "plx"))
 #or
-ViolinView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+ViolinView(dd[, c("dmso", "plx")])
 
 
 }

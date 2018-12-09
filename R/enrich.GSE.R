@@ -8,20 +8,22 @@
 #' @aliases enrichGSE
 #'
 #' @param geneList A order ranked numeric vector with geneid as names.
-#' @param type A character, indicating geneset category for testing, "MsigDB_c2_h"(default).
-#' @param organism A character, specifying organism, only 'human' is available.
-#' @param minGSSize Minimal size of each geneSet for testing.
-#' @param maxGSSize Maximal size of each geneSet for analyzing.
+#' @param keytype "Entrez" or "Symbol".
+#' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
+#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
+#' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
+#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' maximal size of gene sets for enrichent analysis.
+#' @param gmtpath The path to gmt file.
 #'
 #' @return A enrichResult instance.
 #'
 #' @author Wubing Zhang
 #'
 #' @seealso \code{\link{enrich.HGT}}
-#' @seealso \code{\link{enrich.DAVID}}
-#' @seealso \code{\link{enrich.GOstats}}
 #' @seealso \code{\link{enrich.ORT}}
 #' @seealso \code{\link{enrichment_analysis}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
@@ -38,67 +40,46 @@
 #' @import DOSE
 #' @export
 
-enrich.GSE <- function(geneList, type = "MsigDB_c2_h", organism='hsa', minGSSize = 10, maxGSSize = 500,
-                       pvalueCutoff = 0.25, pAdjustMethod = "BH"){
+enrich.GSE <- function(geneList, keytype = "Entrez", type="GOBP+GOMF", organism='hsa',
+                       pvalueCutoff = 0.25, pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   geneList = sort(geneList, decreasing = TRUE)
-  #geneList:	order ranked geneList
-  if(type == "KEGG"){
-    # download Kegg data
-    organism = getOrg(organism)$org
-    pathwayFiles <- c(file.path(system.file("extdata", package = "MAGeCKFlute"),
-                                paste0("pathways_", organism)),
-                      file.path(system.file("extdata", package = "MAGeCKFlute"),
-                                paste0("gene2path_", organism)))
-    if(!all(file.exists(pathwayFiles))){
-      ## Download pathway annotation
-      remfname1 <- paste0("http://rest.kegg.jp/link/pathway/",organism)
-      remfname2 <- paste0("http://rest.kegg.jp/list/pathway/",organism)
-      download.file(remfname1, pathwayFiles[1], quiet = TRUE)
-      download.file(remfname2, pathwayFiles[2], quiet = TRUE)
-    }
-    ## Read and preprocess pathway annotation
-    gene2path = data.table::fread(pathwayFiles[1], header = FALSE, showProgress = FALSE)
-    names(gene2path)=c("EntrezID","PathwayID")
-    gene2path$PathwayID=gsub("path:","",gene2path$PathwayID)
-    gene2path$EntrezID=gsub(paste0(organism,":"),"",gene2path$EntrezID)
-    pathways=data.table::fread(pathwayFiles[2], header = FALSE, showProgress = FALSE)
-    names(pathways)=c("PathwayID","PathwayName")
-    pathways$PathwayID=gsub("path:","",pathways$PathwayID)
-    pathways$PathwayName=gsub(" - .*", "", pathways$PathwayName)
-    ##==========
-    enrichedRes = GSEA(geneList=geneList, minGSSize = minGSSize, maxGSSize = maxGSSize,
-                       pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod,
-                       TERM2GENE=gene2path[,c("PathwayID","EntrezID")], TERM2NAME=pathways)
+
+  ## Gene ID conversion
+  if(keytype == "Symbol"){
+    allsymbol = names(geneList)
+    gene = TransGeneID(allsymbol, "Symbol", "Entrez", organism = organism)
+    geneList = geneList[!duplicated(gene)]
+    names(geneList) = gene[!duplicated(gene)]
   }
 
-  if(type == "MsigDB_c2_h"){
-    gene2path = read.gmt(system.file("extdata", "MsigDB_c2_h.gmt", package = "MAGeCKFlute"))
-    enrichedRes = GSEA(geneList=geneList, minGSSize = minGSSize, maxGSSize = maxGSSize,
-                       pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod,
-                       TERM2GENE=gene2path)
+  ## Prepare gene set annotation
+  if(is.na(gmtpath)){
+    msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                       paste0(organism, "_msig_entrez.gmt.gz"))
+    gmtpath = gzfile(msigdb)
   }
-  if(type %in% c("BP", "CC", "MF")){
-    orgdb = getOrg(organism)$pkg
-    enrichedRes = gseGO(geneList=geneList, ont = type, OrgDb=orgdb,
-                        minGSSize = minGSSize, maxGSSize = maxGSSize,
-                        pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod)
-  }
+  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
+  close(gmtpath)
+  names(gene2path) = c("Gene","PathwayID", "PathwayName")
+  gene2path$PathwayName = toupper(gene2path$PathwayName)
+  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
+  type = unlist(strsplit(type, "\\+"))
+  idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
+  gene2path = gene2path[idx, ]
+  gene2path = gene2path[!is.na(gene2path$Gene), ]
+  idx = duplicated(gene2path$PathwayID)
+  pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
+                        PathwayName = gene2path$PathwayName[!idx])
 
-  if(type == "DO"){
-    enrichedRes = gseDO(geneList=geneList, minGSSize = minGSSize, maxGSSize = maxGSSize,
-                        pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod)
-  }
-  if(type == "MKEGG"){
-    enrichedRes = gseMKEGG(geneList=geneList, organism = organism, minGSSize = minGSSize, maxGSSize = maxGSSize,
-                           pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod)
-  }
-  if(type == "NCG"){
-    enrichedRes = gseNCG(geneList=geneList, minGSSize = minGSSize, maxGSSize = maxGSSize,
-                           pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod)
-  }
+  ## Enrichment analysis
+  enrichedRes = GSEA(geneList = geneList, minGSSize = limit[1], maxGSSize = limit[2],
+                     pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod,
+                     TERM2GENE = gene2path[,c("PathwayID","Gene")], TERM2NAME = pathways)
+
+  ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     geneID = strsplit(enrichedRes@result$core_enrichment, "/")
     allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
@@ -107,6 +88,10 @@ enrich.GSE <- function(geneList, type = "MsigDB_c2_h", organism='hsa', minGSSize
       paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)
+    enrichedRes@result$Count = unlist(lapply(geneID, length))
+    enrichedRes@result = enrichedRes@result[, c("ID", "Description", "NES", "pvalue", "p.adjust",
+                                                "core_enrichment", "geneName", "Count")]
+    colnames(enrichedRes@result)[6] = "geneID"
   }
 
   return(enrichedRes)

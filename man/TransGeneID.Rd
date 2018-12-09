@@ -7,20 +7,19 @@
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
 TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
-  organism = "hsa", useBiomart = FALSE, ensemblHost = "www.ensembl.org")
+  organism = "hsa", useBiomart = FALSE,
+  ensemblHost = "www.ensembl.org")
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}
 
-\item{fromType}{The input ID type, one of "Symbol" (default), "Entrez",
-"Ensembl", "FULLNAME" and "TYPE". you can e.g. do: mart = useMart("ensembl", dataset="hsapiens_gene_ensembl"),
-followed by listAttributes(mart) to get valid attribute names.}
+\item{fromType}{The input ID type, one of "Symbol" (default), "Entrez" and "Ensembl";
+you can also input other valid attribute names for biomart.}
 
-\item{toType}{The output ID type, one of "Symbol", "Entrez" (default),
-"Ensembl", "FULLNAME" and "TYPE".}
+\item{toType}{The output ID type, one of "Symbol", "Entrez" (default), "Ensembl";
+you can also input other valid attribute names for biomart.}
 
-\item{organism}{A character, specifying organism, one of "hsa"(or 'Human'),
-"mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
+\item{organism}{One of "hsa"(or 'Human'), "mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
 
 \item{useBiomart}{Boolean, indicating whether use Biomart to do the transformation.}
 
@@ -34,10 +33,10 @@ A character vector, named by unique input gene ids.
 Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
-data(MLE_Data)
-TransGeneID(MLE_Data$Gene[1:10], organism="hsa")
-TransGeneID(MLE_Data$Gene[1:10], organism="hsa", useBiomart = TRUE,
-            fromType = "hgnc_symbol", toType = "entrezgene")
+data(mle.gene_summary)
+TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
+TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa", useBiomart = TRUE)
+
 }
 \seealso{
 \code{\link[pathview]{eg2id}}

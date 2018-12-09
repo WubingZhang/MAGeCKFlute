@@ -6,26 +6,31 @@
 \alias{Hypergeometric}
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
-enrich.HGT(gene, universe = NULL, type = "KEGG", organism = "hsa",
-  pvalueCutoff = 0.25, pAdjustMethod = "BH", minGSSize = 2,
-  maxGSSize = 500)
+enrich.HGT(geneList, universe = NULL, keytype = "Entrez",
+  type = "GOBP+GOMF", organism = "hsa", pvalueCutoff = 0.25,
+  pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA)
 }
 \arguments{
-\item{gene}{A character vector, specifying the genelist to do enrichment analysis.}
+\item{geneList}{A numeric vector with gene as names.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
-\item{type}{Geneset category for testing, KEGG(default).}
+\item{keytype}{"Entrez" or "Symbol".}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
+'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+
+\item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
 \item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{minGSSize}{Minimal size of each geneSet for testing.}
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
 
-\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
+\item{gmtpath}{The path to gmt file.}
 }
 \value{
 A enrichResult instance.
@@ -35,16 +40,12 @@ Do enrichment analysis using Hypergeometric test
 }
 \examples{
 data(geneList, package = "DOSE")
-genes <- names(geneList)[1:100]
-enrichRes <- enrich.HGT(genes)
+genes <- geneList[1:100]
+enrichRes <- enrich.HGT(genes, type = "KEGG")
 head(enrichRes@result)
 
 }
 \seealso{
-\code{\link{enrich.GOstats}}
-
-\code{\link{enrich.DAVID}}
-
 \code{\link{enrich.GSE}}
 
 \code{\link{enrich.ORT}}
@@ -54,5 +55,5 @@ head(enrichRes@result)
 \code{\link[DOSE]{enrichResult-class}}
 }
 \author{
-Feizhen Wu
+Wubing Zhang
 }

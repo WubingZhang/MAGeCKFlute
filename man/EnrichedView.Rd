@@ -6,14 +6,16 @@
 \alias{enrichview}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, plotTitle = NULL, color = "#3f90f7",
-  termNum = 15, charLength = 40, filename = NULL, width = 5,
-  height = 4, ...)
+EnrichedView(enrichment, plotTitle = NULL, type = "All",
+  color = "#3f90f7", termNum = 15, charLength = 40,
+  filename = NULL, width = 7, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.}
 
 \item{plotTitle}{Same as 'title' in 'plot'.}
+
+\item{type}{"All" (Default), enriched geneset category for visualization.}
 
 \item{color}{Color of nodes.}
 
@@ -38,10 +40,8 @@ Grid plot for enriched terms
 }
 \examples{
 data(geneList, package = "DOSE")
-genes <- names(geneList)[1:100]
-enrichRes <- enrich.HGT(genes)
+enrichRes <- enrich.HGT(geneList[1:100])
 EnrichedView(enrichment=enrichRes@result)
-
 }
 \seealso{
 \code{\link{KeggPathwayView}}

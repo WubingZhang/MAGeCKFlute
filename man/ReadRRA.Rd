@@ -4,26 +4,26 @@
 \name{ReadRRA}
 \alias{ReadRRA}
 \alias{readrra}
-\title{Read MAGeCK-RRA data}
+\title{Read gene summary file in MAGeCK-RRA results}
 \usage{
 ReadRRA(gene_summary, organism = "hsa")
 }
 \arguments{
-\item{gene_summary}{A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
+\item{gene_summary}{A file path or a data frame of gene summary data.}
 
 \item{organism}{Character, KEGG species code, or the common species name, used to determine
-the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
+the gene annotation package. For all potential values check: data(bods); bods. Default org = "hsa",
 and can also be "human" (case insensitive).}
 }
 \value{
-A data frame including four columns, named "Official", "neg.fdr", "pos.fdr" and "ENTREZID".
+A data frame including four columns, named "Official", "EntrezID", "LFC" and "FDR".
 }
 \description{
-Read pvalue of gene selection from file or data frame
+Read gene summary file in MAGeCK-RRA results
 }
 \examples{
-data(RRA_Data)
-dd.rra = ReadRRA(RRA_Data, organism="hsa")
+data(rra.gene_summary)
+dd.rra = ReadRRA(rra.gene_summary, organism = "hsa")
 head(dd.rra)
 
 }

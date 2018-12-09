@@ -25,10 +25,8 @@
 #'
 #'
 #' @examples
-#' gg = data.frame(Label = c("Day0_R1", "Day0_R2", "Day7_R1", "Day7_R2"),
-#'                           Reads = c(62818064, 47289074, 51190401, 58686580))
-#' gg$Reads = gg$Reads / sum(gg$Reads)
-#' IdentBarView(gg, x="Label", y="Reads")
+#' data(countsummary)
+#' IdentBarView(countsummary, x="Label", y="Reads")
 #'
 #' @import ggplot2
 #' @export
@@ -51,7 +49,7 @@ IdentBarView <- function(gg, x = "x", y = "y", fill = c("#CF3C2B", "#394E80"),
                 panel.border = element_blank(), panel.background = element_blank())
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

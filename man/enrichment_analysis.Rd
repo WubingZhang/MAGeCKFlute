@@ -7,32 +7,31 @@
 \title{Enrichment analysis}
 \usage{
 enrichment_analysis(geneList, universe = NULL, method = "ORT",
-  type = "KEGG", organism = "hsa", pvalueCutoff = 0.25,
-  qvalueCutoff = 0.2, pAdjustMethod = "BH", minGSSize = 2,
-  maxGSSize = 500, plotTitle = NULL, color = "#3f90f7")
+  keytype = "Entrez", type = "KEGG", organism = "hsa",
+  pvalueCutoff = 0.25, pAdjustMethod = "BH", limit = c(3, 50),
+  plotTitle = NULL, color = "#3f90f7")
 }
 \arguments{
-\item{geneList}{A character vector or a ranked numeric vector(for GSEA) with names of geneid,
-specifying the genelist to do enrichment analysis.}
+\item{geneList}{A numeric vector with gene as names.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
-\item{method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), "DAVID",
-"GOstats", and "HGT"(HyperGemetric test), or index from 1 to 5}
+\item{method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
-\item{type}{Geneset category for testing, KEGG(default).}
+\item{keytype}{"Entrez" or "Symbol".}
 
-\item{organism}{A character, specifying organism, such as "hsa" or "Human"(default), and "mmu" or "Mouse"}
+\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
+'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+
+\item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{qvalueCutoff}{Qvalue cutoff.}
-
 \item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
-\item{minGSSize}{Minimal size of each geneSet for testing.}
-
-\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
 
 \item{plotTitle}{Same as 'title' in 'plot'.}
 
@@ -47,16 +46,12 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-genes <- names(geneList)[1:100]
+genes <- geneList[1:100]
 keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
 print(keggA$gridPlot)
 
 }
 \seealso{
-\code{\link{enrich.GOstats}}
-
-\code{\link{enrich.DAVID}}
-
 \code{\link{enrich.GSE}}
 
 \code{\link{enrich.ORT}}

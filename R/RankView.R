@@ -26,11 +26,10 @@
 #'
 #'
 #' @examples
-#' data(MLE_Data)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' rankdata = dd$PLX7_R1 - dd$D7_R1
-#' names(rankdata) = rownames(dd)
+#' data(rra.gene_summary)
+#' rra = ReadRRA(rra.gene_summary, organism = "hsa")
+#' rankdata = rra$LFC
+#' names(rankdata) = rra$Official
 #' RankView(rankdata)
 #'
 #' @importFrom ggrepel geom_label_repel
@@ -38,8 +37,8 @@
 #' @export
 #'
 
-RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rankdata), sd(rankdata)),
-                     main=NULL,filename=NULL, width=5, height=4, ...){
+RankView <- function(rankdata, genelist=NA, top=20, bottom=20, cutoff=c(-sd(rankdata), sd(rankdata)),
+                     main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   message(Sys.time(), " # Rank genes and plot...")
   data = data.frame(Gene = names(rankdata), diff = rankdata, stringsAsFactors=FALSE)
@@ -50,7 +49,7 @@ RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rank
 
 
   idx=(data$Rank<=bottom) | (data$Rank>(max(data$Rank)-top)) | (data$Gene %in% genelist)
-  mycolour = c("no"="darkgray",  "up"="#e41a1c","down"="#377eb8")
+  mycolour = c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
   p = ggplot()
   p = p + geom_point(aes(x=diff,y=Rank,color=factor(data$group)),data=data,size=0.5)
   p = p + scale_color_manual(values=mycolour)
@@ -72,7 +71,7 @@ RankView <- function(rankdata, genelist=c(), top=20, bottom=20,cutoff=c(-sd(rank
   p = p + theme(legend.position="none")#+ylim(-1000,7000)
 
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height=height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }
   return(p)
 }

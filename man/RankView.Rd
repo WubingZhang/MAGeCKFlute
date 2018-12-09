@@ -6,9 +6,9 @@
 \alias{rankview}
 \title{View the rank of gene points}
 \usage{
-RankView(rankdata, genelist = c(), top = 20, bottom = 20,
-  cutoff = c(-sd(rankdata), sd(rankdata)), main = NULL, filename = NULL,
-  width = 5, height = 4, ...)
+RankView(rankdata, genelist = NA, top = 20, bottom = 20,
+  cutoff = c(-sd(rankdata), sd(rankdata)), main = NULL,
+  filename = NULL, width = 5, height = 4, ...)
 }
 \arguments{
 \item{rankdata}{Numeric vector, with gene as names.}
@@ -39,11 +39,10 @@ Rank all genes according to beta score deviation, and label top and bottom meani
 Some other interested genes can be labeled too.
 }
 \examples{
-data(MLE_Data)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-rankdata = dd$PLX7_R1 - dd$D7_R1
-names(rankdata) = rownames(dd)
+data(rra.gene_summary)
+rra = ReadRRA(rra.gene_summary, organism = "hsa")
+rankdata = rra$LFC
+names(rankdata) = rra$Official
 RankView(rankdata)
 
 }

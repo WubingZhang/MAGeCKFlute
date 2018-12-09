@@ -10,11 +10,14 @@
 #' @param scale Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.
 #'
 #' @return A numeric value.
+#' @examples
+#' CutoffCalling(rnorm(10000))
+#' @export
 
 CutoffCalling=function(d, scale=FALSE){
   param=1
   if(class(scale)=="logical" & scale){
-    param=round(length(d) / 18000,digits = 1)
+    param = round(length(d) / 20000, digits = 1)
   }else if(class(scale)=="numeric"){param = scale}
 
   Control_mean=0

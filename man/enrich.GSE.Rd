@@ -6,24 +6,29 @@
 \alias{enrichGSE}
 \title{GSEA}
 \usage{
-enrich.GSE(geneList, type = "MsigDB_c2_h", organism = "hsa",
-  minGSSize = 10, maxGSSize = 500, pvalueCutoff = 0.25,
-  pAdjustMethod = "BH")
+enrich.GSE(geneList, keytype = "Entrez", type = "GOBP+GOMF",
+  organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
+  limit = c(3, 50), gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
 
-\item{type}{A character, indicating geneset category for testing, "MsigDB_c2_h"(default).}
+\item{keytype}{"Entrez" or "Symbol".}
 
-\item{organism}{A character, specifying organism, only 'human' is available.}
+\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
+'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
 
-\item{minGSSize}{Minimal size of each geneSet for testing.}
-
-\item{maxGSSize}{Maximal size of each geneSet for analyzing.}
+\item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
 \item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
+
+\item{gmtpath}{The path to gmt file.}
 }
 \value{
 A enrichResult instance.
@@ -41,10 +46,6 @@ data(geneList, package = "DOSE")
 }
 \seealso{
 \code{\link{enrich.HGT}}
-
-\code{\link{enrich.DAVID}}
-
-\code{\link{enrich.GOstats}}
 
 \code{\link{enrich.ORT}}
 

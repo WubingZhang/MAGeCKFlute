@@ -7,7 +7,7 @@
 \title{Scatter plot}
 \usage{
 ScatterView(beta, ctrlname = "Control", treatname = "Treatment",
-  scale_cutoff = 1, main = NULL, filename = NULL, width = 5,
+  scale_cutoff = 2, main = NULL, filename = NULL, width = 5,
   height = 4, ...)
 }
 \arguments{
@@ -39,10 +39,10 @@ Scatter plot of all genes, in which x-axis is mean beta score in Control samples
 is mean beta scores in Treatment samples.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+ScatterView(dd, ctrlname = "dmso", treatname = "plx")
 
 
 }

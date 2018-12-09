@@ -12,10 +12,10 @@ KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id,
   split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE,
   node.sum = "sum", discrete = list(gene = FALSE, cpd = FALSE),
   limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10),
-  both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene = NULL,
-  cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
-  mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red", cpd =
-  "yellow"), na.col = "transparent", ...)
+  both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene =
+  NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
+  mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red",
+  cpd = "yellow"), na.col = "transparent", ...)
 }
 \arguments{
 \item{gene.data}{Either vector (single sample) or a matrix-like data (multiple sample).

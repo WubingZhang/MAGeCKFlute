@@ -27,10 +27,10 @@
 #'
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' MAView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #' @export
 
@@ -70,7 +70,7 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                      label=paste(Mid, IQR, sep="\n"))
   }
   if(!is.null(filename)){
-    ggsave(plot=p, filename=filename, units = "in", dpi=600, width=width, height =height, ...)
+    ggsave(plot=p, filename=filename, units = "in", width=width, height =height, ...)
   }
   return(p)
 }

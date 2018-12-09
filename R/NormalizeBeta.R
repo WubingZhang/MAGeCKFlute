@@ -30,19 +30,15 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' tmp = TransGeneID(rownames(dd), "Symbol", "Entrez")
-#' dd = dd[!(duplicated(tmp)|is.na(tmp)), ]
-#' rownames(dd) = tmp[!(duplicated(tmp)|is.na(tmp))]
-#' samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
 #' #Cell Cycle normalization
-#' dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
+#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 #' head(dd_essential)
 #'
 #' #Optional loess normalization
-#' dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
+#' dd_loess = NormalizeBeta(dd, samples=c("dmso", "plx"), method="loess")
 #' head(dd_loess)
 #'
 #'
@@ -105,8 +101,8 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
 #' @seealso \code{\link{NormalizeBeta}}
 #'
 #' @examples
-#' beta = ReadBeta(MLE_Data, organism="hsa")
-#' beta_loess = normalize.loess(beta[,c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+#' beta = ReadBeta(mle.gene_summary, organism="hsa")
+#' beta_loess = normalize.loess(beta[,c("dmso", "plx")])
 #'
 #' @export
 #'

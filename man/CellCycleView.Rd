@@ -6,13 +6,15 @@
 \alias{CellCycle,MAGeCKFlute-method}
 \title{Estimate cell cycle time for all samples compared to control sample and view.}
 \usage{
-CellCycleView(beta, ctrlname = "Control", main = NULL, filename = NULL,
+CellCycleView(beta, ctrlname, treatname, main = NULL, filename = NULL,
   width = 5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, which has columns of \code{ctrlname} and other samples.}
 
-\item{ctrlname}{Character vector, specifying the name of control sample.}
+\item{ctrlname}{A character, specifying the names of control samples.}
+
+\item{treatname}{A character, specifying the name of treatment samples.}
 
 \item{main}{As in 'plot'.}
 
@@ -33,10 +35,10 @@ Estimate cell cycle time in different samples by linear fitting of beta scores, 
 in which x-axis is control beta score and y-axis is beta score of all samples.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-CellCycleView(dd, ctrlname = c("D7_R1", "D7_R2"))
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+CellCycleView(dd, ctrlname = "dmso", treatname = "plx")
 
 }
 \author{
