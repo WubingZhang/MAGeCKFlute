@@ -31,7 +31,7 @@
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:100]
 #' enrichRes <- enrich.HGT(genes, type = "KEGG")
-#' head(enrichRes@result)
+#' head(as.data.frame(enrichRes))
 #'
 #' @import DOSE
 #' @importFrom data.table fread

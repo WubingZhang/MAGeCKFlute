@@ -16,9 +16,9 @@
 
 CutoffCalling=function(d, scale=FALSE){
   param=1
-  if(class(scale)=="logical" & scale){
+  if(is.logical(scale) & scale){
     param = round(length(d) / 20000, digits = 1)
-  }else if(class(scale)=="numeric"){param = scale}
+  }else if(is.numeric(scale)){param = scale}
 
   Control_mean=0
   sorted_beta=sort(abs(d))

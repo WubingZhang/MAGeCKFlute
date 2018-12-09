@@ -25,9 +25,9 @@
 
 ReadRRA <- function(gene_summary, organism = "hsa"){
   message(Sys.time(), " # Read gene summary file ...")
-  if(class(gene_summary)=="character" && file.exists(gene_summary)){
+  if(is.character(gene_summary) && file.exists(gene_summary)){
     dd = read.table(file = gene_summary, header = TRUE)
-  }else if(class(gene_summary)=="data.frame" &&
+  }else if(is.data.frame(gene_summary) &&
            all(c("id", "neg.goodsgrna", "neg.lfc", "neg.fdr", "pos.goodsgrna","pos.fdr") %in% colnames(gene_summary))){
     dd = gene_summary
   }else{

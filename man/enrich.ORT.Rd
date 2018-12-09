@@ -42,7 +42,7 @@ Do enrichment analysis using over-representation test
 data(geneList, package = "DOSE")
 genes <- geneList[1:100]
 enrichedRes <- enrich.ORT(genes)
-head(enrichedRes@result)
+head(as.data.frame(enrichedRes))
 
 }
 \seealso{

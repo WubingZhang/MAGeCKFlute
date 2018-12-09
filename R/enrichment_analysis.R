@@ -50,7 +50,7 @@ enrichment_analysis = function(geneList, universe = NULL, method = "ORT", keytyp
   type = toupper(type[1])
   methods = c("ORT", "GSEA", "HGT")
   names(methods) = toupper(methods)
-  if(class(method)=="character") method = toupper(method)
+  if(is.character(method)) method = toupper(method)
   method = methods[method]
 
   # The number of input genes < limit

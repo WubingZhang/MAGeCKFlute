@@ -2,10 +2,6 @@
 knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       dev="png", message=FALSE, error=FALSE, warning=TRUE)
 
-## ----install, eval=FALSE-------------------------------------------------
-#  source("https://bioconductor.org/biocLite.R")
-#  biocLite("MAGeCKFlute")
-
 ## ----library, eval=TRUE--------------------------------------------------
 library(MAGeCKFlute)
 
@@ -62,24 +58,13 @@ universe = dd.rra$EntrezID
 geneList= dd.rra$LFC
 names(geneList) = universe
 
-geneList = sort(geneList)
-kegg.neg = enrichment_analysis(geneList = geneList[1:100], universe = universe, 
-                             type = "KEGG", plotTitle = "KEGG: neg")
-bp.neg = enrichment_analysis(geneList = geneList[1:100], universe = universe, 
-                           type = "GOBP+GOMF+GOCC", plotTitle="GOBP+GOMF+GOCC: neg")
-geneList = sort(geneList, decreasing = TRUE)
-kegg.pos=enrichment_analysis(geneList = geneList[1:100], universe=universe, 
-                             type = "KEGG", plotTitle="KEGG: pos")
-bp.pos=enrichment_analysis(geneList = geneList[1:100], universe=universe, 
-                           type = "GOBP+GOMF+GOCC", plotTitle="GOBP+GOMF+GOCC: pos")
+enrich = enrich.GSE(geneList = geneList, type = "All")
 
-## ----enrichedGeneView, fig.height=5, fig.width=10------------------------
-EnrichedGeneView(enrichment=kegg.neg$enrichRes@result, geneList, keytype = "Entrez")
-EnrichedGeneView(enrichment=kegg.pos$enrichRes@result, geneList, keytype = "Entrez")
-EnrichedGSEView(enrichment=kegg.neg$enrichRes@result, decreasing = FALSE)
-EnrichedGSEView(enrichment=kegg.pos$enrichRes@result, decreasing = TRUE)
-EnrichedView(enrichment=kegg.neg$enrichRes@result, color = "#377eb8")
-EnrichedView(enrichment=kegg.pos$enrichRes@result, color = "#e41a1c")
+## ----enrichedGeneView, fig.height=5, fig.width=15------------------------
+EnrichedGeneView(as.data.frame(enrich), geneList, keytype = "Entrez")
+EnrichedGSEView(as.data.frame(enrich), decreasing = FALSE)
+EnrichedGSEView(as.data.frame(enrich), decreasing = TRUE)
+EnrichedView(as.data.frame(enrich))
 
 ## ----CheckMLERes---------------------------------------------------------
 library(MAGeCKFlute)
@@ -155,25 +140,25 @@ geneList = sort(geneList, decreasing = TRUE)
 universe=rownames(groupAB)
 ## Do enrichment analysis using HGT method
 keggA = enrich.HGT(geneList[1:100], universe, organism = "hsa", limit = c(3, 50))
-keggA_grid = EnrichedGSEView(keggA@result, plotTitle = "Positive selection")
+keggA_grid = EnrichedGSEView(as.data.frame(keggA), plotTitle = "Positive selection")
 
 ## look at the results
-head(keggA@result)
+head(as.data.frame(keggA))
 print(keggA_grid)
 
 
 ## ----GSEA, fig.height=5, fig.width=10------------------------------------
 ## Do enrichment analysis using GSEA method
 gseA = enrich.GSE(geneList, type = "KEGG", organism = "hsa", pvalueCutoff = 1)
-gseA_grid = EnrichedGSEView(gseA@result, plotTitle = "Positive selection")
+gseA_grid = EnrichedGSEView(as.data.frame(gseA), plotTitle = "Positive selection")
 
 #should same as
-head(gseA@result)
+head(as.data.frame(gseA))
 print(gseA_grid)
 
 ## ----pathview, fig.height=10, fig.width=20-------------------------------
 genedata = dd_essential[,c("Control","Treatment")]
-keggID = gsub("KEGG_", "", gseA@result$ID[1])
+keggID = gsub("KEGG_", "", as.data.frame(gseA)$ID[1])
 #The pathway map will be located on current workspace
 KeggPathwayView(gene.data = genedata, pathway.id = keggID, species = "hsa")
 ##Read the figure into R
@@ -196,12 +181,12 @@ universe=rownames(Square9)
 #====KEGG_enrichment=====
 kegg1=enrich.ORT(geneList = geneList, universe = universe, type = "KEGG", limit = c(3, 50))
 ## look at the results
-head(kegg1@result)
-EnrichedGSEView(kegg1@result)
+head(as.data.frame(kegg1))
+EnrichedGSEView(as.data.frame(kegg1))
 
 ## ----pathview2, eval=FALSE-----------------------------------------------
 #  genedata = dd_essential[, c("Control","Treatment")]
-#  keggID = gsub("KEGG_", "", kegg1@result$ID[1])
+#  keggID = gsub("KEGG_", "", as.data.frame(kegg1)$ID[1])
 #  KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
 #  ##Read the figure into R
 #  pngname=paste0(keggID, ".pathview.multi.png")

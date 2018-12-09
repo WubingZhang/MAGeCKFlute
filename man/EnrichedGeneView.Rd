@@ -41,7 +41,7 @@ Visualize selected genes in enriched genesets
 \examples{
 data(geneList, package = "DOSE")
 enrichRes <- enrich.GSE(geneList)
-EnrichedGeneView(enrichment=enrichRes@result, geneList, keytype = "Entrez")
+EnrichedGeneView(enrichment=as.data.frame(enrichRes), geneList, keytype = "Entrez")
 }
 \author{
 Wubing Zhang

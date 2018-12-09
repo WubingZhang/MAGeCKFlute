@@ -33,10 +33,10 @@
 #'
 
 BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
-  if(class(mat)=="character" && file.exists(mat)){
+  if(is.character(mat) && file.exists(mat)){
     mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
-  if(class(batchMat)=="character" && file.exists(batchMat)){
+  if(is.character(batchMat) && file.exists(batchMat)){
     batchMat = read.table(batchMat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
   requireNamespace("sva")

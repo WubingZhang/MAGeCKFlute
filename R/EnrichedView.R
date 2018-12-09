@@ -123,7 +123,7 @@ EnrichedView=function(enrichment, plotTitle = NULL, type = "All", color = "#3f90
 #' \dontrun{
 #'     data(geneList, package = "DOSE")
 #'     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-#'     EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+#'     EnrichedGSEView(as.data.frame(enrichRes), plotTitle = "GSEA Analysis")
 #' }
 #' @export
 EnrichedGSEView = function(enrichment, decreasing = TRUE, plotTitle = NULL,

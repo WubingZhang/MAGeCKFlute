@@ -50,7 +50,7 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
   if(is.null(samples)) samples = setdiff(colnames(beta))
 
   if(method=="cell_cycle"){
-    if(!is.null(posControl) && class(posControl)=="character" && file.exists(posControl)[1]){
+    if(!is.null(posControl) && is.character(posControl) && file.exists(posControl)[1]){
       tmp = read.table(posControl, sep = "\t", header = FALSE)
       posControl = as.character(unlist(tmp))
     }else{

@@ -319,7 +319,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     }
     if (kegg.native) {
       node.data = try(node.info(xml.file[i]), silent =TRUE)
-      if (class(node.data) == "try-error") {
+      if (is(node.data, "try-error")) {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         warning(warn.msg)
         return(invisible(0))
@@ -342,7 +342,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                                    split.group),
                 silent =TRUE)
       node.data = try(node.info(gR1), silent =TRUE)
-      if (class(node.data) == "try-error") {
+      if (is(node.data, "try-error")) {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         warning(warn.msg)
         return(invisible(0))

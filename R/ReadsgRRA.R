@@ -19,9 +19,9 @@
 #'
 ReadsgRRA <- function(sgRNA_summary){
   message(Sys.time(), " # Read sgRNA summary file ...")
-  if(class(sgRNA_summary)=="character" && file.exists(sgRNA_summary)){
+  if(is.character(sgRNA_summary) && file.exists(sgRNA_summary)){
     dd = read.table(file = sgRNA_summary, header = TRUE, stringsAsFactors = FALSE)
-  }else if(class(sgRNA_summary)=="data.frame" &&
+  }else if(is.data.frame(sgRNA_summary) &&
            all(c("sgrna", "Gene", "LFC", "FDR") %in% colnames(sgRNA_summary))){
     dd = sgRNA_summary
   }else{

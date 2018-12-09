@@ -42,7 +42,7 @@ Grid plot for enriched terms in GSEA
 \dontrun{
     data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-    EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
+    EnrichedGSEView(as.data.frame(enrichRes), plotTitle = "GSEA Analysis")
 }
 }
 \seealso{

@@ -22,14 +22,14 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' enrichRes <- enrich.GSE(geneList)
-#' EnrichedGeneView(enrichment=enrichRes@result, geneList, keytype = "Entrez")
+#' EnrichedGeneView(enrichment=as.data.frame(enrichRes), geneList, keytype = "Entrez")
 #' @export
 
 EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff = c(-log2(1.5), log2(1.5)),
                           top = 5, bottom = 5, charLength = 40, filename = NULL, width = 7, height = 5, ...){
   # No enriched pathways
   if(is.null(enrichment) || nrow(enrichment)==0){
-    p1 = noEnrichPlot(plotTitle)
+    p1 = noEnrichPlot("No enriched terms")
     if(!is.null(filename)){
       ggsave(plot=p1,filename=filename, units = "in", width=width, height=height, ...)
     }
