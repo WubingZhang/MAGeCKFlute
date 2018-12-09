@@ -150,9 +150,6 @@
 #' @import pathview
 #'
 #' @export
-
-
-
 KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                           species = "hsa", kegg.dir = ".",
                           cpd.idtype = "kegg",gene.idtype ="ENTREZ",
@@ -322,7 +319,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     }
     if (kegg.native) {
       node.data = try(node.info(xml.file[i]), silent =TRUE)
-      if (class(node.data) == "try-error") {
+      if (is(node.data, "try-error")) {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         warning(warn.msg)
         return(invisible(0))
@@ -345,7 +342,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                                    split.group),
                 silent =TRUE)
       node.data = try(node.info(gR1), silent =TRUE)
-      if (class(node.data) == "try-error") {
+      if (is(node.data, "try-error")) {
         warn.msg = sprintf(warn.fmt, xml.file[i])
         warning(warn.msg)
         return(invisible(0))
@@ -475,14 +472,16 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #'  of Control and Treatment represent gene score in Control and Treatment sample.
 #' @param pathways character vector, the KEGG pathway ID(s), usually 5 digit, may also
 #' include the 3 letter KEGG species code.
+#' @param top integer, specifying how many top enriched pathways to be visualized.
+#' @param ncol integer, specifying how many column of figures to be arranged in each page.
+#' @param title  optional string, or grob.
+#' @param sub optional string, or grob.
 #' @param organism character, either the kegg code, scientific name or the common name of
 #' the target species. This applies to both pathway and gene.data or cpd.data. When KEGG
 #' ortholog pathway is considered, species="ko". Default species="hsa", it is equivalent
 #' to use either "Homo sapiens" (scientific name) or "human" (common name).
 #' @param view_allpath boolean, specifying whether view all pathways. Default view_allpath='FALSE',
-#'  and only plot top 4 enriched pathways.
-#' @param title  optional string, or grob.
-#' @param sub optional string, or grob.
+#'  and only plot top enriched pathways.
 #' @param output Path to save plot to.
 #' @param path.archive character, the directory of KEGG pathway data file (.xml) and image file
 #'  (.png). Users may supply their own data files in the same format and naming convention
@@ -498,25 +497,20 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @seealso \code{\link{KeggPathwayView}}
 #'
 #' @examples
-#' \dontrun{
-#'   data(MLE_Data)
-#'   # Read beta score from gene summary table in MAGeCK MLE results
-#'   dd = ReadBeta(MLE_Data, organism="hsa")
-#'   tmp = TransGeneID(rownames(dd), "Symbol", "Entrez", organism = "hsa")
-#'   idx = is.na(tmp) | duplicated(tmp)
-#'   dd = dd[!idx,]
-#'   rownames(dd) = tmp[!idx]
-#'   dd$Control = rowMeans(dd[, 1:2])
-#'   dd$Treatment = rowMeans(dd[, 3:4])
-#'   arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
-#' }
+#' data(mle.gene_summary)
+#' # Read beta score from gene summary table in MAGeCK MLE results
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' colnames(dd)[3:4] = c("Control", "Treatment")
+#' arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 #'
 #' @importFrom png readPNG
 #' @importFrom grid grid.raster
+#' @export
 
-arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath= FALSE,
-                        title="Group A", sub="Negative control normalized",
-                        output=".", path.archive=".", kegg.native = TRUE){
+arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
+                            title="Group A", sub="Negative control normalized",
+                            organism='hsa', view_allpath= FALSE,
+                            output=".", path.archive = ".", kegg.native = TRUE){
   requireNamespace("png", quietly=TRUE) || stop("need png package")
   requireNamespace("grid", quietly=TRUE) || stop("need grid package")
   #====No pathways supplied======================
@@ -528,10 +522,10 @@ arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath
     return(0)
   }
 
-  if(length(pathways)<4 || view_allpath){
+  if(length(pathways)<top || view_allpath){
     keggID=pathways
   }else{
-    keggID=pathways[1:4]
+    keggID=pathways[1:top]
   }
 
   message(Sys.time(), " # Starting plot kegg pathways for ", sub, title)
@@ -556,7 +550,7 @@ arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath
   suppressWarnings(file.remove(failMulti))
 
   if(all(boo)){
-    pngnames = file.path(output, paste0(title,"_",sub,"_",allpngnames))
+    pngnames = file.path(output, paste0(title, "_", sub, "_", allpngnames))
     idx=file.exists(pngnames)
     pngnames = pngnames[idx]
   }else{pngnames=c()}
@@ -567,15 +561,10 @@ arrangePathview <- function(genelist, pathways=c(), organism='hsa', view_allpath
   }else
     thePlots = list()
 
-  if(length(thePlots)==1){
-    do.call(grid.arrange, c(thePlots, ncol = 1, top=title, bottom=sub))
-  }else if(length(thePlots)==2){
-    do.call(grid.arrange, c(thePlots[1:2], ncol = 2, top=title, bottom=sub))
-  }else if(length(thePlots)==3){
-    do.call(grid.arrange, c(thePlots[1], ncol = 1, top=title, bottom=sub))
-    do.call(grid.arrange, c(thePlots[2:3], ncol = 2, top=title, bottom=sub))
-  }else if(length(thePlots)==4){
-    do.call(grid.arrange, c(thePlots[1:2], ncol = 2, top=title, bottom=sub))
-    do.call(grid.arrange, c(thePlots[3:4], ncol = 2, top=title, bottom=sub))
+  for(i in 1:ceiling(length(thePlots)/ncol)){
+    if(ncol*i <= length(thePlots))
+      do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):(ncol*i)], ncol = ncol, top=title, bottom=sub))
+    else
+      do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):length(thePlots)], ncol = ncol, top=title, bottom=sub))
   }
 }

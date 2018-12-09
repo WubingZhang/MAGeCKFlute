@@ -1,7 +1,5 @@
 #' Gene ID conversion between ENTREZID and SYMBOL
 #'
-#' Gene ID conversion between ENTREZID and SYMBOL
-#'
 #' @docType methods
 #' @name TransGeneID
 #' @rdname TransGeneID
@@ -24,9 +22,9 @@
 #' @seealso \code{\link[pathview]{eg2id}}
 #'
 #' @examples
-#' data(MLE_Data)
-#' TransGeneID(MLE_Data$Gene[1:10], organism="hsa", useBiomart = FALSE)
-#' TransGeneID(MLE_Data$Gene[1:10], organism="hsa")
+#' data(mle.gene_summary)
+#' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
+#' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa", useBiomart = TRUE)
 #'
 #' @import biomaRt
 #' @export
@@ -53,8 +51,8 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     type = c("ensembl_gene_id", "entrezgene", "hgnc_symbol")
     if(org=="mmu") type[3] = "mgi_symbol"
     names(type) = c("ensembl", "entrez", "symbol")
-    fromType = ifelse(fromType%in% names(type), type[fromType])
-    toType = ifelse(toType%in% names(type), type[toType])
+    fromType = ifelse(fromType%in% names(type), type[fromType], fromType)
+    toType = ifelse(toType%in% names(type), type[toType], toType)
     # listEnsemblArchives()
     # listMarts()
     ds = datasets[grepl(org, datasets)]

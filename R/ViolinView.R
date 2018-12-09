@@ -24,12 +24,12 @@
 #' @seealso \code{\link{DensityView}}
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' ViolinView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' ViolinView(dd, samples=c("dmso", "plx"))
 #' #or
-#' ViolinView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+#' ViolinView(dd[, c("dmso", "plx")])
 #'
 #'
 #' @importFrom data.table melt
@@ -37,9 +37,8 @@
 #'
 #' @export
 #'
-
-#===Distribution of beta scores======================================
-ViolinView <- function(beta, samples=NULL, main=NULL,ylab="Beta Score",filename=NULL, width=5, height=4, ...){
+ViolinView <- function(beta, samples=NULL, main=NULL, ylab="Beta Score",
+                       filename=NULL, width=5, height=4, ...){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 

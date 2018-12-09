@@ -29,16 +29,16 @@
 #'
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' ScatterView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #'
 #' @export
 #'
 
-ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=1,
+ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=2,
                         main=NULL, filename=NULL, width=5, height=4, ...){
 
   beta$Control=rowMeans(beta[,ctrlname,drop= FALSE])

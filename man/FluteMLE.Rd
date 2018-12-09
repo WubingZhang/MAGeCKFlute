@@ -9,8 +9,9 @@
 FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
   organism = "hsa", scale_cutoff = 1, top = 10, bottom = 10,
   interestGenes = NA, pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", enrich_kegg = "HGT", gsea = FALSE, posControl = NULL,
-  loess = FALSE, prefix = "", outdir = ".", view_allpath = FALSE)
+  adjust = "BH", enrich_kegg = "HGT", gsea = FALSE,
+  posControl = NULL, loess = FALSE, prefix = "", width = 10,
+  height = 7, outdir = ".", view_allpath = FALSE)
 }
 \arguments{
 \item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
@@ -22,7 +23,7 @@ FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
 
 \item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
 
-\item{organism}{A character, specifying organism, such as "hsa"("Human"), or "mmu"("Mouse").}
+\item{organism}{"hsa" or "mmu".}
 
 \item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
 or how many standard deviation will be used as cutoff.}
@@ -33,8 +34,8 @@ or how many standard deviation will be used as cutoff.}
 
 \item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
-max size of pathways for enrichent analysis.}
+\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
@@ -51,6 +52,10 @@ positive controls used for cell cycle normalization.}
 \item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
 \item{prefix}{A character, indicating the prefix of output file name, which can't contain special characters.}
+
+\item{width}{The width of summary pdf in inches.}
+
+\item{height}{The height of summary pdf in inches.}
 
 \item{outdir}{Output directory on disk.}
 
@@ -87,11 +92,11 @@ and performing biological functional category analysis and pathway enrichment an
 The function also visualizes genes in the context of pathways to benefit users exploring screening data.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 \dontrun{
   # functional analysis for MAGeCK MLE results
-  FluteMLE(MLE_Data, ctrlname = c("D7_R1","D7_R2"), treatname = c("PLX7_R1","PLX7_R2"),
-           prefix = "BRAF_D7", pvalueCutoff = 0.25, organism = "hsa")
+  FluteMLE(mle.gene_summary, ctrlname = c("dmso"), treatname = c("plx"),
+           prefix = "PLX", pvalueCutoff = 0.25, organism = "hsa")
 }
 
 }

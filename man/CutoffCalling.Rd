@@ -18,3 +18,6 @@ A numeric value.
 \description{
 Calculate standard deviation as cutoff for a numeric vector
 }
+\examples{
+CutoffCalling(rnorm(10000))
+}

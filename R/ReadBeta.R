@@ -18,21 +18,18 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(MLE_Data)
-#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' data(mle.gene_summary)
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
 #' head(dd)
 #'
 #' @export
-
-
-#===read gene summary file=============================================
 ReadBeta <- function(gene_summary, keytype = "Symbol", organism = 'hsa'){
   message(Sys.time(), " # Read gene summary file ...")
 
   #=========If gene_summary is a path or a data frame=====
-  if(class(gene_summary)=="character" && file.exists(gene_summary)){
+  if(is.character(gene_summary) && file.exists(gene_summary)){
     dd=read.table(file=gene_summary,header= TRUE, check.names = FALSE, stringsAsFactors = FALSE)
-  }else if(class(gene_summary)=="data.frame" &&
+  }else if(is.data.frame(gene_summary) &&
           ("Gene"%in%names(gene_summary)) &&
           any(grepl(".beta", names(gene_summary)))){
     dd = gene_summary

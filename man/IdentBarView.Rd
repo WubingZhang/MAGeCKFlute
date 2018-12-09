@@ -6,8 +6,8 @@
 \title{Identical bar plot}
 \usage{
 IdentBarView(gg, x = "x", y = "y", fill = c("#CF3C2B", "#394E80"),
-  main = NULL, xlab = NULL, ylab = NULL, filename = NULL, width = 5,
-  height = 4, ...)
+  main = NULL, xlab = NULL, ylab = NULL, filename = NULL,
+  width = 5, height = 4, ...)
 }
 \arguments{
 \item{gg}{A data frame.}
@@ -40,10 +40,8 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Identical bar plot
 }
 \examples{
-gg = data.frame(Label = c("Day0_R1", "Day0_R2", "Day7_R1", "Day7_R2"),
-                          Reads = c(62818064, 47289074, 51190401, 58686580))
-gg$Reads = gg$Reads / sum(gg$Reads)
-IdentBarView(gg, x="Label", y="Reads")
+data(countsummary)
+IdentBarView(countsummary, x="Label", y="Reads")
 
 }
 \author{

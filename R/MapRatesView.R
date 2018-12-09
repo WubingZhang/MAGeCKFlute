@@ -23,10 +23,8 @@
 #'
 #'
 #' @examples
-#' countSummary = data.frame(Label = c("Day0_R1", "Day0_R2", "Day7_R1", "Day7_R2"),
-#'                           Reads = c(62818064, 47289074, 51190401, 58686580),
-#'                           Mapped = c(39992777, 31709075, 34729858, 37836392))
-#' MapRatesView(countSummary)
+#' data(countsummary)
+#' MapRatesView(countsummary)
 #'
 #' @import ggplot2
 #' @export

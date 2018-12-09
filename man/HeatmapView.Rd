@@ -3,56 +3,39 @@
 \docType{methods}
 \name{HeatmapView}
 \alias{HeatmapView}
-\alias{heatmapview}
-\title{Calculate the similarity between samples and plot heatmap}
+\title{Draw heatmap}
 \usage{
-HeatmapView(beta, method = "pearson", breaks = NA, cluster_rows = TRUE,
-  cluster_cols = TRUE, legend = TRUE, main = NA, fontsize = 10,
-  display_numbers = TRUE, filename = NA, width = NA, height = NA, ...)
+HeatmapView(mat, limit = c(-2, 2),
+  colPal = rev(colorRampPalette(c("#c12603", "white", "#0073B6"), space =
+  "Lab")(199)), filename = NA, width = NA, height = NA, ...)
 }
 \arguments{
-\item{beta}{Data frame or matrix, in which each column represents one sample.}
+\item{mat}{Matrix like object, each row is gene and each column is sample.}
 
-\item{method}{Character, One of "pearson", "kendall", "spearman", "euclidean", "maximum",
-"manhattan", "canberra", "binary", or "minkowski".}
+\item{limit}{Max value in heatmap}
 
-\item{breaks}{The same as that in pheatmap}
+\item{colPal}{colorRampPalette.}
 
-\item{cluster_rows}{The same as that in pheatmap}
+\item{filename}{File path where to save the picture.}
 
-\item{cluster_cols}{The same as that in pheatmap}
+\item{width}{Manual option for determining the output file width in inches.}
 
-\item{legend}{The same as that in pheatmap}
+\item{height}{Manual option for determining the output file height in inches.}
 
-\item{main}{The same as that in pheatmap}
-
-\item{fontsize}{The same as that in pheatmap}
-
-\item{display_numbers}{The same as that in pheatmap}
-
-\item{filename}{The same as that in pheatmap}
-
-\item{width}{The same as that in pheatmap}
-
-\item{height}{The same as that in pheatmap}
-
-\item{...}{Other parameters in pheatmap}
+\item{...}{Other parameters in pheatmap.}
 }
 \value{
-The same as pheatmap
+Invisibly a pheatmap object that is a list with components.
 }
 \description{
-Calculate the similarity between samples and plot heatmap
+Draw heatmap
 }
 \examples{
-data(MLE_Data)
-dd = ReadBeta(MLE_Data, organism="hsa")
-dd = dd[,3:ncol(dd)]
-HeatmapView(dd, method = "pearson")
+data(mle.gene_summary)
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+gg = cor(dd[,3:ncol(dd)])
+HeatmapView(gg, display_numbers = TRUE)
 
-}
-\seealso{
-\code{\link[pheatmap]{pheatmap}}
 }
 \author{
 Wubing Zhang

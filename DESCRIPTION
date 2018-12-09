@@ -2,8 +2,8 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative analysis pipeline for pooled CRISPR functional
         genetic screens
-Version: 1.1.9
-Date: 2018-10-25
+Version: 1.3.1
+Date: 2018-12-9
 Author: Wubing Zhang, Feizhen Wu, Binbin Wang
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
 Description: MAGeCKFlute is designed to surporting downstream analysis, utilizing the gene summary data provided through MAGeCK or MAGeCK-VISPR. Quality control, normalization, and screen hit identification for CRISPR screen data are performed in pipeline. Identified hits within the pipeline are categorized based on experimental design, and are subsequently interpreted by functional enrichment analysis.
@@ -13,11 +13,11 @@ Depends: R (>= 3.5), ggplot2, stats, grDevices, utils, pathview,
         gridExtra
 Suggests: knitr, rmarkdown, BiocStyle, org.Mm.eg.db
 Imports: ggExtra, ggsci, ggrepel, clusterProfiler, png, data.table,
-        pheatmap, RColorBrewer, sva, DOSE, biomaRt, grid
+        pheatmap, sva, DOSE, biomaRt, grid, bladderbatch
 LazyData: TRUE
 NeedsCompilation: no
-biocViews: Workflow, CRISPR, PooledScreens, QualityControl,
-        Normalization, MultipleComparison, FunctionalGenomics,
-        GeneSetEnrichment, Pathways, Visualization
-RoxygenNote: 6.0.1
-Packaged: 2018-10-05 05:12:21 UTC; Wubing
+biocViews: Software, FunctionalGenomics, CRISPR, ImmunoOncology,
+        BatchEffect, QualityControl, Normalization, GeneSetEnrichment,
+        Pathways, Visualization
+RoxygenNote: 6.1.1
+Packaged: 2018-12-09 12:05:50 UTC; Wubing

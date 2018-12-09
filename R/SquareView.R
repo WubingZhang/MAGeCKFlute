@@ -31,10 +31,10 @@
 #' @seealso \code{\link{ScatterView}}
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' SquareView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 #'
 #'
 #' @importFrom ggExtra ggMarginal
@@ -65,7 +65,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
   drug_cutoff = CutoffCalling(beta$Treatment, scale=scale_cutoff)
   x=beta$Control; y=beta$Treatment
   beta$diff = y-x
-  intercept=CutoffCalling(y-x,scale=scale_cutoff/3)
+  intercept=CutoffCalling(y-x, scale = scale_cutoff)
   y_max=x+intercept; y_min=x-intercept
   idx0=y>y_max | y<y_min
 
@@ -108,7 +108,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
   gg = beta[idx,]
   gg$group=factor(gg$group, levels = c("Group1","Group2","Group3","Group4","Others"))
   #===============
-  mycolour=c("Others"="aliceblue",  "Group2"="#ff7f00", "Group3"="#005CB7",
+  mycolour=c("Others"="gray80",  "Group2"="#ff7f00", "Group3"="#005CB7",
              "Group4"="#984ea3", "Group1"="#4daf4a" )
   idx1 = gg$Gene %in% genelist
   idx2 = !(gg$group=="Others" | is.na(gg$text))
@@ -116,7 +116,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
   col_label = rep("#004b84",nrow(label_gg))
   col_label[label_gg$group=="Others"]="gray60"
   p = ggplot(gg,aes(x=Control,y=Treatment,colour=group,fill=group))
-  p = p + geom_point(shape=".",alpha=1/1,size = 1)+scale_color_manual(values=mycolour)
+  p = p + geom_point(shape=".", alpha=0.8, size = 1)+scale_color_manual(values=mycolour)
   p = p + geom_jitter(size = 1)
   p = p + geom_vline(xintercept = Control_cutoff,linetype = "dotted")
   p = p + geom_vline(xintercept = -Control_cutoff,linetype = "dotted")
@@ -150,7 +150,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
                 panel.border = element_blank(), panel.background = element_blank())
   p=p+theme(legend.position="none")+theme(legend.title=element_blank())
 
-  p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
+  # p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
   p$data = beta
   p$data = p$data[order(p$data$group), ]
 

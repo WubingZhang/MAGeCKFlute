@@ -20,11 +20,11 @@
 #'
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
 #' # Density plot of beta score deviation between control and treatment
-#' DensityDiffView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+#' DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #'
 #' @export

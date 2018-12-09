@@ -1,15 +1,13 @@
 #' Batch effect removal
 #'
-#' Remove batch effect
-#'
 #' @docType methods
 #' @name BatchRemove
 #' @rdname BatchRemove
-#' @aliases batchremove
 #'
 #' @param mat Matrix, or a file path of data.
-#' @param batchMat Matrix like data object or a file path of batch table, which has at least two columns,
-#' including Samples(matched colname of mat) and Batch. It can have the third column, which should be Covariate.
+#' @param batchMat Matrix like data object or a file path of batch table,
+#' in which the first two columns are `Samples`(matched colname of mat) and `Batch`, and
+#' remaining columns should be Covariates.
 #' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
 #' @param positive Boolean, specifying whether all values should be positive.
 #'
@@ -20,22 +18,25 @@
 #' @seealso \code{\link[sva]{ComBat}}
 #'
 #' @examples
-#' data(MLE_Data)
-#' beta = ReadBeta(MLE_Data, organism="hsa")
-#' samples = c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
-#' batchMat = data.frame(samples = samples, batch = c("bat1","bat2","bat1","bat2"), cov = c(1,1,2,2))
-#' res = BatchRemove(beta[, samples], batchMat)
+#' data(bladderdata, package = "bladderbatch")
+#' dat <- bladderEset[1:50,]
+#' pheno = pData(dat)
+#' edata = exprs(dat)
+#' batchMat = pheno[, c("sample", "batch", "cancer")]
+#' batchMat$sample = rownames(batchMat)
+#' edata1 = BatchRemove(edata, batchMat)
 #'
 #' @importFrom sva ComBat
+#' @import bladderbatch
 #'
 #' @export
 #'
 
 BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
-  if(class(mat)=="character" && file.exists(mat)){
+  if(is.character(mat) && file.exists(mat)){
     mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
-  if(class(batchMat)=="character" && file.exists(batchMat)){
+  if(is.character(batchMat) && file.exists(batchMat)){
     batchMat = read.table(batchMat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   }
   requireNamespace("sva")
