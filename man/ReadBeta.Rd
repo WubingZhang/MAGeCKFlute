@@ -24,8 +24,8 @@ A data frame, in which the first column is ENTREZID, and the later columns are b
 Read gene beta scores from file or data frame
 }
 \examples{
-data(MLE_Data)
-dd = ReadBeta(MLE_Data, organism="hsa")
+data(mle.gene_summary)
+dd = ReadBeta(mle.gene_summary, organism="hsa")
 head(dd)
 
 }

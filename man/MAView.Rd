@@ -5,8 +5,8 @@
 \alias{MAView}
 \title{MAplot of gene beta scores}
 \usage{
-MAView(beta, ctrlname = "Control", treatname = "Treatment", main = NULL,
-  show.statistics = TRUE, add.smooth = TRUE, lty = 1,
+MAView(beta, ctrlname = "Control", treatname = "Treatment",
+  main = NULL, show.statistics = TRUE, add.smooth = TRUE, lty = 1,
   smooth.col = "red", plot.method = c("loess", "lm", "glm", "gam"),
   filename = NULL, width = 5, height = 4, ...)
 }
@@ -45,10 +45,10 @@ An object created by \code{ggplot}, which can be assigned and further customized
 MAplot of gene beta scores in Control vs Treatment
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+MAView(dd, ctrlname = "dmso", treatname = "plx")
 
 }
 \author{

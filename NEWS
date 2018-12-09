@@ -1,23 +1,54 @@
-CHANGES IN VERSION 0.99.0
+CHANGES IN VERSION 1.2.2
 -------------------------
 
-    o FluteMLE and FluteRRA are two main functions in MAGeCKFlute package. FluteMLE run pipeline from gene beta scores caculated by MAGeCK MLE, while FluteRRA run pipeline based on MAGeCK RRA results.
+    o Revise ReadRRA function.
+    o Add ReadsgRRA function to read sgrna_summary in MAGeCK RRA results.
+    o Add sgRankView function to visualize the rank of sgRNA targeting top selected genes.
+    o Remove bugs in FluteMLE and FluteRRA.
+    o Add additional visualization functions in FluteRRA.
+    o Add EnrichedGeneView to visualize the core enriched genes in enriched pathways.
+    o Integrate WikiPathways, PID terms and EHMN pathways into enrichment functions.
+    o Export all the hidden functions.
 
-CHANGES IN VERSION 0.99.1
+
+CHANGES IN VERSION 1.2.1
 -------------------------
 
-    o Remove some new errors, such as error trigered by no GroupA genes.
-    o Allow users to input their own essential genes to do the cell cycle normalization
-    o Allow users to define the number of genes labeled in rank figure, default label top 10 and bottom 10 genes
-    o Add annotation of other organisms
+    o Add VolcanoView to show positive and negative selected genes.
+    o Improve EnrichedView and EnrichedGSEView function.
+    o Add QC figures in vignettes.
+    o Merge MsigDB, KEGG, and GO genesets together and integrate them into package.
 
-CHANGES IN VERSION 0.99.10
+
+CHANGES IN VERSION 1.1.6
 -------------------------
 
-    o Change all plot function names ended with 'View'.
-    o Decrease exported functions
-    o Decrease package denpendcies
-    o Revise all documents
+    o Add functions to plot figures in NatureProtocol manuscript.
+    o Shorten the check time.
+    o Remove null figures in pathview part.
+
+
+CHANGES IN VERSION 1.1.9
+-------------------------
+
+    o Add parameter 'pathway_limit' / 'limit' / 'gmtpath' in FluteRRA, FluteMLE, and all enrichment functions which enable users to customize gene sets for enrichment analysis.
+    o Remove DAVID and GOstats, which are not recommended.
+    o Add enrichment score in enrichment results from all algorithms.
+
+
+CHANGES IN VERSION 1.1.1
+-------------------------
+
+    o Speed up the enrichment analysis.
+    o Release memory in time.
+
+
+CHANGES IN VERSION 0.99.19
+-------------------------
+
+    o Beutify figures.
+    o Remove some unnecessary dependencies.
+
 
 CHANGES IN VERSION 0.99.18
 -------------------------
@@ -28,39 +59,25 @@ CHANGES IN VERSION 0.99.18
     o Label top ten essential genes in SquareView.
     o Change some default parameter values to be better.
 
-CHANGES IN VERSION 0.99.19
+CHANGES IN VERSION 0.99.10
 -------------------------
 
-    o Beutify figures.
-    o Remove some unnecessary dependencies.
+    o Change all plot function names ended with 'View'.
+    o Decrease exported functions
+    o Decrease package denpendcies
+    o Revise all documents
 
-CHANGES IN VERSION 1.1.1
+
+CHANGES IN VERSION 0.99.1
 -------------------------
 
-    o Speed up the enrichment analysis.
-    o Release memory in time.
+    o Remove some new errors, such as error trigered by no GroupA genes.
+    o Allow users to input their own essential genes to do the cell cycle normalization
+    o Allow users to define the number of genes labeled in rank figure, default label top 10 and bottom 10 genes
+    o Add annotation of other organisms
 
-CHANGES IN VERSION 1.1.6
+
+CHANGES IN VERSION 0.99.0
 -------------------------
 
-    o Add functions to plot figures in NatureProtocol manuscript.
-    o Shorten the check time.
-    o Remove null figures in pathview part.
-
-CHANGES IN VERSION 1.1.9
--------------------------
-
-    o Add parameter 'pathway_limit' / 'limit' / 'gmtpath' in FluteRRA, FluteMLE, and all enrichment functions which enable users to customize gene sets for enrichment analysis.
-    o Remove DAVID and GOstats, which are not recommended.
-    o Add enrichment score in enrichment results from all algorithms.
-
-CHANGES IN VERSION 1.3.1
--------------------------
-
-    o Add VolcanoView to show positive and negative selected genes.
-    o Improve EnrichedView and EnrichedGSEView function.
-    o Add QC figures in vignettes.
-    o Merge MsigDB, KEGG, and GO genesets together and integrate them into package.
-
-
-
+    o FluteMLE and FluteRRA are two main functions in MAGeCKFlute package. FluteMLE run pipeline from gene beta scores caculated by MAGeCK MLE, while FluteRRA run pipeline based on MAGeCK RRA results.

@@ -7,7 +7,8 @@
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
 TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
-  organism = "hsa", useBiomart = FALSE, ensemblHost = "www.ensembl.org")
+  organism = "hsa", useBiomart = FALSE,
+  ensemblHost = "www.ensembl.org")
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}
@@ -32,9 +33,9 @@ A character vector, named by unique input gene ids.
 Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
-data(MLE_Data)
-TransGeneID(MLE_Data$Gene[1:10], organism="hsa", useBiomart = FALSE)
-TransGeneID(MLE_Data$Gene[1:10], organism="hsa")
+data(mle.gene_summary)
+TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
+TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa", useBiomart = TRUE)
 
 }
 \seealso{

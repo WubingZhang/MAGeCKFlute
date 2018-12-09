@@ -25,10 +25,8 @@
 #'
 #'
 #' @examples
-#' gg = data.frame(Label = c("Day0_R1", "Day0_R2", "Day7_R1", "Day7_R2"),
-#'                           Reads = c(62818064, 47289074, 51190401, 58686580))
-#' gg$Reads = gg$Reads / sum(gg$Reads)
-#' IdentBarView(gg, x="Label", y="Reads")
+#' data(countsummary)
+#' IdentBarView(countsummary, x="Label", y="Reads")
 #'
 #' @import ggplot2
 #' @export

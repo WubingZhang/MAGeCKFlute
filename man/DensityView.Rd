@@ -33,12 +33,12 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Plot the density of gene beta scores in two samples.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+DensityView(dd, samples=c("dmso", "plx"))
 #or
-DensityView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+DensityView(dd[, c("dmso", "plx")])
 
 }
 \seealso{

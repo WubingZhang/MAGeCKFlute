@@ -6,9 +6,10 @@
 \alias{squareview}
 \title{Scatter plot of 9-Square}
 \usage{
-SquareView(beta, ctrlname = "Control", treatname = "Treatment", label = 0,
-  label.top = TRUE, top = 5, genelist = c(), scale_cutoff = 1,
-  main = NULL, filename = NULL, width = 5, height = 4, ...)
+SquareView(beta, ctrlname = "Control", treatname = "Treatment",
+  label = 0, label.top = TRUE, top = 5, genelist = c(),
+  scale_cutoff = 1, main = NULL, filename = NULL, width = 5,
+  height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including columns of \code{ctrlname} and \code{treatname}, with Gene Symbol as rowname.}
@@ -47,10 +48,10 @@ Plot a scatter plot with Control beta score as x-axis and Treatment beta score a
 and colored treatment related genes.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-SquareView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 
 
 }

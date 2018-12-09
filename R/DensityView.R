@@ -23,12 +23,12 @@
 #' @seealso \code{\link{ViolinView}}
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' DensityView(dd, samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2"))
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' DensityView(dd, samples=c("dmso", "plx"))
 #' #or
-#' DensityView(dd[, c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+#' DensityView(dd[, c("dmso", "plx")])
 #'
 #' @importFrom data.table melt
 #' @importFrom ggsci scale_color_npg
@@ -39,7 +39,7 @@
 DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
                         filename = NULL, width = 5, height = 4, ...){
   message(Sys.time(), " # Density plot for ", main, " ", xlab, " ...")
-  if(!is.null(samples) && length(samples)>1){ beta = beta[, samples]}
+  if(!is.null(samples) && length(samples)>0){ beta = beta[, samples, drop = FALSE]}
   dd1 = data.table::melt(beta,id=NULL)
   if(!"variable" %in% colnames(dd1)){
     dd1$variable = colnames(beta)

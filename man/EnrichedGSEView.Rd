@@ -8,7 +8,7 @@
 \usage{
 EnrichedGSEView(enrichment, decreasing = TRUE, plotTitle = NULL,
   type = "All", termNum = 15, charLength = 40, filename = NULL,
-  width = 5, height = 4, ...)
+  width = 7, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
@@ -44,7 +44,6 @@ Grid plot for enriched terms in GSEA
     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
     EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
 }
-
 }
 \seealso{
 \code{\link{EnrichedView}}

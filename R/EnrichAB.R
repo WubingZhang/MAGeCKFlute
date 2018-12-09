@@ -22,7 +22,7 @@
 #' @param ... Other available parameters in ggsave.
 #'
 #' @return A list containing enrichment results for each group genes. This list contains items four
-#' items, \code{keggA}, \code{keggB}, \code{bpA}, \code{bpB}. Four items are all list object, containing
+#' items, \code{keggA}, \code{keggB}, \code{goA}, \code{goB}. Four items are all list object, containing
 #' subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
 #' \code{enrichRes} is a enrichResult instance
 #'
@@ -31,20 +31,20 @@
 #' @seealso \code{\link{EnrichSquare}}
 #'
 #'
-# @examples
-#' data(MLE_Data)
+#' @examples
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-# dd = ReadBeta(MLE_Data, organism="hsa")
-#
-# \dontrun{
-#   data=ScatterView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")$data
-#   #BP and KEGG enrichment analysis
-#   enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
-#   print(enrich_result$keggA$gridPlot)
-#   print(enrich_result$bpA$gridPlot)
-# }
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
+#' \dontrun{
+#'   #GO and KEGG enrichment analysis
+#'  enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
+#'   print(enrich_result$keggA$gridPlot)
+#'   print(enrich_result$goA$gridPlot)
+#' }
 #'
 #' @import clusterProfiler
+#' @export
 
 # Enrichment for GroupA and GroupB genes
 EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
@@ -67,7 +67,7 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
                             organism = organism, pvalueCutoff = pvalue,
                             plotTitle = "KEGG: GroupA", color = "#e41a1c",
                             pAdjustMethod = adjust, limit = pathway_limit)
-  bpA=enrichment_analysis(geneList = geneList, universe = universe,
+  goA=enrichment_analysis(geneList = geneList, universe = universe,
                           method = "ORT", type = "GOBP+GOMF", organism = organism,
                           pvalueCutoff = pvalue, plotTitle = "BP: GroupA",
                           color = "#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
@@ -89,7 +89,7 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
                             organism = organism, pvalueCutoff = pvalue,
                             plotTitle = "KEGG: GroupB", color = "#377eb8",
                             pAdjustMethod = adjust, limit = pathway_limit)
-  bpB = enrichment_analysis(geneList = geneList, universe = universe,
+  goB = enrichment_analysis(geneList = geneList, universe = universe,
                             method = "ORT",type = "GOBP+GOMF",organism = organism,
                             pvalueCutoff = pvalue, plotTitle = "BP: GroupB",
                             color="#377eb8", pAdjustMethod = adjust, limit = pathway_limit)
@@ -169,12 +169,12 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
                                                filename,".png")),
              units = "in", width=6.5, height=4)
     }
-    if(!is.null(bpA$enrichRes)){
-      write.table(bpA$enrichRes@result,
-                  file.path(out.dir,paste0("GroupA_bp_",filename,".txt")),
+    if(!is.null(goA$enrichRes)){
+      write.table(goA$enrichRes@result,
+                  file.path(out.dir,paste0("GroupA_go_",filename,".txt")),
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(bpA$gridPlot,
-             filename=file.path(out.dir,paste0("GroupA_bp_",filename,".png")),
+      ggsave(goA$gridPlot,
+             filename=file.path(out.dir,paste0("GroupA_go_",filename,".png")),
              units = "in", width=6.5, height=4)
     }
     ##=========Save GroupB enrichment results===========================
@@ -186,21 +186,21 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
              filename=file.path(out.dir,paste0("GroupB_kegg_",filename,".png")),
              units = "in", width=6.5, height=4)
     }
-    if(!is.null(bpB$enrichRes)){
-      write.table(bpB$enrichRes@result,
-                  file.path(out.dir,paste0("GroupB_bp_",filename,".txt")),
+    if(!is.null(goB$enrichRes)){
+      write.table(goB$enrichRes@result,
+                  file.path(out.dir,paste0("GroupB_go_",filename,".txt")),
                   sep="\t", row.names = FALSE, col.names = TRUE, quote=FALSE)
-      ggsave(bpB$gridPlot,
-             filename=file.path(out.dir,paste0("GroupB_bp_",filename,".png")),
+      ggsave(goB$gridPlot,
+             filename=file.path(out.dir,paste0("GroupB_go_",filename,".png")),
              units = "in", width=6.5, height=4)
     }
   }
   ##=========Return results=====================================
   if(gsea){
-    return(list(keggA=keggA, bpA=bpA, gseA=gseA,
-                keggB=keggB, bpB=bpB, gseB=gseB))
+    return(list(keggA=keggA, goA=goA, gseA=gseA,
+                keggB=keggB, goB=goB, gseB=gseB))
   }else{
-    return(list(keggA=keggA, bpA=bpA, keggB=keggB, bpB=bpB))
+    return(list(keggA=keggA, goA=goA, keggB=keggB, goB=goB))
   }
 }
 

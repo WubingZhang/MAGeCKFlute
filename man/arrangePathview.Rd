@@ -5,10 +5,10 @@
 \alias{arrangePathview}
 \title{Kegg pathway view and arrange grobs on page}
 \usage{
-arrangePathview(genelist, pathways = c(), organism = "hsa",
-  view_allpath = FALSE, title = "Group A",
-  sub = "Negative control normalized", output = ".", path.archive = ".",
-  kegg.native = TRUE)
+arrangePathview(genelist, pathways = c(), top = 4, ncol = 2,
+  title = "Group A", sub = "Negative control normalized",
+  organism = "hsa", view_allpath = FALSE, output = ".",
+  path.archive = ".", kegg.native = TRUE)
 }
 \arguments{
 \item{genelist}{a data frame with columns of ENTREZID, Control and Treatment. The columns
@@ -17,17 +17,21 @@ of Control and Treatment represent gene score in Control and Treatment sample.}
 \item{pathways}{character vector, the KEGG pathway ID(s), usually 5 digit, may also
 include the 3 letter KEGG species code.}
 
+\item{top}{integer, specifying how many top enriched pathways to be visualized.}
+
+\item{ncol}{integer, specifying how many column of figures to be arranged in each page.}
+
+\item{title}{optional string, or grob.}
+
+\item{sub}{optional string, or grob.}
+
 \item{organism}{character, either the kegg code, scientific name or the common name of
 the target species. This applies to both pathway and gene.data or cpd.data. When KEGG
 ortholog pathway is considered, species="ko". Default species="hsa", it is equivalent
 to use either "Homo sapiens" (scientific name) or "human" (common name).}
 
 \item{view_allpath}{boolean, specifying whether view all pathways. Default view_allpath='FALSE',
-and only plot top 4 enriched pathways.}
-
-\item{title}{optional string, or grob.}
-
-\item{sub}{optional string, or grob.}
+and only plot top enriched pathways.}
 
 \item{output}{Path to save plot to.}
 
@@ -46,18 +50,11 @@ plot on the current device
 Kegg pathway view and arrange grobs on page.
 }
 \examples{
-\dontrun{
-  data(MLE_Data)
-  # Read beta score from gene summary table in MAGeCK MLE results
-  dd = ReadBeta(MLE_Data, organism="hsa")
-  tmp = TransGeneID(rownames(dd), "Symbol", "Entrez", organism = "hsa")
-  idx = is.na(tmp) | duplicated(tmp)
-  dd = dd[!idx,]
-  rownames(dd) = tmp[!idx]
-  dd$Control = rowMeans(dd[, 1:2])
-  dd$Treatment = rowMeans(dd[, 3:4])
-  arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
-}
+data(mle.gene_summary)
+# Read beta score from gene summary table in MAGeCK MLE results
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+colnames(dd)[3:4] = c("Control", "Treatment")
+arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 
 }
 \seealso{

@@ -40,16 +40,15 @@ After normalization, the beta scores are comparable across samples. \code{loess}
 optional normalization method, which is used to normalize array data before.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-samples=c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")
+dd = ReadBeta(mle.gene_summary, organism="hsa")
 #Cell Cycle normalization
-dd_essential = NormalizeBeta(dd, samples=samples, method="cell_cycle")
+dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 head(dd_essential)
 
 #Optional loess normalization
-dd_loess = NormalizeBeta(dd, samples=samples, method="loess")
+dd_loess = NormalizeBeta(dd, samples=c("dmso", "plx"), method="loess")
 head(dd_loess)
 
 

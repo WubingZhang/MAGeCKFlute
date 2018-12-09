@@ -9,8 +9,8 @@
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param keytype "Entrez" or "Symbol".
 #' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-#' 'KEGG', 'BIOCARTA', 'REACTOME', 'TFT', 'IMMUNOLOGIC', 'ONCOGENIC',
-#' or 'All' and any combination of them, such as 'IMMUNOLOGIC+GOBP+KEGG'.
+#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
@@ -47,15 +47,16 @@ enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOB
   ## Prepare gene set annotation
   if(is.na(gmtpath)){
     msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                       paste0(organism, "_c2c3c6c7hgokegg_entrez.gmt.gz"))
+                       paste0(organism, "_msig_entrez.gmt.gz"))
     gmtpath = gzfile(msigdb)
   }
-  gene2path = readGMT(gmtpath, limit = c(1, 500))
+  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
   close(gmtpath)
   names(gene2path) = c("Gene","PathwayID", "PathwayName")
-  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+TFT+IMMUNOLOGIC+ONCOGENIC+GOBP+GOCC+GOMF'
+  gene2path$PathwayName = toupper(gene2path$PathwayName)
+  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
   type = unlist(strsplit(type, "\\+"))
-  idx = gsub("_.*", "", gene2path$PathwayID) %in% type
+  idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
   gene2path = gene2path[idx, ]
   gene2path = gene2path[!is.na(gene2path$Gene), ]
   idx = duplicated(gene2path$PathwayID)

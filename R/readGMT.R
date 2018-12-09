@@ -1,10 +1,10 @@
-#' readGMT
+#' ReadGMT
 #'
 #' Parse gmt file to a data.frame
 #'
 #' @docType methods
-#' @name readGMT
-#' @rdname readGMT
+#' @name ReadGMT
+#' @rdname ReadGMT
 #'
 #' @param gmtpath The path to gmt file.
 #' @param limit A integer vector of length two, specifying the limit of geneset size.
@@ -15,7 +15,7 @@
 #'
 #' @export
 #'
-readGMT <- function(gmtpath, limit = c(3, 30)){
+ReadGMT <- function(gmtpath, limit = c(3, 30)){
   c2 = readLines(gmtpath)
   c2_list = strsplit(c2, "\t")
   c2_pathway = t(matrix(unlist(lapply(c2_list, function(x) x[1:2])), nrow = 2))

@@ -37,8 +37,8 @@ A matrix similar as \code{mat}.
 Loess normalization method.
 }
 \examples{
-beta = ReadBeta(MLE_Data, organism="hsa")
-beta_loess = normalize.loess(beta[,c("D7_R1", "D7_R2", "PLX7_R1", "PLX7_R2")])
+beta = ReadBeta(mle.gene_summary, organism="hsa")
+beta_loess = normalize.loess(beta[,c("dmso", "plx")])
 
 }
 \seealso{

@@ -5,18 +5,19 @@
 \alias{VolcanoView}
 \title{Volcano View}
 \usage{
-VolcanoView(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
-  topnames = NULL, filename = NULL, x_cutoff = 0.1, y_cutoff = 0.25,
-  main = NULL, xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)", ...)
+VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
+  topnames = NULL, filename = NULL, x_cutoff = log2(1.5),
+  y_cutoff = 0.05, main = NULL, xlab = "Log2 Fold Change",
+  ylab = "-Log10(Adjust.P)", ...)
 }
 \arguments{
-\item{mat}{Data frame}
+\item{df}{Data frame}
 
-\item{x}{Colname of mat specifying x-axis in Volcanno figure, 'logFC' (default).}
+\item{x}{Colname of df specifying x-axis in Volcanno figure, 'logFC' (default).}
 
-\item{y}{Colname of mat specifying y-axis in Volcanno figure, 'adj.P.Val' (default).}
+\item{y}{Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default).}
 
-\item{Label}{Colname of mat specifying labeled terms in Volcanno figure.}
+\item{Label}{Colname of df specifying labeled terms in Volcanno figure.}
 
 \item{top}{Interger, the number of top significant terms to be labeled.}
 
@@ -44,8 +45,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Volcano plot
 }
 \examples{
-data(MLE_Data)
-VolcanoView(MLE_Data, x = "PLX7_R1.beta", y = "PLX7_R1.fdr", Label = "Gene")
+data(rra.gene_summary)
+rra = ReadRRA(rra.gene_summary)
+VolcanoView(rra, x = "LFC", y = "FDR", Label = "Official")
 
 }
 \author{

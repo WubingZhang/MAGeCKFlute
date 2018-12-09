@@ -6,17 +6,17 @@
 \alias{RRApipeline}
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
-FluteRRA(gene_summary, prefix = "Test", enrich_kegg = "HGT",
+FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
   organism = "hsa", pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", outdir = ".")
+  adjust = "BH", prefix = "Test", width = 9, height = 6,
+  outdir = ".")
 }
 \arguments{
-\item{gene_summary}{A file path or a data frame, which has three columns named 'id', 'neg.fdr' and 'pos.fdr'.}
+\item{gene_summary}{A file path or a data frame of gene summary data.}
 
-\item{prefix}{A character, indicating the prefix of output file name.}
+\item{sgrna_summary}{A file path or a data frame of sgRNA summary data.}
 
-\item{enrich_kegg}{One of "HGT"(HyperGemetric test), "ORT"(Over-Representing Test), "DAVID" and "GOstats",
-specifying enrichment method used for kegg enrichment analysis.}
+\item{lfcCutoff}{A two-length vector (default: c(-1, 1)), specifying the logFC cutoff for negative selection and positive selection.}
 
 \item{organism}{"hsa" or "mmu".}
 
@@ -26,6 +26,12 @@ maximal size of gene sets for enrichent analysis.}
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
+
+\item{prefix}{A character, indicating the prefix of output file name.}
+
+\item{width}{The width of summary pdf in inches.}
+
+\item{height}{The height of summary pdf in inches.}
 
 \item{outdir}{Output directory on disk.}
 }
@@ -48,11 +54,10 @@ The downstream analysis of this function includes identifying positive and negat
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 }
 \examples{
-data(RRA_Data)
-gene_summary = RRA_Data
+data(rra.gene_summary)
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(gene_summary, prefix="BRAF", organism="hsa")
+    FluteRRA(rra.gene_summary, prefix="GSC", organism="hsa")
 }
 
 

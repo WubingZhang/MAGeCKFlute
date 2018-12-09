@@ -16,8 +16,8 @@ enrich.GSE(geneList, keytype = "Entrez", type = "GOBP+GOMF",
 \item{keytype}{"Entrez" or "Symbol".}
 
 \item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'TFT', 'IMMUNOLOGIC', 'ONCOGENIC',
-or 'All' and any combination of them, such as 'IMMUNOLOGIC+GOBP+KEGG'.}
+'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
 
 \item{organism}{'hsa' or 'mmu'.}
 

@@ -1,4 +1,5 @@
 countsummary
-MLE_Data
-RRA_Data
+mle.gene_summary
+rra.gene_summary
+rra.sgrna_summary
 Zuber_Essential

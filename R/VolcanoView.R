@@ -6,10 +6,10 @@
 #' @name VolcanoView
 #' @rdname VolcanoView
 #'
-#' @param mat Data frame
-#' @param x Colname of mat specifying x-axis in Volcanno figure, 'logFC' (default).
-#' @param y Colname of mat specifying y-axis in Volcanno figure, 'adj.P.Val' (default).
-#' @param Label Colname of mat specifying labeled terms in Volcanno figure.
+#' @param df Data frame
+#' @param x Colname of df specifying x-axis in Volcanno figure, 'logFC' (default).
+#' @param y Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default).
+#' @param Label Colname of df specifying labeled terms in Volcanno figure.
 #' @param top Interger, the number of top significant terms to be labeled.
 #' @param topnames Character vector, indicating interested terms to be labeled.
 #' @param filename Figure file name to create on disk. Default filename="NULL",
@@ -26,17 +26,18 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(MLE_Data)
-#' VolcanoView(MLE_Data, x = "PLX7_R1.beta", y = "PLX7_R1.fdr", Label = "Gene")
+#' data(rra.gene_summary)
+#' rra = ReadRRA(rra.gene_summary)
+#' VolcanoView(rra, x = "LFC", y = "FDR", Label = "Official")
 #'
 #' @import ggrepel
 #' @export
 
-VolcanoView <- function(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
-                        topnames = NULL, filename = NULL, x_cutoff = 0.1, y_cutoff = 0.25,
+VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
+                        topnames = NULL, filename = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
                         main = NULL, xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)", ...){
     requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
-    gg = mat[, c(x, y)]
+    gg = df[, c(x, y)]
     gg$group="no"
     gg$group[gg[,x]>x_cutoff & gg[,y]<y_cutoff] = "up"
     gg$group[gg[,x]< -x_cutoff & gg[,y]<y_cutoff] = "down"
@@ -44,7 +45,7 @@ VolcanoView <- function(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     gg[, y] = -log10(gg[, y])
     if(!(top==0 & is.null(topnames))){
       gg$Label = rownames(gg)
-      if(!is.na(Label)) gg$Label = mat[, Label]
+      if(!is.na(Label)) gg$Label = df[, Label]
       gg = gg[order(gg[,y], decreasing = TRUE), ]
       idx1 = idx2 = c()
       if(top>0){
@@ -53,10 +54,10 @@ VolcanoView <- function(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
       }
       idx = unique(c(idx1, idx2, which(gg$Label %in% topnames)))
     }
-    mycolour=c("no"="aliceblue",  "up"="#e41a1c","down"="#377eb8")
+    mycolour=c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
     #=========
     p = ggplot(gg, aes(x=gg[,x], y=gg[,y], colour=group, fill=group))
-    p = p + geom_jitter(position = "jitter", show.legend = FALSE, alpha=0.3, size = 0.5)
+    p = p + geom_jitter(position = "jitter", show.legend = FALSE, alpha=0.8, size = 0.5)
     p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                   plot.title = element_text(hjust = 0.5, size=16),
                   axis.text = element_text(colour="gray10"))
@@ -66,12 +67,12 @@ VolcanoView <- function(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     p = p + geom_hline(yintercept = -log10(y_cutoff), linetype = "dotted")
     p = p + geom_vline(xintercept = c(-x_cutoff, x_cutoff), linetype = "dotted")
     p = p + labs(x=xlab, y=ylab, title=main)
-    p = p + annotate("text", color="#e41a1c", x = x_cutoff, y = max(gg[,y]), hjust = 0, vjust = 1,
-                     label = paste("Up: ",dim(gg[gg$group=="up",])[1], sep=""))
-    p = p + annotate("text", color = "#377eb8", x = (-x_cutoff), y = max(gg[,y]), hjust = 1, vjust = 1,
-                     label = paste("Down: ", dim(gg[gg$group=="down",])[1], sep=""))
+    # p = p + annotate("text", color="#e41a1c", x = x_cutoff, y = max(gg[,y]), hjust = 0, vjust = 1,
+    #                  label = paste("Up: ",dim(gg[gg$group=="up",])[1], sep=""))
+    # p = p + annotate("text", color = "#377eb8", x = (-x_cutoff), y = max(gg[,y]), hjust = 1, vjust = 1,
+    #                  label = paste("Down: ", dim(gg[gg$group=="down",])[1], sep=""))
     if(!(top==0 & is.null(topnames)))
-      p = p + ggrepel::geom_text_repel(aes(x=gg[idx,x],y=gg[idx,y], colour=group,label = Label), data=gg[idx,],
+      p = p + ggrepel::geom_text_repel(aes(x=gg[idx,x],y=gg[idx,y], label = Label), data=gg[idx,],
                                        fontface = 'bold', size = 2.5,
                                        box.padding = unit(0.4, "lines"), segment.color = 'grey50',
                                        point.padding = unit(0.3, "lines"), segment.size = 0.3)
@@ -80,8 +81,8 @@ VolcanoView <- function(mat, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     p = p + theme(legend.position = "none")
 
     if(!is.null(filename)){
-      ggsave(plot=p, filename=filename, units = "in", dpi=600, ...)
-      saveRDS(mat, gsub(".png|.pdf|.jpg|.tiff", ".rds", filename))
+      ggsave(plot=p, filename=filename, units = "in", ...)
+      saveRDS(df, gsub(".png|.pdf|.jpg|.tiff", ".rds", filename))
     }
     return(p)
 }

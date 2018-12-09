@@ -35,10 +35,10 @@ Estimate cell cycle time in different samples by linear fitting of beta scores, 
 in which x-axis is control beta score and y-axis is beta score of all samples.
 }
 \examples{
-data(MLE_Data)
+data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(MLE_Data, organism="hsa")
-CellCycleView(dd, ctrlname = c("D7_R1", "D7_R2"), treatname = c("PLX7_R1", "PLX7_R2"))
+dd = ReadBeta(mle.gene_summary, organism="hsa")
+CellCycleView(dd, ctrlname = "dmso", treatname = "plx")
 
 }
 \author{

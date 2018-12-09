@@ -2,57 +2,25 @@
 knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       dev="png", message=FALSE, error=FALSE, warning=TRUE)
 
-## ----quickStart1, eval=FALSE---------------------------------------------
-#  library(MAGeCKFlute)
-#  ##Load gene summary data in MAGeCK MLE results
-#  data("MLE_Data")
-#  ##Run the downstream analysis pipeline for MAGeCK MLE
-#  FluteMLE(MLE_Data, ctrlname=c("D7_R1", "D7_R2"), treatname=c("PLX7_R1","PLX7_R2"), prefix="BRAF_", organism="hsa")
+## ----install, eval=FALSE-------------------------------------------------
+#  source("https://bioconductor.org/biocLite.R")
+#  biocLite("MAGeCKFlute")
+
+## ----library, eval=TRUE--------------------------------------------------
+library(MAGeCKFlute)
 
 ## ----quickStart2, eval=FALSE---------------------------------------------
 #  ##Load gene summary data in MAGeCK RRA results
-#  data("RRA_Data")
+#  data("rra.gene_summary")
+#  data("rra.sgrna_summary")
 #  ##Run the downstream analysis pipeline for MAGeCK RRA
-#  FluteRRA(RRA_Data, prefix="BRAF", organism="hsa")
+#  FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa", lfcCutoff = c(-0.3, 0.3))
 
-## ----CheckRRARes---------------------------------------------------------
-library(MAGeCKFlute)
-data("RRA_Data")
-head(RRA_Data)
-
-## ----ReadRRA-------------------------------------------------------------
-dd.rra = ReadRRA(RRA_Data, organism = "hsa")
-head(dd.rra)
-
-## ----selection1, fig.height=4, fig.width=7-------------------------------
-RRA_Data$fdr = rowMin(as.matrix(RRA_Data[, c("neg.fdr", "pos.fdr")]))
-p1 = VolcanoView(RRA_Data, x = "neg.lfc", y = "fdr", Label = "id")
-print(p1)
-
-## ----neg3, fig.height=5, fig.width=9-------------------------------------
-universe=dd.rra$ENTREZID
-idx = dd.rra$neg.fdr<0.05
-geneList= -log10(dd.rra[idx, "neg.fdr"])
-names(geneList) = dd.rra$ENTREZID[idx]
-
-kegg.neg = enrichment_analysis(geneList = geneList, universe=universe, 
-                             type = "KEGG", plotTitle="KEGG: neg")
-bp.neg = enrichment_analysis(geneList = geneList, universe=universe, 
-                           type = "GOBP", plotTitle="GOBP: neg")
-print(kegg.neg$gridPlot)
-print(bp.neg$gridPlot)
-
-## ----pos3, fig.height=5, fig.width=10------------------------------------
-universe = dd.rra$ENTREZID
-idx = dd.rra$pos.fdr<0.05
-geneList = -log10(dd.rra[idx, "pos.fdr"])
-names(geneList) = dd.rra$ENTREZID[idx]
-kegg.pos=enrichment_analysis(geneList = geneList, universe=universe, 
-                             type = "KEGG", plotTitle="KEGG: pos")
-bp.pos=enrichment_analysis(geneList = geneList, universe=universe, 
-                           type = "GOBP", plotTitle="GOBP: pos")
-print(kegg.pos$gridPlot)
-print(bp.pos$gridPlot)
+## ----quickStart1, eval=FALSE---------------------------------------------
+#  ##Load gene summary data in MAGeCK MLE results
+#  data("mle.gene_summary")
+#  ##Run the downstream analysis pipeline for MAGeCK MLE
+#  FluteMLE(mle.gene_summary, ctrlname=c("dmso"), treatname=c("plx"), prefix="MLE_", organism="hsa")
 
 ## ----CheckCountSummary---------------------------------------------------
 data("countsummary")
@@ -66,28 +34,79 @@ countsummary$Missed = log10(countsummary$Zerocounts)
 IdentBarView(countsummary, x = "Label", y = "Missed", fill = "#394E80",
              ylab = "Log10 missed gRNAs", main = "Missed sgRNAs")
 
+## ----CheckRRARes---------------------------------------------------------
+library(MAGeCKFlute)
+data("rra.gene_summary")
+head(rra.gene_summary)
+
+## ----ReadRRA-------------------------------------------------------------
+dd.rra = ReadRRA(rra.gene_summary, organism = "hsa")
+head(dd.rra)
+dd.sgrna = ReadsgRRA(rra.sgrna_summary)
+
+## ----selection1, fig.height=4, fig.width=7-------------------------------
+p1 = VolcanoView(dd.rra, x = "LFC", y = "FDR", Label = "Official")
+print(p1)
+
+## ----sgRNARank, fig.height=4, fig.width=7--------------------------------
+p2 = sgRankView(dd.sgrna)
+print(p2)
+
+## ----rankrra, fig.height=4, fig.width=6----------------------------------
+geneList= dd.rra$LFC
+names(geneList) = dd.rra$Official
+RankView(geneList)
+
+## ----enrich_rra----------------------------------------------------------
+universe = dd.rra$EntrezID
+geneList= dd.rra$LFC
+names(geneList) = universe
+
+geneList = sort(geneList)
+kegg.neg = enrichment_analysis(geneList = geneList[1:100], universe = universe, 
+                             type = "KEGG", plotTitle = "KEGG: neg")
+bp.neg = enrichment_analysis(geneList = geneList[1:100], universe = universe, 
+                           type = "GOBP+GOMF+GOCC", plotTitle="GOBP+GOMF+GOCC: neg")
+geneList = sort(geneList, decreasing = TRUE)
+kegg.pos=enrichment_analysis(geneList = geneList[1:100], universe=universe, 
+                             type = "KEGG", plotTitle="KEGG: pos")
+bp.pos=enrichment_analysis(geneList = geneList[1:100], universe=universe, 
+                           type = "GOBP+GOMF+GOCC", plotTitle="GOBP+GOMF+GOCC: pos")
+
+## ----enrichedGeneView, fig.height=5, fig.width=10------------------------
+EnrichedGeneView(enrichment=kegg.neg$enrichRes@result, geneList, keytype = "Entrez")
+EnrichedGeneView(enrichment=kegg.pos$enrichRes@result, geneList, keytype = "Entrez")
+EnrichedGSEView(enrichment=kegg.neg$enrichRes@result, decreasing = FALSE)
+EnrichedGSEView(enrichment=kegg.pos$enrichRes@result, decreasing = TRUE)
+EnrichedView(enrichment=kegg.neg$enrichRes@result, color = "#377eb8")
+EnrichedView(enrichment=kegg.pos$enrichRes@result, color = "#e41a1c")
+
 ## ----CheckMLERes---------------------------------------------------------
 library(MAGeCKFlute)
-data("MLE_Data")
-head(MLE_Data)
+data("mle.gene_summary")
+head(mle.gene_summary)
 
 ## ----ReadBeta------------------------------------------------------------
-data("MLE_Data")
-gene_summary = MLE_Data
-ctrlname = c("D7_R1", "D7_R2")
-treatname = c("PLX7_R1", "PLX7_R2")
+data("mle.gene_summary")
+ctrlname = c("dmso")
+treatname = c("plx")
 #Read beta scores from gene summary table in MAGeCK MLE results
-dd=ReadBeta(gene_summary, organism="hsa")
+dd=ReadBeta(mle.gene_summary, organism="hsa")
 head(dd)
 
 ## ----BatchRemove, fig.height=5, fig.width=6------------------------------
 ##Before batch removal
-HeatmapView(dd[,c(ctrlname, treatname)])
-batchMat = data.frame(samples = c(ctrlname, treatname), batch = c(1,2,1,2), cov = c(1,1,2,2))
-dd1 = BatchRemove(dd[,c(ctrlname, treatname)], batchMat)$data
+data(bladderdata, package = "bladderbatch")
+dat <- bladderEset[, 1:10]
+pheno = pData(dat)
+edata = exprs(dat)
+HeatmapView(cor(edata))
 
 ## After batch removal
-HeatmapView(dd1[,c(ctrlname, treatname)])
+batchMat = pheno[, c("sample", "batch", "cancer")]
+batchMat$sample = rownames(batchMat)
+edata1 = BatchRemove(edata, batchMat)
+HeatmapView(cor(edata1$data))
 
 ## ----NormalizeBeta-------------------------------------------------------
 dd_essential = NormalizeBeta(dd, samples=c(ctrlname, treatname), method="cell_cycle")
@@ -116,8 +135,8 @@ print(p1)
 
 ## ----rank, fig.height=5, fig.width=7-------------------------------------
 ## Add column of 'diff'
-dd_essential$Control = rowMeans(dd_essential[,ctrlname])
-dd_essential$Treatment = rowMeans(dd_essential[,treatname])
+dd_essential$Control = rowMeans(dd_essential[,ctrlname, drop = FALSE])
+dd_essential$Treatment = rowMeans(dd_essential[,treatname, drop = FALSE])
 
 rankdata = dd_essential$Treatment - dd_essential$Control
 names(rankdata) = dd_essential$Gene

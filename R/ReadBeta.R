@@ -18,14 +18,11 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(MLE_Data)
-#' dd = ReadBeta(MLE_Data, organism="hsa")
+#' data(mle.gene_summary)
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
 #' head(dd)
 #'
 #' @export
-
-
-#===read gene summary file=============================================
 ReadBeta <- function(gene_summary, keytype = "Symbol", organism = 'hsa'){
   message(Sys.time(), " # Read gene summary file ...")
 

@@ -6,7 +6,6 @@
 #' @name EnrichedView
 #' @rdname EnrichedView
 #' @aliases enrichview
-#'
 #' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.
 #' @param plotTitle Same as 'title' in 'plot'.
 #' @param type "All" (Default), enriched geneset category for visualization.
@@ -18,29 +17,24 @@
 #' @param width As in ggsave.
 #' @param height As in ggsave.
 #' @param ... Other available parameters in ggsave.
-#'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
-#'
 #' @author Feizhen Wu
-#'
 #' @seealso \code{\link{KeggPathwayView}}
 #' @seealso \code{\link{EnrichedGSEView}}
-#'
 #' @examples
 #' data(geneList, package = "DOSE")
 #' enrichRes <- enrich.HGT(geneList[1:100])
 #' EnrichedView(enrichment=enrichRes@result)
-#'
 #' @import DOSE
 #' @export
 
 EnrichedView=function(enrichment, plotTitle = NULL, type = "All", color = "#3f90f7", termNum = 15,
-                      charLength = 40, filename = NULL, width = 5, height = 4, ...){
+                      charLength = 40, filename = NULL, width = 7, height = 4, ...){
 
   # Select subset of enrichedRes.
-  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+TFT+IMMUNOLOGIC+ONCOGENIC+GOBP+GOCC+GOMF'
+  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
   type = unlist(strsplit(type, "\\+"))
-  idx = gsub("_.*", "", enrichment$ID) %in% type
+  idx = toupper(gsub("_.*", "", enrichment$ID)) %in% toupper(type)
   enrichment = enrichment[idx, ]
 
   # No enriched pathways
@@ -103,9 +97,6 @@ EnrichedView=function(enrichment, plotTitle = NULL, type = "All", color = "#3f90
 }
 
 
-
-
-##=====================================================================
 #' View enriched terms in GSEA
 #'
 #' Grid plot for enriched terms in GSEA
@@ -114,7 +105,6 @@ EnrichedView=function(enrichment, plotTitle = NULL, type = "All", color = "#3f90
 #' @name EnrichedGSEView
 #' @rdname EnrichedGSEView
 #' @aliases enrichgseview
-#'
 #' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and NES
 #' @param decreasing Logical. Should the NES sort order be increasing or decreasing?
 #' @param plotTitle Same as 'title' in 'plot'.
@@ -126,31 +116,24 @@ EnrichedView=function(enrichment, plotTitle = NULL, type = "All", color = "#3f90
 #' @param width As in ggsave.
 #' @param height As in ggsave.
 #' @param ... Other available parameters in ggsave.
-#'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
-#'
 #' @author Wubing Zhang
-#'
 #' @seealso \code{\link{EnrichedView}}
-#'
 #' @examples
 #' \dontrun{
 #'     data(geneList, package = "DOSE")
 #'     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
 #'     EnrichedGSEView(enrichRes@result, plotTitle = "GSEA Analysis")
 #' }
-#'
 #' @export
-
-##===================
 EnrichedGSEView = function(enrichment, decreasing = TRUE, plotTitle = NULL,
                          type = "All", termNum = 15, charLength = 40,
-                         filename = NULL, width = 5, height = 4, ...){
+                         filename = NULL, width = 7, height = 4, ...){
 
   # Select subset of enrichedRes.
-  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+TFT+IMMUNOLOGIC+ONCOGENIC+GOBP+GOCC+GOMF'
+  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
   type = unlist(strsplit(type, "\\+"))
-  idx = gsub("_.*", "", enrichment$ID) %in% type
+  idx = toupper(gsub("_.*", "", enrichment$ID)) %in% toupper(type)
   enrichment = enrichment[idx, ]
 
   # No enriched pathways
@@ -213,13 +196,9 @@ EnrichedGSEView = function(enrichment, decreasing = TRUE, plotTitle = NULL,
 #' @docType methods
 #' @name noEnrichPlot
 #' @rdname noEnrichPlot
-#'
 #' @param plotTitle Same as 'title' in 'plot'.
-#'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
-#'
 #' @author Wubing Zhang
-
 noEnrichPlot <- function(plotTitle){
   p1 = ggplot()
   p1 = p1 + geom_text(aes(x=0,y=0,label="No enriched terms"), size=6)

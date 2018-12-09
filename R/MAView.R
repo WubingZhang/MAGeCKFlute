@@ -27,10 +27,10 @@
 #'
 #'
 #' @examples
-#' data(MLE_Data)
+#' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(MLE_Data, organism="hsa")
-#' MAView(dd, ctrlname = "D7_R1", treatname = "PLX7_R1")
+#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' MAView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #' @export
 

@@ -7,8 +7,8 @@
 \title{View enriched terms}
 \usage{
 EnrichedView(enrichment, plotTitle = NULL, type = "All",
-  color = "#3f90f7", termNum = 15, charLength = 40, filename = NULL,
-  width = 5, height = 4, ...)
+  color = "#3f90f7", termNum = 15, charLength = 40,
+  filename = NULL, width = 7, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.}
@@ -42,7 +42,6 @@ Grid plot for enriched terms
 data(geneList, package = "DOSE")
 enrichRes <- enrich.HGT(geneList[1:100])
 EnrichedView(enrichment=enrichRes@result)
-
 }
 \seealso{
 \code{\link{KeggPathwayView}}

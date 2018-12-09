@@ -12,8 +12,8 @@
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param keytype "Entrez" or "Symbol".
 #' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-#' 'KEGG', 'BIOCARTA', 'REACTOME', 'TFT', 'IMMUNOLOGIC', 'ONCOGENIC',
-#' or 'All' and any combination of them, such as 'IMMUNOLOGIC+GOBP+KEGG'.
+#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
+#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
