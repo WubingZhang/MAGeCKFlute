@@ -37,7 +37,8 @@
 #' @export
 #'
 
-RankView <- function(rankdata, genelist=NA, top=20, bottom=20, cutoff=c(-sd(rankdata), sd(rankdata)),
+RankView <- function(rankdata, genelist=NA, top=20, bottom=20,
+                     cutoff=c(-sd(rankdata), sd(rankdata)),
                      main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   message(Sys.time(), " # Rank genes and plot...")

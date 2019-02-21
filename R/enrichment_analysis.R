@@ -8,17 +8,17 @@
 #' @aliases enrichment
 #'
 #' @param geneList A numeric vector with gene as names.
-#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
+#' @param type Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
+#' 'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
+#' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param plotTitle Same as 'title' in 'plot'.
 #' @param color Color of points.
 #'
@@ -41,9 +41,9 @@
 #' @import DOSE
 #' @export
 
-enrichment_analysis = function(geneList, universe = NULL, method = "ORT", keytype = "Entrez",
-                               type = "KEGG", organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
-                               limit = c(3, 50), plotTitle = NULL, color = "#3f90f7"){
+enrichment_analysis = function(geneList, method = "HGT", keytype = "Entrez", type = "KEGG",
+                               organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
+                               limit = c(3, 50), universe = NULL, plotTitle = NULL, color = "#3f90f7"){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   result = list()

@@ -14,10 +14,10 @@ TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
 \item{genes}{A character vector, input genes to be converted.}
 
 \item{fromType}{The input ID type, one of "Symbol" (default), "Entrez" and "Ensembl";
-you can also input other valid attribute names for biomart.}
+you can also input other valid attribute names for biomaRt.}
 
 \item{toType}{The output ID type, one of "Symbol", "Entrez" (default), "Ensembl";
-you can also input other valid attribute names for biomart.}
+you can also input other valid attribute names for biomaRt.}
 
 \item{organism}{One of "hsa"(or 'Human'), "mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
 

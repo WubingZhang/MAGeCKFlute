@@ -5,10 +5,10 @@
 \alias{noEnrichPlot}
 \title{Blank figure}
 \usage{
-noEnrichPlot(plotTitle)
+noEnrichPlot(main)
 }
 \arguments{
-\item{plotTitle}{Same as 'title' in 'plot'.}
+\item{main}{Same as 'title' in 'plot'.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.

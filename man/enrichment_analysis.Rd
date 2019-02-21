@@ -6,23 +6,21 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-enrichment_analysis(geneList, universe = NULL, method = "ORT",
-  keytype = "Entrez", type = "KEGG", organism = "hsa",
-  pvalueCutoff = 0.25, pAdjustMethod = "BH", limit = c(3, 50),
+enrichment_analysis(geneList, method = "HGT", keytype = "Entrez",
+  type = "KEGG", organism = "hsa", pvalueCutoff = 0.25,
+  pAdjustMethod = "BH", limit = c(3, 50), universe = NULL,
   plotTitle = NULL, color = "#3f90f7")
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
 
-\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
-
 \item{method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+\item{type}{Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
+'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
+or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{organism}{'hsa' or 'mmu'.}
 
@@ -32,6 +30,8 @@ such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
 
 \item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
+
+\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
 \item{plotTitle}{Same as 'title' in 'plot'.}
 

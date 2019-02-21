@@ -6,7 +6,7 @@
 \alias{enrichGSE}
 \title{GSEA}
 \usage{
-enrich.GSE(geneList, keytype = "Entrez", type = "GOBP+GOMF",
+enrich.GSE(geneList, keytype = "Entrez", type = "CORUM",
   organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
   limit = c(3, 50), gmtpath = NA)
 }
@@ -15,9 +15,9 @@ enrich.GSE(geneList, keytype = "Entrez", type = "GOBP+GOMF",
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+\item{type}{Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
+'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
+or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{organism}{'hsa' or 'mmu'.}
 
@@ -28,7 +28,7 @@ such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
 \item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
-\item{gmtpath}{The path to gmt file.}
+\item{gmtpath}{The path to customized gmt file.}
 }
 \value{
 A enrichResult instance.
@@ -40,7 +40,7 @@ A universal gene set enrichment analysis tools
 data(geneList, package = "DOSE")
 \dontrun{
     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-    head(enrichRes@result)
+    head(slot(enrichRes, "result"))
 }
 
 }

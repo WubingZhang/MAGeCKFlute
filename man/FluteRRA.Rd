@@ -8,7 +8,7 @@
 \usage{
 FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
   organism = "hsa", pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", prefix = "Test", width = 9, height = 6,
+  adjust = "BH", prefix = "Test", width = 12, height = 6,
   outdir = ".")
 }
 \arguments{
@@ -16,7 +16,8 @@ FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
 
 \item{sgrna_summary}{A file path or a data frame of sgRNA summary data.}
 
-\item{lfcCutoff}{A two-length vector (default: c(-1, 1)), specifying the logFC cutoff for negative selection and positive selection.}
+\item{lfcCutoff}{A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
+for negative selection and positive selection.}
 
 \item{organism}{"hsa" or "mmu".}
 

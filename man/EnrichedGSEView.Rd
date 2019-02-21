@@ -6,22 +6,19 @@
 \alias{enrichgseview}
 \title{View enriched terms in GSEA}
 \usage{
-EnrichedGSEView(enrichment, decreasing = TRUE, plotTitle = NULL,
-  type = "All", termNum = 15, charLength = 40, filename = NULL,
-  width = 7, height = 4, ...)
+EnrichedGSEView(enrichment, top = 5, bottom = 5, charLength = 40,
+  main = NULL, filename = NULL, width = 7, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES}
 
-\item{decreasing}{Logical. Should the NES sort order be increasing or decreasing?}
+\item{top}{An integer, specifying the number of top enriched terms to show.}
 
-\item{plotTitle}{Same as 'title' in 'plot'.}
-
-\item{type}{"All" (Default), enriched geneset category for visualization.}
-
-\item{termNum}{Integer, specifying number of top enriched terms to show.}
+\item{bottom}{An integer, specifying the number of bottom enriched terms to show.}
 
 \item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab.}
+
+\item{main}{Same as 'title' in 'plot'.}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
 no output.}
@@ -42,7 +39,7 @@ Grid plot for enriched terms in GSEA
 \dontrun{
     data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-    EnrichedGSEView(as.data.frame(enrichRes), plotTitle = "GSEA Analysis")
+    EnrichedGSEView(as.data.frame(enrichRes), main = "GSEA Analysis")
 }
 }
 \seealso{

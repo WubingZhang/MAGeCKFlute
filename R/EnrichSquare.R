@@ -8,7 +8,7 @@
 #'
 #' @param beta Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.
 #' @param pvalue Pvalue cutoff.
-#' @param enrich_method One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).
+#' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
 #' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
 #' max size of pathways for enrichent analysis.

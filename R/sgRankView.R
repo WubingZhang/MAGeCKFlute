@@ -1,16 +1,17 @@
-#' View the rank of sgRNA points in horizontal bars.
+#' View sgRNA rank.
 #'
 #' @docType methods
 #' @name sgRankView
 #' @rdname sgRankView
 #'
 #' @param df A data frame, which contains columns of 'sgrna', 'Gene', and 'LFC'.
-#' @param genelist Character vector, specifying genes to be plotted.
+#' @param gene Character vector, specifying genes to be plotted.
 #' @param top Integer, specifying number of top genes to be plotted.
 #' @param bottom Integer, specifying number of bottom genes to be plotted.
-#' @param neg_ctrl A vector of negative ctrl genes.
-#' @param binwidth A numeric value specifying the bar width,
-#' @param line.size A numeric value specifying the size of segment lines.
+#' @param neg_ctrl A vector specifying negative ctrl genes.
+#' @param binwidth A numeric value specifying the bar width.
+#' @param interval A numeric value specifying the interval length between each bar.
+#' @param bg.col A character value specifying the background color.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
 #' @param width As in ggsave.
 #' @param height As in ggsave.
@@ -18,7 +19,7 @@
 #'
 #' @return An object created by \code{ggplot}.
 #'
-#' @author Wubing Zhang
+#' @author Yihan Xiao
 #' @examples
 #' data(rra.sgrna_summary)
 #' sgrra = ReadsgRRA(rra.sgrna_summary)
@@ -27,49 +28,76 @@
 #' @import ggplot2
 #' @export
 #'
-sgRankView <- function(df, genelist = NULL, top = 3, bottom = 3, neg_ctrl = NULL,
-                       binwidth = 5, line.size = 1,
-                       filename = NULL, width = 5, height = 3.5, ...){
+sgRankView <- function(df, gene = NULL, top = 3, bottom = 3, neg_ctrl = NULL,
+                       binwidth = 0.3, interval = 0.1, bg.col = "gray90",
+                       filename = NULL, width = 5, height = 3.5,...){
   df = df[order(df$LFC), ]
   df$sgrna = as.character(df$sgrna)
   df$Gene = as.character(df$Gene)
+
   if(top>0){
     top_genes = sort(table(df$Gene[(nrow(df)-100*top+1):nrow(df)]), decreasing = TRUE)
-    genelist = c(genelist, names(top_genes[1:top]))
+    gene = c(gene, names(top_genes[1:top]))
   }
   if(bottom>0){
     bott_genes = sort(table(df$Gene[1:(bottom*100)]), decreasing = TRUE)
-    genelist = c(genelist, names(bott_genes[1:bottom]))
+    gene = c(gene, names(bott_genes[1:bottom]))
   }
-  genelist = unique(genelist)
-  idx1 = which(df$Gene %in% genelist)
-  gg = df[idx1, ]
-  gg$group = "pos"
-  neg_gene = sapply(unique(gg$Gene), function(x) median(gg$LFC[gg$Gene==x]))
-  gg$group[gg$Gene%in%names(neg_gene[neg_gene<0])] = "neg"
-  gg$Gene = factor(gg$Gene, levels = names(sort(neg_gene, decreasing = TRUE)))
-  idx2 = df$Gene %in% neg_ctrl
-  if(sum(idx2)>0){
-    for(i in 1:length(unique(gg$Gene))){
-      tmp_gg = df[idx2, ]
-      tmp_gg$Gene = unique(gg$Gene)[i]
-      tmp_gg$group = "no"
-      gg = rbind.data.frame(gg, tmp_gg)
-    }
-  }
-  gg$x_end = gg$LFC - line.size*0.02
-  gg$x_end[gg$LFC<0] = gg$LFC[gg$LFC<0] + line.size*0.02
+  gene = unique(gene)
 
-  # Plot segments
-  p = ggplot(gg, aes(x = LFC, y = Gene))
-  p = p + geom_segment(aes(x=min(df$LFC), xend=max(df$LFC), yend=Gene),
-                       size=binwidth+5+line.size*0.5, colour="black", lineend = "butt")
-  p = p + geom_segment(aes(x=min(df$LFC)+line.size*0.01,
-                           xend=max(df$LFC)-line.size*0.01, yend=Gene),
-                       size=binwidth+5, colour="gray80", lineend = "butt")
-  p = p + geom_segment(aes(xend = x_end, yend = Gene, color = group), size=binwidth+5)
-  p = p + scale_color_manual(values = c("pos"="#e41a1c","neg"="#377eb8", "no"="gray50"))
-  p = p + labs(x = NULL, y = NULL)
+  subdf = df[df$Gene%in%gene, ]
+  subdf$Gene = factor(subdf$Gene, levels = gene)
+  subdf = subdf[order(subdf$Gene), ]
+  subdf$index = rep(1:length(gene), as.numeric(table(subdf$Gene)[gene]))
+  subdf$yend <- (binwidth+interval)*subdf$index-interval
+  subdf$y <- (binwidth+interval)*(subdf$index-1)
+  color <- c(rep("pos",dim(subdf)[1]))
+  color[which(subdf[,3]<0)] <- "neg"
+  subdf$color <- color
+  subdf = subdf[, c("sgrna", "Gene", "LFC", "y", "yend", "color", "index")]
+
+  #set the scale of x-axis
+  a<-round(min(subdf$LFC), 2) - 0.05
+  b<-round(max(subdf$LFC), 2) + 0.05
+
+  #bgcor
+  if(is.na(bg.col)){bg.col<-"white"}
+  bindex <- as.vector(sapply(seq(1,max(subdf$index),1),function(x){rep(x,4)}))
+  bgcol <- data.frame(as.vector(bindex))
+  bgcol$color <- c(rep("bg",length(bindex)))
+  colnames(bgcol)<- c("id","value")
+  bgcol$x <-  rep(c(a,b,b,a),max(subdf$index))
+  bgcol$y <-as.vector(sapply(seq(1,max(subdf$index),1), function(x){
+    c((interval + binwidth)*(x-1), (interval + binwidth)*(x-1),
+      (interval + binwidth)*x-interval,(interval + binwidth)*x-interval)
+    }))
+
+  #background
+  if(!is.null(neg_ctrl)){
+    neggene = rep(df[df$Gene %in% neg_ctrl, "Gene"], max(subdf$index))
+    negsgrna = rep(df[df$Gene %in% neg_ctrl, "sgrna"], max(subdf$index))
+    background <- data.frame(sgrna = as.vector(negsgrna), Gene = as.vector(neggene))
+    background$LFC <- rep(df[df$Gene %in% neg_ctrl,3], max(subdf$index))
+    seq <- as.vector(sapply(seq(1,max(subdf$index),1), function(x){
+      rep(x,length(df[df$Gene %in% neg_ctrl,2]))}))
+    background$y <- (binwidth+interval)*(seq-1)
+    background$yend <-(binwidth+interval)*seq-interval
+    background$color <-rep("tbg",length(neggene))
+    background$index = 0
+    subdf = rbind.data.frame(subdf, background)
+  }
+
+  #depict
+  cols <- c("pos"="#e41a1c","neg"="#377eb8", "tbg" = 608, "black"="black")
+  p = ggplot()
+  p = p + geom_polygon(aes(x, y, fill=value, group=id), color="gray20", data=bgcol)
+  p = p + geom_segment(aes(LFC, y, xend = LFC, yend = yend, color = color), data = subdf)
+  p = p + scale_color_manual(values = cols)
+  p = p + scale_fill_manual(values = c("bg"= bg.col))
+  p = p + scale_x_continuous(limits = c(a, b), expand = c(0, 0))
+  p = p + scale_y_continuous(breaks = bgcol$y[seq(1, nrow(bgcol), 4)] + binwidth/2,
+                             labels = gene, expand = c(0, 0))
+  p = p + labs(x = "Log2(Fold change)", y = NULL)
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))

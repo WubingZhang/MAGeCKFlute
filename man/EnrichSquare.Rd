@@ -14,7 +14,7 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
+\item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
 \item{organism}{"hsa" or "mmu".}
 

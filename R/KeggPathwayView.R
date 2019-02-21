@@ -530,8 +530,9 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
 
   message(Sys.time(), " # Starting plot kegg pathways for ", sub, title)
 
-  p1 <- KeggPathwayView(gene.data  = genelist[,c("Control","Treatment")], pathway.id = keggID,
-                        species=organism, kegg.dir = path.archive, kegg.native = kegg.native)
+  p1 <- suppressWarnings(KeggPathwayView(gene.data  = genelist[,c("Control","Treatment")],
+                        pathway.id = keggID, species=organism, kegg.dir = path.archive,
+                        kegg.native = kegg.native))
 
   #Maybe there are not multi file, but only keggID.pathview.png
   allpngnames=paste0(keggID, ".pathview.multi.png")

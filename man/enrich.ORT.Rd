@@ -6,20 +6,18 @@
 \alias{enrichORT}
 \title{Do enrichment analysis using over-representation test}
 \usage{
-enrich.ORT(geneList, universe = NULL, keytype = "Entrez",
-  type = "GOBP+GOMF", organism = "hsa", pvalueCutoff = 0.25,
-  pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA)
+enrich.ORT(geneList, keytype = "Entrez", type = "CORUM",
+  organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
+  limit = c(3, 50), universe = NULL, gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
 
-\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
-
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+\item{type}{Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
+'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
+or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{organism}{'hsa' or 'mmu'.}
 
@@ -30,7 +28,9 @@ such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
 \item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
-\item{gmtpath}{The path to gmt file.}
+\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
+
+\item{gmtpath}{The path to customized gmt file.}
 }
 \value{
 A enrichedResult instance.
@@ -42,7 +42,7 @@ Do enrichment analysis using over-representation test
 data(geneList, package = "DOSE")
 genes <- geneList[1:100]
 enrichedRes <- enrich.ORT(genes)
-head(as.data.frame(enrichedRes))
+head(slot(enrichedRes, "result"))
 
 }
 \seealso{

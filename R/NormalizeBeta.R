@@ -59,9 +59,11 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
     }
     idx = which(rownames(beta) %in% posControl$EntrezID)
     normalized = as.matrix(beta[,samples])
-    mid = apply(normalized[idx,], 2, median)
-    mid = abs(mid - minus)
-    normalized = t(t(normalized) / mid)
+    if(length(idx)>0){
+      mid = apply(normalized[idx,], 2, median)
+      mid = abs(mid - minus)
+      normalized = t(t(normalized) / mid)
+    }
   }
   if(method=="loess"){
     normalized = as.matrix(beta[,samples])

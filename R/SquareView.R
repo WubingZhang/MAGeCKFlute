@@ -15,8 +15,7 @@
 #' @param label.top Boolean, whether label the top selected genes, default label the top 10 genes in each group.
 #' @param top Integer, specifying the number of top selected genes to be labeled. Default is 5.
 #' @param genelist Character vector, specifying labeled genes.
-#' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
-#' or how many standard deviation will be used as cutoff.
+#' @param scale_cutoff Numeric, specifying the number of standard deviation to be used as cutoff.
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
 #' don't save the figure on disk.
@@ -44,8 +43,10 @@
 #'
 
 #Plot square
-SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, label.top = TRUE, top=5, genelist=c(),
-                     scale_cutoff=1, main=NULL, filename=NULL, width=5, height=4, ...){
+SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
+                     label = 0, label.top = TRUE, top=5, genelist=c(),
+                     scale_cutoff = 1.96, main=NULL,
+                     filename=NULL, width=5, height=4, ...){
   requireNamespace("ggExtra", quietly=TRUE) || stop("need ggExtra package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
@@ -65,7 +66,7 @@ SquareView<-function(beta, ctrlname="Control",treatname="Treatment", label = 0, 
   drug_cutoff = CutoffCalling(beta$Treatment, scale=scale_cutoff)
   x=beta$Control; y=beta$Treatment
   beta$diff = y-x
-  intercept=CutoffCalling(y-x, scale = scale_cutoff)
+  intercept=CutoffCalling(y-x, scale = 1)
   y_max=x+intercept; y_min=x-intercept
   idx0=y>y_max | y<y_min
 

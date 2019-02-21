@@ -36,16 +36,8 @@ EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff 
     return(p1)
   }
   # Reorder enrichment table
-  enrichment$p.adjust = p.adjust(enrichment$pvalue, "BH")
   enrichment$logP = round(-log10(enrichment$p.adjust), 1)
   enrichment = enrichment[!is.na(enrichment$ID),]
-  enrichment=enrichment[!duplicated(enrichment$Description),]
-  enrichment = enrichment[order(enrichment$NES), ]
-  idx = c()
-  if(bottom>0) idx = 1:min(bottom, nrow(enrichment))
-  if(top>0) idx = c(idx, max(1, nrow(enrichment)-top+1):nrow(enrichment))
-  idx = unique(idx)
-  enrichment = enrichment[idx, ]
 
   #normalize term description
   terms=as.character(enrichment$Description)
@@ -53,24 +45,32 @@ EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff 
     x=as.character(x)
     if(nchar(x)>k){x=substr(x,start=1,stop=k)}
     return(x)}, charLength)
-  enrichment$Description=do.call(rbind,terms)
-  idx = duplicated(enrichment$Description)
-  enrichment=enrichment[!idx,]
-  enrichment$Name=factor(enrichment$Description, levels=enrichment$Description)
+  enrichment$Description = do.call(rbind,terms)
+  enrichment = enrichment[!duplicated(enrichment$Description),]
+  enrichment = enrichment[order(enrichment$NES), ]
+  idx = c()
+  if(bottom>0) idx = 1:min(bottom, nrow(enrichment))
+  if(top>0) idx = c(idx, max(1, nrow(enrichment)-top+1):nrow(enrichment))
+  idx = unique(idx)
+  enrichment = enrichment[idx, ]
+
+  enrichment$Description = factor(enrichment$Description, levels=enrichment$Description)
 
   #Prepare data for plotting.
   geneNames = strsplit(enrichment$geneName, "\\/")
   geneIds = strsplit(enrichment$geneID, "\\/")
-  gg = data.frame(ID = rep(enrichment$ID, enrichment$Count), Term = rep(enrichment$Description, enrichment$Count),
+  gg = data.frame(ID = rep(enrichment$ID, enrichment$Count),
+                  Term = rep(enrichment$Description, enrichment$Count),
              Gene = unlist(geneNames), geneIds = unlist(geneIds), stringsAsFactors = FALSE)
+  names(geneList) = toupper(names(geneList))
   if(keytype == "Symbol") gg$GeneScore = geneList[gg$Gene]
   if(keytype == "Entrez") gg$GeneScore = geneList[gg$geneIds]
   gg$Size = abs(gg$GeneScore)
   idx = is.na(gg$GeneScore) | (gg$GeneScore>gene_cutoff[1] & gg$GeneScore<gene_cutoff[2])
   gg = gg[!idx, ]
+  gg$Term = factor(gg$Term, levels = unique(gg$Term))
   gg = gg[order(gg$GeneScore), ]
   gg$Gene = factor(gg$Gene, levels = unique(gg$Gene))
-  gg$Term = factor(gg$Term, levels = unique(gg$Term))
   # Plot the dot heatmap
   p1 = ggplot(data=gg, aes(x=Gene, y=Term, size=Size, color = GeneScore))
   p1 = p1 + geom_point()

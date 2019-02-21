@@ -49,10 +49,13 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
       gg = gg[order(gg[,y], decreasing = TRUE), ]
       idx1 = idx2 = c()
       if(top>0){
-        idx1 = which(gg$group=="up")[1:top]
-        idx2 = which(gg$group=="down")[1:top]
+        idx1 = which(gg$group=="up")[1:min(top, sum(gg$group=="up"))]
+        idx2 = which(gg$group=="down")[1:min(top, sum(gg$group=="down"))]
       }
       idx = unique(c(idx1, idx2, which(gg$Label %in% topnames)))
+      gg$Label = as.character(gg$Label)
+      gg$Label[setdiff(1:nrow(gg), idx)] = ""
+      gg$Label = factor(gg$Label, levels = setdiff(unique(gg$Label), ""))
     }
     mycolour=c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
     #=========

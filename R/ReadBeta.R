@@ -30,7 +30,7 @@ ReadBeta <- function(gene_summary, keytype = "Symbol", organism = 'hsa'){
   if(is.character(gene_summary) && file.exists(gene_summary)){
     dd=read.table(file=gene_summary,header= TRUE, check.names = FALSE, stringsAsFactors = FALSE)
   }else if(is.data.frame(gene_summary) &&
-          ("Gene"%in%names(gene_summary)) &&
+          ("Gene" %in% names(gene_summary)) &&
           any(grepl(".beta", names(gene_summary)))){
     dd = gene_summary
   }else{

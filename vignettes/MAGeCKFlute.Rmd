@@ -1,11 +1,11 @@
 ---
 title: "Integrative analysis pipeline for pooled CRISPR functional genetic screens - MAGeCKFlute"
 author: "WubingZhang, Binbin Wang"
-date: "9 Dec 2018"
-package: "1.3.1"
+date: "21 Feb, 2019"
+package: "1.2.3"
 abstract: >
-  Genome-wide CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
-  Here, We developed MAGeCKFlute for supporting downstream analysis, utilizing the data provided through MAGeCK and MAGeCK-VISPR. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis and pathway enrichment analysis of these genes. The package also visualizes genes in the context of pathways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
+  CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
+  Here, We developed MAGeCKFlute for supporting downstream analysis. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis, pathway enrichment analysis and protein complex enrichment analysis of these genes. The package also visualizes genes in multiple ways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
  
   MAGeCKFlute package version: `r packageVersion("MAGeCKFlute")`
 output:
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
 ```	
 
 **Note:** if you use MAGeCKFlute in published research, please cite:
-
+Binbin Wang, Mei Wang, Wubing Zhang. "Integrative analysis of pooled CRISPR genetic screens using MAGeCKFlute." Nature Protocols (2019), doi: [10.1038/s41596-018-0113-7](https://www.nature.com/articles/s41596-018-0113-7).
 
 ## How to get help for MAGeCKFlute
 
@@ -43,25 +43,25 @@ an alert to the package authors to respond on the support site.  See
 the first question in the list of [Frequently Asked Questions](#FAQ)
 (FAQ) for information about how to construct an informative post. 
 
-You should **not** email your question to the package authors, as we will
-just reply that the question should be posted to the 
-**Bioconductor support site**.
-
+You can also email your question to the package authors.
 
 ## Input data
 
-As input, the MAGeCKFlute package expects gene summary file as obtained by running commands `mageck test` or `mageck mle` in MAGeCK [@Wei2014] and MAGeCK-VISPR [@Wei2015], which are developed by our lab previously, to analyze CRISPR/Cas9 screen data in different scenarios[@Tim2014, @Hiroko2014, @Ophir2014, @Luke2014, @Silvana2015]. Both algorithms use negative binomial models to model the variances of sgRNAs, and use Robust Rank Aggregation (for MAGeCK) or maximum likelihood framework (for MAGeCK-VISPR) for a robust identification of selected genes.
+### MAGeCK results
 
-MAGeCK-MLE can be used to analyze CRISPR screen data from multi-conditioned experiments. MAGeCK-MLE also normalizes the data across multiple samples, making them comparable to each other. The most important ouput of MAGeCK MLE is “gene_summary” file, which includes the beta scores of multiple conditions and the associated statistics. The ‘beta score’ for each gene describes how the gene is selected: a positive beta score indicates a positive selection, and a negative beta score indicates a negative selection.
+MAGeCK [@Wei2014] and MAGeCK-VISPR [@Wei2015] are developed by our lab previously, to analyze CRISPR/Cas9 screen data in different scenarios[@Tim2014, @Hiroko2014, @Ophir2014, @Luke2014, @Silvana2015]. Both algorithms use negative binomial models to model the variances of sgRNAs, and use Robust Rank Aggregation (for MAGeCK) or maximum likelihood framework (for MAGeCK-VISPR) for a robust identification of selected genes.
 
-MAGeCK RRA allows for the comparison between two experimental conditions. It can identify genes and sgRNAs are significantly selected between the two conditions. The most important output of MAGeCK RRA is the file “gene_summary.txt”. MAGeCK RRA will output both the negative score and positive score for each gene. A smaller score indicates higher gene importance. MAGeCK RRA  will also output the statistical value for the scores of each gene. Genes that are significantly positively and negatively selected can be identified based on the p-value or FDR.
+The command `mageck mle` computes beta scores and the associated statistics for all genes in  multiple conditions. The **beta score** describes how the gene is selected: a positive beta score indicates a positive selection, and a negative beta score indicates a negative selection. 
+
+The command `mageck test` uses Robust Rank Aggregation (RRA) for robust identification of CRISPR-screen hits, and outputs the summary results at both sgRNA and gene level.
+
+### Customized matrix input
+FluteMLE: A matrix contains columns of 'Gene', \code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter \code{ctrlname} and \code{treatname}.
+FluteRRA: A matrix contains columns of "id", "neg.goodsgrna", "neg.lfc", "neg.fdr", "pos.goodsgrna", and "pos.fdr".
 
 ## Quick start
 
-Here we show the most basic steps for integrative analysis pipeline using gene summary file. Before using MAGeCKFlute, analyzing CRISPR/Cas9 screen data using MAGeCK RRA (in MAGeCK [@Wei2014]) or MAGeCK MLE (in MAGeCK-VISPR [@Wei2015]) is necessary, which result in the generation of the gene summary file. 
-
-To run MAGeCKFlute pipeline, we need gene summary file generated by running MAGeCK RRA or MAGeCK MLE.
-MAGeCKFlute package provides two example data, one is `MLE_Data`, and the other is `RRA_Data`. 
+Here we show the most basic steps for integrative analysis pipeline. MAGeCKFlute package provides several example data, including `countsummary`, `rra.gene_summary`, `rra.sgrna_summary`, and `mle.gene_summary`, which are generated by running MAGeCK. 
 We will work with them in this document.
 
 ```{r library, eval=TRUE}
@@ -75,16 +75,16 @@ library(MAGeCKFlute)
 data("rra.gene_summary")
 data("rra.sgrna_summary")
 ##Run the downstream analysis pipeline for MAGeCK RRA
-FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa", lfcCutoff = c(-0.3, 0.3))
+FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa")
 ```
-All pipeline results are written into local directory "./BRAF_Flute_Results/" too, and all figures are integrated into file "RRA_Flute.rra_summary.pdf".
+All pipeline results are written into local directory "./RRA_Flute_Results/", and all figures are integrated into file "RRA_Flute.rra_summary.pdf".
 
 **Downstream analysis pipeline for MAGeCK MLE**
 ```{r quickStart1, eval=FALSE}
-##Load gene summary data in MAGeCK MLE results
+## Load gene summary data in MAGeCK MLE results
 data("mle.gene_summary")
-##Run the downstream analysis pipeline for MAGeCK MLE
-FluteMLE(mle.gene_summary, ctrlname=c("dmso"), treatname=c("plx"), prefix="MLE_", organism="hsa")
+## Run the downstream analysis pipeline for MAGeCK MLE
+FluteMLE(mle.gene_summary, ctrlname="dmso", treatname="plx", prefix="MLE", organism="hsa")
 ```
 All pipeline results are written into local directory "./MLE_Flute_Results/", and all figures are integrated into file "MLE_Flute.mle_summary.pdf".
 
@@ -135,18 +135,20 @@ p1 = VolcanoView(dd.rra, x = "LFC", y = "FDR", Label = "Official")
 print(p1)
 ```
 
-We provide a function `sgRankView` to visualize the rank of sgRNA targeting top negative and positive selected genes.
-```{r sgRNARank, fig.height=4, fig.width=7}
-p2 = sgRankView(dd.sgrna)
-print(p2)
-```
-
-We also provide a function `RankView` to visualize top negative and positive selected genes.
+We provide a function `RankView` to visualize top negative and positive selected genes.
 ```{r rankrra, fig.height=4, fig.width=6}
 geneList= dd.rra$LFC
 names(geneList) = dd.rra$Official
-RankView(geneList)
+p2 = RankView(geneList, top = 10, bottom = 10)
+print(p2)
 ```
+
+We also provide a function `sgRankView` to visualize the rank of sgRNA targeting top negative and positive selected genes.
+```{r sgRNARank, fig.height=4, fig.width=7}
+p2 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = levels(p1$data$Label))
+print(p2)
+```
+
 
 Select negative selection and positive selection genes and perform enrichment analysis.
 
@@ -156,15 +158,14 @@ universe = dd.rra$EntrezID
 geneList= dd.rra$LFC
 names(geneList) = universe
 
-enrich = enrich.GSE(geneList = geneList, type = "All")
+enrich = enrich.GSE(geneList = geneList, type = "CORUM")
 ```
 
 Visualize the top enriched genes and pathways/GO terms using `EnrichedGeneView`, `EnrichedView` and `EnrichedGSEView`.
 ```{r enrichedGeneView, fig.height=5, fig.width=15}
-EnrichedGeneView(as.data.frame(enrich), geneList, keytype = "Entrez")
-EnrichedGSEView(as.data.frame(enrich), decreasing = FALSE)
-EnrichedGSEView(as.data.frame(enrich), decreasing = TRUE)
-EnrichedView(as.data.frame(enrich))
+EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
+EnrichedGSEView(slot(enrich, "result"))
+EnrichedView(slot(enrich, "result"))
 ```
 
 
@@ -230,13 +231,13 @@ conditions should be similar. We can evaluate the distribution of beta
 scores using the function ‘ViolinView’, ‘DensityView’, and ‘DensityDiffView’.
 
 ```{r DistributeBeta, fig.height=5, fig.width=8}
-ViolinView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
-DensityView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
-DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+ViolinView(dd_essential, samples=c(ctrlname, treatname))
+DensityView(dd_essential, samples=c(ctrlname, treatname))
+DensityDiffView(dd_essential, ctrlname, treatname)
 
 #we can also use the function 'MAView' to evaluate the data quality of normalized
 #beta score profile.
-MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized")
+MAView(dd_essential, ctrlname, treatname)
 ```
 
 ### Estimate cell cycle time by linear fitting
@@ -245,7 +246,7 @@ After normalization, the cell cycle time in different condition should be almost
 
 ```{r EstimateCellCycle, fig.height=5, fig.width=8}
 ##Fitting beta score of all genes
-CellCycleView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+CellCycleView(dd_essential, ctrlname, treatname)
 ```
 
 ### Positive selection and negative selection
@@ -257,7 +258,7 @@ We can also use function `RankView` to rank the beta score deviation
 between control and treatment and mark top selected genes in the figure.
 
 ```{r selection2, fig.height=5, fig.width=7}
-p1 = ScatterView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+p1 = ScatterView(dd_essential, ctrlname, treatname)
 print(p1)
 ```
 
@@ -268,13 +269,12 @@ dd_essential$Treatment = rowMeans(dd_essential[,treatname, drop = FALSE])
 
 rankdata = dd_essential$Treatment - dd_essential$Control
 names(rankdata) = dd_essential$Gene
-p2 = RankView(rankdata, main="Cell cycle normalized")
+p2 = RankView(rankdata)
 print(p2)
 ```
 
 ### Functional analysis of selected genes
-For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can
-be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` and `EnrichedGSEView` (for `enrich.GSE`) can be used to generate `gridPlot` from `enrichRes`easily, as shown below. 
+For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` and `EnrichedGSEView` (for `enrich.GSE`) can be used to generate `gridPlot` from `enrichRes` easily, as shown below. 
 
 ```{r EnrichAB, fig.height=5, fig.width=10}
 ## Get information of positive and negative selection genes
@@ -287,22 +287,22 @@ names(geneList)=genes
 geneList = sort(geneList, decreasing = TRUE)
 universe=rownames(groupAB)
 ## Do enrichment analysis using HGT method
-keggA = enrich.HGT(geneList[1:100], universe, organism = "hsa", limit = c(3, 50))
-keggA_grid = EnrichedGSEView(as.data.frame(keggA), plotTitle = "Positive selection")
+hgtA = enrich.HGT(geneList[1:100], organism = "hsa", universe = universe)
+hgtA_grid = EnrichedGSEView(slot(hgtA, "result"))
 
 ## look at the results
-head(as.data.frame(keggA))
-print(keggA_grid)
+head(slot(hgtA, "result"))
+print(hgtA_grid)
 
 ```
 
 ```{r GSEA, fig.height=5, fig.width=10}
 ## Do enrichment analysis using GSEA method
 gseA = enrich.GSE(geneList, type = "KEGG", organism = "hsa", pvalueCutoff = 1)
-gseA_grid = EnrichedGSEView(as.data.frame(gseA), plotTitle = "Positive selection")
+gseA_grid = EnrichedGSEView(slot(gseA, "result"))
 
 #should same as
-head(as.data.frame(gseA))
+head(slot(gseA, "result"))
 print(gseA_grid)
 ```
 
@@ -311,23 +311,15 @@ the beta score level in control and treatment on pathway map.[@Weijun2013]
 
 ```{r pathview, fig.height=10, fig.width=20}
 genedata = dd_essential[,c("Control","Treatment")]
-keggID = gsub("KEGG_", "", as.data.frame(gseA)$ID[1])
-#The pathway map will be located on current workspace
-KeggPathwayView(gene.data = genedata, pathway.id = keggID, species = "hsa")
-##Read the figure into R
-pngname=paste0(keggID, ".pathview.multi.png")
-grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
-file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
+keggID = gsub("KEGG_", "", slot(gseA, "result")$ID[1])
+arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
 ```
 
 ### Identify treatment-associated genes using 9-square model
-
-Considering the difference of beta scores in control and treatment sample, we developed a 9-square model, which group all genes into several subgroups. Among these subgroups, four subgroup genes are treatment-associated, which correspond to specific functions. Group1 and Group3 genes are not selected in the control sample, while they are significantly selected in the treatment sample, so they may be related to drug resistance. Group2 and Group4
-genes are selected in control, but they are not selected in treatment, so
-maybe these genes are associated with drug targets.
+We developed a 9-square model, which group all genes into several subgroups by considering the selection status of genes in control and treatment. Each subgroup genes correspond to specific functions.
 
 ```{r Square, fig.height=7, fig.width=8}
-p3 = SquareView(dd_essential, label = "Gene", main="Cell cycle normalized")
+p3 = SquareView(dd_essential, label = "Gene")
 print(p3)
 ```
 
@@ -335,30 +327,26 @@ print(p3)
 Same as the section above. We can do enrichment analysis for treatment-associated genes.
 
 ```{r EnrichSquare, fig.height=5, fig.width=9}
-##Get information of treatment-associated genes
+#Get information of treatment-associated genes
 Square9 = p3$data
-##==select group1 genes in 9-Square
+# Select group1 genes in 9-Square
 idx=Square9$group=="Group1"
 geneList = (Square9$Treatment - Square9$Control)[idx]
 names(geneList) = rownames(Square9)[idx]
 universe=rownames(Square9)
-#====KEGG_enrichment=====
-kegg1=enrich.ORT(geneList = geneList, universe = universe, type = "KEGG", limit = c(3, 50))
-## look at the results
-head(as.data.frame(kegg1))
-EnrichedGSEView(as.data.frame(kegg1))
+# KEGG_enrichment
+kegg1 = enrich.HGT(geneList = geneList, universe = universe, type = "KEGG")
+# View the results
+head(slot(kegg1, "result"))
+EnrichedGSEView(slot(kegg1, "result"))
 ```
 
 Also, pathway visualization can be done using function `KeggPathwayView`, the same as the section above.
 
 ```{r pathview2, eval=FALSE}
 genedata = dd_essential[, c("Control","Treatment")]
-keggID = gsub("KEGG_", "", as.data.frame(kegg1)$ID[1])
-KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
-##Read the figure into R
-pngname=paste0(keggID, ".pathview.multi.png")
-grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
-file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
+keggID = gsub("KEGG_", "", slot(kegg1, "result")$ID[1])
+arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
 ```
 
 
@@ -369,4 +357,8 @@ sessionInfo()
 ```
 
 # References
+Subramanian, A. et al. Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles. Proc. Natl. Acad. Sci. USA 102, [15545–15550](https://www.pnas.org/content/102/43/15545) (2005).
 
+Yu, G., Lg, W., H., Y. & Qy., H. clusterProfiler: an R package for comparing biological themes among gene clusters. OMICS 16, [284–287](https://www.liebertpub.com/doi/10.1089/omi.2011.0118) (2012).
+
+Luo, W. & Brouwer, C. Pathview: an R/Bioconductor package for pathway-based data integration and visualization. Bioinformatics 29, [1830–1831](https://academic.oup.com/bioinformatics/article-abstract/29/14/1830/232698) (2013).

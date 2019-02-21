@@ -9,7 +9,8 @@
 #'
 #' @param gene_summary A file path or a data frame of gene summary data.
 #' @param sgrna_summary A file path or a data frame of sgRNA summary data.
-#' @param lfcCutoff A two-length vector (default: c(-1, 1)), specifying the logFC cutoff for negative selection and positive selection.
+#' @param lfcCutoff A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
+#' for negative selection and positive selection.
 #' @param organism "hsa" or "mmu".
 #' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
@@ -50,7 +51,7 @@
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism = "hsa",
                      pathway_limit = c(3, 50), pvalueCutoff = 0.25, adjust = "BH",
-                     prefix = "Test", width=9, height = 6, outdir = "."){
+                     prefix = "Test", width = 12, height = 6, outdir = "."){
   #=========Prepare the running environment=========
   {
     message(Sys.time(), " # Create output dir and pdf file ...")
@@ -76,11 +77,15 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
   p3 = RankView(geneList)
   ggsave(p3, filename = file.path(out.dir_sub,"RRA/RankView_Gene.png"),
          units = "in", width = 6.5, height = 4)
-  p2 = sgRankView(dd.sgrna)
-  ggsave(p2, filename = file.path(out.dir_sub,"RRA/RankView_sgRNA.png"),
+  topgenes = as.vector(p1$data$Label[!is.na(p1$data$Label) & p1$data$LFC>0])
+  botgenes = as.vector(p1$data$Label[!is.na(p1$data$Label) & p1$data$LFC<0])
+  p2 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = topgenes)
+  ggsave(p2, filename = file.path(out.dir_sub,"RRA/RankView_sgRNA_top8_.png"),
          units = "in", width = 6.5, height = 4)
-  grid.arrange(p1, ncol = 1)
-  grid.arrange(p2, p3, ncol = 1)
+  p4 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = botgenes)
+  ggsave(p4, filename = file.path(out.dir_sub,"RRA/RankView_sgRNA_bott8_.png"),
+         units = "in", width = 6.5, height = 4)
+  grid.arrange(p1, p3, p2, p4, ncol = 2)
   #enrichment analysis
   {
     universe=dd$EntrezID
@@ -88,11 +93,11 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
     names(geneList) = dd$EntrezID
     idx=dd$LFC<lfcCutoff[1]
     kegg.neg=enrichment_analysis(geneList=geneList[idx], universe=universe,
-                                 method = "ORT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
+                                 method = "HGT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
                                  organism=organism,pvalueCutoff=pvalueCutoff,
                                  plotTitle="Pathway: neg",color="#3f90f7",
                                  pAdjustMethod = adjust, limit = pathway_limit)
-    go.neg=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "ORT",
+    go.neg=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "HGT",
                                type = "GOBP+GPMF+GOCC", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="Gene Ontology: neg",
                                color="#3f90f7", pAdjustMethod = adjust, limit = pathway_limit)
@@ -106,11 +111,11 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
 
     idx=dd$LFC>lfcCutoff[2]
     kegg.pos=enrichment_analysis(geneList=geneList[idx], universe=universe,
-                                 method = "ORT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
+                                 method = "HGT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
                                  organism=organism, pvalueCutoff=pvalueCutoff,
                                  plotTitle="Pathway: pos",color="#e41a1c",
                                  pAdjustMethod = adjust, limit = pathway_limit)
-    go.pos=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "ORT",
+    go.pos=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "HGT",
                                type = "GOBP+GOMF+GOCC", organism=organism,
                                pvalueCutoff = pvalueCutoff, plotTitle="Gene Ontology: pos",
                                color="#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
@@ -121,33 +126,32 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
            units = "in", width = 6.5, height = 4)
     saveRDS(go.pos, file.path(out.dir_sub, "RRA/EnrichRes_go.pos.rds"))
 
-    grid.arrange(kegg.neg$gridPlot, kegg.pos$gridPlot, ncol = 1)
-    grid.arrange(go.neg$gridPlot, go.pos$gridPlot, ncol = 1)
+    grid.arrange(kegg.neg$gridPlot, kegg.pos$gridPlot, go.neg$gridPlot, go.pos$gridPlot, ncol = 2)
 
     if(!is.null(kegg.neg$enrichRes)){
       p1 = EnrichedGeneView(enrichment=kegg.neg$enrichRes@result, geneList, keytype = "Entrez",
-                            gene_cutoff = lfcCutoff)
+                            gene_cutoff = lfcCutoff, top = 0, bottom = 15)
       ggsave(filename = file.path(out.dir_sub,"RRA/EnrichedGeneView_kegg.neg.png"), p1,
              units = "in", width = 10, height = 7)
       grid.arrange(p1, ncol = 1)
     }
     if(!is.null(go.neg$enrichRes)){
       p2 = EnrichedGeneView(enrichment=go.neg$enrichRes@result, geneList, keytype = "Entrez",
-                            gene_cutoff = lfcCutoff)
+                            gene_cutoff = lfcCutoff, top = 0, bottom = 15)
       ggsave(filename=file.path(out.dir_sub,"RRA/EnrichedGeneView_go.neg.png"), p2,
              units = "in", width = 10, height = 7)
       grid.arrange(p2, ncol = 1)
     }
     if(!is.null(kegg.pos$enrichRes)){
       p3 = EnrichedGeneView(enrichment=kegg.pos$enrichRes@result, geneList, keytype = "Entrez",
-                            gene_cutoff = lfcCutoff)
+                            gene_cutoff = lfcCutoff, top = 15, bottom = 0)
       ggsave(filename = file.path(out.dir_sub, "RRA/EnrichedGeneView_kegg.pos.png"), p3,
            units = "in", width = 10, height = 7)
       grid.arrange(p3, ncol = 1)
     }
     if(!is.null(go.pos$enrichRes)){
       p4 = EnrichedGeneView(enrichment=go.pos$enrichRes@result, geneList, keytype = "Entrez",
-                            gene_cutoff = lfcCutoff)
+                            gene_cutoff = lfcCutoff, top = 15, bottom = 0)
       ggsave(filename=file.path(out.dir_sub, "RRA/EnrichedGeneView_go.pos.png"), p4,
            units = "in", width = 10, height = 7)
       grid.arrange(p4, ncol = 1)

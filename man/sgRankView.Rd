@@ -3,26 +3,28 @@
 \docType{methods}
 \name{sgRankView}
 \alias{sgRankView}
-\title{View the rank of sgRNA points in horizontal bars.}
+\title{View sgRNA rank.}
 \usage{
-sgRankView(df, genelist = NULL, top = 3, bottom = 3,
-  neg_ctrl = NULL, binwidth = 5, line.size = 1, filename = NULL,
-  width = 5, height = 3.5, ...)
+sgRankView(df, gene = NULL, top = 3, bottom = 3, neg_ctrl = NULL,
+  binwidth = 0.3, interval = 0.1, bg.col = "gray90",
+  filename = NULL, width = 5, height = 3.5, ...)
 }
 \arguments{
 \item{df}{A data frame, which contains columns of 'sgrna', 'Gene', and 'LFC'.}
 
-\item{genelist}{Character vector, specifying genes to be plotted.}
+\item{gene}{Character vector, specifying genes to be plotted.}
 
 \item{top}{Integer, specifying number of top genes to be plotted.}
 
 \item{bottom}{Integer, specifying number of bottom genes to be plotted.}
 
-\item{neg_ctrl}{A vector of negative ctrl genes.}
+\item{neg_ctrl}{A vector specifying negative ctrl genes.}
 
-\item{binwidth}{A numeric value specifying the bar width,}
+\item{binwidth}{A numeric value specifying the bar width.}
 
-\item{line.size}{A numeric value specifying the size of segment lines.}
+\item{interval}{A numeric value specifying the interval length between each bar.}
+
+\item{bg.col}{A character value specifying the background color.}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
 
@@ -36,7 +38,7 @@ sgRankView(df, genelist = NULL, top = 3, bottom = 3,
 An object created by \code{ggplot}.
 }
 \description{
-View the rank of sgRNA points in horizontal bars.
+View sgRNA rank.
 }
 \examples{
 data(rra.sgrna_summary)
@@ -45,5 +47,5 @@ sgRankView(sgrra)
 
 }
 \author{
-Wubing Zhang
+Yihan Xiao
 }

@@ -6,17 +6,17 @@
 #' @aliases Hypergeometric
 #'
 #' @param geneList A numeric vector with gene as names.
-#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
+#' @param type Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
+#' 'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
+#' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
-#' @param gmtpath The path to gmt file.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
+#' @param gmtpath The path to customized gmt file.
 #'
 #' @return A enrichResult instance.
 #'
@@ -29,18 +29,18 @@
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
-#' genes <- geneList[1:100]
-#' enrichRes <- enrich.HGT(genes, type = "KEGG")
-#' head(as.data.frame(enrichRes))
+#' genes <- geneList[1:300]
+#' enrichRes <- enrich.HGT(genes, type = "KEGG", )
+#' head(slot(enrichRes, "result"))
 #'
 #' @import DOSE
 #' @importFrom data.table fread
 #'
 #' @export
 
-enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOBP+GOMF",
-                      organism = 'hsa', pvalueCutoff = 0.25, pAdjustMethod = "BH",
-                      limit = c(3, 50), gmtpath = NA){
+enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
+                      organism = 'hsa', pvalueCutoff = 0.05, pAdjustMethod = "BH",
+                      limit = c(3, 50), universe = NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
@@ -53,11 +53,14 @@ enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOB
   gene2path = ReadGMT(gmtpath, limit = c(1, 500))
   close(gmtpath)
   names(gene2path) = c("Gene","PathwayID", "PathwayName")
-  gene2path$PathwayName = toupper(gene2path$PathwayName)
-  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
-  type = unlist(strsplit(type, "\\+"))
-  idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
-  gene2path = gene2path[idx, ]
+  gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
+                                 tolower(substr(gene2path$PathwayName, 2,
+                                                nchar(gene2path$PathwayName))))
+  if(type != "All"){
+    type = unlist(strsplit(type, "\\+"))
+    idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
+    gene2path = gene2path[idx, ]
+  }
   gene2path = gene2path[!is.na(gene2path$Gene), ]
   idx = duplicated(gene2path$PathwayID)
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
@@ -65,12 +68,12 @@ enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOB
                         stringsAsFactors = FALSE)
 
   ## Gene ID conversion
-  if(keytype == "Symbol"){
+  if(keytype != "Entrez"){
     allsymbol = names(geneList)
-    gene = TransGeneID(allsymbol, "Symbol", "Entrez", organism = organism)
+    gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
     geneList = geneList[!duplicated(gene)]
     names(geneList) = gene[!duplicated(gene)]
-    universe = TransGeneID(universe, "Symbol", "Entrez", organism = organism)
+    universe = TransGeneID(universe, keytype, "Entrez", organism = organism)
     universe = universe[!is.na(universe)]
   }
   gene = names(geneList)
@@ -92,31 +95,36 @@ enrich.HGT = function(geneList, universe = NULL, keytype = "Entrez", type = "GOB
     idx2 = universe %in% gene
     q = length(universe[idx1&idx2])
     geneID = paste(universe[idx1&idx2], collapse = "/")
-    retr <- list(ID = NA, Description = NA, NES = NA, pvalue = NA, GeneRatio = NA,
-                 BgRatio = NA, geneID = NA, geneName = NA, Count = NA)
-    if(k>=limit[1] & k<=limit[2] & q>0){
+    retr <- list(ID = NA, Description = NA, NES = NA,
+                 pvalue = NA, GeneRatio = NA, BgRatio = NA,
+                 geneID = NA, geneName = NA, Count = NA)
+    if(k>=limit[1] & k<=limit[2] & q>2){
       pvalue = phyper(q, m, n, k, lower.tail = FALSE)
       retr <- list(ID = pid, Description = pathways$PathwayName[pathways$PathwayID==pid],
-                   NES = sum(geneList[universe[idx1&idx2]]) / log2(sum(idx1&idx2)+1), pvalue = pvalue,
-                   GeneRatio = paste(q, sum(idx1), sep="/"), BgRatio = paste(sum(idx1), length(pGene), sep="/"),
-                   geneID = geneID, geneName = paste(allsymbol[universe[idx1&idx2]], collapse = "/"), Count = q)
+                   NES = mean(geneList[universe[idx1&idx2]]) * sum(idx1&idx2)^0.6,
+                   pvalue = pvalue, GeneRatio = paste(q, sum(idx1), sep="/"),
+                   BgRatio = paste(sum(idx1), length(pGene), sep="/"),
+                   geneID = geneID, geneName = paste(allsymbol[universe[idx1&idx2]],
+                                                     collapse = "/"), Count = q)
     }
     return(retr)
   }
   res = sapply(pathways$PathwayID, HGT)
   res = as.data.frame(t(res), stringsAsFactors = FALSE)
   res = res[!is.na(res$ID), ]
-  res[, c(1:2, 5:8)] = matrix(unlist(res[, c(1:2, 5:8)]), ncol = 6)
-  res[, c(3:4, 9)] = matrix(unlist(res[, c(3:4, 9)]), ncol = 3)
-  res$p.adjust = p.adjust(res$pvalue, pAdjustMethod)
-  res$nLogpvalue = -log10(res$p.adjust)
-  idx = which(res$pvalue<=pvalueCutoff & res$p.adjust<=pvalueCutoff)
-  if(length(idx)>0){
-    res = res[idx, ]
-    idx = c("ID", "Description", "NES", "pvalue", "p.adjust",
-            "GeneRatio", "BgRatio", "geneID", "geneName", "Count")
-    res = res[, idx]
-  }else res=data.frame()
+  if(nrow(res)>0){
+    res[, c(1:2, 5:8)] = matrix(unlist(res[, c(1:2, 5:8)]), ncol = 6)
+    res[, c(3:4, 9)] = matrix(unlist(res[, c(3:4, 9)]), ncol = 3)
+    res$p.adjust = p.adjust(res$pvalue, pAdjustMethod)
+    res$nLogpvalue = -log10(res$p.adjust)
+    idx = which(res$pvalue<=pvalueCutoff & res$p.adjust<=pvalueCutoff)
+    if(length(idx)>0){
+      res = res[idx, ]
+      idx = c("ID", "Description", "NES", "pvalue", "p.adjust",
+              "GeneRatio", "BgRatio", "geneID", "geneName", "Count")
+      res = res[, idx]
+    }else res=data.frame()
+  }
 
   ## Create enrichResult object
   new("enrichResult",

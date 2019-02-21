@@ -8,7 +8,7 @@
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   label = 0, label.top = TRUE, top = 5, genelist = c(),
-  scale_cutoff = 1, main = NULL, filename = NULL, width = 5,
+  scale_cutoff = 1.96, main = NULL, filename = NULL, width = 5,
   height = 4, ...)
 }
 \arguments{
@@ -26,8 +26,7 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 
 \item{genelist}{Character vector, specifying labeled genes.}
 
-\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
+\item{scale_cutoff}{Numeric, specifying the number of standard deviation to be used as cutoff.}
 
 \item{main}{As in 'plot'.}
 
