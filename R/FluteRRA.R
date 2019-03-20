@@ -12,10 +12,9 @@
 #' @param lfcCutoff A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
 #' for negative selection and positive selection.
 #' @param organism "hsa" or "mmu".
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
-#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param prefix A character, indicating the prefix of output file name.
 #' @param width The width of summary pdf in inches.
 #' @param height The height of summary pdf in inches.
@@ -50,7 +49,7 @@
 
 #===read RRA results=====================================
 FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism = "hsa",
-                     pathway_limit = c(3, 50), pvalueCutoff = 0.25, adjust = "BH",
+                     limit = c(3, 50), pvalueCutoff = 0.25,
                      prefix = "Test", width = 12, height = 6, outdir = "."){
   #=========Prepare the running environment=========
   {
@@ -95,12 +94,11 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
     kegg.neg=enrichment_analysis(geneList=geneList[idx], universe=universe,
                                  method = "HGT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
                                  organism=organism,pvalueCutoff=pvalueCutoff,
-                                 plotTitle="Pathway: neg",color="#3f90f7",
-                                 pAdjustMethod = adjust, limit = pathway_limit)
+                                 main="Pathway: neg", limit = limit)
     go.neg=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "HGT",
                                type = "GOBP+GPMF+GOCC", organism=organism,
-                               pvalueCutoff = pvalueCutoff, plotTitle="Gene Ontology: neg",
-                               color="#3f90f7", pAdjustMethod = adjust, limit = pathway_limit)
+                               pvalueCutoff = pvalueCutoff, main="Gene Ontology: neg",
+                               limit = limit)
 
     ggsave(filename = file.path(out.dir_sub, "RRA/kegg.neg.png"), kegg.neg$gridPlot,
            units = "in", width = 6.5, height = 4)
@@ -113,12 +111,12 @@ FluteRRA <- function(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1), organism
     kegg.pos=enrichment_analysis(geneList=geneList[idx], universe=universe,
                                  method = "HGT", type = "KEGG+BIOCARTA+REACTOME+EHMN+PID+WikiPathways",
                                  organism=organism, pvalueCutoff=pvalueCutoff,
-                                 plotTitle="Pathway: pos",color="#e41a1c",
-                                 pAdjustMethod = adjust, limit = pathway_limit)
+                                 main="Pathway: pos",
+                                 limit = limit)
     go.pos=enrichment_analysis(geneList=geneList[idx], universe=universe, method = "HGT",
                                type = "GOBP+GOMF+GOCC", organism=organism,
-                               pvalueCutoff = pvalueCutoff, plotTitle="Gene Ontology: pos",
-                               color="#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
+                               pvalueCutoff = pvalueCutoff, main="Gene Ontology: pos",
+                               limit = limit)
     ggsave(kegg.pos$gridPlot,filename=file.path(out.dir_sub,"RRA/kegg.pos.png"),
            units = "in", width = 6.5, height = 4)
     saveRDS(kegg.pos, file.path(out.dir_sub, "RRA/EnrichRes_kegg.pos.rds"))

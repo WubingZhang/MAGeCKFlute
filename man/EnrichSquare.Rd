@@ -6,8 +6,8 @@
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
 EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
-  organism = "hsa", pathway_limit = c(3, 50), adjust = "BH",
-  filename = NULL, out.dir = ".", width = 6.5, height = 4, ...)
+  organism = "hsa", limit = c(3, 50), filename = NULL,
+  out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.}
@@ -18,10 +18,8 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the min and
 max size of pathways for enrichent analysis.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{filename}{Suffix of output file name. NULL(default) means no output.}
 

@@ -10,9 +10,8 @@
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
+#' @param limit A two-length vector (default: c(3, 50)), specifying the min and
 #' max size of pathways for enrichent analysis.
-#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param filename Suffix of output file name. NULL(default) means no output.
 #' @param out.dir Path to save plot to (combined with filename).
 #' @param width As in ggsave.
@@ -59,8 +58,8 @@
 #' @export
 
 #enrichment for square grouped genes
-EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa", pathway_limit = c(3,50),
-                         adjust="BH", filename=NULL, out.dir=".", width=6.5, height=4, ...){
+EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa", limit = c(3,50),
+                         filename=NULL, out.dir=".", width=6.5, height=4, ...){
   message(Sys.time(), " # Enrichment analysis of 9 Square grouped genes ...")
 
   ## ===========Enrichment===================
@@ -75,12 +74,12 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg1=enrichment_analysis(geneList = geneList, universe=universe,
                             method = enrich_method, type = "KEGG",
-                            organism=organism, pvalueCutoff = pvalue, color="#4daf4a",
-                            plotTitle="KEGG: Group1", pAdjustMethod = adjust, limit = pathway_limit)
+                            organism=organism, pvalueCutoff = pvalue,
+                            main="KEGG: Group1", limit = limit)
   go1=enrichment_analysis(geneList = geneList, universe=universe,
                           method = "ORT", type = "GOBP+GOMF+GOCC", organism=organism,
-                          pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group1",
-                          color="#4daf4a", pAdjustMethod = adjust, limit = pathway_limit)
+                          pvalueCutoff = pvalue, main="Gene Ontology: Group1",
+                          limit = limit)
 
 
   idx=gg$group=="Group2"
@@ -90,11 +89,11 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg2=enrichment_analysis(geneList = geneList, universe=universe,
                             method = enrich_method, type = "KEGG",
-                            organism=organism, pvalueCutoff=pvalue, color="#ff7f00",
-                            plotTitle="KEGG: Group2", pAdjustMethod=adjust, limit = pathway_limit)
+                            organism=organism, pvalueCutoff=pvalue,
+                            main="KEGG: Group2", limit = limit)
   go2=enrichment_analysis(geneList = geneList, universe=universe, method="ORT",
-                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue, color="#ff7f00",
-                          plotTitle="Gene Ontology: Group2", pAdjustMethod = adjust, limit = pathway_limit)
+                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue,
+                          main="Gene Ontology: Group2", limit = limit)
 
   idx=gg$group=="Group3"
   genes=rownames(gg)[idx]
@@ -103,11 +102,11 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg3=enrichment_analysis(geneList = geneList, universe=universe,
                             method = enrich_method,type = "KEGG",
-                            organism=organism, pvalueCutoff = pvalue, limit = pathway_limit,
-                            color="#005CB7", plotTitle="KEGG: Group3", pAdjustMethod = adjust)
+                            organism=organism, pvalueCutoff = pvalue, limit = limit,
+                            main="KEGG: Group3")
   go3=enrichment_analysis(geneList = geneList, universe=universe, method = "ORT",
-                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue, limit = pathway_limit,
-                          color="#005CB7", plotTitle="Gene Ontology: Group3", pAdjustMethod = adjust)
+                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue, limit = limit,
+                          main="Gene Ontology: Group3")
 
   idx = gg$group=="Group4"
   genes = rownames(gg)[idx]
@@ -116,11 +115,11 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg4=enrichment_analysis(geneList = geneList, universe=universe,
                             method = enrich_method,type = "KEGG",
-                            organism=organism, pvalueCutoff = pvalue, limit = pathway_limit,
-                            color="#984ea3", plotTitle="KEGG: Group4", pAdjustMethod=adjust)
+                            organism=organism, pvalueCutoff = pvalue, limit = limit,
+                            main="KEGG: Group4")
   go4=enrichment_analysis(geneList = geneList, universe=universe, method="ORT",
-                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue, limit = pathway_limit,
-                          color="#984ea3", plotTitle="Gene Ontology: Group4", pAdjustMethod = adjust)
+                          type = "GOBP+GOMF+GOCC",organism=organism, pvalueCutoff=pvalue, limit = limit,
+                          main="Gene Ontology: Group4")
 
   idx1=gg$group=="Group1"
   idx2=gg$group=="Group3"
@@ -131,12 +130,11 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg13=enrichment_analysis(geneList = geneList, universe=universe,
                              method = enrich_method,type = "KEGG",
-                             organism=organism, pvalueCutoff = pvalue, limit = pathway_limit,
-                             color="#e41a1c", plotTitle="KEGG: Group1&3", pAdjustMethod = adjust)
+                             organism=organism, pvalueCutoff = pvalue, limit = limit,
+                             main="KEGG: Group1&3")
   go13=enrichment_analysis(geneList = geneList, universe=universe,
-                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = pathway_limit,
-                           pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group1&3",
-                           color="#e41a1c", pAdjustMethod = adjust)
+                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = limit,
+                           pvalueCutoff = pvalue, main="Gene Ontology: Group1&3")
 
 
   idx1=gg$group=="Group1"
@@ -147,13 +145,12 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   names(geneList) = genes
   #====GO_KEGG_enrichment=====
   kegg14=enrichment_analysis(geneList = geneList, universe=universe,
-                             method = enrich_method,type = "KEGG", limit = pathway_limit,
+                             method = enrich_method,type = "KEGG", limit = limit,
                              organism=organism, pvalueCutoff = pvalue,
-                             color="#e41a1c", plotTitle="KEGG: Group1&4", pAdjustMethod=adjust)
+                             main="KEGG: Group1&4")
   go14=enrichment_analysis(geneList = geneList, universe=universe,
-                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = pathway_limit,
-                           pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group1&4",
-                           color="#e41a1c", pAdjustMethod = adjust)
+                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = limit,
+                           pvalueCutoff = pvalue, main="Gene Ontology: Group1&4")
 
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group3"
@@ -163,13 +160,12 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   names(geneList) = genes
   #====GO_KEGG_enrichment=====
   kegg23=enrichment_analysis(geneList = geneList, universe=universe,
-                             method = enrich_method,type = "KEGG", limit = pathway_limit,
+                             method = enrich_method,type = "KEGG", limit = limit,
                              organism=organism, pvalueCutoff = pvalue,
-                             color="#377eb8", plotTitle="KEGG: Group2&3", pAdjustMethod = adjust)
+                             main="KEGG: Group2&3")
   go23=enrichment_analysis(geneList = geneList, universe=universe,
-                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = pathway_limit,
-                           pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group2&3",
-                           color="#377eb8", pAdjustMethod = adjust)
+                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = limit,
+                           pvalueCutoff = pvalue, main="Gene Ontology: Group2&3")
 
   idx1=gg$group=="Group2"
   idx2=gg$group=="Group4"
@@ -180,30 +176,13 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
   #====GO_KEGG_enrichment=====
   kegg24=enrichment_analysis(geneList = geneList, universe=universe,
                              method = enrich_method,type = "KEGG",
-                             organism=organism,pvalueCutoff = pvalue, limit = pathway_limit,
-                             color="#377eb8", plotTitle="KEGG: Group2&4", pAdjustMethod = adjust)
+                             organism=organism,pvalueCutoff = pvalue, limit = limit,
+                             main="KEGG: Group2&4")
   go24=enrichment_analysis(geneList = geneList, universe=universe,
-                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = pathway_limit,
-                           pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group2&4",
-                           color="#377eb8", pAdjustMethod = adjust)
+                           method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism, limit = limit,
+                           pvalueCutoff = pvalue, main="Gene Ontology: Group2&4")
 
-  # idx1=gg$group=="Group1"
-  # idx2=gg$group=="Group2"
-  # idx3=gg$group=="Group3"
-  # idx4=gg$group=="Group4"
-  # idx = idx1|idx2|idx3|idx4
-  # genes=as.character(gg$ENTREZID[idx])
-  # #====GO_KEGG_enrichment=====
-  # kegg1234=enrichment_analysis(geneList = genes, universe=universe,
-  #                              method = enrich_method,type = "KEGG",
-  #                              organism=organism, pvalueCutoff = pvalue,
-  #                              plotTitle="KEGG: Group1&2&3&4",
-  #                              color="#6daf61", pAdjustMethod = adjust)
-  # go1234=enrichment_analysis(geneList = genes, universe=universe,
-  #                            method = "ORT", type = "GOBP+GOMF+GOCC",organism=organism,
-  #                            pvalueCutoff = pvalue, plotTitle="Gene Ontology: Group1&2&3&4",
-  #                            color="#6daf61", pAdjustMethod = adjust)
-  ###========Output results=================================================
+  ###========Output results==================
   if(!is.null(filename)){
     if(!is.null(kegg1$enrichRes)){
       write.table(kegg1$enrichRes@result,

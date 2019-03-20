@@ -12,7 +12,6 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
@@ -30,7 +29,7 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:300]
-#' enrichRes <- enrich.HGT(genes, type = "KEGG", )
+#' enrichRes <- enrich.HGT(genes, type = "KEGG")
 #' head(slot(enrichRes, "result"))
 #'
 #' @import DOSE
@@ -38,8 +37,9 @@
 #'
 #' @export
 
-enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
-                      organism = 'hsa', pvalueCutoff = 0.05, pAdjustMethod = "BH",
+enrich.HGT = function(geneList, keytype = "Entrez",
+                      type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
+                      organism = 'hsa', pvalueCutoff = 0.05,
                       limit = c(3, 50), universe = NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
@@ -50,7 +50,7 @@ enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
                        paste0(organism, "_msig_entrez.gmt.gz"))
     gmtpath = gzfile(msigdb)
   }
-  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
+  gene2path = ReadGMT(gmtpath, limit = limit)
   close(gmtpath)
   names(gene2path) = c("Gene","PathwayID", "PathwayName")
   gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
@@ -85,9 +85,7 @@ enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
     universe = unique(c(gene, gene2path$Gene))
   }
 
-  # Start to do the hypergeometric test
-  m = length(gene)
-  n = length(universe) - m
+  ## Start to do the hypergeometric test ##
   HGT <- function(pid){
     pGene = gene2path$Gene[gene2path$PathwayID==pid]
     idx1 = universe %in% pGene
@@ -109,15 +107,21 @@ enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
     }
     return(retr)
   }
+
+  ## Test using above function ##
+  len = length(unique(intersect(gene, gene2path$Gene)))
+  message("\t", len, " genes are mapped ...")
+  m = length(gene)
+  n = length(universe) - m
   res = sapply(pathways$PathwayID, HGT)
   res = as.data.frame(t(res), stringsAsFactors = FALSE)
   res = res[!is.na(res$ID), ]
   if(nrow(res)>0){
     res[, c(1:2, 5:8)] = matrix(unlist(res[, c(1:2, 5:8)]), ncol = 6)
     res[, c(3:4, 9)] = matrix(unlist(res[, c(3:4, 9)]), ncol = 3)
-    res$p.adjust = p.adjust(res$pvalue, pAdjustMethod)
+    res$p.adjust = p.adjust(res$pvalue, "BH")
     res$nLogpvalue = -log10(res$p.adjust)
-    idx = which(res$pvalue<=pvalueCutoff & res$p.adjust<=pvalueCutoff)
+    idx = which(res$p.adjust<=pvalueCutoff)
     if(length(idx)>0){
       res = res[idx, ]
       idx = c("ID", "Description", "NES", "pvalue", "p.adjust",
@@ -126,11 +130,11 @@ enrich.HGT = function(geneList, keytype = "Entrez", type = "CORUM",
     }else res=data.frame()
   }
 
-  ## Create enrichResult object
+  ## Create enrichResult object ##
   new("enrichResult",
       result         = res,
       pvalueCutoff   = pvalueCutoff,
-      pAdjustMethod  = pAdjustMethod,
+      pAdjustMethod  = "BH",
       organism       = organism,
       ontology       = type,
       gene           = as.character(gene),

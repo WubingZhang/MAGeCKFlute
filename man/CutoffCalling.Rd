@@ -10,7 +10,8 @@ CutoffCalling(d, scale = FALSE)
 \arguments{
 \item{d}{A numeric vector.}
 
-\item{scale}{Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.}
+\item{scale}{Boolean or numeric, whether scale cutoff to whole genome level,
+or how many standard deviation will be used as cutoff.}
 }
 \value{
 A numeric value.

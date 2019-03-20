@@ -8,10 +8,10 @@
 \usage{
 FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
   organism = "hsa", scale_cutoff = 1, top = 10, bottom = 10,
-  interestGenes = NA, pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", enrich_kegg = "HGT", gsea = FALSE,
-  posControl = NULL, loess = FALSE, prefix = "", width = 10,
-  height = 7, outdir = ".", view_allpath = FALSE)
+  interestGenes = NA, limit = c(3, 50), pvalueCutoff = 0.25,
+  enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
+  loess = FALSE, prefix = "", width = 10, height = 7,
+  outdir = ".", view_allpath = FALSE)
 }
 \arguments{
 \item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
@@ -34,20 +34,17 @@ or how many standard deviation will be used as cutoff.}
 
 \item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
 \item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and
 negative selection genes.}
 
-\item{posControl}{A file path or a character vector, specifying a list of gene entrezid as
-positive controls used for cell cycle normalization.}
+\item{posControl}{A character vector, specifying a list of positive control gene symbols.}
 
 \item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
@@ -66,16 +63,18 @@ All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Resu
 which includes a pdf file and many folders. The pdf file '{prefix}_Pipeline_results.pdf' is the
 summary of pipeline results. For each section in this pipeline, figures and useful data are
 outputed to corresponding subfolders.
-Distribution_of_BetaScores: Density plot and violin plot of beta scores.
-MAplot: Maplot for each normalized data.
-Linear_Fitting_of_BetaScores: Linear fitting of beta scores indicates the difference of cell cycle
-time between Control and Treatment samples.
-Scatter_Treat_Ctrl: Positive selection and negative selection
-Enrichment_Treat-Ctrl: Enrichment analysis for positive and negative selection genes
-Pathview_Treat_Ctrl: Pathway view for top enriched pathways
-Scatter_9Square: Using 9 Square to select drug related genes
-Enrichment_9Square: Enrichment analysis for selected genes
-Pathview_9Square: Pathway view for top enriched pathways
+\itemize{
+  \item {Distribution_of_BetaScores}: {Density plot and violin plot of beta scores.}
+  \item {MAplot}: {Maplot for each normalized data.}
+  \item {Linear_Fitting_of_BetaScores}: {Linear fitting of beta scores indicates the difference of cell cycle
+  time between Control and Treatment samples.}
+  \item {Scatter_Treat_Ctrl}: {Positive selection and negative selection.}
+  \item {Enrichment_Treat-Ctrl}: {Enrichment analysis for positive and negative selection genes.}
+  \item {Pathview_Treat_Ctrl}: {Pathway view for top enriched pathways.}
+  \item {Scatter_9Square}: {Using 9 Square to select drug related genes.}
+  \item {Enrichment_9Square}: {Enrichment analysis for selected genes.}
+  \item {Pathview_9Square}: {Pathway view for top enriched pathways.}
+}
 }
 \description{
 Integrative analysis pipeline using the gene summary table in MAGeCK MLE results

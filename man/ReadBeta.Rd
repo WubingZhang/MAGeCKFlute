@@ -9,7 +9,7 @@
 ReadBeta(gene_summary, keytype = "Symbol", organism = "hsa")
 }
 \arguments{
-\item{gene_summary}{A file path or a data frame, data frame, which has columns of 'Gene' and '*|beta'.}
+\item{gene_summary}{A file path or a data frame, which has columns of 'Gene' and beta score of samples.}
 
 \item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
 

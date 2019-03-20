@@ -20,16 +20,14 @@
 #' @param bottom An integer, specifying number of bottom selected genes to be labeled in rank figure.
 #' @param interestGenes A character vector, specifying interested genes to be labeled in rank figure.
 #'
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
-#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param gsea Boolean, indicating whether GSEA analysis is needed for positive and
 #' negative selection genes.
 #'
-#' @param posControl A file path or a character vector, specifying a list of gene entrezid as
-#' positive controls used for cell cycle normalization.
+#' @param posControl A character vector, specifying a list of positive control gene symbols.
 #' @param loess Boolean, whether include loess normalization in the pipeline.
 #'
 #' @param prefix A character, indicating the prefix of output file name, which can't contain special characters.
@@ -44,16 +42,18 @@
 #' which includes a pdf file and many folders. The pdf file '{prefix}_Pipeline_results.pdf' is the
 #' summary of pipeline results. For each section in this pipeline, figures and useful data are
 #' outputed to corresponding subfolders.
-#' Distribution_of_BetaScores: Density plot and violin plot of beta scores.
-#' MAplot: Maplot for each normalized data.
-#' Linear_Fitting_of_BetaScores: Linear fitting of beta scores indicates the difference of cell cycle
-#' time between Control and Treatment samples.
-#' Scatter_Treat_Ctrl: Positive selection and negative selection
-#' Enrichment_Treat-Ctrl: Enrichment analysis for positive and negative selection genes
-#' Pathview_Treat_Ctrl: Pathway view for top enriched pathways
-#' Scatter_9Square: Using 9 Square to select drug related genes
-#' Enrichment_9Square: Enrichment analysis for selected genes
-#' Pathview_9Square: Pathway view for top enriched pathways
+#' \itemize{
+#'   \item {Distribution_of_BetaScores}: {Density plot and violin plot of beta scores.}
+#'   \item {MAplot}: {Maplot for each normalized data.}
+#'   \item {Linear_Fitting_of_BetaScores}: {Linear fitting of beta scores indicates the difference of cell cycle
+#'   time between Control and Treatment samples.}
+#'   \item {Scatter_Treat_Ctrl}: {Positive selection and negative selection.}
+#'   \item {Enrichment_Treat-Ctrl}: {Enrichment analysis for positive and negative selection genes.}
+#'   \item {Pathview_Treat_Ctrl}: {Pathway view for top enriched pathways.}
+#'   \item {Scatter_9Square}: {Using 9 Square to select drug related genes.}
+#'   \item {Enrichment_9Square}: {Enrichment analysis for selected genes.}
+#'   \item {Pathview_9Square}: {Pathway view for top enriched pathways.}
+#' }
 #'
 #' @details MAGeCK-MLE can be used to analyze screen data from multi-conditioned experiments. MAGeCK-MLE
 #' also normalizes the data across multiple samples, making them comparable to each other. The most important
@@ -81,35 +81,30 @@
 
 FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", organism = "hsa", # Input dataset
                      scale_cutoff = 1, top = 10, bottom = 10, interestGenes = NA, # Parameters for rank visualization
-                     pathway_limit = c(3, 50), pvalueCutoff=0.25, adjust="BH", enrich_kegg = "HGT", gsea = FALSE,
+                     limit = c(3, 50), pvalueCutoff=0.25, enrich_kegg = "ORT", gsea = FALSE,
                      posControl = NULL, loess = FALSE,
                      prefix = "", width = 10, height = 7, outdir = ".", view_allpath = FALSE){
 
-	#=========Prepare the running environment=========
-	{
-	  message(Sys.time(), " # Create output dir and pdf file...")
-	  outdir = file.path(outdir, paste0(prefix, "_Flute_Results"))
-	  dir.create(file.path(outdir), showWarnings = FALSE)
-	  output_pdf = paste0(prefix, "_Flute.mle_summary.pdf")
-	  pdf(file.path(outdir, output_pdf), width = width, height = height)
-	  organism = getOrg(organism)$org
-	}
+	## Prepare the running environment ##
+  message(Sys.time(), " # Create output dir and pdf file...")
+  outdir = file.path(outdir, paste0(prefix, "_Flute_Results"))
+  dir.create(file.path(outdir), showWarnings = FALSE)
+  output_pdf = paste0(prefix, "_Flute.mle_summary.pdf")
+  pdf(file.path(outdir, output_pdf), width = width, height = height)
+  organism = getOrg(organism)$org
 
-	#=========Beta Score Preparation=========================
-	{
-	  beta = ReadBeta(gene_summary, keytype = "Symbol", organism = organism)
-	  if(all(c(ctrlname, treatname) %in% colnames(beta))){
-	    dd = beta[, c("Gene", "EntrezID", ctrlname, treatname)]
-	  }else{
-	    stop("No sample found!")
-	  }
-	  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
-	                               method = "cell_cycle", posControl = posControl)
-	  if(loess) dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method = "loess")
-	  rm(beta)
-	}
+  ## Beta Score Preparation ##
+  beta = ReadBeta(gene_summary, keytype = "Symbol", organism = organism)
+  if(all(c(ctrlname, treatname) %in% colnames(beta)))
+    dd = beta[, c("Gene", "EntrezID", ctrlname, treatname)]
+  else stop("No sample found!")
+  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
+                               method = "cell_cycle", posControl = posControl)
+  if(loess)
+    dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method = "loess")
+  rm(beta)
 
-	#========Distribution of all genes================================
+	## Distribution of all genes ##
 	{
 	  outputDir1 = file.path(outdir, "Distribution_of_BetaScores")
 	  dir.create(outputDir1, showWarnings = FALSE)
@@ -162,49 +157,55 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 
 	#=============Distribution of essential genes====================
 	{
-	  outputDir3 = file.path(outdir, "Linear_Fitting_of_BetaScores")
-	  dir.create(outputDir3, showWarnings = FALSE)
 	  data(Zuber_Essential)
-	  idx = which(rownames(dd) %in% Zuber_Essential$EntrezID)
-	  #Negative control normalized
-	  P1 = ViolinView(dd[idx, idx_distr], ylab = "Essential.B.S.", main = "Negative control normalized",
-	                 filename = file.path(outputDir1, "violin_ess_negative_normalized.png"))
-	  P2 = DensityView(dd[idx, idx_distr], xlab = "Essential.B.S.", main = "Negative control normalized",
-	                  filename = file.path(outputDir1, "density_ess_negative_normalized.png"))
-	  P3 = CellCycleView(dd[, idx_distr], ctrlname, treatname, main="Negative control normalized",
-	                  filename = file.path(outputDir3, "Linear_all_negative_normalized.png"))
-	  P4 = CellCycleView(dd[idx, idx_distr], ctrlname, treatname, main = "Negative control normalized",
-	                  filename = file.path(outputDir3, "Linear_ess_negative_normalized.png"))
-	  #Essential normalized
-	  P5 = ViolinView(dd_essential[idx, idx_distr], ylab = "Essential.B.S.", main = "Cell cycle  normalized",
-	                 filename = file.path(outputDir1, "violin_ess_essential_normalized.png"))
-	  P6 = DensityView(dd_essential[idx, idx_distr], xlab = "Essential.B.S.", main = "Cell cycle  normalized",
-	                  filename = file.path(outputDir1, "density_ess_essential_normalized.png"))
-	  P7 = CellCycleView(dd_essential[, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
-	                  filename = file.path(outputDir3, "Linear_all_essential_normalized.png"))
-	  P8 = CellCycleView(dd_essential[idx, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
-	                  filename = file.path(outputDir3, "Linear_ess_essential_normalized.png"))
+	  if(is.null(posControl))
+	    idx = toupper(dd$Gene) %in% toupper(Zuber_Essential$GeneSymbol)
+	  else
+	    idx = which(dd$Gene %in% posControl)
 
-	  #loess normalized
-	  if(loess){
-  		P9 = ViolinView(dd_loess[idx, idx_distr], ylab = "Essential.B.S.", main="Loess  normalized",
-  		               filename = file.path(outputDir1, "violin_ess_loess_normalized.png"))
-  		P10 = DensityView(dd_loess[idx,idx_distr], xlab = "Essential.B.S.", main = "Loess  normalized",
-  		                 filename = file.path(outputDir1, "density_ess_loess_normalized.png"))
-  		P11 = CellCycleView(dd_loess[,idx_distr], ctrlname, treatname, main = "Loess  normalized",
-  		                 filename = file.path(outputDir3, "Linear_all_loess_normalized.png"))
-  		P12 = CellCycleView(dd_loess[idx,idx_distr], ctrlname, treatname, main = "Loess  normalized",
-  		                 filename = file.path(outputDir3, "Linear_ess_loess_normalized.png"))
+	  if(sum(posControl) > 2){
+	    outputDir3 = file.path(outdir, "Linear_Fitting_of_BetaScores")
+	    dir.create(outputDir3, showWarnings = FALSE)
 
-  		grid.arrange(P1, P5, P9, P2, P6, P10, ncol = 3)
-  		grid.arrange(P3, P7, P11, P4, P8, P12, ncol = 3)
-	  }else{
-  		grid.arrange(P1, P5, P2, P6, ncol = 2)
-  		grid.arrange(P3, P7, P4, P8, ncol = 2)
+	    #Negative control normalized
+	    P1 = ViolinView(dd[idx, idx_distr], ylab = "Essential.B.S.", main = "Negative control normalized",
+	                    filename = file.path(outputDir1, "violin_ess_negative_normalized.png"))
+	    P2 = DensityView(dd[idx, idx_distr], xlab = "Essential.B.S.", main = "Negative control normalized",
+	                     filename = file.path(outputDir1, "density_ess_negative_normalized.png"))
+	    P3 = CellCycleView(dd[, idx_distr], ctrlname, treatname, main="Negative control normalized",
+	                       filename = file.path(outputDir3, "Linear_all_negative_normalized.png"))
+	    P4 = CellCycleView(dd[idx, idx_distr], ctrlname, treatname, main = "Negative control normalized",
+	                       filename = file.path(outputDir3, "Linear_ess_negative_normalized.png"))
+	    #Essential normalized
+	    P5 = ViolinView(dd_essential[idx, idx_distr], ylab = "Essential.B.S.", main = "Cell cycle  normalized",
+	                    filename = file.path(outputDir1, "violin_ess_essential_normalized.png"))
+	    P6 = DensityView(dd_essential[idx, idx_distr], xlab = "Essential.B.S.", main = "Cell cycle  normalized",
+	                     filename = file.path(outputDir1, "density_ess_essential_normalized.png"))
+	    P7 = CellCycleView(dd_essential[, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
+	                       filename = file.path(outputDir3, "Linear_all_essential_normalized.png"))
+	    P8 = CellCycleView(dd_essential[idx, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
+	                       filename = file.path(outputDir3, "Linear_ess_essential_normalized.png"))
+
+	    #loess normalized
+	    if(loess){
+	      P9 = ViolinView(dd_loess[idx, idx_distr], ylab = "Essential.B.S.", main="Loess  normalized",
+	                      filename = file.path(outputDir1, "violin_ess_loess_normalized.png"))
+	      P10 = DensityView(dd_loess[idx,idx_distr], xlab = "Essential.B.S.", main = "Loess  normalized",
+	                        filename = file.path(outputDir1, "density_ess_loess_normalized.png"))
+	      P11 = CellCycleView(dd_loess[,idx_distr], ctrlname, treatname, main = "Loess  normalized",
+	                          filename = file.path(outputDir3, "Linear_all_loess_normalized.png"))
+	      P12 = CellCycleView(dd_loess[idx,idx_distr], ctrlname, treatname, main = "Loess  normalized",
+	                          filename = file.path(outputDir3, "Linear_ess_loess_normalized.png"))
+
+	      grid.arrange(P1, P5, P9, P2, P6, P10, ncol = 3)
+	      grid.arrange(P3, P7, P11, P4, P8, P12, ncol = 3)
+	    }else{
+	      grid.arrange(P1, P5, P2, P6, ncol = 2)
+	      grid.arrange(P3, P7, P4, P8, ncol = 2)
+	    }
+	    suppressWarnings(rm(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, outputDir3, idx))
 	  }
-	  suppressWarnings(rm(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, outputDir3, idx))
 	}
-
   dd$Control = rowMeans(dd[, ctrlname, drop = FALSE])
   dd$Treatment = rowMeans(dd[, treatname, drop = FALSE])
   dd.diff = dd$Treatment - dd$Control
@@ -263,7 +264,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	  dir.create(outputDir6, showWarnings=FALSE)
 
 	  E1 = EnrichAB(P1$data, pvalue = pvalueCutoff, enrich_method = enrich_kegg,
-	                organism = organism, adjust = adjust, gsea = gsea,
+	                organism = organism, gsea = gsea, limit = limit,
 	                filename = "Negative_ctrl_normalized", out.dir = outputDir5)
 	  # EnrichedView
 	  grid.arrange(E1$keggA$gridPlot, E1$goA$gridPlot, ncol = 1)
@@ -284,7 +285,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
   {# Cell cycle normalization
 	  E2 = EnrichAB(P3$data, pvalue = pvalueCutoff,
 	                enrich_method = enrich_kegg, organism=organism,
-	                adjust=adjust, gsea=gsea,
+	                gsea=gsea, limit = limit,
 	                filename="Essential_normalized", out.dir=outputDir5)
 	  # Cell cycle normalization
 	  grid.arrange(E2$keggA$gridPlot, E2$goA$gridPlot, ncol = 1)
@@ -303,9 +304,9 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 
   }
   if(loess){# Loess normalization
-		E3 = EnrichAB(P5$data, pvalue=pvalueCutoff,
+		E3 = EnrichAB(P5$data, pvalue=pvalueCutoff, limit = limit,
 		              enrich_method = enrich_kegg, organism=organism,
-		              adjust=adjust, gsea=gsea,filename="Loess_normalized",
+		              gsea=gsea,filename="Loess_normalized",
 		              out.dir=outputDir5)
 
 		# EnrichedView
@@ -350,9 +351,9 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
   dir.create(outputDir7, showWarnings=FALSE)
   dir.create(outputDir8, showWarnings=FALSE)
 	{# Negative control normalization
-	  E1 = EnrichSquare(P1$data, pvalue = pvalueCutoff,adjust = adjust,
+	  E1 = EnrichSquare(P1$data, pvalue = pvalueCutoff,
 	                    enrich_method = enrich_kegg, organism=organism,
-        						 filename="negative_normalized",
+        						 filename="negative_normalized", limit = limit,
         						 out.dir=outputDir7)
     # EnrichView
 	  grid.arrange(E1$kegg1$gridPlot, E1$go1$gridPlot, ncol = 1)
@@ -399,9 +400,9 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	                    organism=organism, view_allpath=view_allpath, output=outputDir8)
   }
   {# Cell cycle normalization
-	  E2 = EnrichSquare(P2$data, pvalue=pvalueCutoff,adjust=adjust, enrich_method=enrich_kegg,
+	  E2 = EnrichSquare(P2$data, pvalue=pvalueCutoff, enrich_method=enrich_kegg,
 	                    organism=organism, filename="essential_normalized",
-        						 out.dir = outputDir7)
+	                    limit = limit, out.dir = outputDir7)
     # EnrichedView
 	  grid.arrange(E2$kegg1$gridPlot, E2$go1$gridPlot, ncol = 1)
 	  grid.arrange(E2$kegg2$gridPlot, E2$go2$gridPlot, ncol = 1)
@@ -447,9 +448,9 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	                    organism=organism,view_allpath=view_allpath, output=outputDir8)
   }
   if(loess){# Loess normalization
-		E3 = EnrichSquare(P3$data, pvalue=pvalueCutoff,adjust=adjust, organism=organism,
+		E3 = EnrichSquare(P3$data, pvalue=pvalueCutoff, organism=organism,
 		                  enrich_method=enrich_kegg, filename="loess_normalized",
-      						   out.dir=outputDir7)
+		                  limit = limit, out.dir=outputDir7)
 		# EnrichedView
 		grid.arrange(E3$kegg1$gridPlot, E3$go1$gridPlot, ncol = 1)
 		grid.arrange(E3$kegg2$gridPlot, E3$go2$gridPlot, ncol = 1)

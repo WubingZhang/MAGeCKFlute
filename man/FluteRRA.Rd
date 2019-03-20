@@ -7,9 +7,8 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
-  organism = "hsa", pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", prefix = "Test", width = 12, height = 6,
-  outdir = ".")
+  organism = "hsa", limit = c(3, 50), pvalueCutoff = 0.25,
+  prefix = "Test", width = 12, height = 6, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}
@@ -21,12 +20,10 @@ for negative selection and positive selection.}
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{prefix}{A character, indicating the prefix of output file name.}
 

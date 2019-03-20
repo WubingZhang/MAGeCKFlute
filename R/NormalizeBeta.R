@@ -9,32 +9,32 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta Data frame, in which rows are EntrezID, columns are samples.
-#' @param samples Character vector, specifying the samples in \code{beta} to be normalized.
-#' If NULL (default), normalize beta score of all samples in \code{beta}.
+#' @param beta Data frame.
+#' @param samples Character vector, specifying the sample names in \emph{beta} columns.
+#' If NULL (default), take all \emph{beta} columns as samples.
 #' @param method Character, one of 'cell_cycle'(default) and 'loess'.
-#' @param posControl A file path or a character vector, specifying a list of gene entrezids as positive
-#' controls used for cell cycle normalization
-#' @param minus Numeric, scale for cell cycle normalization. Between 0 and 1.
+#' @param id A single number giving the column of the table which contains the gene names,
+#' or character string giving the name of the table column containing the gene names.
+#' @param posControl A character vector, specifying a list of positive control genes.
 #'
-#' @return A data frame with same format as input data \code{beta}.
+#' @return A data frame with same format as input data \emph{beta}.
 #'
-#' @details In CRISPR screens, cells treated with different conditions (e.g., with or without
-#' drug) may have different proliferation rates. So we defined a list of core essential genes,
-#' which is equally negatively selected between samples with different proliferation rate.
-#' Normalization of gene beta scores is performed using these essential genes. \code{cell_cycle}
-#' in MAGeCKFlute normalizes the beta scores of all genes based on the median beta score of essential genes.
-#' After normalization, the beta scores are comparable across samples. \code{loess} is another
-#' optional normalization method, which is used to normalize array data before.
+#' @details In CRISPR screens, cells treated with different conditions (e.g., with or without drug)
+#' may have different proliferation rates. So it's necessary to normalize the proliferation rate
+#' based on defined positive control genes among samples. After normalization, the beta scores are
+#' comparable across samples. \code{loess} is another optional normalization method, which is used
+#' to normalize array data before.
 #'
 #' @author Wubing Zhang
 #'
 #' @examples
 #' data(mle.gene_summary)
+#' data(Zuber_Essential)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(mle.gene_summary, organism="hsa")
 #' #Cell Cycle normalization
-#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
+#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
+#'     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)
 #' head(dd_essential)
 #'
 #' #Optional loess normalization
@@ -45,32 +45,29 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0.2){
+NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", id = 1, posControl=NULL){
   message(Sys.time(), " # Normalize beta scores ...")
-  if(is.null(samples)) samples = setdiff(colnames(beta))
-
+  if(is.null(samples)) normalized = beta
+  else normalized = as.matrix(beta[, samples])
+  if(id!=0) rownames(normalized) = beta[, id]
   if(method=="cell_cycle"){
-    if(!is.null(posControl) && is.character(posControl) && file.exists(posControl)[1]){
-      tmp = read.table(posControl, sep = "\t", header = FALSE)
-      posControl = as.character(unlist(tmp))
-    }else{
+    if(is.null(posControl)){
       data(Zuber_Essential)
-      posControl=Zuber_Essential
+      posControl=Zuber_Essential$GeneSymbol
     }
-    idx = which(rownames(beta) %in% posControl$EntrezID)
-    normalized = as.matrix(beta[,samples])
+    idx = which(toupper(rownames(normalized)) %in% toupper(posControl))
     if(length(idx)>0){
       mid = apply(normalized[idx,], 2, median)
-      mid = abs(mid - minus)
+      mid = abs(mid - 0.2)
       normalized = t(t(normalized) / mid)
+    }else{
+      warning("No positive control genes provided !!!", call. = FALSE)
     }
   }
   if(method=="loess"){
-    normalized = as.matrix(beta[,samples])
     normalized = normalize.loess(normalized, log.it = FALSE, verbose=FALSE)
   }
-  beta[,samples] = normalized
-
+  beta[, samples] = normalized
   return(beta)
 }
 

@@ -6,9 +6,9 @@
 \alias{enrichGSE}
 \title{GSEA}
 \usage{
-enrich.GSE(geneList, keytype = "Entrez", type = "CORUM",
-  organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
-  limit = c(3, 50), gmtpath = NA)
+enrich.GSE(geneList, keytype = "Entrez",
+  type = "CORUM+GOBP+GOMF+RECTOME+KEGG", organism = "hsa",
+  pvalueCutoff = 0.05, limit = c(3, 50), gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
@@ -22,8 +22,6 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 \item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
-
-\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
@@ -39,7 +37,7 @@ A universal gene set enrichment analysis tools
 \examples{
 data(geneList, package = "DOSE")
 \dontrun{
-    enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+    enrichRes = enrich.GSE(geneList)
     head(slot(enrichRes, "result"))
 }
 

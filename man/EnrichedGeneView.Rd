@@ -3,24 +3,31 @@
 \docType{methods}
 \name{EnrichedGeneView}
 \alias{EnrichedGeneView}
-\title{Visualize selected genes in enriched genesets}
+\title{Visualize enriched pathways and genes in those pathways}
 \usage{
-EnrichedGeneView(enrichment, geneList, keytype = "Symbol",
-  gene_cutoff = c(-log2(1.5), log2(1.5)), top = 5, bottom = 5,
+EnrichedGeneView(enrichment, geneList, rank_by = "p.adjust", top = 5,
+  bottom = 0, custom_pid = NULL, keytype = "Symbol",
+  gene_cutoff = c(-log2(1.5), log2(1.5)), custom_gene = NULL,
   charLength = 40, filename = NULL, width = 7, height = 5, ...)
 }
 \arguments{
-\item{enrichment}{A data frame of enrichment result.}
+\item{enrichment}{A data frame of enrichment result or an \code{enrichResult} object.}
 
-\item{geneList}{The geneList used in enrichment analysis.}
+\item{geneList}{A numeric geneList used in enrichment anlaysis.}
+
+\item{rank_by}{"p.adjust" or "NES", specifying the indices for ranking pathways.}
+
+\item{top}{An integer, specifying the number of positively enriched terms to show.}
+
+\item{bottom}{An integer, specifying the number of negatively enriched terms to show.}
+
+\item{custom_pid}{A character vector (pathway IDs), customizing pathways to show.}
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{gene_cutoff}{A tow-length numeric vector, specifying cutoff for negative and positive selections.}
+\item{gene_cutoff}{A two-length numeric vector, specifying cutoff for genes to show.}
 
-\item{top}{An integer, specifying the number of top enriched terms to show.}
-
-\item{bottom}{An integer, specifying the number of bottom enriched terms to show.}
+\item{custom_gene}{A character vector (gene names), customizing genes to show.}
 
 \item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab.}
 
@@ -36,12 +43,12 @@ EnrichedGeneView(enrichment, geneList, keytype = "Symbol",
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Visualize selected genes in enriched genesets
+Visualize enriched pathways and genes in those pathways
 }
 \examples{
 data(geneList, package = "DOSE")
 enrichRes <- enrich.GSE(geneList)
-EnrichedGeneView(enrichment=as.data.frame(enrichRes), geneList, keytype = "Entrez")
+EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
 }
 \author{
 Wubing Zhang

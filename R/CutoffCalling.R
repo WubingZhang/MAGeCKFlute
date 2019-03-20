@@ -7,7 +7,8 @@
 #' @rdname CutoffCalling
 #'
 #' @param d A numeric vector.
-#' @param scale Boolean or numeric, whether scale cutoff to whole genome level, or how many standard deviation will be used as cutoff.
+#' @param scale Boolean or numeric, whether scale cutoff to whole genome level,
+#' or how many standard deviation will be used as cutoff.
 #'
 #' @return A numeric value.
 #' @examples
@@ -27,8 +28,5 @@ CutoffCalling=function(d, scale=FALSE){
   cutoff=round(temp/temp_2,digits = 3)
   names(cutoff)=NULL
   cutoff=cutoff*param
-  if(cutoff==0){
-    stop("Cutoff can not be zero!")
-  }
   return(cutoff)
 }

@@ -1,8 +1,8 @@
 ---
 title: "Integrative analysis pipeline for pooled CRISPR functional genetic screens - MAGeCKFlute"
 author: "WubingZhang, Binbin Wang"
-date: "21 Feb, 2019"
-package: "1.2.3"
+date: "22 Feb, 2019"
+package: "1.2.4"
 abstract: >
   CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
   Here, We developed MAGeCKFlute for supporting downstream analysis. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis, pathway enrichment analysis and protein complex enrichment analysis of these genes. The package also visualizes genes in multiple ways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
@@ -158,14 +158,19 @@ universe = dd.rra$EntrezID
 geneList= dd.rra$LFC
 names(geneList) = universe
 
-enrich = enrich.GSE(geneList = geneList, type = "CORUM")
+enrich = enrich.GSE(geneList = geneList, type = "GOMF+GOCC+GOBP", limit = c(2, 100))
 ```
 
-Visualize the top enriched genes and pathways/GO terms using `EnrichedGeneView`, `EnrichedView` and `EnrichedGSEView`.
+Visualize the top enriched genes and pathways/GO terms using `EnrichedGeneView` and `EnrichedView`.
 ```{r enrichedGeneView, fig.height=5, fig.width=15}
 EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
-EnrichedGSEView(slot(enrich, "result"))
 EnrichedView(slot(enrich, "result"))
+```
+
+Simplify the enrichment results using `EnrichedFilter`.
+```{r}
+enrich2 = EnrichedFilter(slot(enrich, "result"))
+EnrichedView(enrich2)
 ```
 
 
@@ -199,8 +204,8 @@ Is there batch effects? This is a commonly asked question before perform later a
 ##Before batch removal
 data(bladderdata, package = "bladderbatch")
 dat <- bladderEset[, 1:10]
-pheno = pData(dat)
-edata = exprs(dat)
+pheno = dat@phenoData@data
+edata = dat@assayData$exprs
 HeatmapView(cor(edata))
 
 ## After batch removal
@@ -274,7 +279,7 @@ print(p2)
 ```
 
 ### Functional analysis of selected genes
-For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` and `EnrichedGSEView` (for `enrich.GSE`) can be used to generate `gridPlot` from `enrichRes` easily, as shown below. 
+For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` can be used to generate `gridPlot` from `enrichRes` easily, as shown below. 
 
 ```{r EnrichAB, fig.height=5, fig.width=10}
 ## Get information of positive and negative selection genes
@@ -288,7 +293,7 @@ geneList = sort(geneList, decreasing = TRUE)
 universe=rownames(groupAB)
 ## Do enrichment analysis using HGT method
 hgtA = enrich.HGT(geneList[1:100], organism = "hsa", universe = universe)
-hgtA_grid = EnrichedGSEView(slot(hgtA, "result"))
+hgtA_grid = EnrichedView(slot(hgtA, "result"))
 
 ## look at the results
 head(slot(hgtA, "result"))
@@ -299,7 +304,7 @@ print(hgtA_grid)
 ```{r GSEA, fig.height=5, fig.width=10}
 ## Do enrichment analysis using GSEA method
 gseA = enrich.GSE(geneList, type = "KEGG", organism = "hsa", pvalueCutoff = 1)
-gseA_grid = EnrichedGSEView(slot(gseA, "result"))
+gseA_grid = EnrichedView(slot(gseA, "result"))
 
 #should same as
 head(slot(gseA, "result"))
@@ -338,7 +343,7 @@ universe=rownames(Square9)
 kegg1 = enrich.HGT(geneList = geneList, universe = universe, type = "KEGG")
 # View the results
 head(slot(kegg1, "result"))
-EnrichedGSEView(slot(kegg1, "result"))
+EnrichedView(slot(kegg1, "result"))
 ```
 
 Also, pathway visualization can be done using function `KeggPathwayView`, the same as the section above.

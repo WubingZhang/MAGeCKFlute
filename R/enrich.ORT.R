@@ -14,7 +14,6 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
@@ -39,8 +38,9 @@
 #' @import clusterProfiler
 #' @export
 
-enrich.ORT <- function(geneList, keytype = "Entrez", type = "CORUM", organism = 'hsa',
-                       pvalueCutoff = 0.25, pAdjustMethod = "BH",
+enrich.ORT <- function(geneList, keytype = "Entrez",
+                       type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
+                       organism = 'hsa', pvalueCutoff = 0.05,
                        limit = c(3, 50), universe=NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
@@ -51,7 +51,7 @@ enrich.ORT <- function(geneList, keytype = "Entrez", type = "CORUM", organism = 
                        paste0(organism, "_msig_entrez.gmt.gz"))
     gmtpath = gzfile(msigdb)
   }
-  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
+  gene2path = ReadGMT(gmtpath, limit = limit)
   close(gmtpath)
   names(gene2path) = c("Gene","PathwayID", "PathwayName")
   gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
@@ -87,24 +87,19 @@ enrich.ORT <- function(geneList, keytype = "Entrez", type = "CORUM", organism = 
   }
 
   ## Enrichment analysis
+  len = length(unique(intersect(gene, gene2path$Gene)))
+  message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
-  enrichedRes = enricher(gene, pvalueCutoff = pvalueCutoff, qvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod,
-                universe = universe, minGSSize = limit[1], maxGSSize = limit[2],
-                TERM2GENE = gene2path[,c("PathwayID","Gene")], TERM2NAME = pathways)
+  enrichedRes = enricher(gene, pvalueCutoff = pvalueCutoff,
+                universe = universe, TERM2NAME = pathways,
+                TERM2GENE = gene2path[,c("PathwayID","Gene")])
 
   ## Add enriched gene symbols into enrichedRes table
-  if(!is.null(enrichedRes)){
-    idx = enrichedRes@result$p.adjust<=pvalueCutoff
-    if(sum(idx)<1){
-      enrichedRes@result = data.frame()
-      return(enrichedRes)
-    }
-    enrichedRes@result = enrichedRes@result[idx, ]
+  if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
     geneID = strsplit(enrichedRes@result$geneID, split = "/")
     geneName = lapply(geneID, function(gid){
-      SYMBOL = allsymbol[gid]
-      paste(SYMBOL, collapse = "/")
+      SYMBOL = allsymbol[gid]; paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)
     enrichedRes@result$NES = as.vector(sapply(enrichedRes@result$geneID, function(x){

@@ -15,12 +15,10 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
-#' @param plotTitle Same as 'title' in 'plot'.
-#' @param color Color of points.
+#' @param main Same as 'title' in 'plot'.
 #'
 #' @return A list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
 #' a ggplot object, and \code{enrichRes} is a enrichResult instance.
@@ -34,16 +32,15 @@
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
-#' genes <- geneList[1:100]
-#' keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
+#' keggA = enrichment_analysis(geneList, method = "GSEA", type = "KEGG")
 #' print(keggA$gridPlot)
 #'
 #' @import DOSE
 #' @export
 
 enrichment_analysis = function(geneList, method = "HGT", keytype = "Entrez", type = "KEGG",
-                               organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
-                               limit = c(3, 50), universe = NULL, plotTitle = NULL, color = "#3f90f7"){
+                               organism = "hsa", pvalueCutoff = 0.25,
+                               limit = c(3, 50), universe = NULL, main = NULL){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   result = list()
@@ -57,7 +54,7 @@ enrichment_analysis = function(geneList, method = "HGT", keytype = "Entrez", typ
   if(length(geneList) < limit[1] + 1){
     p1 = ggplot()
     p1 = p1 + geom_text(aes(x=0, y=0, label = "Too less input genes"), size = 6)
-    p1 = p1 + labs(title = plotTitle)
+    p1 = p1 + labs(title = main)
     p1 = p1 + theme(plot.title = element_text(size=10))
     p1 = p1 + theme_void()
     p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
@@ -71,7 +68,7 @@ enrichment_analysis = function(geneList, method = "HGT", keytype = "Entrez", typ
     message(Sys.time(), " # Running GSEA for ", type)
     geneList = geneList[order(geneList,decreasing = TRUE)]
     enrichRes <- enrich.GSE(geneList, type = type, pvalueCutoff = pvalueCutoff,
-                            pAdjustMethod = pAdjustMethod, organism = organism, limit = limit)
+                            organism = organism, limit = limit)
   }
 
   ## Over-Representation Analysis
@@ -79,21 +76,21 @@ enrichment_analysis = function(geneList, method = "HGT", keytype = "Entrez", typ
     message(Sys.time(), " # Running Over-Representation Test for ", type)
     enrichRes <- enrich.ORT(geneList, universe = universe, keytype = keytype, type = type,
                             organism = organism, pvalueCutoff = pvalueCutoff,
-                            pAdjustMethod = pAdjustMethod, limit = limit)
+                            limit = limit)
   }
 
   ## HyperGeometric test
   if(method == "HGT"){
     message(Sys.time(), " # Running Hypergeometric test for ", type)
     enrichRes = enrich.HGT(geneList, universe, keytype = keytype, type = type, organism = organism,
-                           pvalueCutoff  = pvalueCutoff, pAdjustMethod = pAdjustMethod, limit = limit)
+                           pvalueCutoff  = pvalueCutoff, limit = limit)
   }
 
   ## Visualization of enriched pathways
   result$enrichRes = enrichRes
   if(!is.null(enrichRes)){
-    gridPlot <- EnrichedGSEView(enrichRes@result, plotTitle = plotTitle, color = color)
-  }else{ gridPlot = noEnrichPlot(plotTitle) }
+    gridPlot <- EnrichedView(enrichRes@result, main=main)
+  }else{ gridPlot = noEnrichPlot(main=main) }
   result$gridPlot = gridPlot
 
   return(result)

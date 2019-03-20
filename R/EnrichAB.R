@@ -11,9 +11,8 @@
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
-#' @param pathway_limit A two-length vector (default: c(3, 50)), specifying the min and
+#' @param limit A two-length vector (default: c(3, 50)), specifying the min and
 #' max size of pathways for enrichent analysis.
-#' @param adjust One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", and "none".
 #' @param filename Suffix of output file name.
 #' @param out.dir Path to save plot to (combined with filename).
 #' @param gsea Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea = FALSE.
@@ -48,35 +47,35 @@
 
 # Enrichment for GroupA and GroupB genes
 EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
-                     organism = "hsa", pathway_limit = c(3, 50), adjust = "BH",
-                     filename = NULL, out.dir = ".", gsea = FALSE, width = 6.5, height = 4, ...){
+                     organism = "hsa", limit = c(3, 50),
+                     filename = NULL, out.dir = ".", gsea = FALSE,
+                     width = 6.5, height = 4, ...){
 
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("Need clusterProfiler package")
   message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
   gg = data
-  ##===================enrichment for GroupA==============================
+  ##=====enrichment for GroupA======
   idx1 = gg$group=="up"
   genes = rownames(gg)[idx1]
   geneList = gg$diff[idx1]
   names(geneList) = genes
   universe = rownames(gg)
 
-  #====GO_KEGG_enrichment=====
+  #======GO_KEGG_enrichment========
   keggA = enrichment_analysis(geneList = geneList, universe = universe,
                             method = enrich_method, type = "KEGG",
                             organism = organism, pvalueCutoff = pvalue,
-                            plotTitle = "KEGG: GroupA", color = "#e41a1c",
-                            pAdjustMethod = adjust, limit = pathway_limit)
+                            main = "KEGG: GroupA", limit = limit)
   goA=enrichment_analysis(geneList = geneList, universe = universe,
                           method = "ORT", type = "GOBP+GOMF", organism = organism,
-                          pvalueCutoff = pvalue, plotTitle = "BP: GroupA",
-                          color = "#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
+                          pvalueCutoff = pvalue, main = "BP: GroupA",
+                          limit = limit)
   if(gsea){
     requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
     gseA = enrichment_analysis(geneList = gg$diff, method = "GSEA",
                              type = "KEGG", organism=organism,
-                             pvalueCutoff = pvalue, plotTitle="GSEA: GroupA",
-                             color = "#e41a1c", pAdjustMethod = adjust, limit = pathway_limit)
+                             pvalueCutoff = pvalue, main="GSEA: GroupA",
+                             limit = limit)
   }
   ##=============Enrichment for GroupB========================================
   idx2 = gg$group=="down"
@@ -87,17 +86,16 @@ EnrichAB <- function(data, pvalue = 0.25, enrich_method = "ORT",
   keggB=enrichment_analysis(geneList = geneList, universe = universe,
                             method = enrich_method, type = "KEGG",
                             organism = organism, pvalueCutoff = pvalue,
-                            plotTitle = "KEGG: GroupB", color = "#377eb8",
-                            pAdjustMethod = adjust, limit = pathway_limit)
+                            main = "KEGG: GroupB", limit = limit)
   goB = enrichment_analysis(geneList = geneList, universe = universe,
                             method = "ORT",type = "GOBP+GOMF",organism = organism,
-                            pvalueCutoff = pvalue, plotTitle = "BP: GroupB",
-                            color="#377eb8", pAdjustMethod = adjust, limit = pathway_limit)
+                            pvalueCutoff = pvalue, main = "BP: GroupB",
+                            limit = limit)
   if(gsea){
     gseB=enrichment_analysis(geneList = gg$diff, method = "GSEA",
                              type = "KEGG", organism=organism,
-                             pvalueCutoff = pvalue, plotTitle="GSEA: GroupB",
-                             color="#377eb8", pAdjustMethod = adjust, limit = pathway_limit)
+                             pvalueCutoff = pvalue, main="GSEA: GroupB",
+                             limit = limit)
   }
   ##================output results=============================================
   if(!is.null(filename)){

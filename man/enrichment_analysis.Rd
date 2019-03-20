@@ -8,8 +8,7 @@
 \usage{
 enrichment_analysis(geneList, method = "HGT", keytype = "Entrez",
   type = "KEGG", organism = "hsa", pvalueCutoff = 0.25,
-  pAdjustMethod = "BH", limit = c(3, 50), universe = NULL,
-  plotTitle = NULL, color = "#3f90f7")
+  limit = c(3, 50), universe = NULL, main = NULL)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -26,16 +25,12 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
-
 \item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
-\item{plotTitle}{Same as 'title' in 'plot'.}
-
-\item{color}{Color of points.}
+\item{main}{Same as 'title' in 'plot'.}
 }
 \value{
 A list, including two items, \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is
@@ -46,8 +41,7 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-genes <- geneList[1:100]
-keggA = enrichment_analysis(genes, method = "HGT", type = "KEGG")
+keggA = enrichment_analysis(geneList, method = "GSEA", type = "KEGG")
 print(keggA$gridPlot)
 
 }

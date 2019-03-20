@@ -1,15 +1,21 @@
-#' Visualize selected genes in enriched genesets
+#' Visualize enriched pathways and genes in those pathways
 #'
 #' @docType methods
 #' @name EnrichedGeneView
 #' @rdname EnrichedGeneView
 #'
-#' @param enrichment A data frame of enrichment result.
-#' @param geneList The geneList used in enrichment analysis.
+#' @param enrichment A data frame of enrichment result or an \code{enrichResult} object.
+#' @param geneList A numeric geneList used in enrichment anlaysis.
+#' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
+#'
+#' @param top An integer, specifying the number of positively enriched terms to show.
+#' @param bottom An integer, specifying the number of negatively enriched terms to show.
+#' @param custom_pid A character vector (pathway IDs), customizing pathways to show.
+#'
 #' @param keytype "Entrez" or "Symbol".
-#' @param gene_cutoff A tow-length numeric vector, specifying cutoff for negative and positive selections.
-#' @param top An integer, specifying the number of top enriched terms to show.
-#' @param bottom An integer, specifying the number of bottom enriched terms to show.
+#' @param gene_cutoff A two-length numeric vector, specifying cutoff for genes to show.
+#' @param custom_gene A character vector (gene names), customizing genes to show.
+#'
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
 #' @param width As in ggsave.
@@ -22,12 +28,23 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' enrichRes <- enrich.GSE(geneList)
-#' EnrichedGeneView(enrichment=as.data.frame(enrichRes), geneList, keytype = "Entrez")
+#' EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
 #' @export
 
-EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff = c(-log2(1.5), log2(1.5)),
-                          top = 5, bottom = 5, charLength = 40, filename = NULL, width = 7, height = 5, ...){
-  # No enriched pathways
+EnrichedGeneView=function(enrichment, geneList,
+                          rank_by = "p.adjust",
+                          top = 5, bottom = 0,
+                          custom_pid = NULL,
+                          keytype = "Symbol",
+                          gene_cutoff = c(-log2(1.5), log2(1.5)),
+                          custom_gene = NULL,
+                          charLength = 40,
+                          filename = NULL,
+                          width = 7, height = 5, ...){
+
+  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+
+  ## No enriched pathways ##
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1 = noEnrichPlot("No enriched terms")
     if(!is.null(filename)){
@@ -35,39 +52,59 @@ EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff 
     }
     return(p1)
   }
-  # Reorder enrichment table
-  enrichment$logP = round(-log10(enrichment$p.adjust), 1)
-  enrichment = enrichment[!is.na(enrichment$ID),]
 
-  #normalize term description
-  terms=as.character(enrichment$Description)
-  terms=lapply(terms, function(x,k){
-    x=as.character(x)
+  ## Rank enriched pathways ##
+  enrichment$logP = round(-log10(enrichment$p.adjust), 1)
+  enrichment = enrichment[!is.na(enrichment$ID), ]
+  if(tolower(rank_by) == "p.adjust"){
+    enrichment = enrichment[order(enrichment$p.adjust), ]
+  }else if(tolower(rank_by) == "nes"){
+    enrichment = enrichment[order(abs(enrichment$NES), decreasing = TRUE), ]
+  }
+
+  ## Normalize term description ##
+  terms = as.character(enrichment$Description)
+  terms = lapply(terms, function(x,k){
+    x = as.character(x)
     if(nchar(x)>k){x=substr(x,start=1,stop=k)}
     return(x)}, charLength)
-  enrichment$Description = do.call(rbind,terms)
+  enrichment$Description = do.call(rbind, terms)
   enrichment = enrichment[!duplicated(enrichment$Description),]
-  enrichment = enrichment[order(enrichment$NES), ]
-  idx = c()
-  if(bottom>0) idx = 1:min(bottom, nrow(enrichment))
-  if(top>0) idx = c(idx, max(1, nrow(enrichment)-top+1):nrow(enrichment))
-  idx = unique(idx)
+
+  ## Select pathways to show ##
+  pid_neg <- pid_pos <- NULL
+  if(bottom>0){
+    tmp = enrichment[enrichment$NES<0, ]
+    pid_neg = tmp$ID[1:min(nrow(tmp), bottom)]
+  }
+  if(top>0){
+    tmp = enrichment[enrichment$NES>0, ]
+    pid_pos = tmp$ID[1:min(nrow(tmp), top)]
+  }
+  idx = enrichment$ID %in% c(custom_pid, pid_neg, pid_pos)
+  if(sum(idx)==0) stop("No input pathway found !!!")
+
+  ## Prepare data for plotting ##
   enrichment = enrichment[idx, ]
-
-  enrichment$Description = factor(enrichment$Description, levels=enrichment$Description)
-
-  #Prepare data for plotting.
+  enrichment$Description = factor(enrichment$Description,
+                                  levels=enrichment$Description)
   geneNames = strsplit(enrichment$geneName, "\\/")
   geneIds = strsplit(enrichment$geneID, "\\/")
   gg = data.frame(ID = rep(enrichment$ID, enrichment$Count),
                   Term = rep(enrichment$Description, enrichment$Count),
-             Gene = unlist(geneNames), geneIds = unlist(geneIds), stringsAsFactors = FALSE)
+                  Size = rep(enrichment$logP, enrichment$Count),
+                  Gene = unlist(geneNames), geneIds = unlist(geneIds),
+                  stringsAsFactors = FALSE)
+
+  ## Select genes to show ##
   names(geneList) = toupper(names(geneList))
+  geneList = geneList[geneList<gene_cutoff[1] | geneList>gene_cutoff[2] |
+                        names(geneList) %in% custom_gene]
   if(keytype == "Symbol") gg$GeneScore = geneList[gg$Gene]
   if(keytype == "Entrez") gg$GeneScore = geneList[gg$geneIds]
-  gg$Size = abs(gg$GeneScore)
-  idx = is.na(gg$GeneScore) | (gg$GeneScore>gene_cutoff[1] & gg$GeneScore<gene_cutoff[2])
-  gg = gg[!idx, ]
+
+  ## Rank pathways and genes ##
+  gg = gg[!is.na(gg$GeneScore), ]
   gg$Term = factor(gg$Term, levels = unique(gg$Term))
   gg = gg[order(gg$GeneScore), ]
   gg$Gene = factor(gg$Gene, levels = unique(gg$Gene))
@@ -78,9 +115,9 @@ EnrichedGeneView=function(enrichment, geneList, keytype = "Symbol", gene_cutoff 
   p1 = p1 + theme(panel.grid.major=element_line(colour="gray90"),
                   panel.grid.minor=element_blank(),
                   panel.background=element_blank())
-  p1 = p1 + labs(x=NULL, y=NULL, color = NULL)
+  p1 = p1 + labs(x=NULL, y=NULL, color = "Gene score", size = "-Log10(p.adjust)")
   # p1 = p1 + theme(legend.position="top")
-  p1 = p1 + scale_size_continuous(guide = FALSE)
+  # p1 = p1 + scale_size_continuous(guide = FALSE)
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
   p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                   plot.title = element_text(hjust = 0.5, size=18),

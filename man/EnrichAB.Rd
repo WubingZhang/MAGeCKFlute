@@ -6,9 +6,8 @@
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
-  organism = "hsa", pathway_limit = c(3, 50), adjust = "BH",
-  filename = NULL, out.dir = ".", gsea = FALSE, width = 6.5,
-  height = 4, ...)
+  organism = "hsa", limit = c(3, 50), filename = NULL,
+  out.dir = ".", gsea = FALSE, width = 6.5, height = 4, ...)
 }
 \arguments{
 \item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
@@ -19,10 +18,8 @@ EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(3, 50)), specifying the min and
 max size of pathways for enrichent analysis.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", and "none".}
 
 \item{filename}{Suffix of output file name.}
 

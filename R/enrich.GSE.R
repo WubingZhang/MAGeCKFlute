@@ -14,7 +14,6 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param gmtpath The path to customized gmt file.
@@ -31,7 +30,7 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' \dontrun{
-#'     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+#'     enrichRes = enrich.GSE(geneList)
 #'     head(slot(enrichRes, "result"))
 #' }
 #'
@@ -40,8 +39,9 @@
 #' @import DOSE
 #' @export
 
-enrich.GSE <- function(geneList, keytype = "Entrez", type = "CORUM",
-                       organism = 'hsa', pvalueCutoff = 0.25, pAdjustMethod = "BH",
+enrich.GSE <- function(geneList, keytype = "Entrez",
+                       type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
+                       organism = 'hsa', pvalueCutoff = 0.05,
                        limit = c(3, 50), gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
@@ -62,43 +62,59 @@ enrich.GSE <- function(geneList, keytype = "Entrez", type = "CORUM",
                        paste0(organism, "_msig_entrez.gmt.gz"))
     gmtpath = gzfile(msigdb)
   }
-  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
+  gene2path = ReadGMT(gmtpath, limit = limit)
   close(gmtpath)
   names(gene2path) = c("Gene","PathwayID", "PathwayName")
   gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
                           tolower(substr(gene2path$PathwayName, 2,
                                   nchar(gene2path$PathwayName))))
 
+  ## Select gene set type ##
   if(type != "All"){
     type = unlist(strsplit(type, "\\+"))
     idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
     gene2path = gene2path[idx, ]
   }
   gene2path = gene2path[!is.na(gene2path$Gene), ]
+
+  ## Remove redundant pathways ##
+  # tmpList = split(gene2path$Gene, gene2path$PathwayID)
+  # tmp1 = crossprod(table(stack(tmpList)))
+  # tmp2 = outer(lengths(tmpList), lengths(tmpList), "+")
+  # ijc = tmp1 / (tmp2 - tmp1)
+  # diag(ijc) = 0
+  # tmpNames = names(sort(lengths(tmpList)))
+  # ijc = ijc[tmpNames, tmpNames]
+  # idx <- which(ijc>0.8, arr.ind = TRUE)
+  # colnames(idx) = c("row", "col")
+  # idx = data.table::as.data.table(idx)
+  # imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
   idx = duplicated(gene2path$PathwayID)
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx])
 
   ## Enrichment analysis
-  enrichedRes = GSEA(geneList = geneList, minGSSize = limit[1],
-                     maxGSSize = limit[2], pvalueCutoff = pvalueCutoff,
-                     pAdjustMethod = pAdjustMethod, TERM2NAME = pathways,
+  len = length(unique(intersect(names(geneList), gene2path$Gene)))
+  message("\t", len, " genes are mapped ...")
+  enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
+                     TERM2NAME = pathways,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")])
 
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
-    geneID = strsplit(enrichedRes@result$core_enrichment, "/")
-    allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
+    colnames(enrichedRes@result)[11] = "geneID"
+    # enrichedRes@result = EnrichedFilter(enrichedRes@result)
+    geneID = strsplit(enrichedRes@result$geneID, "/")
+    allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol",
+                            organism = organism)
     geneName = lapply(geneID, function(gid){
-      SYMBOL = allsymbol[gid]
-      paste(SYMBOL, collapse = "/")
+      SYMBOL = allsymbol[gid]; paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)
     enrichedRes@result$Count = unlist(lapply(geneID, length))
     cnames = c("ID", "Description", "NES", "pvalue", "p.adjust",
-               "core_enrichment", "geneName", "Count")
+               "geneID", "geneName", "Count")
     enrichedRes@result = enrichedRes@result[, cnames]
-    colnames(enrichedRes@result)[6] = "geneID"
   }
   return(enrichedRes)
 }
