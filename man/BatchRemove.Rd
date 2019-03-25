@@ -25,13 +25,11 @@ A list contrains two objects, including \code{data} and \code{p}.
 Batch effect removal
 }
 \examples{
-data(bladderdata, package = "bladderbatch")
-dat <- bladderEset[1:50,]
-pheno = pData(dat)
-edata = exprs(dat)
-batchMat = pheno[, c("sample", "batch", "cancer")]
-batchMat$sample = rownames(batchMat)
+edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
+colnames(edata) = paste0("s", 1:4)
+batchMat = data.frame(sample = colnames(edata), batch = rep(1:2, each = 2))
 edata1 = BatchRemove(edata, batchMat)
+print(edata1$p)
 
 }
 \seealso{

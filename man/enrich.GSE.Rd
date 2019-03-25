@@ -7,8 +7,8 @@
 \title{GSEA}
 \usage{
 enrich.GSE(geneList, keytype = "Entrez",
-  type = "CORUM+GOBP+GOMF+RECTOME+KEGG", organism = "hsa",
-  pvalueCutoff = 0.05, limit = c(3, 50), gmtpath = NA)
+  type = "CORUM+GOBP+GOMF+GOCC+KEGG", organism = "hsa",
+  pvalueCutoff = 0.25, limit = c(3, 80), gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
@@ -47,7 +47,7 @@ data(geneList, package = "DOSE")
 
 \code{\link{enrich.ORT}}
 
-\code{\link{enrichment_analysis}}
+\code{\link{EnrichAnalyzer}}
 
 \code{\link[DOSE]{enrichResult-class}}
 }

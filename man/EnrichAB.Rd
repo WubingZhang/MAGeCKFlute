@@ -7,7 +7,7 @@
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
   organism = "hsa", limit = c(3, 50), filename = NULL,
-  out.dir = ".", gsea = FALSE, width = 6.5, height = 4, ...)
+  out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
 \item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
@@ -24,8 +24,6 @@ max size of pathways for enrichent analysis.}
 \item{filename}{Suffix of output file name.}
 
 \item{out.dir}{Path to save plot to (combined with filename).}
-
-\item{gsea}{Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea = FALSE.}
 
 \item{width}{As in ggsave.}
 

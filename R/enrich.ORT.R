@@ -25,7 +25,7 @@
 #'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.GSE}}
-#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link{EnrichAnalyzer}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
@@ -39,9 +39,9 @@
 #' @export
 
 enrich.ORT <- function(geneList, keytype = "Entrez",
-                       type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
+                       type = "CORUM+GOBP+GOMF+GOCC+KEGG",
                        organism = 'hsa', pvalueCutoff = 0.05,
-                       limit = c(3, 50), universe=NULL, gmtpath = NA){
+                       limit = c(3, 80), universe=NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
@@ -90,10 +90,12 @@ enrich.ORT <- function(geneList, keytype = "Entrez",
   len = length(unique(intersect(gene, gene2path$Gene)))
   message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
-  enrichedRes = enricher(gene, pvalueCutoff = pvalueCutoff,
-                universe = universe, TERM2NAME = pathways,
-                TERM2GENE = gene2path[,c("PathwayID","Gene")])
-
+  enrichedRes = enricher(gene, universe = universe,
+                         TERM2NAME = pathways, pvalueCutoff = pvalueCutoff,
+                         TERM2GENE = gene2path[,c("PathwayID","Gene")])
+  if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
+    enrichedRes@result = enrichedRes@result[enrichedRes@result$p.adjust<pvalueCutoff, ]
+  }
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)

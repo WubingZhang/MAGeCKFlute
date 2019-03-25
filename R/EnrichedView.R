@@ -27,21 +27,24 @@
 #' @examples
 #' \dontrun{
 #'     data(geneList, package = "DOSE")
-#'     enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+#'     enrichRes = enrich.GSE(geneList, organism="hsa")
 #'     EnrichedView(slot(enrichRes, "result"))
 #' }
 #' @export
 EnrichedView = function(enrichment,
                         rank_by = "p.adjust",
-                        top = 5, bottom = 0,
+                        top = 5, bottom = 5,
                         custom_pid = NULL,
                         x = "LogP",
                         charLength = 40,
                         filename = NULL,
                         width = 7, height = 4, ...){
+  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
+
   # No enriched pathways
   if(is.null(enrichment) || nrow(enrichment)==0){
-    p1 = noEnrichPlot(main)
+    p1 = noEnrichPlot("No enriched terms")
     if(!is.null(filename)){
       ggsave(plot=p1,filename=filename, units = "in", width=width, height=height, ...)
     }
@@ -83,21 +86,24 @@ EnrichedView = function(enrichment,
   enrichment = enrichment[idx, ]
   enrichment$Description = factor(enrichment$Description,
                                   levels=enrichment$Description)
-  if(x=="NES"){ enrichment$x = enrichment$NES
-  }else{enrichment$x = enrichment$LogP}
+  if(x=="NES"){
+    enrichment$x = enrichment$NES
+    enrichment$size = enrichment$logP
+  }else{
+    enrichment$x = enrichment$logP
+    enrichment$size = enrichment$NES
+  }
   # Visualize the top enriched terms
   enrichment$col = "Up"
   enrichment$col[enrichment$NES<0] = "Down"
 
   ## Plot the figure ##
-  if(x=="NES") p1 = ggplot(data=enrichment, aes(x=x, y=Description, size=LogP))
-  else p1 = ggplot(data=enrichment, aes(x=x, y=Description, size=NES))
+  p1 = ggplot(data=enrichment, aes(x=x, y=Description, size=size))
   p1 = p1 + geom_point(aes(color = col))
   p1 = p1 + scale_color_manual(values = c("#377eb8", "#e41a1c"))
   p1 = p1 + theme(panel.grid.major=element_line(colour="gray90"),
                    panel.grid.minor=element_blank(),
                    panel.background=element_blank())
-  p1 = p1 + labs(title=main, col="Type", size = "-lgP")
   p1 = p1 + theme(legend.position="right")
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
   p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
@@ -107,9 +113,11 @@ EnrichedView = function(enrichment,
                   panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                   panel.border = element_blank(), panel.background = element_blank(),
                   legend.key = element_rect(fill = "transparent"))
-  if(x=="NES")(p1 = p1 + xlab("NES score") + ylab(NULL)
-  )else(p1 = p1 + xlab("P.adj") + ylab(NULL)
-  )
+  if(x=="NES")
+    p1 = p1 + labs(x = "Enrichment score", y = NULL, col = "Group", size = "LogP")
+  else
+    p1 = p1 + labs(x = "LogP", y = NULL, col = "Group", size = "NES")
+
   if(!is.null(filename)){
     ggsave(plot=p1, filename=filename, units = "in", width=width, height=height, ...)
   }
@@ -121,12 +129,12 @@ EnrichedView = function(enrichment,
 #' @docType methods
 #' @name noEnrichPlot
 #' @rdname noEnrichPlot
-#' @param main Same as 'title' in 'plot'.
+#' @param main The title of figure.
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #' @author Wubing Zhang
-noEnrichPlot = function(main){
+noEnrichPlot = function(main = "No enriched terms"){
   p1 = ggplot()
-  p1 = p1 + geom_text(aes(x=0,y=0,label="No enriched terms"), size=6)
+  p1 = p1 + geom_text(aes(x=0, y=0, label="No enriched terms"), size=6)
   p1 = p1 + labs(title=main)
   p1 = p1 + theme(plot.title = element_text(size=12))
   p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),

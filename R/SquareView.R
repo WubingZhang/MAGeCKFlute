@@ -56,7 +56,7 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
                      x_cutoff = c(-1,1), y_cutoff = c(-1,1), intercept = NULL,
                      groups = c("midleft", "topcenter", "midright", "bottomcenter"),
                      groupnames = paste0("Group", 1:length(groups)),
-                     main = NULL, filename = NULL, width = 5, height = 4, ...){
+                     main = NULL, filename = NULL, width = 6, height = 4, ...){
   requireNamespace("ggExtra", quietly=TRUE) || stop("need ggExtra package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 

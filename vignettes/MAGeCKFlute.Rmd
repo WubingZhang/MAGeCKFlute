@@ -158,7 +158,7 @@ universe = dd.rra$EntrezID
 geneList= dd.rra$LFC
 names(geneList) = universe
 
-enrich = enrich.GSE(geneList = geneList, type = "GOMF+GOCC+GOBP", limit = c(2, 100))
+enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100))
 ```
 
 Visualize the top enriched genes and pathways/GO terms using `EnrichedGeneView` and `EnrichedView`.
@@ -202,17 +202,15 @@ Is there batch effects? This is a commonly asked question before perform later a
 
 ```{r BatchRemove, fig.height=5, fig.width=6}
 ##Before batch removal
-data(bladderdata, package = "bladderbatch")
-dat <- bladderEset[, 1:10]
-pheno = dat@phenoData@data
-edata = dat@assayData$exprs
+edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
+colnames(edata) = paste0("s", 1:4)
 HeatmapView(cor(edata))
 
 ## After batch removal
-batchMat = pheno[, c("sample", "batch", "cancer")]
-batchMat$sample = rownames(batchMat)
+batchMat = data.frame(sample = colnames(edata), batch = rep(1:2, each = 2))
 edata1 = BatchRemove(edata, batchMat)
-HeatmapView(cor(edata1$data))
+head(edata1$data)
+print(edata1$p)
 ```
 
 ### Normalization of beta scores
@@ -279,39 +277,30 @@ print(p2)
 ```
 
 ### Functional analysis of selected genes
-For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `enrichment_analysis`, which return a list containing `gridPlot` (ggplot object) and `enrichRes` (enrichResult instance). Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT", which return an enrichResult instance. Function `EnrichedView` can be used to generate `gridPlot` from `enrichRes` easily, as shown below. 
+For gene set enrichment analysis, we provide three methods in this package, including "ORT"(Over-Representing Test [@Guangchuang2012]), "GSEA"(Gene Set Enrichment Analysis [@Aravind2005]), and "HGT"(hypergeometric test), which can be performed on annotations of Gene ontology(GO) terms [@GO2014], Kyoto encyclopedia of genes and genomes (KEGG) pathways [@Minoru2014], MsigDB gene sets, or custom gene sets. The enrichment analysis can be done easily using function `EnrichAnalyzer`, which returns an enrichResult instance. Alternatively, you can do enrichment analysis using the function `enrich.ORT` for "ORT", `enrich.GSE` for GSEA, and `enrich.HGT` for "HGT". Function `EnrichedView` can be used to generate `gridPlot` from `enrichRes` easily, as shown below. 
 
 ```{r EnrichAB, fig.height=5, fig.width=10}
 ## Get information of positive and negative selection genes
 groupAB = p1$data
-## select positive selection genes
-idx1=groupAB$group=="up"
-genes=rownames(groupAB)[idx1]
-geneList=groupAB$diff[idx1]
-names(geneList)=genes
-geneList = sort(geneList, decreasing = TRUE)
-universe=rownames(groupAB)
-## Do enrichment analysis using HGT method
-hgtA = enrich.HGT(geneList[1:100], organism = "hsa", universe = universe)
+geneList = groupAB$diff; names(geneList) = rownames(groupAB)
+## Do enrichment analysis for positive selection genes.
+idx1 = groupAB$group=="up"
+hgtA = EnrichAnalyzer(geneList[idx1], method = "HGT", universe = rownames(groupAB))
 hgtA_grid = EnrichedView(slot(hgtA, "result"))
 
 ## look at the results
 head(slot(hgtA, "result"))
 print(hgtA_grid)
-
 ```
 
 ```{r GSEA, fig.height=5, fig.width=10}
 ## Do enrichment analysis using GSEA method
-gseA = enrich.GSE(geneList, type = "KEGG", organism = "hsa", pvalueCutoff = 1)
-gseA_grid = EnrichedView(slot(gseA, "result"))
-
-#should same as
-head(slot(gseA, "result"))
+gseA = EnrichAnalyzer(geneList, method = "GSEA", type = "KEGG", limit = c(2, 150))
+gseA_grid = EnrichedView(gseA)
 print(gseA_grid)
 ```
 
-For enriched pathways, we can use function `KeggPathwayView` to visualize
+For enriched KEGG pathways, we can use function `KeggPathwayView` to visualize
 the beta score level in control and treatment on pathway map.[@Weijun2013]
 
 ```{r pathview, fig.height=10, fig.width=20}
@@ -332,26 +321,22 @@ print(p3)
 Same as the section above. We can do enrichment analysis for treatment-associated genes.
 
 ```{r EnrichSquare, fig.height=5, fig.width=9}
-#Get information of treatment-associated genes
+#Get 9-square groups
 Square9 = p3$data
-# Select group1 genes in 9-Square
-idx=Square9$group=="Group1"
-geneList = (Square9$Treatment - Square9$Control)[idx]
+idx=Square9$group=="topcenter"
+geneList = (Square9$y - Square9$x)[idx]
 names(geneList) = rownames(Square9)[idx]
 universe=rownames(Square9)
-# KEGG_enrichment
-kegg1 = enrich.HGT(geneList = geneList, universe = universe, type = "KEGG")
-# View the results
-head(slot(kegg1, "result"))
-EnrichedView(slot(kegg1, "result"))
+# Enrichment analysis
+kegg1 = EnrichAnalyzer(geneList = geneList, universe = universe)
+EnrichedView(kegg1, top = 10, bottom = 0)
 ```
 
 Also, pathway visualization can be done using function `KeggPathwayView`, the same as the section above.
 
 ```{r pathview2, eval=FALSE}
 genedata = dd_essential[, c("Control","Treatment")]
-keggID = gsub("KEGG_", "", slot(kegg1, "result")$ID[1])
-arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
+arrangePathview(genedata, pathways = "hsa01521", organism = "hsa", sub = NULL)
 ```
 
 

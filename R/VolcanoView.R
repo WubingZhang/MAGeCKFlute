@@ -46,7 +46,7 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     if(!(top==0 & is.null(topnames))){
       gg$Label = rownames(gg)
       if(!is.na(Label)) gg$Label = df[, Label]
-      gg = gg[order(gg[,y], decreasing = TRUE), ]
+      gg = gg[order(abs(gg[,x]), gg[,y], decreasing = TRUE), ]
       idx1 = idx2 = c()
       if(top>0){
         idx1 = which(gg$group=="up")[1:min(top, sum(gg$group=="up"))]

@@ -23,7 +23,7 @@
 #'
 #' @seealso \code{\link{enrich.GSE}}
 #' @seealso \code{\link{enrich.ORT}}
-#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link{EnrichAnalyzer}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
@@ -34,13 +34,12 @@
 #'
 #' @import DOSE
 #' @importFrom data.table fread
-#'
 #' @export
 
 enrich.HGT = function(geneList, keytype = "Entrez",
-                      type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
+                      type = "CORUM+GOBP+GOMF+GOCC+KEGG",
                       organism = 'hsa', pvalueCutoff = 0.05,
-                      limit = c(3, 50), universe = NULL, gmtpath = NA){
+                      limit = c(3, 80), universe = NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 

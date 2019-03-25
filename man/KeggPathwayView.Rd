@@ -50,8 +50,8 @@ to use either "Homo sapiens" (scientific name) or "human" (common name).}
 \item{gene.idtype}{Character, ID type used for the gene.data, case insensitive. Default
 gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many
 common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG
-use other types of gene IDs. For the common model organisms (to check the list, do:
-data(bods); bods), you may also specify other types of valid IDs. To check the ID list,
+use other types of gene IDs. For the common model organisms, you may also specify other
+types of valid IDs. To check the ID list,
  do: data(gene.idtype.list); gene.idtype.list.}
 
 \item{gene.annotpkg}{Character, the name of the annotation package to use for mapping

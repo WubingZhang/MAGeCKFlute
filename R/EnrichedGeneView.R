@@ -33,7 +33,7 @@
 
 EnrichedGeneView=function(enrichment, geneList,
                           rank_by = "p.adjust",
-                          top = 5, bottom = 0,
+                          top = 5, bottom = 5,
                           custom_pid = NULL,
                           keytype = "Symbol",
                           gene_cutoff = c(-log2(1.5), log2(1.5)),
@@ -43,6 +43,7 @@ EnrichedGeneView=function(enrichment, geneList,
                           width = 7, height = 5, ...){
 
   if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
   ## No enriched pathways ##
   if(is.null(enrichment) || nrow(enrichment)==0){
@@ -115,7 +116,7 @@ EnrichedGeneView=function(enrichment, geneList,
   p1 = p1 + theme(panel.grid.major=element_line(colour="gray90"),
                   panel.grid.minor=element_blank(),
                   panel.background=element_blank())
-  p1 = p1 + labs(x=NULL, y=NULL, color = "Gene score", size = "-Log10(p.adjust)")
+  p1 = p1 + labs(x=NULL, y=NULL, color = "Gene score", size = "LogP")
   # p1 = p1 + theme(legend.position="top")
   # p1 = p1 + scale_size_continuous(guide = FALSE)
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))

@@ -11,7 +11,7 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   x_cutoff = c(-1, 1), y_cutoff = c(-1, 1), intercept = NULL,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
   groupnames = paste0("Group", 1:length(groups)), main = NULL,
-  filename = NULL, width = 5, height = 4, ...)
+  filename = NULL, width = 6, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}

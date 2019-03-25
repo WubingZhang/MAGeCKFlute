@@ -24,8 +24,6 @@
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
-#' @param gsea Boolean, indicating whether GSEA analysis is needed for positive and
-#' negative selection genes.
 #'
 #' @param posControl A character vector, specifying a list of positive control gene symbols.
 #' @param loess Boolean, whether include loess normalization in the pipeline.
@@ -79,11 +77,15 @@
 #' @import ggplot2 stats grDevices utils gridExtra grid
 #' @export
 
-FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", organism = "hsa", # Input dataset
-                     scale_cutoff = 1, top = 10, bottom = 10, interestGenes = NA, # Parameters for rank visualization
-                     limit = c(3, 50), pvalueCutoff=0.25, enrich_kegg = "ORT", gsea = FALSE,
+FluteMLE <- function(gene_summary, ctrlname, treatname,
+                     keytype = "Symbol", organism = "hsa", # Input dataset
+                     scale_cutoff = 1, top = 10, bottom = 10,
+                     interestGenes = NA, # Parameters for rank visualization
+                     limit = c(3, 50), pvalueCutoff=0.25,
+                     enrich_kegg = "ORT",
                      posControl = NULL, loess = FALSE,
-                     prefix = "", width = 10, height = 7, outdir = ".", view_allpath = FALSE){
+                     prefix = "", width = 10, height = 7,
+                     outdir = ".", view_allpath = FALSE){
 
 	## Prepare the running environment ##
   message(Sys.time(), " # Create output dir and pdf file...")
@@ -264,13 +266,13 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	  dir.create(outputDir6, showWarnings=FALSE)
 
 	  E1 = EnrichAB(P1$data, pvalue = pvalueCutoff, enrich_method = enrich_kegg,
-	                organism = organism, gsea = gsea, limit = limit,
+	                organism = organism, limit = limit,
 	                filename = "Negative_ctrl_normalized", out.dir = outputDir5)
 	  # EnrichedView
 	  grid.arrange(E1$keggA$gridPlot, E1$goA$gridPlot, ncol = 1)
-	  if(gsea) grid.arrange(E1$gseA$gridPlot, E1$gseA$gseaplot, ncol = 1)
+	  # if(gsea) grid.arrange(E1$gseA$gridPlot, E1$gseA$gseaplot, ncol = 1)
 	  grid.arrange(E1$keggB$gridPlot, E1$goB$gridPlot, ncol = 1)
-	  if(gsea) grid.arrange(E1$gseB$gridPlot, E1$gseB$gseaplot, ncol = 1)
+	  # if(gsea) grid.arrange(E1$gseB$gridPlot, E1$gseB$gseaplot, ncol = 1)
 
 	  # Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes@result)>0)
@@ -285,13 +287,13 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
   {# Cell cycle normalization
 	  E2 = EnrichAB(P3$data, pvalue = pvalueCutoff,
 	                enrich_method = enrich_kegg, organism=organism,
-	                gsea=gsea, limit = limit,
-	                filename="Essential_normalized", out.dir=outputDir5)
+	                limit = limit, filename="Essential_normalized",
+	                out.dir=outputDir5)
 	  # Cell cycle normalization
 	  grid.arrange(E2$keggA$gridPlot, E2$goA$gridPlot, ncol = 1)
-	  if(gsea) grid.arrange(E2$gseA$gridPlot, E2$gseA$gseaplot, ncol = 1)
+	  # if(gsea) grid.arrange(E2$gseA$gridPlot, E2$gseA$gseaplot, ncol = 1)
 	  grid.arrange(E2$keggB$gridPlot, E2$goB$gridPlot, ncol = 1)
-	  if(gsea) grid.arrange(E2$gseB$gridPlot, E2$gseB$gseaplot, ncol = 1)
+	  # if(gsea) grid.arrange(E2$gseB$gridPlot, E2$gseB$gseaplot, ncol = 1)
     # Pathway view
 	  if(!is.null(E2$keggA$enrichRes) && nrow(E2$keggA$enrichRes@result)>0)
 	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$keggA$enrichRes@result$ID), top = 4, ncol = 2,
@@ -301,19 +303,18 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	    arrangePathview(dd_essential, gsub("KEGG_", "", E2$keggB$enrichRes@result$ID), top = 4, ncol = 2,
 	                    title="Group B", sub="Cell cycle normalized",organism=organism,
 	                    view_allpath=view_allpath, output=outputDir6)
-
   }
   if(loess){# Loess normalization
 		E3 = EnrichAB(P5$data, pvalue=pvalueCutoff, limit = limit,
 		              enrich_method = enrich_kegg, organism=organism,
-		              gsea=gsea,filename="Loess_normalized",
+		              filename="Loess_normalized",
 		              out.dir=outputDir5)
 
 		# EnrichedView
 		grid.arrange(E3$keggA$gridPlot, E3$goA$gridPlot, ncol = 1)
-		if(gsea) grid.arrange(E3$gseA$gridPlot, E3$gseA$gseaplot, ncol = 1)
+		# if(gsea) grid.arrange(E3$gseA$gridPlot, E3$gseA$gseaplot, ncol = 1)
 		grid.arrange(E3$keggB$gridPlot, E3$goB$gridPlot, ncol = 1)
-		if(gsea) grid.arrange(E3$gseB$gridPlot, E3$gseB$gseaplot, ncol = 1)
+		# if(gsea) grid.arrange(E3$gseB$gridPlot, E3$gseB$gseaplot, ncol = 1)
 
 		# Pathway View
 		if(!is.null(E3$keggA$enrichRes) && nrow(E3$keggA$enrichRes@result)>0)
@@ -353,8 +354,8 @@ FluteMLE <- function(gene_summary, ctrlname, treatname, keytype = "Symbol", orga
 	{# Negative control normalization
 	  E1 = EnrichSquare(P1$data, pvalue = pvalueCutoff,
 	                    enrich_method = enrich_kegg, organism=organism,
-        						 filename="negative_normalized", limit = limit,
-        						 out.dir=outputDir7)
+	                    filename="negative_normalized", limit = limit,
+	                    out.dir=outputDir7)
     # EnrichView
 	  grid.arrange(E1$kegg1$gridPlot, E1$go1$gridPlot, ncol = 1)
 	  grid.arrange(E1$kegg2$gridPlot, E1$go2$gridPlot, ncol = 1)

@@ -32,8 +32,8 @@
 #' @param gene.idtype Character, ID type used for the gene.data, case insensitive. Default
 #' gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many
 #' common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG
-#' use other types of gene IDs. For the common model organisms (to check the list, do:
-#' data(bods); bods), you may also specify other types of valid IDs. To check the ID list,
+#' use other types of gene IDs. For the common model organisms, you may also specify other
+#' types of valid IDs. To check the ID list,
 #'  do: data(gene.idtype.list); gene.idtype.list.
 #' @param gene.annotpkg Character, the name of the annotation package to use for mapping
 #' between other gene ID types including symbols and Entrez gene ID. Default gene.annotpkg=NULL.
@@ -209,7 +209,10 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     stop("gene.data and cpd.data are both NULL!")
   }
   gene.idtype = toupper(gene.idtype)
-  data(bods)
+  bods <- data.frame(package = paste0("org.", c("Hs", "Mm", "Rn", "Bt", "Cf", "Pt", "Ss"), ".eg.db"),
+                     species = c("Human", "Mouse", "Rat", "Bovine", "Canine", "Chimp", "Pig"),
+                     "kegg code" = c("hsa", "mmu", "rno", "bta", "cfa", "ptr", "ssc"),
+                     check.names = FALSE, stringsAsFactors = FALSE)
   if (species != "ko") {
     species.data = kegg.species.code(species, na.rm =TRUE,
                                      code.only = FALSE)

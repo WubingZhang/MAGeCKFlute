@@ -18,36 +18,41 @@
 #' @seealso \code{\link[sva]{ComBat}}
 #'
 #' @examples
-#' data(bladderdata, package = "bladderbatch")
-#' dat <- bladderEset[1:50,]
-#' pheno = pData(dat)
-#' edata = exprs(dat)
-#' batchMat = pheno[, c("sample", "batch", "cancer")]
-#' batchMat$sample = rownames(batchMat)
+#' edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
+#' colnames(edata) = paste0("s", 1:4)
+#' batchMat = data.frame(sample = colnames(edata), batch = rep(1:2, each = 2))
 #' edata1 = BatchRemove(edata, batchMat)
+#' print(edata1$p)
 #'
 #' @importFrom sva ComBat
-#' @import bladderbatch
 #'
 #' @export
 #'
 
 BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
   if(is.character(mat) && file.exists(mat)){
-    mat = read.table(mat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+    mat = read.table(mat, sep = "\t", header = TRUE,
+                     stringsAsFactors = FALSE, check.names = FALSE)
   }
   if(is.character(batchMat) && file.exists(batchMat)){
-    batchMat = read.table(batchMat, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+    batchMat = read.table(batchMat, sep = "\t", header = TRUE,
+                          stringsAsFactors = FALSE, check.names = FALSE)
   }
+  mat = as.data.frame(mat, stringsAsFactors = FALSE)
+  batchMat = as.data.frame(batchMat, stringsAsFactors = FALSE)
+  colnames(batchMat)[1:2] = c("Sample", "Batch")
+  rownames(batchMat) = batchMat[,1]
+  batch = batchMat
   requireNamespace("sva")
-  mat = as.matrix(mat)
-  if(mode(mat)!="numeric") stop("Numeric data matrix is needed!")
-  batch = as.matrix(batchMat)
-  rownames(batch) = batch[,1]
+  # mat = as.matrix(mat)
+  # if(mode(mat)!="numeric") stop("Numeric data matrix is needed!")
+  # batch = as.matrix(batchMat)
+  # rownames(batch) = batch[,1]
+
   ## load batch matrix
-  index=intersect(batch[,1], colnames(mat))
-  if(length(index)<2) stop("Less than two samples found in data matrix.")
-  dt=mat[,index]
+  index=intersect(batchMat[,1], colnames(mat))
+  if(length(index)<2) stop("Too less samples ...")
+  dt = mat[, index]
   if(log2trans) dt = log(dt+1)
   ##
   tmp=dt
@@ -69,14 +74,15 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
   }else mod = NULL
   if(length(unique(batch[,2]))<2){
     res = tmp2
-  }else{res <- sva::ComBat(tmp2, batch = batch[,2], mod = mod)}
+  }else{res <- sva::ComBat(as.matrix(tmp2), batch = batch[,2], mod = mod)}
   if(positive) res[res<0] = 0
   if(length(setdiff(colnames(mat), colnames(res)))>0){
-    res=cbind(mat[setdiff(1:nrow(tmp),var0), setdiff(colnames(mat),colnames(res))], res)
-    colnames(res)[1:length(setdiff(colnames(mat), colnames(res)))] = setdiff(colnames(mat),colnames(res))
+    clnames = setdiff(colnames(mat),colnames(res))
+    res=cbind.data.frame(mat[setdiff(1:nrow(tmp),var0), clnames], as.data.frame(res))
+    colnames(res)[1:length(clnames)] = clnames
   }
   if(length(var0)>0){
-    res = rbind(res, mat[var0, colnames(res)])
+    res = rbind.data.frame(as.data.frame(res), mat[var0, colnames(res)])
   }
 
   # dt2 = matrix(as.numeric(res[,index]), ncol = length(index))
@@ -91,10 +97,10 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
   pca2 = prcomp(t(dt2))$x[,1:2]
 
   gg1 = as.data.frame(pca1, stringsAsFactors=FALSE)
-  gg1$col = batch[rownames(gg1),2]
+  gg1$col = as.character(batch[rownames(gg1),2])
   gg1$group = factor("Before batch removal", "Before batch removal")
   gg2 = as.data.frame(pca2,stringsAsFactors=FALSE)
-  gg2$col = batch[rownames(gg2),2]
+  gg2$col = as.character(batch[rownames(gg2),2])
   gg2$group = factor("After batch removal", "After batch removal")
   if(ncol(batch)>2){
     gg1$shape = as.character(batch[rownames(gg1),3])

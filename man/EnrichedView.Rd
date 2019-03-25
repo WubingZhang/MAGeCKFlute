@@ -6,7 +6,7 @@
 \alias{enrichgseview}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, rank_by = "p.adjust", top = 5, bottom = 0,
+EnrichedView(enrichment, rank_by = "p.adjust", top = 5, bottom = 5,
   custom_pid = NULL, x = "LogP", charLength = 40, filename = NULL,
   width = 7, height = 4, ...)
 }
@@ -42,7 +42,7 @@ Grid plot for enriched terms
 \examples{
 \dontrun{
     data(geneList, package = "DOSE")
-    enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
+    enrichRes = enrich.GSE(geneList, organism="hsa")
     EnrichedView(slot(enrichRes, "result"))
 }
 }

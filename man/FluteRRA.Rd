@@ -52,10 +52,11 @@ The downstream analysis of this function includes identifying positive and negat
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 }
 \examples{
-data(rra.gene_summary)
+data("rra.gene_summary")
+data("rra.sgrna_summary")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(rra.gene_summary, prefix="GSC", organism="hsa")
+    FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa")
 }
 
 

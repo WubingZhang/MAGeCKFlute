@@ -24,7 +24,7 @@
 #'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.ORT}}
-#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link{EnrichAnalyzer}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
@@ -40,9 +40,9 @@
 #' @export
 
 enrich.GSE <- function(geneList, keytype = "Entrez",
-                       type = "CORUM+GOBP+GOMF+RECTOME+KEGG",
-                       organism = 'hsa', pvalueCutoff = 0.05,
-                       limit = c(3, 50), gmtpath = NA){
+                       type = "CORUM+GOBP+GOMF+GOCC+KEGG",
+                       organism = 'hsa', pvalueCutoff = 0.25,
+                       limit = c(3, 80), gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 

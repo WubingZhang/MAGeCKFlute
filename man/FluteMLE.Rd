@@ -9,9 +9,9 @@
 FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
   organism = "hsa", scale_cutoff = 1, top = 10, bottom = 10,
   interestGenes = NA, limit = c(3, 50), pvalueCutoff = 0.25,
-  enrich_kegg = "ORT", gsea = FALSE, posControl = NULL,
-  loess = FALSE, prefix = "", width = 10, height = 7,
-  outdir = ".", view_allpath = FALSE)
+  enrich_kegg = "ORT", posControl = NULL, loess = FALSE,
+  prefix = "", width = 10, height = 7, outdir = ".",
+  view_allpath = FALSE)
 }
 \arguments{
 \item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
@@ -40,9 +40,6 @@ maximal size of gene sets for enrichent analysis.}
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
-
-\item{gsea}{Boolean, indicating whether GSEA analysis is needed for positive and
-negative selection genes.}
 
 \item{posControl}{A character vector, specifying a list of positive control gene symbols.}
 

@@ -13,12 +13,15 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' enrichRes <- enrich.GSE(geneList)
-#' EnrichedFilter(enrichment=slot(enrichRes, "result"))
+#' EnrichedFilter(enrichRes)
 #' @import data.table
 #' @export
 
 EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
+  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
   enrichment = enrichment[order(enrichment$p.adjust), ]
+  if(nrow(enrichment)<8) return(enrichment)
   genelist = strsplit(enrichment$geneID, "/")
   names(genelist) = enrichment$ID
   # Jaccard Index

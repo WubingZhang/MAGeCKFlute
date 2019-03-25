@@ -7,8 +7,8 @@
 \title{Do enrichment analysis using over-representation test}
 \usage{
 enrich.ORT(geneList, keytype = "Entrez",
-  type = "CORUM+GOBP+GOMF+RECTOME+KEGG", organism = "hsa",
-  pvalueCutoff = 0.05, limit = c(3, 50), universe = NULL,
+  type = "CORUM+GOBP+GOMF+GOCC+KEGG", organism = "hsa",
+  pvalueCutoff = 0.05, limit = c(3, 80), universe = NULL,
   gmtpath = NA)
 }
 \arguments{
@@ -49,7 +49,7 @@ head(slot(enrichedRes, "result"))
 
 \code{\link{enrich.GSE}}
 
-\code{\link{enrichment_analysis}}
+\code{\link{EnrichAnalyzer}}
 
 \code{\link[DOSE]{enrichResult-class}}
 }

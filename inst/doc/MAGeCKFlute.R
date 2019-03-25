@@ -10,13 +10,13 @@ library(MAGeCKFlute)
 #  data("rra.gene_summary")
 #  data("rra.sgrna_summary")
 #  ##Run the downstream analysis pipeline for MAGeCK RRA
-#  FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa", lfcCutoff = c(-0.3, 0.3))
+#  FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa")
 
 ## ----quickStart1, eval=FALSE---------------------------------------------
-#  ##Load gene summary data in MAGeCK MLE results
+#  ## Load gene summary data in MAGeCK MLE results
 #  data("mle.gene_summary")
-#  ##Run the downstream analysis pipeline for MAGeCK MLE
-#  FluteMLE(mle.gene_summary, ctrlname=c("dmso"), treatname=c("plx"), prefix="MLE_", organism="hsa")
+#  ## Run the downstream analysis pipeline for MAGeCK MLE
+#  FluteMLE(mle.gene_summary, ctrlname="dmso", treatname="plx", prefix="MLE", organism="hsa")
 
 ## ----CheckCountSummary---------------------------------------------------
 data("countsummary")
@@ -44,27 +44,30 @@ dd.sgrna = ReadsgRRA(rra.sgrna_summary)
 p1 = VolcanoView(dd.rra, x = "LFC", y = "FDR", Label = "Official")
 print(p1)
 
-## ----sgRNARank, fig.height=4, fig.width=7--------------------------------
-p2 = sgRankView(dd.sgrna)
-print(p2)
-
 ## ----rankrra, fig.height=4, fig.width=6----------------------------------
 geneList= dd.rra$LFC
 names(geneList) = dd.rra$Official
-RankView(geneList)
+p2 = RankView(geneList, top = 10, bottom = 10)
+print(p2)
+
+## ----sgRNARank, fig.height=4, fig.width=7--------------------------------
+p2 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = levels(p1$data$Label))
+print(p2)
 
 ## ----enrich_rra----------------------------------------------------------
 universe = dd.rra$EntrezID
 geneList= dd.rra$LFC
 names(geneList) = universe
 
-enrich = enrich.GSE(geneList = geneList, type = "All")
+enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100))
 
 ## ----enrichedGeneView, fig.height=5, fig.width=15------------------------
-EnrichedGeneView(as.data.frame(enrich), geneList, keytype = "Entrez")
-EnrichedGSEView(as.data.frame(enrich), decreasing = FALSE)
-EnrichedGSEView(as.data.frame(enrich), decreasing = TRUE)
-EnrichedView(as.data.frame(enrich))
+EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
+EnrichedView(slot(enrich, "result"))
+
+## ------------------------------------------------------------------------
+enrich2 = EnrichedFilter(slot(enrich, "result"))
+EnrichedView(enrich2)
 
 ## ----CheckMLERes---------------------------------------------------------
 library(MAGeCKFlute)
@@ -81,17 +84,15 @@ head(dd)
 
 ## ----BatchRemove, fig.height=5, fig.width=6------------------------------
 ##Before batch removal
-data(bladderdata, package = "bladderbatch")
-dat <- bladderEset[, 1:10]
-pheno = pData(dat)
-edata = exprs(dat)
+edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
+colnames(edata) = paste0("s", 1:4)
 HeatmapView(cor(edata))
 
 ## After batch removal
-batchMat = pheno[, c("sample", "batch", "cancer")]
-batchMat$sample = rownames(batchMat)
+batchMat = data.frame(sample = colnames(edata), batch = rep(1:2, each = 2))
 edata1 = BatchRemove(edata, batchMat)
-HeatmapView(cor(edata1$data))
+head(edata1$data)
+print(edata1$p)
 
 ## ----NormalizeBeta-------------------------------------------------------
 dd_essential = NormalizeBeta(dd, samples=c(ctrlname, treatname), method="cell_cycle")
@@ -102,20 +103,20 @@ dd_loess = NormalizeBeta(dd, samples=c(ctrlname, treatname), method="loess")
 head(dd_loess)
 
 ## ----DistributeBeta, fig.height=5, fig.width=8---------------------------
-ViolinView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
-DensityView(dd_essential, samples=c(ctrlname, treatname), main="Cell cycle normalized")
-DensityDiffView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+ViolinView(dd_essential, samples=c(ctrlname, treatname))
+DensityView(dd_essential, samples=c(ctrlname, treatname))
+DensityDiffView(dd_essential, ctrlname, treatname)
 
 #we can also use the function 'MAView' to evaluate the data quality of normalized
 #beta score profile.
-MAView(dd_essential, ctrlname, treatname, cex=1, main="Cell cycle normalized")
+MAView(dd_essential, ctrlname, treatname)
 
 ## ----EstimateCellCycle, fig.height=5, fig.width=8------------------------
 ##Fitting beta score of all genes
-CellCycleView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+CellCycleView(dd_essential, ctrlname, treatname)
 
 ## ----selection2, fig.height=5, fig.width=7-------------------------------
-p1 = ScatterView(dd_essential, ctrlname, treatname, main="Cell cycle normalized")
+p1 = ScatterView(dd_essential, ctrlname, treatname)
 print(p1)
 
 ## ----rank, fig.height=5, fig.width=7-------------------------------------
@@ -125,73 +126,51 @@ dd_essential$Treatment = rowMeans(dd_essential[,treatname, drop = FALSE])
 
 rankdata = dd_essential$Treatment - dd_essential$Control
 names(rankdata) = dd_essential$Gene
-p2 = RankView(rankdata, main="Cell cycle normalized")
+p2 = RankView(rankdata)
 print(p2)
 
 ## ----EnrichAB, fig.height=5, fig.width=10--------------------------------
 ## Get information of positive and negative selection genes
 groupAB = p1$data
-## select positive selection genes
-idx1=groupAB$group=="up"
-genes=rownames(groupAB)[idx1]
-geneList=groupAB$diff[idx1]
-names(geneList)=genes
-geneList = sort(geneList, decreasing = TRUE)
-universe=rownames(groupAB)
-## Do enrichment analysis using HGT method
-keggA = enrich.HGT(geneList[1:100], universe, organism = "hsa", limit = c(3, 50))
-keggA_grid = EnrichedGSEView(as.data.frame(keggA), plotTitle = "Positive selection")
+geneList = groupAB$diff; names(geneList) = rownames(groupAB)
+## Do enrichment analysis for positive selection genes.
+idx1 = groupAB$group=="up"
+hgtA = EnrichAnalyzer(geneList[idx1], method = "HGT", universe = rownames(groupAB))
+hgtA_grid = EnrichedView(slot(hgtA, "result"))
 
 ## look at the results
-head(as.data.frame(keggA))
-print(keggA_grid)
-
+head(slot(hgtA, "result"))
+print(hgtA_grid)
 
 ## ----GSEA, fig.height=5, fig.width=10------------------------------------
 ## Do enrichment analysis using GSEA method
-gseA = enrich.GSE(geneList, type = "KEGG", organism = "hsa", pvalueCutoff = 1)
-gseA_grid = EnrichedGSEView(as.data.frame(gseA), plotTitle = "Positive selection")
-
-#should same as
-head(as.data.frame(gseA))
+gseA = EnrichAnalyzer(geneList, method = "GSEA", type = "KEGG", limit = c(2, 150))
+gseA_grid = EnrichedView(gseA)
 print(gseA_grid)
 
 ## ----pathview, fig.height=10, fig.width=20-------------------------------
 genedata = dd_essential[,c("Control","Treatment")]
-keggID = gsub("KEGG_", "", as.data.frame(gseA)$ID[1])
-#The pathway map will be located on current workspace
-KeggPathwayView(gene.data = genedata, pathway.id = keggID, species = "hsa")
-##Read the figure into R
-pngname=paste0(keggID, ".pathview.multi.png")
-grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
-file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
+keggID = gsub("KEGG_", "", slot(gseA, "result")$ID[1])
+arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
 
 ## ----Square, fig.height=7, fig.width=8-----------------------------------
-p3 = SquareView(dd_essential, label = "Gene", main="Cell cycle normalized")
+p3 = SquareView(dd_essential, label = "Gene")
 print(p3)
 
 ## ----EnrichSquare, fig.height=5, fig.width=9-----------------------------
-##Get information of treatment-associated genes
+#Get 9-square groups
 Square9 = p3$data
-##==select group1 genes in 9-Square
-idx=Square9$group=="Group1"
-geneList = (Square9$Treatment - Square9$Control)[idx]
+idx=Square9$group=="topcenter"
+geneList = (Square9$y - Square9$x)[idx]
 names(geneList) = rownames(Square9)[idx]
 universe=rownames(Square9)
-#====KEGG_enrichment=====
-kegg1=enrich.ORT(geneList = geneList, universe = universe, type = "KEGG", limit = c(3, 50))
-## look at the results
-head(as.data.frame(kegg1))
-EnrichedGSEView(as.data.frame(kegg1))
+# Enrichment analysis
+kegg1 = EnrichAnalyzer(geneList = geneList, universe = universe)
+EnrichedView(kegg1, top = 10, bottom = 0)
 
 ## ----pathview2, eval=FALSE-----------------------------------------------
 #  genedata = dd_essential[, c("Control","Treatment")]
-#  keggID = gsub("KEGG_", "", as.data.frame(kegg1)$ID[1])
-#  KeggPathwayView(gene.data = genedata, pathway.id = keggID, species="hsa")
-#  ##Read the figure into R
-#  pngname=paste0(keggID, ".pathview.multi.png")
-#  grid.arrange(grid::rasterGrob(png::readPNG(pngname)))
-#  file.remove(paste0(keggID, c(".pathview.multi.png", ".png", ".xml")))
+#  arrangePathview(genedata, pathways = "hsa01521", organism = "hsa", sub = NULL)
 
 ## ----sessionInfo---------------------------------------------------------
 sessionInfo()

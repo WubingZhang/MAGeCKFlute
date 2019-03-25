@@ -21,7 +21,7 @@ Simplify the enrichment results based on Jaccard index
 \examples{
 data(geneList, package = "DOSE")
 enrichRes <- enrich.GSE(geneList)
-EnrichedFilter(enrichment=slot(enrichRes, "result"))
+EnrichedFilter(enrichRes)
 }
 \author{
 Yihan Xiao

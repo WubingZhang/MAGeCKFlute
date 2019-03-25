@@ -26,22 +26,31 @@
 #' sgRankView(sgrra)
 #'
 #' @import ggplot2
+#' @import data.table
 #' @export
 #'
-sgRankView <- function(df, gene = NULL, top = 3, bottom = 3, neg_ctrl = NULL,
-                       binwidth = 0.3, interval = 0.1, bg.col = "gray90",
-                       filename = NULL, width = 5, height = 3.5,...){
+sgRankView <- function(df, gene = NULL,
+                       top = 3, bottom = 3,
+                       neg_ctrl = NULL,
+                       binwidth = 0.3,
+                       interval = 0.1,
+                       bg.col = "gray90",
+                       filename = NULL,
+                       width = 5, height = 3.5,
+                       ...){
+
   df = df[order(df$LFC), ]
   df$sgrna = as.character(df$sgrna)
   df$Gene = as.character(df$Gene)
-
+  tmp = as.data.table(df)
+  tmp = tmp[, .(mid=median(LFC)), by = Gene]
+  tmp = tmp[order(tmp$mid), ]
   if(top>0){
-    top_genes = sort(table(df$Gene[(nrow(df)-100*top+1):nrow(df)]), decreasing = TRUE)
-    gene = c(gene, names(top_genes[1:top]))
+    idx = max((nrow(tmp)-top+1), 1)
+    gene = c(gene, tmp$Gene[idx:nrow(tmp)])
   }
   if(bottom>0){
-    bott_genes = sort(table(df$Gene[1:(bottom*100)]), decreasing = TRUE)
-    gene = c(gene, names(bott_genes[1:bottom]))
+    gene = c(gene, tmp$Gene[1:min(bottom, nrow(tmp))])
   }
   gene = unique(gene)
 
