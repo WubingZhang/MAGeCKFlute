@@ -66,7 +66,8 @@ EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
 EnrichedView(slot(enrich, "result"))
 
 ## ------------------------------------------------------------------------
-enrich2 = EnrichedFilter(slot(enrich, "result"))
+enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100), filter = FALSE)
+enrich2 = EnrichedFilter(enrich)
 EnrichedView(enrich2)
 
 ## ----CheckMLERes---------------------------------------------------------

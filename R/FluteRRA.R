@@ -79,6 +79,7 @@ FluteRRA <- function(gene_summary, sgrna_summary,
   geneList = dd$LFC
   names(geneList) = dd$Official
   p2 = RankView(geneList)
+  p2 = p2 + labs(x = "Log2 Fold Change")
   ggsave(file.path(out.dir_sub,"RRA/RankView_Gene.png"), p2,
          units = "in", width = 6.5, height = 4)
 

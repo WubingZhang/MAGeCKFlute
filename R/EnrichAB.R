@@ -64,14 +64,14 @@ EnrichAB <- function(data, pvalue = 0.25,
                          organism = organism, pvalueCutoff = pvalue,
                          limit = limit)
   keggA = list(enrichRes = keggA,
-               gridPlot = EnrichedView(EnrichedFilter(keggA), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(keggA), top = 8, bottom = 0)
                + labs(title = "KEGG: GroupA"))
   goA = EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   goA = list(enrichRes = goA,
-             gridPlot = EnrichedView(EnrichedFilter(goA), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(goA), top = 8, bottom = 0)
                + labs(title = "Gene Ontology: GroupA"))
 
 
@@ -82,14 +82,14 @@ EnrichAB <- function(data, pvalue = 0.25,
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   keggB = list(enrichRes = keggB,
-               gridPlot = EnrichedView(EnrichedFilter(keggB), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(keggB), top = 0, bottom = 8)
                + labs(title = "KEGG: GroupB"))
   goB = EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   goB = list(enrichRes = goB,
-             gridPlot = EnrichedView(EnrichedFilter(goB), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(goB), top = 0, bottom = 8)
                + labs(title = "Gene Ontology: GroupB"))
 
   if(!is.null(filename)){

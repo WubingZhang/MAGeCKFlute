@@ -23,18 +23,18 @@
 #' \item{kegg2}{a list record enriched KEGG pathways for Group2 genes in 9-Square}
 #' \item{kegg3}{a list record enriched KEGG pathways for Group3 genes in 9-Square}
 #' \item{kegg4}{a list record enriched KEGG pathways for Group4 genes in 9-Square}
+#' \item{kegg12}{a list record enriched KEGG pathways for Group1&Group2 genes in 9-Square}
 #' \item{kegg13}{a list record enriched KEGG pathways for Group1&Group3 genes in 9-Square}
-#' \item{kegg14}{a list record enriched KEGG pathways for Group1&Group4 genes in 9-Square}
-#' \item{kegg23}{a list record enriched KEGG pathways for Group2&Group3 genes in 9-Square}
 #' \item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
+#' \item{kegg34}{a list record enriched KEGG pathways for Group3&Group4 genes in 9-Square}
 #' \item{go1}{a list record enriched GO terms for Group1 genes in 9-Square}
 #' \item{go2}{a list record enriched GO terms for Group2 genes in 9-Square}
 #' \item{go3}{a list record enriched GO terms for Group3 genes in 9-Square}
 #' \item{go4}{a list record enriched GO terms for Group4 genes in 9-Square}
+#' \item{go12}{a list record enriched GO terms for Group1&Group2 genes in 9-Square}
 #' \item{go13}{a list record enriched GO terms for Group1&Group3 genes in 9-Square}
-#' \item{go14}{a list record enriched GO terms for Group1&Group4 genes in 9-Square}
-#' \item{go23}{a list record enriched GO terms for Group2&Group3 genes in 9-Square}
 #' \item{go24}{a list record enriched GO terms for Group2&Group4 genes in 9-Square}
+#' \item{go34}{a list record enriched GO terms for Group3&Group4 genes in 9-Square}
 #'
 #' Each item in the returned list has two sub items:
 #' \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}
@@ -81,15 +81,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      organism=organism, pvalueCutoff = pvalue,
                      limit = limit)
   kegg1 = list(enrichRes = kegg1,
-               gridPlot = EnrichedView(EnrichedFilter(kegg1), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(kegg1), top = 8, bottom = 0)
                + labs(title = "KEGG: Group1"))
   go1 = list(enrichRes = go1,
-             gridPlot = EnrichedView(EnrichedFilter(go1), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(go1), top = 8, bottom = 0)
                + labs(title = "Gene Ontology: Group1"))
 
 
-  geneList = gg$diff[idx2]; names(geneList) = rownames(gg)[idx2]
   #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx2]; names(geneList) = rownames(gg)[idx2]
   kegg2=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method, type = "KEGG",
                        organism=organism, pvalueCutoff=pvalue,
@@ -98,14 +98,14 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg2 = list(enrichRes = kegg2,
-               gridPlot = EnrichedView(EnrichedFilter(kegg2), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(kegg2), top = 8, bottom = 0)
                + labs(title = "KEGG: Group2"))
   go2 = list(enrichRes = go2,
-             gridPlot = EnrichedView(EnrichedFilter(go2), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(go2), top = 8, bottom = 0)
              + labs(title = "Gene Ontology: Group2"))
 
-  geneList = gg$diff[idx3]; names(geneList) = rownames(gg)[idx3]
   #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx3]; names(geneList) = rownames(gg)[idx3]
   kegg3=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method,type = "KEGG",
                        organism=organism, pvalueCutoff = pvalue, limit = limit)
@@ -113,14 +113,14 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg3 = list(enrichRes = kegg3,
-               gridPlot = EnrichedView(EnrichedFilter(kegg3), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(kegg3), top = 0, bottom = 8)
                + labs(title = "KEGG: Group3"))
   go3 = list(enrichRes = go3,
-             gridPlot = EnrichedView(EnrichedFilter(go3), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(go3), top = 0, bottom = 8)
              + labs(title = "Gene Ontology: Group3"))
 
-  geneList = gg$diff[idx4]; names(geneList) = rownames(gg)[idx4]
   #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx4]; names(geneList) = rownames(gg)[idx4]
   kegg4=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method, type = "KEGG",
                        organism=organism, pvalueCutoff = pvalue, limit = limit)
@@ -128,14 +128,29 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg4 = list(enrichRes = kegg4,
-               gridPlot = EnrichedView(EnrichedFilter(kegg4), top = 8)
+               gridPlot = EnrichedView(EnrichedFilter(kegg4), top = 0, bottom = 8)
                + labs(title = "KEGG: Group4"))
   go4 = list(enrichRes = go4,
-             gridPlot = EnrichedView(EnrichedFilter(go4), top = 8)
+             gridPlot = EnrichedView(EnrichedFilter(go4), top = 0, bottom = 8)
              + labs(title = "Gene Ontology: Group4"))
 
-  geneList = abs(gg$diff[idx1|idx2]); names(geneList) = rownames(gg)[idx1|idx2]
   #====GO_KEGG_enrichment=====
+  geneList = abs(gg$diff[idx1|idx2]); names(geneList) = rownames(gg)[idx1|idx2]
+  kegg12=EnrichAnalyzer(geneList = geneList, universe=universe,
+                        method = enrich_method, type = "KEGG",
+                        organism=organism, pvalueCutoff = pvalue, limit = limit)
+  go12=EnrichAnalyzer(geneList = geneList, universe=universe,
+                      method = enrich_method, type = "GOBP+GOMF+GOCC",
+                      organism=organism, pvalueCutoff = pvalue, limit = limit)
+  kegg12 = list(enrichRes = kegg12,
+                gridPlot = EnrichedView(EnrichedFilter(kegg12), top = 8, bottom = 0)
+                + labs(title = "KEGG: Group1&2"))
+  go12 = list(enrichRes = go12,
+              gridPlot = EnrichedView(EnrichedFilter(go12), top = 8, bottom = 0)
+              + labs(title = "Gene Ontology: Group1&2"))
+
+  #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx1|idx3]; names(geneList) = rownames(gg)[idx1|idx3]
   kegg13=EnrichAnalyzer(geneList = geneList, universe=universe,
                         method = enrich_method, type = "KEGG",
                         organism=organism, pvalueCutoff = pvalue, limit = limit)
@@ -143,44 +158,14 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, pvalueCutoff = pvalue, limit = limit)
   kegg13 = list(enrichRes = kegg13,
-                gridPlot = EnrichedView(EnrichedFilter(kegg13), top = 8)
+                gridPlot = EnrichedView(EnrichedFilter(kegg13), top = 4, bottom = 4)
                + labs(title = "KEGG: Group1&3"))
   go13 = list(enrichRes = go13,
-              gridPlot = EnrichedView(EnrichedFilter(go13), top = 8)
+              gridPlot = EnrichedView(EnrichedFilter(go13), top = 4, bottom = 4)
              + labs(title = "Gene Ontology: Group1&3"))
 
-  geneList = abs(gg$diff[idx1|idx4]); names(geneList) = rownames(gg)[idx1|idx4]
   #====GO_KEGG_enrichment=====
-  kegg14=EnrichAnalyzer(geneList = geneList, universe=universe,
-                        method = enrich_method, type = "KEGG",
-                        organism=organism, pvalueCutoff = pvalue, limit = limit)
-  go14=EnrichAnalyzer(geneList = geneList, universe=universe,
-                      method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, pvalueCutoff = pvalue, limit = limit)
-  kegg14 = list(enrichRes = kegg14,
-                gridPlot = EnrichedView(EnrichedFilter(kegg14), top = 8)
-                + labs(title = "KEGG: Group1&4"))
-  go14 = list(enrichRes = go14,
-              gridPlot = EnrichedView(EnrichedFilter(go14), top = 8)
-              + labs(title = "Gene Ontology: Group1&4"))
-
-  geneList = abs(gg$diff[idx3|idx2]); names(geneList) = rownames(gg)[idx3|idx2]
-  #====GO_KEGG_enrichment=====
-  kegg23=EnrichAnalyzer(geneList = geneList, universe=universe,
-                        method = enrich_method, type = "KEGG", limit = limit,
-                        organism=organism, pvalueCutoff = pvalue)
-  go23=EnrichAnalyzer(geneList = geneList, universe=universe,
-                      method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, limit = limit, pvalueCutoff = pvalue)
-  kegg23 = list(enrichRes = kegg23,
-                gridPlot = EnrichedView(EnrichedFilter(kegg23), top = 8)
-                + labs(title = "KEGG: Group2&3"))
-  go23 = list(enrichRes = go23,
-              gridPlot = EnrichedView(EnrichedFilter(go23), top = 8)
-              + labs(title = "Gene Ontology: Group2&3"))
-
-  geneList = abs(gg$diff[idx4|idx2]); names(geneList) = rownames(gg)[idx4|idx2]
-  #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx4|idx2]; names(geneList) = rownames(gg)[idx4|idx2]
   kegg24=EnrichAnalyzer(geneList = geneList, universe=universe,
                         method = enrich_method,type = "KEGG",
                         organism=organism, pvalueCutoff = pvalue,
@@ -189,11 +174,27 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, limit = limit, pvalueCutoff = pvalue)
   kegg24 = list(enrichRes = kegg24,
-                gridPlot = EnrichedView(EnrichedFilter(kegg24), top = 8)
+                gridPlot = EnrichedView(EnrichedFilter(kegg24), top = 4, bottom = 4)
                 + labs(title = "KEGG: Group2&4"))
   go24 = list(enrichRes = go24,
-              gridPlot = EnrichedView(EnrichedFilter(go24), top = 8)
+              gridPlot = EnrichedView(EnrichedFilter(go24), top = 4, bottom = 4)
               + labs(title = "Gene Ontology: Group2&4"))
+
+  #====GO_KEGG_enrichment=====
+  geneList = gg$diff[idx3|idx4]; names(geneList) = rownames(gg)[idx3|idx4]
+  kegg34=EnrichAnalyzer(geneList = geneList, universe=universe,
+                        method = enrich_method, type = "KEGG", limit = limit,
+                        organism=organism, pvalueCutoff = pvalue)
+  go34=EnrichAnalyzer(geneList = geneList, universe=universe,
+                      method = enrich_method, type = "GOBP+GOMF+GOCC",
+                      organism=organism, limit = limit, pvalueCutoff = pvalue)
+  kegg34 = list(enrichRes = kegg34,
+                gridPlot = EnrichedView(EnrichedFilter(kegg34), top = 0, bottom = 8)
+                + labs(title = "KEGG: Group3&4"))
+  go34 = list(enrichRes = go34,
+              gridPlot = EnrichedView(EnrichedFilter(go34), top = 0, bottom = 8)
+              + labs(title = "Gene Ontology: Group3&4"))
+
 
   ###========Output results==================
   if(!is.null(filename)){
@@ -277,36 +278,36 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
              filename=file.path(out.dir,paste0("Group1&3_go_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
-    if(!is.null(kegg14$enrichRes)){
-      write.table(kegg14$enrichRes@result,
-                  file.path(out.dir,paste0("Group1&4_kegg_",filename,".txt")),
+    if(!is.null(kegg12$enrichRes)){
+      write.table(kegg12$enrichRes@result,
+                  file.path(out.dir,paste0("Group1&2_kegg_",filename,".txt")),
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(kegg14$gridPlot,
-             filename=file.path(out.dir,paste0("Group1&4_kegg_",filename,".png")),
+      ggsave(kegg12$gridPlot,
+             filename=file.path(out.dir,paste0("Group1&2_kegg_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
-    if(!is.null(go14$enrichRes)){
-      write.table(go14$enrichRes@result,
-                  file.path(out.dir,paste0("Group1&4_go_",filename,".txt")),
+    if(!is.null(go12$enrichRes)){
+      write.table(go12$enrichRes@result,
+                  file.path(out.dir,paste0("Group1&2_go_",filename,".txt")),
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(go14$gridPlot,
-             filename=file.path(out.dir,paste0("Group1&4_go_",filename,".png")),
+      ggsave(go12$gridPlot,
+             filename=file.path(out.dir,paste0("Group1&2_go_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
-    if(!is.null(kegg23$enrichRes)){
-      write.table(kegg23$enrichRes@result,
-                  file.path(out.dir,paste0("Group2&3_kegg_",filename,".txt")),
+    if(!is.null(kegg34$enrichRes)){
+      write.table(kegg34$enrichRes@result,
+                  file.path(out.dir,paste0("Group3&4_kegg_",filename,".txt")),
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(kegg23$gridPlot,
-             filename=file.path(out.dir,paste0("Group2&3_kegg_",filename,".png")),
+      ggsave(kegg34$gridPlot,
+             filename=file.path(out.dir,paste0("Group3&4_kegg_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
-    if(!is.null(go23$enrichRes)){
-      write.table(go23$enrichRes@result,
-                  file.path(out.dir,paste0("Group2&3_go_",filename,".txt")),
+    if(!is.null(go34$enrichRes)){
+      write.table(go34$enrichRes@result,
+                  file.path(out.dir,paste0("Group3&4_go_",filename,".txt")),
                   sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(go23$gridPlot,
-             filename=file.path(out.dir,paste0("Group2&3_go_",filename,".png")),
+      ggsave(go34$gridPlot,
+             filename=file.path(out.dir,paste0("Group3&4_go_",filename,".png")),
              units = "in", width=width, height=height, ...)
     }
     if(!is.null(kegg24$enrichRes)){
@@ -327,8 +328,8 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
     }
   }
   return(list(kegg1=kegg1, kegg2=kegg2, kegg3=kegg3, kegg4=kegg4,
-              kegg13=kegg13, kegg14=kegg14, kegg23=kegg23, kegg24=kegg24,
+              kegg12=kegg12, kegg13=kegg13, kegg24=kegg24, kegg34=kegg34,
               go1=go1, go2=go2, go3=go3, go4=go4,
-              go13=go13, go14=go14, go23=go23, go24=go24))
+              go13=go13, go12=go12, go24=go24, go34=go34))
 }
 

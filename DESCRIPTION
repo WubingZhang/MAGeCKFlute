@@ -19,4 +19,4 @@ biocViews: Software, FunctionalGenomics, CRISPR, ImmunoOncology,
         BatchEffect, QualityControl, Normalization, GeneSetEnrichment,
         Pathways, Visualization
 RoxygenNote: 6.1.1
-Packaged: 2019-03-24 16:07:36 UTC; Wubing
+Packaged: 2019-03-26 12:23:03 UTC; Wubing

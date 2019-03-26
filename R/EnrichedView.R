@@ -100,7 +100,7 @@ EnrichedView = function(enrichment,
   ## Plot the figure ##
   p1 = ggplot(data=enrichment, aes(x=x, y=Description, size=size))
   p1 = p1 + geom_point(aes(color = col))
-  p1 = p1 + scale_color_manual(values = c("#377eb8", "#e41a1c"))
+  p1 = p1 + scale_color_manual(values = c("Down"="#377eb8", "Up"="#e41a1c"))
   p1 = p1 + theme(panel.grid.major=element_line(colour="gray90"),
                    panel.grid.minor=element_blank(),
                    panel.background=element_blank())

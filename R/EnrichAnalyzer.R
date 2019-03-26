@@ -18,6 +18,7 @@
 #' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
+#' @param filter Boolean, specifying whether filter out redundancies from the enrichment results.
 #' @param gmtpath The path to customized gmt file.
 #'
 #' @return \code{enrichRes} is an enrichResult instance.
@@ -44,6 +45,7 @@ EnrichAnalyzer = function(geneList, keytype = "Entrez",
                          pvalueCutoff = 0.25,
                          limit = c(3, 80),
                          universe = NULL,
+                         filter = TRUE,
                          gmtpath = NA){
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   # result = list()
@@ -56,20 +58,25 @@ EnrichAnalyzer = function(geneList, keytype = "Entrez",
   if(method == "GSEA"){
     enrichRes <- enrich.GSE(geneList, keytype = keytype, type = type,
                             organism = organism,
-                            pvalueCutoff = pvalueCutoff,
+                            pvalueCutoff = 1,
                             limit = limit, gmtpath = gmtpath)
   }else if(method == "ORT"){
     enrichRes <- enrich.ORT(geneList, keytype = keytype, type = type,
-                            organism = organism, pvalueCutoff = pvalueCutoff,
+                            organism = organism, pvalueCutoff = 1,
                             limit = limit, universe = universe, gmtpath = gmtpath)
   }else if(method == "HGT"){
     enrichRes = enrich.HGT(geneList, keytype = keytype, type = type,
-                           organism = organism, pvalueCutoff = pvalueCutoff,
+                           organism = organism, pvalueCutoff = 1,
                            limit = limit, universe = universe, gmtpath = gmtpath)
   }else{
     stop("Avaliable methods: GSEA, ORT, and HGT. ")
   }
 
+  if(filter){
+    result = EnrichedFilter(enrichRes)
+    result$p.adjust = p.adjust(result$pvalue, method = "BH")
+    enrichRes@result = result[result$p.adjust<pvalueCutoff, ]
+  }
   return(enrichRes)
 }
 

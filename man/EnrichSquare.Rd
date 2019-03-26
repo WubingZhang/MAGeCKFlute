@@ -37,18 +37,18 @@ A list containing enrichment results for each group genes. This list contains se
 \item{kegg2}{a list record enriched KEGG pathways for Group2 genes in 9-Square}
 \item{kegg3}{a list record enriched KEGG pathways for Group3 genes in 9-Square}
 \item{kegg4}{a list record enriched KEGG pathways for Group4 genes in 9-Square}
+\item{kegg12}{a list record enriched KEGG pathways for Group1&Group2 genes in 9-Square}
 \item{kegg13}{a list record enriched KEGG pathways for Group1&Group3 genes in 9-Square}
-\item{kegg14}{a list record enriched KEGG pathways for Group1&Group4 genes in 9-Square}
-\item{kegg23}{a list record enriched KEGG pathways for Group2&Group3 genes in 9-Square}
 \item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
+\item{kegg34}{a list record enriched KEGG pathways for Group3&Group4 genes in 9-Square}
 \item{go1}{a list record enriched GO terms for Group1 genes in 9-Square}
 \item{go2}{a list record enriched GO terms for Group2 genes in 9-Square}
 \item{go3}{a list record enriched GO terms for Group3 genes in 9-Square}
 \item{go4}{a list record enriched GO terms for Group4 genes in 9-Square}
+\item{go12}{a list record enriched GO terms for Group1&Group2 genes in 9-Square}
 \item{go13}{a list record enriched GO terms for Group1&Group3 genes in 9-Square}
-\item{go14}{a list record enriched GO terms for Group1&Group4 genes in 9-Square}
-\item{go23}{a list record enriched GO terms for Group2&Group3 genes in 9-Square}
 \item{go24}{a list record enriched GO terms for Group2&Group4 genes in 9-Square}
+\item{go34}{a list record enriched GO terms for Group3&Group4 genes in 9-Square}
 
 Each item in the returned list has two sub items:
 \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}

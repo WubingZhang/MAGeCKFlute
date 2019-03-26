@@ -9,7 +9,7 @@
 EnrichAnalyzer(geneList, keytype = "Entrez",
   type = "CORUM+GOBP+GOMF+GOCC+KEGG", method = "ORT",
   organism = "hsa", pvalueCutoff = 0.25, limit = c(3, 80),
-  universe = NULL, gmtpath = NA)
+  universe = NULL, filter = TRUE, gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -30,6 +30,8 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 maximal size of gene sets for enrichent analysis.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
+
+\item{filter}{Boolean, specifying whether filter out redundancies from the enrichment results.}
 
 \item{gmtpath}{The path to customized gmt file.}
 }

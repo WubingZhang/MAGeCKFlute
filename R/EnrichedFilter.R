@@ -20,8 +20,9 @@
 EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   if(is(enrichment, "enrichResult")) enrichment = enrichment@result
   if(is(enrichment, "gseaResult")) enrichment = enrichment@result
+
   enrichment = enrichment[order(enrichment$p.adjust), ]
-  if(nrow(enrichment)<8) return(enrichment)
+  if(nrow(enrichment)<3) return(enrichment)
   genelist = strsplit(enrichment$geneID, "/")
   names(genelist) = enrichment$ID
   # Jaccard Index
@@ -32,8 +33,10 @@ EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   idx <- which(ijc>cutoff, arr.ind = TRUE)
   colnames(idx) = c("row", "col")
   idx = as.data.table(idx)
-  imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
-  enrichment <- enrichment[setdiff(1:nrow(enrichment), imat$max_value), ]
+  if(nrow(idx)>0){
+    imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
+    enrichment <- enrichment[setdiff(1:nrow(enrichment), imat$max_value), ]
+  }
   # The second round simplification
   genelist = strsplit(enrichment$geneID, "/")
   names(genelist) = enrichment$ID
