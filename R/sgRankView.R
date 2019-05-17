@@ -38,9 +38,10 @@ sgRankView <- function(df, gene = NULL,
                        filename = NULL,
                        width = 5, height = 3.5,
                        ...){
-
+  if(!all(c("sgrna", "Gene", "LFC") %in% colnames(df)))
+    stop("Make sure your data contains columns of 'sgrna', 'Gene', and 'LFC' ...")
+  df = as.data.frame(df, stringsAsFactors = FALSE)
   df = df[order(df$LFC), ]
-  df$sgrna = as.character(df$sgrna)
   df$Gene = as.character(df$Gene)
   tmp = as.data.table(df)
   tmp = tmp[, .(mid=median(LFC)), by = Gene]
@@ -66,8 +67,8 @@ sgRankView <- function(df, gene = NULL,
   subdf = subdf[, c("sgrna", "Gene", "LFC", "y", "yend", "color", "index")]
 
   #set the scale of x-axis
-  a<-round(min(subdf$LFC), 2) - 0.05
-  b<-round(max(subdf$LFC), 2) + 0.05
+  a <- -Inf
+  b <- Inf
 
   #bgcor
   if(is.na(bg.col)){bg.col<-"white"}
@@ -93,17 +94,18 @@ sgRankView <- function(df, gene = NULL,
     background$yend <-(binwidth+interval)*seq-interval
     background$color <-rep("tbg",length(neggene))
     background$index = 0
-    subdf = rbind.data.frame(subdf, background)
   }
 
   #depict
   cols <- c("pos"="#e41a1c","neg"="#377eb8", "tbg" = 608, "black"="black")
   p = ggplot()
   p = p + geom_polygon(aes(x, y, fill=value, group=id), color="gray20", data=bgcol)
+  if(!is.null(neg_ctrl))
+    p = p + geom_segment(aes(LFC, y, xend = LFC, yend = yend, color = color), data = background)
   p = p + geom_segment(aes(LFC, y, xend = LFC, yend = yend, color = color), data = subdf)
   p = p + scale_color_manual(values = cols)
   p = p + scale_fill_manual(values = c("bg"= bg.col))
-  p = p + scale_x_continuous(limits = c(a, b), expand = c(0, 0))
+  # p = p + scale_x_continuous(expand = c(0, 0))
   p = p + scale_y_continuous(breaks = bgcol$y[seq(1, nrow(bgcol), 4)] + binwidth/2,
                              labels = gene, expand = c(0, 0))
   p = p + labs(x = "Log2(Fold change)", y = NULL)

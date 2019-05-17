@@ -12,13 +12,16 @@
 #' @param Label Colname of df specifying labeled terms in Volcanno figure.
 #' @param top Interger, the number of top significant terms to be labeled.
 #' @param topnames Character vector, indicating interested terms to be labeled.
-#' @param filename Figure file name to create on disk. Default filename="NULL",
-#' which means don't save the figure on disk.
 #' @param x_cutoff Cutoff of x-axis.
 #' @param y_cutoff Cutoff of y-axis.
+#' @param alpha Parameter in ggplot.
 #' @param main Title of volcano figure.
 #' @param xlab Label of x-axis in figure.
 #' @param ylab Label of y-axis in figure.
+#' @param filename Figure file name to create on disk. Default filename="NULL",
+#' which means don't save the figure on disk.
+#' @param width Width of figure.
+#' @param height Height of figure.
 #' @param ... Other available parameters in ggsave.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
@@ -33,9 +36,13 @@
 #' @import ggrepel
 #' @export
 
-VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
-                        topnames = NULL, filename = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
-                        main = NULL, xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)", ...){
+VolcanoView <- function(df, x = "logFC", y = "adj.P.Val",
+                        Label = NA, top = 5, topnames = NULL,
+                        x_cutoff = log2(1.5), y_cutoff = 0.05,
+                        alpha=0.6, main = NULL,
+                        xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)",
+                        filename = NULL, width = 4, height = 2.5,
+                        ...){
     requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
     gg = df[, c(x, y)]
     gg$group="no"
@@ -46,7 +53,7 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     if(!(top==0 & is.null(topnames))){
       gg$Label = rownames(gg)
       if(!is.na(Label)) gg$Label = df[, Label]
-      gg = gg[order(abs(gg[,x]), gg[,y], decreasing = TRUE), ]
+      gg = gg[order(gg[,y], abs(gg[,x]), decreasing = TRUE), ]
       idx1 = idx2 = c()
       if(top>0){
         idx1 = which(gg$group=="up")[1:min(top, sum(gg$group=="up"))]
@@ -55,12 +62,17 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
       idx = unique(c(idx1, idx2, which(gg$Label %in% topnames)))
       gg$Label = as.character(gg$Label)
       gg$Label[setdiff(1:nrow(gg), idx)] = ""
-      gg$Label = factor(gg$Label, levels = setdiff(unique(gg$Label), ""))
+      # gg$Label = factor(gg$Label, levels = setdiff(unique(gg$Label), ""))
     }
-    mycolour=c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
+    gg$color = gg$group
+    gg$color[gg$Label!=""] = "black"
+    mycolour=c("no"="gray80",  "up"="#e41a1c","down"="#377eb8", "black"="black")
     #=========
-    p = ggplot(gg, aes(x=gg[,x], y=gg[,y], colour=group, fill=group))
-    p = p + geom_jitter(position = "jitter", show.legend = FALSE, alpha=0.8, size = 0.5)
+    p = ggplot(gg, aes(x=gg[,x], y=gg[,y], label=Label))
+    p = p + geom_point(aes(fill=group), shape = 21, alpha=alpha, show.legend = FALSE)
+    p = p + geom_point(aes(colour=color), shape = 21, alpha=alpha, show.legend = FALSE)
+    p = p + scale_color_manual(values=mycolour)
+    p = p + scale_fill_manual(values=mycolour)
     p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                   plot.title = element_text(hjust = 0.5, size=16),
                   axis.text = element_text(colour="gray10"))
@@ -75,17 +87,12 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
     # p = p + annotate("text", color = "#377eb8", x = (-x_cutoff), y = max(gg[,y]), hjust = 1, vjust = 1,
     #                  label = paste("Down: ", dim(gg[gg$group=="down",])[1], sep=""))
     if(!(top==0 & is.null(topnames)))
-      p = p + ggrepel::geom_text_repel(aes(x=gg[idx,x],y=gg[idx,y], label = Label), data=gg[idx,],
-                                       fontface = 'bold', size = 2.5,
-                                       box.padding = unit(0.4, "lines"), segment.color = 'grey50',
-                                       point.padding = unit(0.3, "lines"), segment.size = 0.3)
-    p = p + scale_color_manual(values=mycolour)
-    p = p + scale_fill_manual(values=mycolour)
+      p = p + ggrepel::geom_text_repel(force = 0.02, fontface = 'bold', size = 3,
+                                       segment.color = 'grey50', segment.size = 0.3)
     p = p + theme(legend.position = "none")
 
     if(!is.null(filename)){
-      ggsave(plot=p, filename=filename, units = "in", ...)
-      saveRDS(df, gsub(".png|.pdf|.jpg|.tiff", ".rds", filename))
+      ggsave(plot=p, filename=filename, width = width, height = height, units = "in", ...)
     }
     return(p)
 }

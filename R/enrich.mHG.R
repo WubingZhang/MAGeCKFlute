@@ -1,45 +1,7 @@
-#' Do enrichment analysis using Hypergeometric test
-#'
-#' @docType methods
-#' @name enrich.HGT
-#' @rdname enrich.HGT
-#' @aliases Hypergeometric
-#'
-#' @param geneList A numeric vector with gene as names.
-#' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
-#' 'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
-#' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
-#' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff Pvalue cutoff.
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
-#' maximal size of gene sets for enrichent analysis.
-#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
-#' @param gmtpath The path to customized gmt file.
-#'
-#' @return A enrichResult instance.
-#'
-#' @author Wubing Zhang
-#'
-#' @seealso \code{\link{enrich.GSE}}
-#' @seealso \code{\link{enrich.ORT}}
-#' @seealso \code{\link{EnrichAnalyzer}}
-#' @seealso \code{\link[DOSE]{enrichResult-class}}
-#'
-#' @examples
-#' data(geneList, package = "DOSE")
-#' genes <- geneList[1:300]
-#' enrichRes <- enrich.HGT(genes, type = "KEGG")
-#' head(slot(enrichRes, "result"))
-#'
-#' @import DOSE
-#' @importFrom data.table fread
-#' @export
-
-enrich.HGT = function(geneList, keytype = "Entrez",
+enrich.mHG = function(geneList, keytype = "Entrez",
                       type = "CORUM+GOBP+GOMF+GOCC+KEGG",
                       organism = 'hsa', pvalueCutoff = 0.05,
-                      limit = c(3, 80), universe = NULL, gmtpath = NA){
+                      limit = c(3, 80),  gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
@@ -65,45 +27,70 @@ enrich.HGT = function(geneList, keytype = "Entrez",
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx],
                         stringsAsFactors = FALSE)
-  gene2path$Gene = as.character(gene2path$Gene)
 
   ## Gene ID conversion
   if(keytype != "Entrez"){
     allsymbol = names(geneList)
     gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
-    idx = duplicated(gene)|is.na(gene)
-    allsymbol = allsymbol[!idx]; names(allsymbol) = gene[!idx]
-    geneList = geneList[!idx]; names(geneList) = gene[!idx]
-  }else{
-    allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
-  }
-  if(!is.null(universe)){
-    universe = TransGeneID(universe, keytype, "Entrez", organism = organism)
-    universe = universe[!is.na(universe)]
-  }else{
-    universe = unique(c(gene, gene2path$Gene))
+    geneList = geneList[!duplicated(gene)]
+    names(geneList) = gene[!duplicated(gene)]
   }
   gene = names(geneList)
+  allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
+  gene2path$Gene = as.character(gene2path$Gene)
+
+  sMHG <- function(U,K,IDX){
+    nseq <- which(IDX==1)
+    k=sum(IDX)
+    p_val <- sapply(nseq,function(x){
+      subidx<-IDX[1:x]
+      k_n <- sum(subidx)
+      p<-1-phyper(q=k_n-1,k=x,m=K,n=U-K)
+    })
+    n_r <- nseq[which.min(p_val)]
+    smHG <- min(p_val)
+    return(smHG)
+  }
+  mHG <- function(W,K,U,IDX){
+    N1=t(matrix(rep(seq(1,W),K),nrow = W))
+    N2=matrix(rep(seq(1,K),W),nrow = K)
+    N=U-(N1+N2)+1
+    dk=(K-N2+1)/N
+    dw=(W-N1+1)/N
+    dk0=(K-seq(1,K)+1)/(U-seq(1,K)+1)
+    dw0=(W-seq(1,W)+1)/(U-seq(1,W)+1)
+    smhg =sMHG(U,K,IDX)
+    mvalue <- function(Kx,Wy,smhg){
+      if((1-phyper(q=Kx-1,m=K,k=Kx+Wy,n=W))<=smhg) return(0)
+      if(Kx==0&&Wy==0) m=1
+      if(Kx==0&&Wy>0) m=mvalue(Kx,Wy-1,smhg)*dw0[Wy]
+      if(Wy==0&&Kx>0) m=mvalue(Kx-1,Wy,smhg)*dk0[Kx]
+      if(Kx>0&&Wy>0) m=mvalue(Kx-1,Wy,smhg)*dk[Kx,Wy]+mvalue(Kx,Wy-1,smhg)*dw[Kx,Wy]
+      return(m)
+    }
+    pval=1-mvalue(Kx=K,Wy=W,smhg)
+    return(pval)
+  }
+
 
   ## Start to do the hypergeometric test ##
-  HGT <- function(pid){
+  mHG <- function(pid){
     pGene = gene2path$Gene[gene2path$PathwayID==pid]
-    idx1 = universe %in% pGene
-    k = length(universe[idx1])
-    idx2 = universe %in% gene
-    q = length(universe[idx1&idx2])
-    geneID = paste(universe[idx1&idx2], collapse = "/")
+    IDX=as.numeric(pGene%in%gene)
+    U=length(pGene)
+    K=sum(IDX)
+    W=U-K
+    geneID = paste(pGene[which(idx==1)], collapse = "/")
     retr <- list(ID = NA, Description = NA, NES = NA,
                  pvalue = NA, GeneRatio = NA, BgRatio = NA,
                  geneID = NA, geneName = NA, Count = NA)
     if(k>=limit[1] & k<=limit[2] & q>2){
-      pvalue = phyper(q, m, n, k, lower.tail = FALSE)
+      pvalue = phyper(W,K,U,IDX)
       retr <- list(ID = pid, Description = pathways$PathwayName[pathways$PathwayID==pid],
-                   NES = mean(geneList[universe[idx1&idx2]]) * sum(idx1&idx2)^0.6,
+                   NES = mean(geneList[pGene[which(idx==1)]]) * K^0.6,
                    pvalue = pvalue, GeneRatio = paste(q, sum(idx1), sep="/"),
                    BgRatio = paste(sum(idx1), length(pGene), sep="/"),
-                   geneID = geneID,
-                   geneName = paste(allsymbol[universe[idx1&idx2]],
+                   geneID = geneID, geneName = paste(allsymbol[pGene[which(idx==1)]],
                                                      collapse = "/"), Count = q)
     }
     return(retr)
@@ -112,9 +99,7 @@ enrich.HGT = function(geneList, keytype = "Entrez",
   ## Test using above function ##
   len = length(unique(intersect(gene, gene2path$Gene)))
   message("\t", len, " genes are mapped ...")
-  m = length(gene)
-  n = length(universe) - m
-  res = sapply(pathways$PathwayID, HGT)
+  res = sapply(pathways$PathwayID, mHG)
   res = as.data.frame(t(res), stringsAsFactors = FALSE)
   res = res[!is.na(res$ID), ]
   if(nrow(res)>0){
@@ -141,4 +126,3 @@ enrich.HGT = function(geneList, keytype = "Entrez",
       gene           = as.character(gene),
       keytype        = keytype)
 }
-

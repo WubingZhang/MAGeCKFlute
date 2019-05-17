@@ -52,8 +52,9 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
   if(keytype != "Entrez"){
     allsymbol = names(geneList)
     gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
-    geneList = geneList[!duplicated(gene)]
-    names(geneList) = gene[!duplicated(gene)]
+    idx = is.na(gene) | duplicated(gene)
+    geneList = geneList[!idx]
+    names(geneList) = gene[!idx]
   }
 
   ## Prepare gene set annotation
@@ -61,34 +62,24 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
     msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
                        paste0(organism, "_msig_entrez.gmt.gz"))
     gmtpath = gzfile(msigdb)
-  }
-  gene2path = ReadGMT(gmtpath, limit = limit)
-  close(gmtpath)
-  names(gene2path) = c("Gene","PathwayID", "PathwayName")
-  gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
-                          tolower(substr(gene2path$PathwayName, 2,
-                                  nchar(gene2path$PathwayName))))
+    gene2path = ReadGMT(gmtpath, limit = limit)
+    close(gmtpath)
+    gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
+                                   substr(gene2path$PathwayName, 2,
+                                          nchar(gene2path$PathwayName)))
+    ## Select gene set type
+    if(type != "All"){
+      type = unlist(strsplit(type, "\\+"))
+      idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
+      gene2path = gene2path[idx, ]
+    }
 
-  ## Select gene set type ##
-  if(type != "All"){
-    type = unlist(strsplit(type, "\\+"))
-    idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
-    gene2path = gene2path[idx, ]
+  }else{
+    gene2path = ReadGMT(gmtpath, limit = limit)
   }
+
+  ## Maping the pathway id to pathway name.
   gene2path = gene2path[!is.na(gene2path$Gene), ]
-
-  ## Remove redundant pathways ##
-  # tmpList = split(gene2path$Gene, gene2path$PathwayID)
-  # tmp1 = crossprod(table(stack(tmpList)))
-  # tmp2 = outer(lengths(tmpList), lengths(tmpList), "+")
-  # ijc = tmp1 / (tmp2 - tmp1)
-  # diag(ijc) = 0
-  # tmpNames = names(sort(lengths(tmpList)))
-  # ijc = ijc[tmpNames, tmpNames]
-  # idx <- which(ijc>0.8, arr.ind = TRUE)
-  # colnames(idx) = c("row", "col")
-  # idx = data.table::as.data.table(idx)
-  # imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
   idx = duplicated(gene2path$PathwayID)
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx])

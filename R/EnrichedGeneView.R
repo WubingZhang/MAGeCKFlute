@@ -98,7 +98,7 @@ EnrichedGeneView=function(enrichment, geneList,
                   stringsAsFactors = FALSE)
 
   ## Select genes to show ##
-  names(geneList) = toupper(names(geneList))
+  names(geneList) = names(geneList)
   geneList = geneList[geneList<gene_cutoff[1] | geneList>gene_cutoff[2] |
                         names(geneList) %in% custom_gene]
   if(keytype == "Symbol") gg$GeneScore = geneList[gg$Gene]

@@ -34,9 +34,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
                         organism="hsa", useBiomart = FALSE,
                         ensemblHost = "www.ensembl.org"){
   requireNamespace("biomaRt")
-  if(is.null(genes) | length(genes)==0){
-    return(c())
-  }
+  stopifnot(length(genes)>0)
   bods <- data.frame(package = paste0("org.", c("Hs", "Mm", "Rn", "Bt", "Cf", "Pt", "Ss"), ".eg.db"),
                      species = c("Human", "Mouse", "Rat", "Bovine", "Canine", "Chimp", "Pig"),
                      "kegg code" = c("hsa", "mmu", "rno", "bta", "cfa", "ptr", "ssc"),
@@ -45,8 +43,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
            which(tolower(bods[,3])==tolower(organism)))
   stopifnot(length(ridx)==1)
   org = bods[ridx,3]
-  genes = toupper(as.character(genes))
-  tmpGene = genes
+  genes = as.character(genes)
   fromType = tolower(fromType)
   toType = tolower(toType)
   #=============Read annotation file========
@@ -56,23 +53,22 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     type = c("ensembl_gene_id", "entrezgene", "hgnc_symbol")
     if(org=="mmu") type[3] = "mgi_symbol"
     names(type) = c("ensembl", "entrez", "symbol")
-    fromType = ifelse(fromType%in% names(type), type[fromType], fromType)
+    fromType = ifelse(fromType%in%names(type), type[fromType], fromType)
     toType = ifelse(toType%in% names(type), type[toType], toType)
     # listEnsemblArchives()
     # listMarts()
     ds = datasets[grepl(org, datasets)]
-    ensembl <- useMart(host = ensemblHost, biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
+    ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds, host = ensemblHost)
     GeneID_Convert = getBM(attributes=c(fromType, toType), mart = ensembl)
-    GeneID_Convert[, toType] = toupper(GeneID_Convert[, toType])
+    GeneID_Convert[, toType] = GeneID_Convert[, toType]
   }else{
     GeneID_Convert <- getOrg(org)$Symbol_Entrez
-    GeneID_Convert$symbol = toupper(GeneID_Convert$symbol)
   }
   ##======Convert==========
   idx = duplicated(GeneID_Convert[, fromType])
   convert = GeneID_Convert[!idx, toType]
   names(convert) = GeneID_Convert[!idx, fromType]
-  gene_after = as.character(convert[tmpGene])
+  gene_after = as.character(convert[genes])
   names(gene_after) = genes
   return(gene_after)
 }
@@ -129,7 +125,6 @@ getOrg <- function(organism, update = FALSE){
     ## Download gene information from NCBI ftp server
     remfname <- paste0("ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/", gzfile[res$org])
     download.file(remfname, locfname, quiet = TRUE)
-
   }
   ## Reorder the mapping file
   data = read.csv(gzfile(locfname), sep = "\t", header = TRUE,

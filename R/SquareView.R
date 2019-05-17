@@ -184,8 +184,8 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   # p = p + theme(legend.position="none")
   p = p + theme(legend.title=element_blank())
   # p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
-  p$data = beta[, c("Gene", "EntrezID", "x", "y", "diff", "group", "text")]
-  p$data = p$data[order(p$data$group), ]
+  # p$data = beta[, c("Gene", "EntrezID", "x", "y", "diff", "group", "text")]
+  # p$data = p$data[order(p$data$group), ]
 
   if(!is.null(filename)){
       write.table(p$data, gsub("\\....$", ".txt", filename),

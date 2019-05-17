@@ -68,23 +68,22 @@ enrich.ORT <- function(geneList, keytype = "Entrez",
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx],
                         stringsAsFactors = FALSE)
+  gene2path$Gene = as.character(gene2path$Gene)
 
   ## Gene ID conversion
   if(keytype != "Entrez"){
     allsymbol = names(geneList)
     gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
-    geneList = geneList[!duplicated(gene)]
-    names(geneList) = gene[!duplicated(gene)]
+    idx = duplicated(gene)|is.na(gene)
+    geneList = geneList[!idx]; names(geneList) = gene[!idx]
+  }
+  if(!is.null(universe)){
     universe = TransGeneID(universe, keytype, "Entrez", organism = organism)
     universe = universe[!is.na(universe)]
-  }
-  gene = names(geneList)
-  gene2path$Gene = as.character(gene2path$Gene)
-  if(!is.null(universe)){
-    universe = unique(as.character(universe))
   }else{
     universe = unique(c(gene, gene2path$Gene))
   }
+  gene = names(geneList)
 
   ## Enrichment analysis
   len = length(unique(intersect(gene, gene2path$Gene)))

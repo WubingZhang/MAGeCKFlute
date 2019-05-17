@@ -57,10 +57,9 @@ ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cu
   ymin=min(data$Treatment)
   ymax=max(data$Treatment)
   #=========
-  p=ggplot(data,aes(x=Control,y=Treatment,colour=group,fill=group))
-  p=p+geom_point(position = "identity",shape=".",alpha=1/100,size = 0.01,show.legend = FALSE)
+  p=ggplot(data,aes(x=Control,y=Treatment,colour=group))
+  p=p+geom_jitter(position = "jitter", show.legend = FALSE)
   p=p+scale_color_manual(values=mycolour)
-  p=p+geom_jitter(position = "jitter",show.legend = FALSE)
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))

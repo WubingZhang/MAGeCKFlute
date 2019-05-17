@@ -6,9 +6,10 @@
 \title{Volcano View}
 \usage{
 VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
-  topnames = NULL, filename = NULL, x_cutoff = log2(1.5),
-  y_cutoff = 0.05, main = NULL, xlab = "Log2 Fold Change",
-  ylab = "-Log10(Adjust.P)", ...)
+  topnames = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
+  alpha = 0.6, main = NULL, xlab = "Log2 Fold Change",
+  ylab = "-Log10(Adjust.P)", filename = NULL, width = 4,
+  height = 2.5, ...)
 }
 \arguments{
 \item{df}{Data frame}
@@ -23,18 +24,24 @@ VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
 
 \item{topnames}{Character vector, indicating interested terms to be labeled.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL",
-which means don't save the figure on disk.}
-
 \item{x_cutoff}{Cutoff of x-axis.}
 
 \item{y_cutoff}{Cutoff of y-axis.}
+
+\item{alpha}{Parameter in ggplot.}
 
 \item{main}{Title of volcano figure.}
 
 \item{xlab}{Label of x-axis in figure.}
 
 \item{ylab}{Label of y-axis in figure.}
+
+\item{filename}{Figure file name to create on disk. Default filename="NULL",
+which means don't save the figure on disk.}
+
+\item{width}{Width of figure.}
+
+\item{height}{Height of figure.}
 
 \item{...}{Other available parameters in ggsave.}
 }
