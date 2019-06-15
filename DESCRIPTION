@@ -2,7 +2,7 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative analysis pipeline for pooled CRISPR functional
         genetic screens
-Version: 1.5.0
+Version: 1.4.1
 Date: 2019-6-16
 Author: Wubing Zhang, Feizhen Wu, Binbin Wang
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
@@ -19,4 +19,4 @@ biocViews: Software, FunctionalGenomics, CRISPR, ImmunoOncology,
         BatchEffect, QualityControl, Normalization, GeneSetEnrichment,
         Pathways, Visualization
 RoxygenNote: 6.1.1
-Packaged: 2019-03-26 12:23:03 UTC; Wubing
+Packaged: 2019-06-15 15:50:09 UTC; Wubing
