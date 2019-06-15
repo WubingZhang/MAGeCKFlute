@@ -5,7 +5,6 @@
 #' @docType methods
 #' @name EnrichedView
 #' @rdname EnrichedView
-#' @aliases enrichgseview
 #' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.
 
 #' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
