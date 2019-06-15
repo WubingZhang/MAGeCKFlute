@@ -23,7 +23,7 @@
 #'
 #' @return \code{enrichRes} is an enrichResult instance.
 #'
-#' @author Feizhen Wu
+#' @author Wubing Zhang
 #'
 #' @seealso \code{\link{enrich.GSE}}
 #' @seealso \code{\link{enrich.ORT}}
@@ -47,8 +47,8 @@ EnrichAnalyzer = function(geneList, keytype = "Entrez",
                          universe = NULL,
                          filter = TRUE,
                          gmtpath = NA){
+
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
-  # result = list()
   methods = c("ORT", "GSEA", "HGT")
   names(methods) = toupper(methods)
   method = methods[toupper(method)]
@@ -72,7 +72,7 @@ EnrichAnalyzer = function(geneList, keytype = "Entrez",
     stop("Avaliable methods: GSEA, ORT, and HGT. ")
   }
 
-  if(filter){
+  if(filter & nrow(enrichRes@result)>10){
     result = EnrichedFilter(enrichRes)
     result$p.adjust = p.adjust(result$pvalue, method = "BH")
     enrichRes@result = result[result$p.adjust<pvalueCutoff, ]

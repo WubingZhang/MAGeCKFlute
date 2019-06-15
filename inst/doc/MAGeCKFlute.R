@@ -35,8 +35,11 @@ library(MAGeCKFlute)
 data("rra.gene_summary")
 head(rra.gene_summary)
 
+data(rra.sgrna_summary)
+head(rra.sgrna_summary)
+
 ## ----ReadRRA-------------------------------------------------------------
-dd.rra = ReadRRA(rra.gene_summary, organism = "hsa")
+dd.rra = ReadRRA(rra.gene_summary)
 head(dd.rra)
 dd.sgrna = ReadsgRRA(rra.sgrna_summary)
 
@@ -51,22 +54,25 @@ p2 = RankView(geneList, top = 10, bottom = 10)
 print(p2)
 
 ## ----sgRNARank, fig.height=4, fig.width=7--------------------------------
-p2 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = levels(p1$data$Label))
+p2 = sgRankView(dd.sgrna, top = 4, bottom = 4)
 print(p2)
 
 ## ----enrich_rra----------------------------------------------------------
-universe = dd.rra$EntrezID
+universe = dd.rra$Official
 geneList= dd.rra$LFC
 names(geneList) = universe
+enrich = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", 
+                        method = "GSEA", type = "GOMF+GOCC+GOBP", 
+                        limit = c(1, 80))
 
-enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100))
-
-## ----enrichedGeneView, fig.height=5, fig.width=15------------------------
-EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
+## ----EnrichedGeneView, fig.height=5, fig.width=15------------------------
+EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Symbol")
 EnrichedView(slot(enrich, "result"))
 
-## ------------------------------------------------------------------------
-enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100), filter = FALSE)
+## ----EnrichedFilter, fig.height=5, fig.width=12--------------------------
+enrich = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", 
+                        method = "GSEA", type = "GOMF+GOCC+GOBP", 
+                        limit = c(2, 80), filter = FALSE)
 enrich2 = EnrichedFilter(enrich)
 EnrichedView(enrich2)
 
@@ -80,10 +86,10 @@ data("mle.gene_summary")
 ctrlname = c("dmso")
 treatname = c("plx")
 #Read beta scores from gene summary table in MAGeCK MLE results
-dd=ReadBeta(mle.gene_summary, organism="hsa")
+dd=ReadBeta(mle.gene_summary)
 head(dd)
 
-## ----BatchRemove, fig.height=5, fig.width=6------------------------------
+## ----BatchRemove, fig.height=5, fig.width=10-----------------------------
 ##Before batch removal
 edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
 colnames(edata) = paste0("s", 1:4)
@@ -133,10 +139,11 @@ print(p2)
 ## ----EnrichAB, fig.height=5, fig.width=10--------------------------------
 ## Get information of positive and negative selection genes
 groupAB = p1$data
-geneList = groupAB$diff; names(geneList) = rownames(groupAB)
+geneList = groupAB$diff; names(geneList) = groupAB$Gene
 ## Do enrichment analysis for positive selection genes.
 idx1 = groupAB$group=="up"
-hgtA = EnrichAnalyzer(geneList[idx1], method = "HGT", universe = rownames(groupAB))
+hgtA = EnrichAnalyzer(geneList[idx1], keytype = "Symbol", method = "HGT", 
+                      universe = groupAB$Gene)
 hgtA_grid = EnrichedView(slot(hgtA, "result"))
 
 ## look at the results
@@ -145,7 +152,8 @@ print(hgtA_grid)
 
 ## ----GSEA, fig.height=5, fig.width=10------------------------------------
 ## Do enrichment analysis using GSEA method
-gseA = EnrichAnalyzer(geneList, method = "GSEA", type = "KEGG", limit = c(2, 150))
+gseA = EnrichAnalyzer(geneList, keytype = "Symbol", method = "GSEA", type = "KEGG", 
+                      limit = c(2, 100), pvalueCutoff = 1)
 gseA_grid = EnrichedView(gseA)
 print(gseA_grid)
 
@@ -155,7 +163,9 @@ keggID = gsub("KEGG_", "", slot(gseA, "result")$ID[1])
 arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
 
 ## ----Square, fig.height=7, fig.width=8-----------------------------------
-p3 = SquareView(dd_essential, label = "Gene")
+p3 = SquareView(dd_essential, label = "Gene", 
+                x_cutoff = CutoffCalling(dd_essential$Control, 2), 
+                y_cutoff = CutoffCalling(dd_essential$Treatment, 2))
 print(p3)
 
 ## ----EnrichSquare, fig.height=5, fig.width=9-----------------------------
@@ -163,10 +173,10 @@ print(p3)
 Square9 = p3$data
 idx=Square9$group=="topcenter"
 geneList = (Square9$y - Square9$x)[idx]
-names(geneList) = rownames(Square9)[idx]
-universe=rownames(Square9)
+names(geneList) = Square9$Gene[idx]
+universe = Square9$Gene
 # Enrichment analysis
-kegg1 = EnrichAnalyzer(geneList = geneList, universe = universe)
+kegg1 = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", universe = universe)
 EnrichedView(kegg1, top = 10, bottom = 0)
 
 ## ----pathview2, eval=FALSE-----------------------------------------------

@@ -41,7 +41,7 @@ to normalize array data before.
 data(mle.gene_summary)
 data(Zuber_Essential)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)

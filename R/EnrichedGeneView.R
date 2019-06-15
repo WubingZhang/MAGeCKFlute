@@ -83,7 +83,7 @@ EnrichedGeneView=function(enrichment, geneList,
     pid_pos = tmp$ID[1:min(nrow(tmp), top)]
   }
   idx = enrichment$ID %in% c(custom_pid, pid_neg, pid_pos)
-  if(sum(idx)==0) stop("No input pathway found !!!")
+  if(sum(idx)==0) return(noEnrichPlot("No eligible terms!!!"))
 
   ## Prepare data for plotting ##
   enrichment = enrichment[idx, ]

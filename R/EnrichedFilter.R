@@ -21,8 +21,8 @@ EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   if(is(enrichment, "enrichResult")) enrichment = enrichment@result
   if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
-  enrichment = enrichment[order(enrichment$p.adjust), ]
   if(nrow(enrichment)<3) return(enrichment)
+  enrichment = enrichment[order(enrichment$p.adjust), ]
   genelist = strsplit(enrichment$geneID, "/")
   names(genelist) = enrichment$ID
   # Jaccard Index

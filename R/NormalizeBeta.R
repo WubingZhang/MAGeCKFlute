@@ -31,7 +31,7 @@
 #' data(mle.gene_summary)
 #' data(Zuber_Essential)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
 #'     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)
@@ -45,7 +45,8 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", id = 1, posControl=NULL){
+NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle",
+                          id = 1, posControl=NULL){
   message(Sys.time(), " # Normalize beta scores ...")
   if(is.null(samples)) normalized = beta
   else normalized = as.matrix(beta[, samples])
@@ -100,7 +101,7 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", id = 1, posCo
 #' @seealso \code{\link{NormalizeBeta}}
 #'
 #' @examples
-#' beta = ReadBeta(mle.gene_summary, organism="hsa")
+#' beta = ReadBeta(mle.gene_summary)
 #' beta_loess = normalize.loess(beta[,c("dmso", "plx")])
 #'
 #' @export

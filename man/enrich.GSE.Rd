@@ -4,7 +4,7 @@
 \name{enrich.GSE}
 \alias{enrich.GSE}
 \alias{enrichGSE}
-\title{GSEA}
+\title{Gene set enrichment analysis}
 \usage{
 enrich.GSE(geneList, keytype = "Entrez",
   type = "CORUM+GOBP+GOMF+GOCC+KEGG", organism = "hsa",

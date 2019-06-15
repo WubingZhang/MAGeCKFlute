@@ -6,7 +6,7 @@
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
-  organism = "hsa", limit = c(3, 50), filename = NULL,
+  organism = "hsa", limit = c(3, 80), filename = NULL,
   out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
@@ -44,7 +44,7 @@ are termed as GroupA and GroupB
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
 \dontrun{
   #GO and KEGG enrichment analysis

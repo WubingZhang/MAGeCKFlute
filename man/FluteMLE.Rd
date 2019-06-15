@@ -7,21 +7,21 @@
 \title{Downstream analysis based on MAGeCK-MLE result}
 \usage{
 FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
-  organism = "hsa", scale_cutoff = 1, top = 10, bottom = 10,
-  interestGenes = NA, limit = c(3, 50), pvalueCutoff = 0.25,
+  organism = "hsa", scale_cutoff = 2, top = 10, bottom = 10,
+  interestGenes = NA, limit = c(3, 80), pvalueCutoff = 0.25,
   enrich_kegg = "ORT", posControl = NULL, loess = FALSE,
   prefix = "", width = 10, height = 7, outdir = ".",
   view_allpath = FALSE)
 }
 \arguments{
-\item{gene_summary}{Either a file path or a data frame, which contains columns of 'Gene',
-\code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.}
+\item{gene_summary}{A data frame, which contains columns of 'Gene',
+\code{ctrlname}.beta and \code{treatname}.beta.}
 
 \item{ctrlname}{A character vector, specifying the names of control samples.}
 
 \item{treatname}{A character vector, specifying the names of treatment samples.}
 
-\item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
+\item{keytype}{"Entrez" or "Symbol".}
 
 \item{organism}{"hsa" or "mmu".}
 

@@ -41,7 +41,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 #'
 #'
@@ -145,7 +145,7 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   p = p + geom_vline(xintercept = x_cutoff[1],linetype = "dotted")
   p = p + geom_hline(yintercept = y_cutoff[2],linetype = "dotted")
   p = p + geom_hline(yintercept = y_cutoff[1],linetype = "dotted")
-  p = p + geom_abline(slope=1, intercept=intercept, linetype = "dotted")
+  if(!all(intercept==0)) p = p + geom_abline(slope=1, intercept=intercept, linetype = "dotted")
   p = p + labs(x="Control beta score", y = "Treatment beta score")
   # p = p + guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)

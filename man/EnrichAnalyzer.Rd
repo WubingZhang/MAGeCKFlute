@@ -57,5 +57,5 @@ head(keggA@result)
 \code{\link[DOSE]{enrichResult-class}}
 }
 \author{
-Feizhen Wu
+Wubing Zhang
 }

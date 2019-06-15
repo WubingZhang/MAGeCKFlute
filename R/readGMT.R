@@ -15,7 +15,7 @@
 #'
 #' @export
 #'
-ReadGMT <- function(gmtpath, limit = c(3, 30)){
+ReadGMT <- function(gmtpath, limit = c(3, 80)){
   c2 = readLines(gmtpath)
   c2_list = strsplit(c2, "\t")
   c2_pathway = t(matrix(unlist(lapply(c2_list, function(x) x[1:2])), nrow = 2))

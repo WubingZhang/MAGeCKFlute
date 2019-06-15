@@ -75,6 +75,7 @@ enrich.HGT = function(geneList, keytype = "Entrez",
     allsymbol = allsymbol[!idx]; names(allsymbol) = gene[!idx]
     geneList = geneList[!idx]; names(geneList) = gene[!idx]
   }else{
+    gene = names(geneList)
     allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
   }
   if(!is.null(universe)){

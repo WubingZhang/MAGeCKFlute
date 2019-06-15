@@ -35,7 +35,7 @@ Plot the density of gene beta scores in two samples.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 DensityView(dd, samples=c("dmso", "plx"))
 #or
 DensityView(dd[, c("dmso", "plx")])

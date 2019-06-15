@@ -7,16 +7,17 @@
 \usage{
 VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
   topnames = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
-  alpha = 0.6, main = NULL, xlab = "Log2 Fold Change",
-  ylab = "-Log10(Adjust.P)", filename = NULL, width = 4,
-  height = 2.5, ...)
+  mycolour = c("gray80", "#e41a1c", "#377eb8"), alpha = 0.6,
+  main = NULL, xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)",
+  filename = NULL, width = 4, height = 2.5, ...)
 }
 \arguments{
 \item{df}{Data frame}
 
 \item{x}{Colname of df specifying x-axis in Volcanno figure, 'logFC' (default).}
 
-\item{y}{Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default).}
+\item{y}{Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default),
+which will be plot after log10 transformation.}
 
 \item{Label}{Colname of df specifying labeled terms in Volcanno figure.}
 
@@ -27,6 +28,8 @@ VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
 \item{x_cutoff}{Cutoff of x-axis.}
 
 \item{y_cutoff}{Cutoff of y-axis.}
+
+\item{mycolour}{A color vector, specifying colors of non-significant, significant up and down-regulated genes.}
 
 \item{alpha}{Parameter in ggplot.}
 

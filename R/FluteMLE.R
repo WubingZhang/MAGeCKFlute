@@ -7,11 +7,11 @@
 #' @rdname FluteMLE
 #' @aliases flutemle
 #'
-#' @param gene_summary Either a file path or a data frame, which contains columns of 'Gene',
-#' \code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.
+#' @param gene_summary A data frame, which contains columns of 'Gene',
+#' \code{ctrlname}.beta and \code{treatname}.beta.
 #' @param ctrlname A character vector, specifying the names of control samples.
 #' @param treatname A character vector, specifying the names of treatment samples.
-#' @param keytype Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".
+#' @param keytype "Entrez" or "Symbol".
 #' @param organism "hsa" or "mmu".
 #'
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
@@ -79,9 +79,9 @@
 
 FluteMLE <- function(gene_summary, ctrlname, treatname,
                      keytype = "Symbol", organism = "hsa", # Input dataset
-                     scale_cutoff = 1, top = 10, bottom = 10,
+                     scale_cutoff = 2, top = 10, bottom = 10,
                      interestGenes = NA, # Parameters for rank visualization
-                     limit = c(3, 50), pvalueCutoff=0.25,
+                     limit = c(3, 80), pvalueCutoff=0.25,
                      enrich_kegg = "ORT",
                      posControl = NULL, loess = FALSE,
                      prefix = "", width = 10, height = 7,
@@ -96,7 +96,16 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
   organism = getOrg(organism)$org
 
   ## Beta Score Preparation ##
-  beta = ReadBeta(gene_summary, keytype = "Symbol", organism = organism)
+  beta = ReadBeta(gene_summary)
+  if(keytype == "Symbol")
+    beta$EntrezID = TransGeneID(beta$Gene, "Symbol", "Entrez", organism = organism)
+  else{
+    beta$EntrezID = beta$Gene
+    beta$Gene = TransGeneID(beta$Gene, "Entrez", "Symbol", organism = organism)
+  }
+  idx = is.na(beta$EntrezID) | duplicated(beta$EntrezID)
+  beta = beta[!idx, ]
+
   if(all(c(ctrlname, treatname) %in% colnames(beta)))
     dd = beta[, c("Gene", "EntrezID", ctrlname, treatname)]
   else stop("No sample found!")
@@ -330,15 +339,20 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	{
 	  dir.create(file.path(outdir, "Scatter_9Square"), showWarnings=FALSE)
 	  outputDir6 <- file.path(outdir, "Scatter_9Square/Square9_")
-
 	  P1 = SquareView(dd, label="Gene", main="Negative control normalized",
-	                 filename=paste0(outputDir6,"scatter_negative_normalized.png"))
+	                  x_cutoff = CutoffCalling(dd$Control, scale_cutoff),
+	                  y_cutoff = CutoffCalling(dd$Treatment, scale_cutoff),
+	                  filename=paste0(outputDir6,"scatter_negative_normalized.png"))
 	  grid.arrange(P1, ncol = 1)
 	  P2 = SquareView(dd_essential, label="Gene", main="Cell cycle normalized",
-	                filename=paste0(outputDir6,"scatter_cellcycle_normalized.png"))
+	                  x_cutoff = CutoffCalling(dd_essential$Control, scale_cutoff),
+	                  y_cutoff = CutoffCalling(dd_essential$Treatment, scale_cutoff),
+	                  filename=paste0(outputDir6,"scatter_cellcycle_normalized.png"))
 	  grid.arrange(P2, ncol = 1)
 	  if(loess){
-  		P3 = SquareView(dd_loess, label="Gene", main="Loess normalized",
+	    P3 = SquareView(dd_loess, label="Gene", main="Loess normalized",
+  		                x_cutoff = CutoffCalling(dd_loess$Control, scale_cutoff),
+  		                y_cutoff = CutoffCalling(dd_loess$Treatment, scale_cutoff),
   		              filename=paste0(outputDir6,"scatter_loess_normalized.png"))
   		grid.arrange(P3, ncol = 1)
 	  }

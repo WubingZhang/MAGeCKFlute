@@ -1,4 +1,4 @@
-#' GSEA
+#' Gene set enrichment analysis
 #'
 #' A universal gene set enrichment analysis tools
 #'

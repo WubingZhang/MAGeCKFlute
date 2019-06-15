@@ -69,7 +69,7 @@ FluteRRA <- function(gene_summary, sgrna_summary,
 
   ## Visualize the top essential genes ##
   message(Sys.time(), " # Read RRA result ...")
-  dd = ReadRRA(gene_summary, organism=organism)
+  dd = ReadRRA(gene_summary)
   dd.sgrna = ReadsgRRA(sgrna_summary)
 
   p1 = VolcanoView(dd, x = "LFC", y = "FDR", Label = "Official")
@@ -92,6 +92,10 @@ FluteRRA <- function(gene_summary, sgrna_summary,
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
+  dd$EntrezID = TransGeneID(dd$Official, "Symbol", "Entrez", organism = organism)
+  idx = is.na(dd$EntrezID) | duplicated(dd$EntrezID)
+  dd = dd[!idx,]
+
   universe = dd$EntrezID
   geneList = dd$LFC; names(geneList) = dd$EntrezID
   idx1 = dd$LFC<lfcCutoff[1]; idx2 = dd$LFC>lfcCutoff[2]

@@ -27,7 +27,7 @@
 #'
 #' @examples
 #' data(rra.gene_summary)
-#' rra = ReadRRA(rra.gene_summary, organism = "hsa")
+#' rra = ReadRRA(rra.gene_summary)
 #' rankdata = rra$LFC
 #' names(rankdata) = rra$Official
 #' RankView(rankdata)
@@ -53,8 +53,7 @@ RankView <- function(rankdata, genelist=NA, top=20, bottom=20,
   mycolour = c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
   p = ggplot(data)
   p = p + geom_jitter(aes(x=diff,y=Rank,color=group), size = 0.5)
-  p = p + geom_vline(xintercept = 0,linetype = "dotted") +
-    geom_vline(xintercept = cutoff,linetype = "dotted")
+  if(!all(cutoff==0)) p = p + geom_vline(xintercept = cutoff, linetype = "dotted")
   if(sum(idx)>0)
     p = p + geom_label_repel(aes(x=diff, y=Rank,fill=group,label = Gene),data=data[idx,],
                              fontface = 'bold', color = 'white', size = 2.5,

@@ -71,6 +71,7 @@ enrich.ORT <- function(geneList, keytype = "Entrez",
   gene2path$Gene = as.character(gene2path$Gene)
 
   ## Gene ID conversion
+  gene = names(geneList)
   if(keytype != "Entrez"){
     allsymbol = names(geneList)
     gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)

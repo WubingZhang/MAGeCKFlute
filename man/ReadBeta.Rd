@@ -6,16 +6,10 @@
 \alias{readbeta}
 \title{Read gene beta scores}
 \usage{
-ReadBeta(gene_summary, keytype = "Symbol", organism = "hsa")
+ReadBeta(gene_summary)
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame, which has columns of 'Gene' and beta score of samples.}
-
-\item{keytype}{Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".}
-
-\item{organism}{Character, KEGG species code, or the common species name, used to determine
-the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
-and can also be "human" (case insensitive).}
 }
 \value{
 A data frame, in which the first column is ENTREZID, and the later columns are beta score for each samples.
@@ -25,7 +19,7 @@ Read gene beta scores from file or data frame
 }
 \examples{
 data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 head(dd)
 
 }

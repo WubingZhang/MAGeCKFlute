@@ -4,12 +4,10 @@
 #' @name BatchRemove
 #' @rdname BatchRemove
 #'
-#' @param mat Matrix, or a file path of data.
-#' @param batchMat Matrix like data object or a file path of batch table,
-#' in which the first two columns are `Samples`(matched colname of mat) and `Batch`, and
-#' remaining columns should be Covariates.
-#' @param log2trans Boolean, specifying whether do log2 transition before batch removal.
-#' @param positive Boolean, specifying whether all values should be positive.
+#' @param mat A data frame, each row is a gene, and each column is a sample.
+#' @param batchMat A data frame, the first column should be `Samples`(matched colnames of mat)
+#' and the second column is `Batch`. The remaining columns could be Covariates.
+#' @param log2trans Boolean, specifying whether do logarithmic transformation before batch removal.
 #'
 #' @return A list contrains two objects, including \code{data} and \code{p}.
 #'
@@ -29,15 +27,7 @@
 #' @export
 #'
 
-BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
-  if(is.character(mat) && file.exists(mat)){
-    mat = read.table(mat, sep = "\t", header = TRUE,
-                     stringsAsFactors = FALSE, check.names = FALSE)
-  }
-  if(is.character(batchMat) && file.exists(batchMat)){
-    batchMat = read.table(batchMat, sep = "\t", header = TRUE,
-                          stringsAsFactors = FALSE, check.names = FALSE)
-  }
+BatchRemove <- function(mat, batchMat, log2trans=FALSE){
   mat = as.data.frame(mat, stringsAsFactors = FALSE)
   batchMat = as.data.frame(batchMat, stringsAsFactors = FALSE)
   colnames(batchMat)[1:2] = c("Sample", "Batch")
@@ -75,7 +65,8 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE, positive = FALSE){
   if(length(unique(batch[,2]))<2){
     res = tmp2
   }else{res <- sva::ComBat(as.matrix(tmp2), batch = batch[,2], mod = mod)}
-  if(positive) res[res<0] = 0
+  # if(positive) res[res<0] = 0
+
   if(length(setdiff(colnames(mat), colnames(res)))>0){
     clnames = setdiff(colnames(mat),colnames(res))
     res=cbind.data.frame(mat[setdiff(1:nrow(tmp),var0), clnames], as.data.frame(res))

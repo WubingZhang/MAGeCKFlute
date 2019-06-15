@@ -138,7 +138,7 @@
 #' @examples
 #' #load data
 #' data(mle.gene_summary)
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' gene.data = dd$plx
 #' names(gene.data) = rownames(dd)
 #' \dontrun{
@@ -499,8 +499,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
-#' colnames(dd)[3:4] = c("Control", "Treatment")
+#' dd = ReadBeta(mle.gene_summary)
+#' colnames(dd)[2:3] = c("Control", "Treatment")
 #' arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 #'
 #' @importFrom png readPNG
@@ -559,13 +559,11 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
   if(length(pngnames)>0){
     thePlots <- lapply (pngnames, function(figure) {
       grid::rasterGrob(png::readPNG(figure, native = FALSE),interpolate = FALSE)})
-  }else
-    thePlots = list()
-
-  for(i in 1:ceiling(length(thePlots)/ncol)){
-    if(ncol*i <= length(thePlots))
-      do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):(ncol*i)], ncol = ncol, top=title, bottom=sub))
-    else
-      do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):length(thePlots)], ncol = ncol, top=title, bottom=sub))
+    for(i in 1:ceiling(length(thePlots)/ncol)){
+      if(ncol*i <= length(thePlots))
+        do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):(ncol*i)], ncol = ncol, top=title, bottom=sub))
+      else
+        do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):length(thePlots)], ncol = ncol, top=title, bottom=sub))
+    }
   }
 }

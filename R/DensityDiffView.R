@@ -1,6 +1,6 @@
-#' Density plot for beta score deviation between Control and Treatment
+#' Density plot
 #'
-#' Plot the density of beta score deviation between two samples.
+#' Plot the density of beta score deviations.
 #'
 #' @docType methods
 #' @name DensityDiffView
@@ -22,7 +22,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' # Density plot of beta score deviation between control and treatment
 #' DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
 #'
@@ -35,14 +35,14 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
                             filename=NULL, width = 5, height = 4, ...){
 
   message(Sys.time(), " # Density plot for ", main, " treat-control beta scores...")
-  d=beta
-  d$Diff=rowMeans(d[,treatname,drop=FALSE])-rowMeans(d[,ctrlname,drop=FALSE])
-  d$r <- rnorm(length(d$Diff), mean=0, sd=sd(d$Diff)-0.01)
-  p=ggplot(d,aes(x=Diff))
-  p=p+geom_histogram(aes(y = ..density..),fill="gray90",binwidth=0.02)
-  p=p+geom_density(colour="black")
-  p=p+geom_density(aes(x=r,y=..density..),linetype="dashed",colour="red")
-  p=p+geom_vline(xintercept = 0,linetype="dashed")
+  d = beta
+  d$Diff = rowMeans(d[,treatname,drop=FALSE])-rowMeans(d[,ctrlname,drop=FALSE])
+  d$r = rnorm(length(d$Diff), mean=0, sd=sd(d$Diff)-0.01)
+  p = ggplot(d,aes(x=Diff))
+  p = p + geom_histogram(aes(y = ..density..), fill="gray90", binwidth=0.02)
+  p = p + geom_density(colour="black")
+  p = p + geom_density(aes(x=r,y=..density..), linetype="dashed", colour="red")
+  p = p + geom_vline(xintercept = 0,linetype="dashed")
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))
@@ -50,8 +50,7 @@ DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", mai
                 panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                 panel.border = element_blank(), panel.background = element_blank(),
                 legend.key = element_rect(fill = "transparent"))
-  p=p+labs(x="Treat-Control Beta Score",y="Density",title=main)
-  #+ggtitle("Normalization with")
+  p = p + labs(x="Treat-Control Beta Score", y="Density", title=main)
 
   if(!is.null(filename)){
     ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
