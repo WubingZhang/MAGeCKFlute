@@ -1,8 +1,8 @@
 ---
 title: "Integrative analysis pipeline for pooled CRISPR functional genetic screens - MAGeCKFlute"
-author: "WubingZhang, Binbin Wang"
-date: "22 Feb, 2019"
-package: "1.2.4"
+author: "WubingZhang, Binbin Wang, Feizhen Wu"
+date: "6 Aug, 2019"
+package: "1.5.1"
 abstract: >
   CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK and MAGeCK-VISPR, to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
   Here, We developed MAGeCKFlute for supporting downstream analysis. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis, pathway enrichment analysis and protein complex enrichment analysis of these genes. The package also visualizes genes in multiple ways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
@@ -117,6 +117,9 @@ For experiments with two experimental conditions, we recommend using MAGeCK-RRA 
 library(MAGeCKFlute)
 data("rra.gene_summary")
 head(rra.gene_summary)
+
+data(rra.sgrna_summary)
+head(rra.sgrna_summary)
 ```
 
 ### Negative selection and positive selection
@@ -124,7 +127,7 @@ head(rra.gene_summary)
 Then, extract "neg.fdr" and "pos.fdr" from the gene summary table.
 
 ```{r ReadRRA}
-dd.rra = ReadRRA(rra.gene_summary, organism = "hsa")
+dd.rra = ReadRRA(rra.gene_summary)
 head(dd.rra)
 dd.sgrna = ReadsgRRA(rra.sgrna_summary)
 ```
@@ -145,7 +148,7 @@ print(p2)
 
 We also provide a function `sgRankView` to visualize the rank of sgRNA targeting top negative and positive selected genes.
 ```{r sgRNARank, fig.height=4, fig.width=7}
-p2 = sgRankView(dd.sgrna, top = 0, bottom = 0, gene = levels(p1$data$Label))
+p2 = sgRankView(dd.sgrna, top = 4, bottom = 4)
 print(p2)
 ```
 
@@ -154,22 +157,25 @@ Select negative selection and positive selection genes and perform enrichment an
 
 #### Enrichment analysis 
 ```{r enrich_rra}
-universe = dd.rra$EntrezID
+universe = dd.rra$Official
 geneList= dd.rra$LFC
 names(geneList) = universe
-
-enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100))
+enrich = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", 
+                        method = "GSEA", type = "GOMF+GOCC+GOBP", 
+                        limit = c(1, 80))
 ```
 
 Visualize the top enriched genes and pathways/GO terms using `EnrichedGeneView` and `EnrichedView`.
-```{r enrichedGeneView, fig.height=5, fig.width=15}
-EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Entrez")
+```{r EnrichedGeneView, fig.height=5, fig.width=15}
+EnrichedGeneView(slot(enrich, "result"), geneList, keytype = "Symbol")
 EnrichedView(slot(enrich, "result"))
 ```
 
 Simplify the enrichment results using `EnrichedFilter`.
-```{r}
-enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOMF+GOCC+GOBP", limit = c(2, 100), filter = FALSE)
+```{r EnrichedFilter, fig.height=5, fig.width=12}
+enrich = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", 
+                        method = "GSEA", type = "GOMF+GOCC+GOBP", 
+                        limit = c(2, 80), filter = FALSE)
 enrich2 = EnrichedFilter(enrich)
 EnrichedView(enrich2)
 ```
@@ -193,7 +199,7 @@ data("mle.gene_summary")
 ctrlname = c("dmso")
 treatname = c("plx")
 #Read beta scores from gene summary table in MAGeCK MLE results
-dd=ReadBeta(mle.gene_summary, organism="hsa")
+dd=ReadBeta(mle.gene_summary)
 head(dd)
 ```
 
@@ -201,7 +207,7 @@ head(dd)
 
 Is there batch effects? This is a commonly asked question before perform later analysis. In our package, we provide `HeatmapView` to ensure whether the batch effect exists in data and use `BatchRemove` to remove easily if same batch samples cluster together.
 
-```{r BatchRemove, fig.height=5, fig.width=6}
+```{r BatchRemove, fig.height=5, fig.width=10}
 ##Before batch removal
 edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
 colnames(edata) = paste0("s", 1:4)
@@ -283,10 +289,11 @@ For gene set enrichment analysis, we provide three methods in this package, incl
 ```{r EnrichAB, fig.height=5, fig.width=10}
 ## Get information of positive and negative selection genes
 groupAB = p1$data
-geneList = groupAB$diff; names(geneList) = rownames(groupAB)
+geneList = groupAB$diff; names(geneList) = groupAB$Gene
 ## Do enrichment analysis for positive selection genes.
 idx1 = groupAB$group=="up"
-hgtA = EnrichAnalyzer(geneList[idx1], method = "HGT", universe = rownames(groupAB))
+hgtA = EnrichAnalyzer(geneList[idx1], keytype = "Symbol", method = "HGT", 
+                      universe = groupAB$Gene)
 hgtA_grid = EnrichedView(slot(hgtA, "result"))
 
 ## look at the results
@@ -296,7 +303,8 @@ print(hgtA_grid)
 
 ```{r GSEA, fig.height=5, fig.width=10}
 ## Do enrichment analysis using GSEA method
-gseA = EnrichAnalyzer(geneList, method = "GSEA", type = "KEGG", limit = c(2, 150))
+gseA = EnrichAnalyzer(geneList, keytype = "Symbol", method = "GSEA", type = "KEGG", 
+                      limit = c(2, 100), pvalueCutoff = 1)
 gseA_grid = EnrichedView(gseA)
 print(gseA_grid)
 ```
@@ -314,7 +322,9 @@ arrangePathview(genedata, pathways = keggID, organism = "hsa", sub = NULL)
 We developed a 9-square model, which group all genes into several subgroups by considering the selection status of genes in control and treatment. Each subgroup genes correspond to specific functions.
 
 ```{r Square, fig.height=7, fig.width=8}
-p3 = SquareView(dd_essential, label = "Gene")
+p3 = SquareView(dd_essential, label = "Gene", 
+                x_cutoff = CutoffCalling(dd_essential$Control, 2), 
+                y_cutoff = CutoffCalling(dd_essential$Treatment, 2))
 print(p3)
 ```
 
@@ -326,10 +336,10 @@ Same as the section above. We can do enrichment analysis for treatment-associate
 Square9 = p3$data
 idx=Square9$group=="topcenter"
 geneList = (Square9$y - Square9$x)[idx]
-names(geneList) = rownames(Square9)[idx]
-universe=rownames(Square9)
+names(geneList) = Square9$Gene[idx]
+universe = Square9$Gene
 # Enrichment analysis
-kegg1 = EnrichAnalyzer(geneList = geneList, universe = universe)
+kegg1 = EnrichAnalyzer(geneList = geneList, keytype = "Symbol", universe = universe)
 EnrichedView(kegg1, top = 10, bottom = 0)
 ```
 

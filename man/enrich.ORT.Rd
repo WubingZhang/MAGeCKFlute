@@ -6,10 +6,9 @@
 \alias{enrichORT}
 \title{Do enrichment analysis using over-representation test}
 \usage{
-enrich.ORT(geneList, keytype = "Entrez",
-  type = "CORUM+GOBP+GOMF+GOCC+KEGG", organism = "hsa",
-  pvalueCutoff = 0.05, limit = c(3, 80), universe = NULL,
-  gmtpath = NA)
+enrich.ORT(geneList, keytype = "Entrez", type = "CORUM+KEGG",
+  organism = "hsa", pvalueCutoff = 0.05, limit = c(1, 120),
+  universe = NULL, gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -24,7 +23,7 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}

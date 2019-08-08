@@ -3,7 +3,6 @@
 \docType{methods}
 \name{EnrichedView}
 \alias{EnrichedView}
-\alias{enrichgseview}
 \title{View enriched terms}
 \usage{
 EnrichedView(enrichment, rank_by = "p.adjust", top = 5, bottom = 5,

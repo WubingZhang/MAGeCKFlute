@@ -6,10 +6,9 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-EnrichAnalyzer(geneList, keytype = "Entrez",
-  type = "CORUM+GOBP+GOMF+GOCC+KEGG", method = "ORT",
-  organism = "hsa", pvalueCutoff = 0.25, limit = c(3, 80),
-  universe = NULL, filter = TRUE, gmtpath = NA)
+EnrichAnalyzer(geneList, keytype = "Entrez", type = "CORUM+KEGG",
+  method = "ORT", organism = "hsa", pvalueCutoff = 0.25,
+  limit = c(1, 120), universe = NULL, filter = TRUE, gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -26,7 +25,7 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
@@ -43,7 +42,7 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-keggA = EnrichAnalyzer(geneList, method = "GSEA")
+keggA = EnrichAnalyzer(geneList[1:500], method = "HGT")
 head(keggA@result)
 
 }
@@ -57,5 +56,5 @@ head(keggA@result)
 \code{\link[DOSE]{enrichResult-class}}
 }
 \author{
-Feizhen Wu
+Wubing Zhang
 }

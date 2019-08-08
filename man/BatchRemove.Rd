@@ -5,18 +5,15 @@
 \alias{BatchRemove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, log2trans = FALSE, positive = FALSE)
+BatchRemove(mat, batchMat, log2trans = FALSE)
 }
 \arguments{
-\item{mat}{Matrix, or a file path of data.}
+\item{mat}{A data frame, each row is a gene, and each column is a sample.}
 
-\item{batchMat}{Matrix like data object or a file path of batch table,
-in which the first two columns are `Samples`(matched colname of mat) and `Batch`, and
-remaining columns should be Covariates.}
+\item{batchMat}{A data frame, the first column should be `Samples`(matched colnames of mat)
+and the second column is `Batch`. The remaining columns could be Covariates.}
 
-\item{log2trans}{Boolean, specifying whether do log2 transition before batch removal.}
-
-\item{positive}{Boolean, specifying whether all values should be positive.}
+\item{log2trans}{Boolean, specifying whether do logarithmic transformation before batch removal.}
 }
 \value{
 A list contrains two objects, including \code{data} and \code{p}.

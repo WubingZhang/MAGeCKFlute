@@ -8,12 +8,14 @@
 #'
 #' @param df Data frame
 #' @param x Colname of df specifying x-axis in Volcanno figure, 'logFC' (default).
-#' @param y Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default).
+#' @param y Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default),
+#' which will be plot after log10 transformation.
 #' @param Label Colname of df specifying labeled terms in Volcanno figure.
 #' @param top Interger, the number of top significant terms to be labeled.
 #' @param topnames Character vector, indicating interested terms to be labeled.
 #' @param x_cutoff Cutoff of x-axis.
 #' @param y_cutoff Cutoff of y-axis.
+#' @param mycolour A color vector, specifying colors of non-significant, significant up and down-regulated genes.
 #' @param alpha Parameter in ggplot.
 #' @param main Title of volcano figure.
 #' @param xlab Label of x-axis in figure.
@@ -39,6 +41,7 @@
 VolcanoView <- function(df, x = "logFC", y = "adj.P.Val",
                         Label = NA, top = 5, topnames = NULL,
                         x_cutoff = log2(1.5), y_cutoff = 0.05,
+                        mycolour = c("gray80", "#e41a1c", "#377eb8"),
                         alpha=0.6, main = NULL,
                         xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)",
                         filename = NULL, width = 4, height = 2.5,
@@ -66,7 +69,8 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val",
     }
     gg$color = gg$group
     gg$color[gg$Label!=""] = "black"
-    mycolour=c("no"="gray80",  "up"="#e41a1c","down"="#377eb8", "black"="black")
+    mycolour = c(mycolour, "black")
+    names(mycolour) = c("no", "up", "down", "black")
     #=========
     p = ggplot(gg, aes(x=gg[,x], y=gg[,y], label=Label))
     p = p + geom_point(aes(fill=group), shape = 21, alpha=alpha, show.legend = FALSE)

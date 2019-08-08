@@ -28,6 +28,5 @@ ReadsgRRA <- function(sgRNA_summary){
     stop("The parameter sgRNA_summary is below standard!")
   }
   dd = dd[, c("sgrna", "Gene", "LFC", "FDR")]
-  rownames(dd) = dd$EntrezID
   return(dd)
 }

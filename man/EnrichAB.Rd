@@ -6,11 +6,11 @@
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
-  organism = "hsa", limit = c(3, 50), filename = NULL,
+  organism = "hsa", limit = c(1, 120), filename = NULL,
   out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
-\item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
+\item{data}{A data frame.}
 
 \item{pvalue}{Pvalue cutoff.}
 
@@ -18,7 +18,7 @@ EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the min and
 max size of pathways for enrichent analysis.}
 
 \item{filename}{Suffix of output file name.}
@@ -44,7 +44,7 @@ are termed as GroupA and GroupB
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
 \dontrun{
   #GO and KEGG enrichment analysis

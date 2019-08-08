@@ -3,7 +3,7 @@
 \docType{methods}
 \name{DensityDiffView}
 \alias{DensityDiffView}
-\title{Density plot for beta score deviation between Control and Treatment}
+\title{Density plot}
 \usage{
 DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
   main = NULL, filename = NULL, width = 5, height = 4, ...)
@@ -29,12 +29,12 @@ DensityDiffView(beta, ctrlname = "Control", treatname = "Treatment",
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot the density of beta score deviation between two samples.
+Plot the density of beta score deviations.
 }
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 # Density plot of beta score deviation between control and treatment
 DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
 

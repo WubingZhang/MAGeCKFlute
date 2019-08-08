@@ -8,7 +8,7 @@
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   label = 0, label.top = TRUE, top = 5, genelist = c(),
-  x_cutoff = c(-1, 1), y_cutoff = c(-1, 1), intercept = NULL,
+  x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
   groupnames = paste0("Group", 1:length(groups)), main = NULL,
   filename = NULL, width = 6, height = 4, ...)
@@ -60,7 +60,7 @@ and colored treatment related genes.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 
 

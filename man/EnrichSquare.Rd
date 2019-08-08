@@ -6,7 +6,7 @@
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
 EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
-  organism = "hsa", limit = c(3, 50), filename = NULL,
+  organism = "hsa", limit = c(1, 120), filename = NULL,
   out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
@@ -18,7 +18,7 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the min and
 max size of pathways for enrichent analysis.}
 
 \item{filename}{Suffix of output file name. NULL(default) means no output.}
@@ -59,7 +59,7 @@ Do enrichment analysis for selected treatment related genes in 9-squares
 }
 \examples{
 data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 p = SquareView(dd, ctrlname = "dmso", treatname = "plx")
 \dontrun{
  # Read beta score from gene summary table in MAGeCK MLE results

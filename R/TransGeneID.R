@@ -24,7 +24,6 @@
 #' @examples
 #' data(mle.gene_summary)
 #' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
-#' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa", useBiomart = TRUE)
 #'
 #' @import biomaRt
 #' @export
@@ -50,7 +49,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
   if(useBiomart){
     datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
                         "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
-    type = c("ensembl_gene_id", "entrezgene", "hgnc_symbol")
+    type = c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol")
     if(org=="mmu") type[3] = "mgi_symbol"
     names(type) = c("ensembl", "entrez", "symbol")
     fromType = ifelse(fromType%in%names(type), type[fromType], fromType)

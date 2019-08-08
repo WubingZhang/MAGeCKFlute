@@ -5,7 +5,6 @@
 #' @docType methods
 #' @name EnrichedView
 #' @rdname EnrichedView
-#' @aliases enrichgseview
 #' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.
 
 #' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
@@ -80,7 +79,7 @@ EnrichedView = function(enrichment,
     pid_pos = tmp$ID[1:min(nrow(tmp), top)]
   }
   idx = enrichment$ID %in% c(custom_pid, pid_neg, pid_pos)
-  if(sum(idx)==0) stop("No input pathway found !!!")
+  if(sum(idx)==0) return(noEnrichPlot("No eligible terms!!!"))
 
   ## Prepare data for plotting ##
   enrichment = enrichment[idx, ]

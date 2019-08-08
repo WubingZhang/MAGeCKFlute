@@ -6,21 +6,21 @@
 \alias{normalizebeta}
 \title{Normalize gene beta scores}
 \usage{
-NormalizeBeta(beta, samples = NULL, method = "cell_cycle", id = 1,
-  posControl = NULL)
+NormalizeBeta(beta, id = 1, method = "cell_cycle", posControl = NULL,
+  samples = NULL)
 }
 \arguments{
 \item{beta}{Data frame.}
 
-\item{samples}{Character vector, specifying the sample names in \emph{beta} columns.
-If NULL (default), take all \emph{beta} columns as samples.}
+\item{id}{An integer specifying the column of gene.}
 
-\item{method}{Character, one of 'cell_cycle'(default) and 'loess'.}
-
-\item{id}{A single number giving the column of the table which contains the gene names,
+\item{method}{Character, one of 'cell_cycle'(default) and 'loess'.
 or character string giving the name of the table column containing the gene names.}
 
 \item{posControl}{A character vector, specifying a list of positive control genes.}
+
+\item{samples}{Character vector, specifying the sample names in \emph{beta} columns.
+If NULL (default), take all \emph{beta} columns as samples.}
 }
 \value{
 A data frame with same format as input data \emph{beta}.
@@ -41,7 +41,7 @@ to normalize array data before.
 data(mle.gene_summary)
 data(Zuber_Essential)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)

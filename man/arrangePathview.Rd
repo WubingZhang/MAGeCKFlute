@@ -52,8 +52,8 @@ Kegg pathway view and arrange grobs on page.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
-colnames(dd)[3:4] = c("Control", "Treatment")
+dd = ReadBeta(mle.gene_summary)
+colnames(dd)[2:3] = c("Control", "Treatment")
 arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 
 }

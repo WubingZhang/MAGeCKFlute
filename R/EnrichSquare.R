@@ -10,7 +10,7 @@
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
-#' @param limit A two-length vector (default: c(3, 50)), specifying the min and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the min and
 #' max size of pathways for enrichent analysis.
 #' @param filename Suffix of output file name. NULL(default) means no output.
 #' @param out.dir Path to save plot to (combined with filename).
@@ -48,7 +48,7 @@
 #'
 #' @examples
 #' data(mle.gene_summary)
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' p = SquareView(dd, ctrlname = "dmso", treatname = "plx")
 #' \dontrun{
 #'  # Read beta score from gene summary table in MAGeCK MLE results
@@ -58,7 +58,8 @@
 #' @export
 
 #enrichment for square grouped genes
-EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa", limit = c(3,50),
+EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
+                         organism = "hsa", limit = c(1, 120),
                          filename=NULL, out.dir=".", width=6.5, height=4, ...){
   message(Sys.time(), " # Enrichment analysis of 9 Square grouped genes ...")
 
@@ -81,10 +82,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      organism=organism, pvalueCutoff = pvalue,
                      limit = limit)
   kegg1 = list(enrichRes = kegg1,
-               gridPlot = EnrichedView(EnrichedFilter(kegg1), top = 8, bottom = 0)
+               gridPlot = EnrichedView(kegg1, top = 8, bottom = 0)
                + labs(title = "KEGG: Group1"))
   go1 = list(enrichRes = go1,
-             gridPlot = EnrichedView(EnrichedFilter(go1), top = 8, bottom = 0)
+             gridPlot = EnrichedView(go1, top = 8, bottom = 0)
                + labs(title = "Gene Ontology: Group1"))
 
 
@@ -98,10 +99,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg2 = list(enrichRes = kegg2,
-               gridPlot = EnrichedView(EnrichedFilter(kegg2), top = 8, bottom = 0)
+               gridPlot = EnrichedView(kegg2, top = 8, bottom = 0)
                + labs(title = "KEGG: Group2"))
   go2 = list(enrichRes = go2,
-             gridPlot = EnrichedView(EnrichedFilter(go2), top = 8, bottom = 0)
+             gridPlot = EnrichedView(go2, top = 8, bottom = 0)
              + labs(title = "Gene Ontology: Group2"))
 
   #====GO_KEGG_enrichment=====
@@ -113,10 +114,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg3 = list(enrichRes = kegg3,
-               gridPlot = EnrichedView(EnrichedFilter(kegg3), top = 0, bottom = 8)
+               gridPlot = EnrichedView(kegg3, top = 0, bottom = 8)
                + labs(title = "KEGG: Group3"))
   go3 = list(enrichRes = go3,
-             gridPlot = EnrichedView(EnrichedFilter(go3), top = 0, bottom = 8)
+             gridPlot = EnrichedView(go3, top = 0, bottom = 8)
              + labs(title = "Gene Ontology: Group3"))
 
   #====GO_KEGG_enrichment=====
@@ -128,10 +129,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff=pvalue, limit = limit)
   kegg4 = list(enrichRes = kegg4,
-               gridPlot = EnrichedView(EnrichedFilter(kegg4), top = 0, bottom = 8)
+               gridPlot = EnrichedView(kegg4, top = 0, bottom = 8)
                + labs(title = "KEGG: Group4"))
   go4 = list(enrichRes = go4,
-             gridPlot = EnrichedView(EnrichedFilter(go4), top = 0, bottom = 8)
+             gridPlot = EnrichedView(go4, top = 0, bottom = 8)
              + labs(title = "Gene Ontology: Group4"))
 
   #====GO_KEGG_enrichment=====
@@ -143,10 +144,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, pvalueCutoff = pvalue, limit = limit)
   kegg12 = list(enrichRes = kegg12,
-                gridPlot = EnrichedView(EnrichedFilter(kegg12), top = 8, bottom = 0)
+                gridPlot = EnrichedView(kegg12, top = 8, bottom = 0)
                 + labs(title = "KEGG: Group1&2"))
   go12 = list(enrichRes = go12,
-              gridPlot = EnrichedView(EnrichedFilter(go12), top = 8, bottom = 0)
+              gridPlot = EnrichedView(go12, top = 8, bottom = 0)
               + labs(title = "Gene Ontology: Group1&2"))
 
   #====GO_KEGG_enrichment=====
@@ -158,10 +159,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, pvalueCutoff = pvalue, limit = limit)
   kegg13 = list(enrichRes = kegg13,
-                gridPlot = EnrichedView(EnrichedFilter(kegg13), top = 4, bottom = 4)
+                gridPlot = EnrichedView(kegg13, top = 4, bottom = 4)
                + labs(title = "KEGG: Group1&3"))
   go13 = list(enrichRes = go13,
-              gridPlot = EnrichedView(EnrichedFilter(go13), top = 4, bottom = 4)
+              gridPlot = EnrichedView(go13, top = 4, bottom = 4)
              + labs(title = "Gene Ontology: Group1&3"))
 
   #====GO_KEGG_enrichment=====
@@ -174,10 +175,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, limit = limit, pvalueCutoff = pvalue)
   kegg24 = list(enrichRes = kegg24,
-                gridPlot = EnrichedView(EnrichedFilter(kegg24), top = 4, bottom = 4)
+                gridPlot = EnrichedView(kegg24, top = 4, bottom = 4)
                 + labs(title = "KEGG: Group2&4"))
   go24 = list(enrichRes = go24,
-              gridPlot = EnrichedView(EnrichedFilter(go24), top = 4, bottom = 4)
+              gridPlot = EnrichedView(go24, top = 4, bottom = 4)
               + labs(title = "Gene Ontology: Group2&4"))
 
   #====GO_KEGG_enrichment=====
@@ -189,10 +190,10 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method="ORT", organism="hsa
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
                       organism=organism, limit = limit, pvalueCutoff = pvalue)
   kegg34 = list(enrichRes = kegg34,
-                gridPlot = EnrichedView(EnrichedFilter(kegg34), top = 0, bottom = 8)
+                gridPlot = EnrichedView(kegg34, top = 0, bottom = 8)
                 + labs(title = "KEGG: Group3&4"))
   go34 = list(enrichRes = go34,
-              gridPlot = EnrichedView(EnrichedFilter(go34), top = 0, bottom = 8)
+              gridPlot = EnrichedView(go34, top = 0, bottom = 8)
               + labs(title = "Gene Ontology: Group3&4"))
 
 

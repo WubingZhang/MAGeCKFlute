@@ -41,7 +41,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 #'
 #'
@@ -53,7 +53,7 @@
 
 SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
                      label = 0, label.top = TRUE, top = 5, genelist = c(),
-                     x_cutoff = c(-1,1), y_cutoff = c(-1,1), intercept = NULL,
+                     x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
                      groups = c("midleft", "topcenter", "midright", "bottomcenter"),
                      groupnames = paste0("Group", 1:length(groups)),
                      main = NULL, filename = NULL, width = 6, height = 4, ...){
@@ -70,9 +70,11 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   beta$y = rowMeans(beta[, treatname, drop= FALSE])
   beta$diff = beta$y-beta$x
   ## Compute the cutoff used for each dimension. ##
+  if(length(x_cutoff)==0) x_cutoff = CutoffCalling(beta$x, 2)
   if(length(x_cutoff)==1) x_cutoff = sort(c(-x_cutoff, x_cutoff))
+  if(length(y_cutoff)==0) y_cutoff = CutoffCalling(beta$y, 2)
   if(length(y_cutoff)==1) y_cutoff = sort(c(-y_cutoff, y_cutoff))
-  if(length(intercept)==0) intercept = CutoffCalling(beta$diff)
+  if(length(intercept)==0) intercept = CutoffCalling(beta$diff, 2)
   if(length(intercept)==1) intercept = sort(c(-intercept, intercept))
   y_min=beta$x+intercept[1]; y_max=beta$x+intercept[2]
   idx0 = beta$y<y_max & beta$y>y_min
@@ -128,10 +130,10 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   x_max = round(max(beta$x[beta$group != "Others"]),2) + tmp
   y_min = round(min(beta$y[beta$group != "Others"]),2) - tmp
   y_max = round(max(beta$y[beta$group != "Others"]),2) + tmp
-  idx1 = (x_min<=beta$x & beta$x<=x_max)
-  idx2 = (y_min<=beta$y  & beta$y<=y_max)
-  idx = idx1&idx2
-  gg = beta[idx, ]
+  # idx1 = (x_min<=beta$x & beta$x<=x_max)
+  # idx2 = (y_min<=beta$y  & beta$y<=y_max)
+  # idx = idx1&idx2
+  gg = beta
 
   ## Plot the scatter figure ##
   label_gg = gg[!is.na(gg$text), ]
@@ -145,7 +147,7 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   p = p + geom_vline(xintercept = x_cutoff[1],linetype = "dotted")
   p = p + geom_hline(yintercept = y_cutoff[2],linetype = "dotted")
   p = p + geom_hline(yintercept = y_cutoff[1],linetype = "dotted")
-  p = p + geom_abline(slope=1, intercept=intercept, linetype = "dotted")
+  if(!all(intercept==0)) p = p + geom_abline(slope=1, intercept=intercept, linetype = "dotted")
   p = p + labs(x="Control beta score", y = "Treatment beta score")
   # p = p + guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)
@@ -184,8 +186,7 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   # p = p + theme(legend.position="none")
   p = p + theme(legend.title=element_blank())
   # p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
-  # p$data = beta[, c("Gene", "EntrezID", "x", "y", "diff", "group", "text")]
-  # p$data = p$data[order(p$data$group), ]
+  # p = p + xlim(x_min, x_max) + ylim(y_min, y_max)
 
   if(!is.null(filename)){
       write.table(p$data, gsub("\\....$", ".txt", filename),

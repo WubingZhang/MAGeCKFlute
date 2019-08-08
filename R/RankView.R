@@ -12,7 +12,7 @@
 #' @param genelist Character vector, specifying genes to be labeled in figure.
 #' @param top Integer, specifying number of top genes to be labeled.
 #' @param bottom Integer, specifying number of bottom genes to be labeled.
-#' @param cutoff A two-length numeric vector, in which first value is bottom cutoff, and second value is top cutoff.
+#' @param cutoff Numeric.
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means no output.
 #' @param width As in ggsave.
@@ -27,7 +27,7 @@
 #'
 #' @examples
 #' data(rra.gene_summary)
-#' rra = ReadRRA(rra.gene_summary, organism = "hsa")
+#' rra = ReadRRA(rra.gene_summary)
 #' rankdata = rra$LFC
 #' names(rankdata) = rra$Official
 #' RankView(rankdata)
@@ -37,24 +37,23 @@
 #' @export
 #'
 
-RankView <- function(rankdata, genelist=NA, top=20, bottom=20,
-                     cutoff=c(-sd(rankdata), sd(rankdata)),
+RankView <- function(rankdata, genelist=NULL, top=10, bottom=10, cutoff=NULL,
                      main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
-  message(Sys.time(), " # Rank genes and plot...")
+  message(Sys.time(), " # Rank genes and plot ...")
+  if(length(cutoff)==0) cutoff = CutoffCalling(rankdata, 2)
+  if(length(cutoff)==1) cutoff = sort(c(-cutoff, cutoff))
   data = data.frame(Gene = names(rankdata), diff = rankdata, stringsAsFactors=FALSE)
   data$Rank = rank(data$diff)
   data$group = "no"
   data$group[data$diff>cutoff[2]] = "up"
   data$group[data$diff<cutoff[1]] = "down"
 
-
   idx=(data$Rank<=bottom) | (data$Rank>(max(data$Rank)-top)) | (data$Gene %in% genelist)
   mycolour = c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
   p = ggplot(data)
   p = p + geom_jitter(aes(x=diff,y=Rank,color=group), size = 0.5)
-  p = p + geom_vline(xintercept = 0,linetype = "dotted") +
-    geom_vline(xintercept = cutoff,linetype = "dotted")
+  if(!all(cutoff==0)) p = p + geom_vline(xintercept = cutoff, linetype = "dotted")
   if(sum(idx)>0)
     p = p + geom_label_repel(aes(x=diff, y=Rank,fill=group,label = Gene),data=data[idx,],
                              fontface = 'bold', color = 'white', size = 2.5,

@@ -7,11 +7,11 @@
 #' @name EnrichAB
 #' @rdname EnrichAB
 #'
-#' @param data A data frame containing columns "diff", with rownames of Entrez IDs.
+#' @param data A data frame.
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
-#' @param limit A two-length vector (default: c(3, 50)), specifying the min and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the min and
 #' max size of pathways for enrichent analysis.
 #' @param filename Suffix of output file name.
 #' @param out.dir Path to save plot to (combined with filename).
@@ -32,7 +32,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
 #' \dontrun{
 #'   #GO and KEGG enrichment analysis
@@ -48,7 +48,7 @@
 EnrichAB <- function(data, pvalue = 0.25,
                      enrich_method = "ORT",
                      organism = "hsa",
-                     limit = c(3, 50),
+                     limit = c(1, 120),
                      filename = NULL, out.dir = ".",
                      width = 6.5, height = 4, ...){
 
@@ -57,39 +57,39 @@ EnrichAB <- function(data, pvalue = 0.25,
   gg = data
 
   ##=====enrichment for GroupA======
-  idx1 = gg$group=="up"; genes = rownames(gg)[idx1]
+  idx1 = gg$group=="up"; genes = gg$EntrezID[idx1]
   geneList = gg$diff[idx1]; names(geneList) = genes
-  keggA = EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
+  keggA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                          method = enrich_method, type = "KEGG",
                          organism = organism, pvalueCutoff = pvalue,
                          limit = limit)
   keggA = list(enrichRes = keggA,
-               gridPlot = EnrichedView(EnrichedFilter(keggA), top = 8, bottom = 0)
+               gridPlot = EnrichedView(keggA, top = 8, bottom = 0)
                + labs(title = "KEGG: GroupA"))
-  goA = EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
+  goA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   goA = list(enrichRes = goA,
-             gridPlot = EnrichedView(EnrichedFilter(goA), top = 8, bottom = 0)
+             gridPlot = EnrichedView(goA, top = 8, bottom = 0)
                + labs(title = "Gene Ontology: GroupA"))
 
 
-  idx2 = gg$group=="down"; genes = rownames(gg)[idx2]
-  geneList = -gg$diff[idx2]; names(geneList) = genes
-  keggB=EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
+  idx2 = gg$group=="down"; genes = gg$EntrezID[idx2]
+  geneList = gg$diff[idx2]; names(geneList) = genes
+  keggB=EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = enrich_method, type = "KEGG",
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   keggB = list(enrichRes = keggB,
-               gridPlot = EnrichedView(EnrichedFilter(keggB), top = 0, bottom = 8)
+               gridPlot = EnrichedView(keggB, top = 0, bottom = 8)
                + labs(title = "KEGG: GroupB"))
-  goB = EnrichAnalyzer(geneList = geneList, universe = rownames(gg),
+  goB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
                        limit = limit)
   goB = list(enrichRes = goB,
-             gridPlot = EnrichedView(EnrichedFilter(goB), top = 0, bottom = 8)
+             gridPlot = EnrichedView(goB, top = 0, bottom = 8)
                + labs(title = "Gene Ontology: GroupB"))
 
   if(!is.null(filename)){

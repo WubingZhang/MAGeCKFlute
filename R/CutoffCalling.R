@@ -1,21 +1,20 @@
-#' Call cutoff
+#' Quantile of normal distribution.
 #'
-#' Calculate standard deviation as cutoff for a numeric vector
+#' Compute cutoff from a normal-distributed vector.
 #'
 #' @docType methods
 #' @name CutoffCalling
 #' @rdname CutoffCalling
 #'
 #' @param d A numeric vector.
-#' @param scale Boolean or numeric, whether scale cutoff to whole genome level,
-#' or how many standard deviation will be used as cutoff.
+#' @param scale Boolean or numeric, specifying how many standard deviation will be used as cutoff.
 #'
 #' @return A numeric value.
 #' @examples
 #' CutoffCalling(rnorm(10000))
 #' @export
 
-CutoffCalling=function(d, scale=FALSE){
+CutoffCalling=function(d, scale=1){
   param=1
   if(is.logical(scale) & scale){
     param = round(length(d) / 20000, digits = 1)

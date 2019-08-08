@@ -7,11 +7,11 @@
 #' @rdname FluteMLE
 #' @aliases flutemle
 #'
-#' @param gene_summary Either a file path or a data frame, which contains columns of 'Gene',
-#' \code{ctrlname}.beta and \code{treatname}.beta which corresponding to the parameter ctrlname and treatmname.
+#' @param gene_summary A data frame, which contains columns of 'Gene',
+#' \code{ctrlname}.beta and \code{treatname}.beta.
 #' @param ctrlname A character vector, specifying the names of control samples.
 #' @param treatname A character vector, specifying the names of treatment samples.
-#' @param keytype Type of gene id in `gene_summary`, which should be one of "Entrez" or "Symbol".
+#' @param keytype "Entrez" or "Symbol".
 #' @param organism "hsa" or "mmu".
 #'
 #' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
@@ -20,7 +20,7 @@
 #' @param bottom An integer, specifying number of bottom selected genes to be labeled in rank figure.
 #' @param interestGenes A character vector, specifying interested genes to be labeled in rank figure.
 #'
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
@@ -70,7 +70,7 @@
 #' data(mle.gene_summary)
 #' \dontrun{
 #'   # functional analysis for MAGeCK MLE results
-#'   FluteMLE(mle.gene_summary, ctrlname = c("dmso"), treatname = c("plx"),
+#'   FluteMLE(mle.gene_summary, ctrlname = "dmso", treatname = "plx",
 #'            prefix = "PLX", pvalueCutoff = 0.25, organism = "hsa")
 #' }
 #'
@@ -79,32 +79,50 @@
 
 FluteMLE <- function(gene_summary, ctrlname, treatname,
                      keytype = "Symbol", organism = "hsa", # Input dataset
-                     scale_cutoff = 1, top = 10, bottom = 10,
+                     scale_cutoff = 2, top = 10, bottom = 10,
                      interestGenes = NA, # Parameters for rank visualization
-                     limit = c(3, 50), pvalueCutoff=0.25,
+                     limit = c(1, 120), pvalueCutoff=0.25,
                      enrich_kegg = "ORT",
                      posControl = NULL, loess = FALSE,
                      prefix = "", width = 10, height = 7,
                      outdir = ".", view_allpath = FALSE){
 
 	## Prepare the running environment ##
-  message(Sys.time(), " # Create output dir and pdf file...")
-  outdir = file.path(outdir, paste0(prefix, "_Flute_Results"))
-  dir.create(file.path(outdir), showWarnings = FALSE)
-  output_pdf = paste0(prefix, "_Flute.mle_summary.pdf")
-  pdf(file.path(outdir, output_pdf), width = width, height = height)
-  organism = getOrg(organism)$org
+  {
+    message(Sys.time(), " # Create output dir and pdf file...")
+    outdir = file.path(outdir, paste0(prefix, "_Flute_Results"))
+    dir.create(file.path(outdir), showWarnings = FALSE)
+    output_pdf = paste0(prefix, "_Flute.mle_summary.pdf")
+    pdf(file.path(outdir, output_pdf), width = width, height = height)
+    # organism = getOrg(organism)$org
+  }
 
   ## Beta Score Preparation ##
-  beta = ReadBeta(gene_summary, keytype = "Symbol", organism = organism)
-  if(all(c(ctrlname, treatname) %in% colnames(beta)))
-    dd = beta[, c("Gene", "EntrezID", ctrlname, treatname)]
-  else stop("No sample found!")
-  dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
-                               method = "cell_cycle", posControl = posControl)
-  if(loess)
-    dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method = "loess")
-  rm(beta)
+  {
+    beta = ReadBeta(gene_summary)
+    if(keytype == "Symbol")
+      beta$EntrezID = TransGeneID(beta$Gene, "Symbol", "Entrez", organism = organism)
+    else{
+      beta$EntrezID = beta$Gene
+      beta$Gene = TransGeneID(beta$Gene, "Entrez", "Symbol", organism = organism)
+    }
+    idx1 = is.na(beta$EntrezID)
+    idx2 = !is.na(beta$EntrezID) & duplicated(beta$EntrezID)
+    idx = idx1|idx2
+    if(sum(idx1)>0) warning(sum(idx1), " genes are not eligible: ",
+                           paste0(beta$Gene[idx1], collapse = ", "))
+    if(sum(idx2)>0) warning(sum(idx2), " genes have duplicate entrez id: ",
+                            paste0(beta$Gene[idx2], collapse = ", "))
+    # beta = beta[!idx, ]
+
+    if(all(c(ctrlname, treatname) %in% colnames(beta)))
+      dd = beta[, c("Gene", "EntrezID", ctrlname, treatname)]
+    else stop("Sample name doesn't match !!!")
+    dd_essential = NormalizeBeta(dd, samples = c(ctrlname, treatname),
+                                 method = "cell_cycle", posControl = posControl)
+    if(loess)
+      dd_loess = NormalizeBeta(dd, samples = c(ctrlname, treatname), method = "loess")
+  }
 
 	## Distribution of all genes ##
 	{
@@ -138,7 +156,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	  suppressWarnings(rm(P1, P2, P4, P5, P7, P8))
 	}
 
-	#========MAplot of treatment and control beta scores==================
+  ## MAplot of treatment and control beta scores ##
 	{
 	  outputDir2 = file.path(outdir, "MAplot")
 	  dir.create(outputDir2, showWarnings = FALSE)
@@ -157,15 +175,15 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	  suppressWarnings(rm(P1, P2, P3, P4, outputDir2))
 	}
 
-	#=============Distribution of essential genes====================
+  ## Distribution of essential genes ##
 	{
 	  data(Zuber_Essential)
 	  if(is.null(posControl))
 	    idx = toupper(dd$Gene) %in% toupper(Zuber_Essential$GeneSymbol)
 	  else
-	    idx = which(dd$Gene %in% posControl)
+	    idx = toupper(dd$Gene) %in% toupper(posControl)
 
-	  if(sum(posControl) > 2){
+	  if(sum(idx) > 6){
 	    outputDir3 = file.path(outdir, "Linear_Fitting_of_BetaScores")
 	    dir.create(outputDir3, showWarnings = FALSE)
 
@@ -208,22 +226,26 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	    suppressWarnings(rm(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, outputDir3, idx))
 	  }
 	}
-  dd$Control = rowMeans(dd[, ctrlname, drop = FALSE])
-  dd$Treatment = rowMeans(dd[, treatname, drop = FALSE])
-  dd.diff = dd$Treatment - dd$Control
-  names(dd.diff) = dd$Gene
-  dd_essential$Control = rowMeans(dd_essential[, ctrlname, drop = FALSE])
-  dd_essential$Treatment = rowMeans(dd_essential[, treatname, drop = FALSE])
-  dd_essential.diff = dd_essential$Treatment - dd_essential$Control
-  names(dd_essential.diff) = dd_essential$Gene
-  if(loess){
-    dd_loess$Control = rowMeans(dd_loess[, ctrlname, drop = FALSE])
-    dd_loess$Treatment = rowMeans(dd_loess[, treatname, drop = FALSE])
-    dd_loess.diff = dd_loess$Treatment - dd_loess$Control
-    names(dd_loess.diff) = dd_loess$Gene
+
+  ## Combine replicates ##
+  {
+    dd$Control = rowMeans(dd[, ctrlname, drop = FALSE])
+    dd$Treatment = rowMeans(dd[, treatname, drop = FALSE])
+    dd.diff = dd$Treatment - dd$Control
+    names(dd.diff) = dd$Gene
+    dd_essential$Control = rowMeans(dd_essential[, ctrlname, drop = FALSE])
+    dd_essential$Treatment = rowMeans(dd_essential[, treatname, drop = FALSE])
+    dd_essential.diff = dd_essential$Treatment - dd_essential$Control
+    names(dd_essential.diff) = dd_essential$Gene
+    if(loess){
+      dd_loess$Control = rowMeans(dd_loess[, ctrlname, drop = FALSE])
+      dd_loess$Treatment = rowMeans(dd_loess[, treatname, drop = FALSE])
+      dd_loess.diff = dd_loess$Treatment - dd_loess$Control
+      names(dd_loess.diff) = dd_loess$Gene
+    }
   }
 
-	# =========Drug-targeted genes=================================
+	## Drug-targeted genes ##
 	{
 	  outputDir4 = file.path(outdir, "Scatter_Treat_Ctrl")
 	  dir.create(outputDir4, showWarnings = FALSE)
@@ -232,14 +254,13 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	  P1 = ScatterView(dd, main = "Negative control normalized", scale_cutoff = scale_cutoff,
 	                filename = file.path(outputDir4,"Scatter_Treat-Ctrl_negative_normalized.png"))
 	  P2 = RankView(dd.diff, genelist = interestGenes, top = top, bottom = bottom, main = "Negative control normalized",
-	              cutoff = c(-CutoffCalling(dd.diff, scale = scale_cutoff), CutoffCalling(dd.diff, scale = scale_cutoff)),
+	              cutoff = CutoffCalling(dd.diff, scale = scale_cutoff),
 	              filename = file.path(outputDir4, "Rank_Treat-Ctrl_negative_normalized.png"))
 	  #Essential normalized
 	  P3=ScatterView(dd_essential, main="Cell cycle normalized", scale_cutoff = scale_cutoff,
 	               filename = file.path(outputDir4, "Scatter_Treat-Ctrl_essential_normalized.png"))
 	  P4=RankView(dd_essential.diff, genelist = interestGenes, top = top, bottom = bottom, main = "Cell cycle  normalized",
-	              cutoff = c(-CutoffCalling(dd_essential.diff, scale = scale_cutoff),
-	                     CutoffCalling(dd_essential.diff, scale = scale_cutoff)),
+	              cutoff = CutoffCalling(dd_essential.diff, scale = scale_cutoff),
 	              filename = file.path(outputDir4, "Rank_Treat-Ctrl_essential_normalized.png"))
 
 	  # Loess normalized
@@ -248,8 +269,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
   		             scale_cutoff = scale_cutoff,
   		             filename = file.path(outputDir4, "Scatter_Treat-Ctrl_loess_normalized.png"))
   		P6 = RankView(dd_loess.diff, genelist = interestGenes, top = top, bottom = bottom, main = "Loess  normalized",
-  		            cutoff = c(-CutoffCalling(dd_loess.diff, scale = scale_cutoff),
-  		                     CutoffCalling(dd_loess.diff, scale = scale_cutoff)),
+  		            cutoff = CutoffCalling(dd_loess.diff, scale = scale_cutoff),
   		          filename = file.path(outputDir4, "Rank_Treat-Ctrl_loess_normalized.png"))
 
   		grid.arrange(P1, P3, P5, P2, P4, P6, ncol = 3)
@@ -258,7 +278,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	  }
 	}
 
-	#==========Enrichment AB group genes=========================
+	## Enrichment analysis of negative and positive selected genes ##
 	{
 	  outputDir5 = file.path(outdir, "Enrichment_Treat-Ctrl/")
 	  outputDir6 = file.path(outdir, "Pathview_Treat_Ctrl/")
@@ -330,15 +350,23 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	{
 	  dir.create(file.path(outdir, "Scatter_9Square"), showWarnings=FALSE)
 	  outputDir6 <- file.path(outdir, "Scatter_9Square/Square9_")
-
 	  P1 = SquareView(dd, label="Gene", main="Negative control normalized",
-	                 filename=paste0(outputDir6,"scatter_negative_normalized.png"))
+	                  x_cutoff = CutoffCalling(dd$Control, scale_cutoff),
+	                  y_cutoff = CutoffCalling(dd$Treatment, scale_cutoff),
+	                  intercept = CutoffCalling(dd$Treatment-dd$Control, scale_cutoff),
+	                  filename=paste0(outputDir6,"scatter_negative_normalized.png"))
 	  grid.arrange(P1, ncol = 1)
 	  P2 = SquareView(dd_essential, label="Gene", main="Cell cycle normalized",
-	                filename=paste0(outputDir6,"scatter_cellcycle_normalized.png"))
+	                  x_cutoff = CutoffCalling(dd_essential$Control, scale_cutoff),
+	                  y_cutoff = CutoffCalling(dd_essential$Treatment, scale_cutoff),
+	                  intercept = CutoffCalling(dd$Treatment-dd$Control, scale_cutoff),
+	                  filename=paste0(outputDir6,"scatter_cellcycle_normalized.png"))
 	  grid.arrange(P2, ncol = 1)
 	  if(loess){
-  		P3 = SquareView(dd_loess, label="Gene", main="Loess normalized",
+	    P3 = SquareView(dd_loess, label="Gene", main="Loess normalized",
+  		                x_cutoff = CutoffCalling(dd_loess$Control, scale_cutoff),
+  		                y_cutoff = CutoffCalling(dd_loess$Treatment, scale_cutoff),
+  		                intercept = CutoffCalling(dd$Treatment-dd$Control, scale_cutoff),
   		              filename=paste0(outputDir6,"scatter_loess_normalized.png"))
   		grid.arrange(P3, ncol = 1)
 	  }

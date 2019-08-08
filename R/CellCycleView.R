@@ -1,12 +1,10 @@
-#' Estimate cell cycle time for all samples compared to control sample and view.
+#' Visualize the estimate cell cycle compared to control.
 #'
-#' Estimate cell cycle time in different samples by linear fitting of beta scores, and plot fitting lines,
-#' in which x-axis is control beta score and y-axis is beta score of all samples.
+#' Estimate cell cycle time in different samples by linear fitting of beta scores.
 #'
 #' @docType methods
 #' @name CellCycleView
 #' @rdname CellCycleView
-#' @aliases CellCycle,MAGeCKFlute-method
 #'
 #' @param beta Data frame, which has columns of \code{ctrlname} and other samples.
 #' @param ctrlname A character, specifying the names of control samples.
@@ -25,7 +23,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' CellCycleView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #' @importFrom data.table melt
@@ -33,11 +31,12 @@
 #' @export
 
 #===Distribution of beta scores======================================
-CellCycleView <- function(beta, ctrlname, treatname, main=NULL, filename=NULL, width=5, height = 4, ...){
+CellCycleView <- function(beta, ctrlname, treatname, main=NULL,
+                          filename=NULL, width=5, height = 4, ...){
+  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
+
   message(Sys.time(), " # Cell cycle fitting of treatments compaired to ",
                 paste(ctrlname, collapse = "&"))
-
-  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   dd2 = data.frame(x = rowMeans(beta[,ctrlname,drop=FALSE]), y = rowMeans(beta[,treatname,drop=FALSE]))
   p = ggplot(dd2, aes(x, y))
   p = p + geom_jitter(size = 0.1, alpha=0.8, color="#1f78b4")

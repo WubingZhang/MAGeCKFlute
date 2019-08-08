@@ -12,7 +12,7 @@
 #' @param lfcCutoff A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
 #' for negative selection and positive selection.
 #' @param organism "hsa" or "mmu".
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param prefix A character, indicating the prefix of output file name.
@@ -51,7 +51,7 @@
 FluteRRA <- function(gene_summary, sgrna_summary,
                      lfcCutoff = c(-1, 1),
                      organism = "hsa",
-                     limit = c(3, 50),
+                     limit = c(1, 120),
                      pvalueCutoff = 0.25,
                      prefix = "Test",
                      width = 12, height = 6,
@@ -69,7 +69,7 @@ FluteRRA <- function(gene_summary, sgrna_summary,
 
   ## Visualize the top essential genes ##
   message(Sys.time(), " # Read RRA result ...")
-  dd = ReadRRA(gene_summary, organism=organism)
+  dd = ReadRRA(gene_summary)
   dd.sgrna = ReadsgRRA(sgrna_summary)
 
   p1 = VolcanoView(dd, x = "LFC", y = "FDR", Label = "Official")
@@ -92,6 +92,10 @@ FluteRRA <- function(gene_summary, sgrna_summary,
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
+  dd$EntrezID = TransGeneID(dd$Official, "Symbol", "Entrez", organism = organism)
+  idx = is.na(dd$EntrezID) | duplicated(dd$EntrezID)
+  dd = dd[!idx,]
+
   universe = dd$EntrezID
   geneList = dd$LFC; names(geneList) = dd$EntrezID
   idx1 = dd$LFC<lfcCutoff[1]; idx2 = dd$LFC>lfcCutoff[2]

@@ -175,7 +175,7 @@ The argument \code{low}, \code{mid}, and \code{high} specifies the color spectra
 \examples{
 #load data
 data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 gene.data = dd$plx
 names(gene.data) = rownames(dd)
 \dontrun{

@@ -4,11 +4,11 @@
 \name{enrich.GSE}
 \alias{enrich.GSE}
 \alias{enrichGSE}
-\title{GSEA}
+\title{Gene set enrichment analysis}
 \usage{
-enrich.GSE(geneList, keytype = "Entrez",
-  type = "CORUM+GOBP+GOMF+GOCC+KEGG", organism = "hsa",
-  pvalueCutoff = 0.25, limit = c(3, 80), gmtpath = NA)
+enrich.GSE(geneList, keytype = "Entrez", type = "CORUM+KEGG",
+  organism = "hsa", pvalueCutoff = 0.25, limit = c(1, 120),
+  gmtpath = NA)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
@@ -23,7 +23,7 @@ or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{gmtpath}{The path to customized gmt file.}

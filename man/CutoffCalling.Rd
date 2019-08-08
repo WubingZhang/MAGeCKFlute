@@ -3,21 +3,20 @@
 \docType{methods}
 \name{CutoffCalling}
 \alias{CutoffCalling}
-\title{Call cutoff}
+\title{Quantile of normal distribution.}
 \usage{
-CutoffCalling(d, scale = FALSE)
+CutoffCalling(d, scale = 1)
 }
 \arguments{
 \item{d}{A numeric vector.}
 
-\item{scale}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
+\item{scale}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
 }
 \value{
 A numeric value.
 }
 \description{
-Calculate standard deviation as cutoff for a numeric vector
+Compute cutoff from a normal-distributed vector.
 }
 \examples{
 CutoffCalling(rnorm(10000))

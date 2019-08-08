@@ -10,12 +10,12 @@
 #' @aliases normalizebeta
 #'
 #' @param beta Data frame.
-#' @param samples Character vector, specifying the sample names in \emph{beta} columns.
-#' If NULL (default), take all \emph{beta} columns as samples.
+#' @param id An integer specifying the column of gene.
 #' @param method Character, one of 'cell_cycle'(default) and 'loess'.
-#' @param id A single number giving the column of the table which contains the gene names,
 #' or character string giving the name of the table column containing the gene names.
 #' @param posControl A character vector, specifying a list of positive control genes.
+#' @param samples Character vector, specifying the sample names in \emph{beta} columns.
+#' If NULL (default), take all \emph{beta} columns as samples.
 #'
 #' @return A data frame with same format as input data \emph{beta}.
 #'
@@ -31,7 +31,7 @@
 #' data(mle.gene_summary)
 #' data(Zuber_Essential)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
 #'     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)
@@ -45,11 +45,13 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", id = 1, posControl=NULL){
+NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
+                          posControl=NULL, samples=NULL){
   message(Sys.time(), " # Normalize beta scores ...")
-  if(is.null(samples)) normalized = beta
-  else normalized = as.matrix(beta[, samples])
+  normalized = beta[, colnames(beta)[setdiff(1:ncol(beta), id)]]
   if(id!=0) rownames(normalized) = beta[, id]
+  if(!is.null(samples)) normalized = normalized[, samples]
+  normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
     if(is.null(posControl)){
       data(Zuber_Essential)
@@ -100,7 +102,7 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", id = 1, posCo
 #' @seealso \code{\link{NormalizeBeta}}
 #'
 #' @examples
-#' beta = ReadBeta(mle.gene_summary, organism="hsa")
+#' beta = ReadBeta(mle.gene_summary)
 #' beta_loess = normalize.loess(beta[,c("dmso", "plx")])
 #'
 #' @export

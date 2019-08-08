@@ -12,7 +12,7 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param gmtpath The path to customized gmt file.
@@ -37,35 +37,18 @@
 #' @export
 
 enrich.HGT = function(geneList, keytype = "Entrez",
-                      type = "CORUM+GOBP+GOMF+GOCC+KEGG",
+                      type = "CORUM+KEGG",
                       organism = 'hsa', pvalueCutoff = 0.05,
-                      limit = c(3, 80), universe = NULL, gmtpath = NA){
+                      limit = c(1, 120), universe = NULL, gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   ## Prepare gene set annotation
-  if(is.na(gmtpath)){
-    msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                       paste0(organism, "_msig_entrez.gmt.gz"))
-    gmtpath = gzfile(msigdb)
-  }
-  gene2path = ReadGMT(gmtpath, limit = limit)
-  close(gmtpath)
-  names(gene2path) = c("Gene","PathwayID", "PathwayName")
-  gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
-                                 tolower(substr(gene2path$PathwayName, 2,
-                                                nchar(gene2path$PathwayName))))
-  if(type != "All"){
-    type = unlist(strsplit(type, "\\+"))
-    idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
-    gene2path = gene2path[idx, ]
-  }
-  gene2path = gene2path[!is.na(gene2path$Gene), ]
+  gene2path = gsGetter(gmtpath, type, limit, organism)
   idx = duplicated(gene2path$PathwayID)
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx],
                         stringsAsFactors = FALSE)
-  gene2path$Gene = as.character(gene2path$Gene)
 
   ## Gene ID conversion
   if(keytype != "Entrez"){
@@ -75,6 +58,7 @@ enrich.HGT = function(geneList, keytype = "Entrez",
     allsymbol = allsymbol[!idx]; names(allsymbol) = gene[!idx]
     geneList = geneList[!idx]; names(geneList) = gene[!idx]
   }else{
+    gene = names(geneList)
     allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
   }
   if(!is.null(universe)){

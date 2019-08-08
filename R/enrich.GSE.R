@@ -1,4 +1,4 @@
-#' GSEA
+#' Gene set enrichment analysis
 #'
 #' A universal gene set enrichment analysis tools
 #'
@@ -14,7 +14,7 @@
 #' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param gmtpath The path to customized gmt file.
 #'
@@ -40,13 +40,20 @@
 #' @export
 
 enrich.GSE <- function(geneList, keytype = "Entrez",
-                       type = "CORUM+GOBP+GOMF+GOCC+KEGG",
+                       type = "CORUM+KEGG",
                        organism = 'hsa', pvalueCutoff = 0.25,
-                       limit = c(3, 80), gmtpath = NA){
+                       limit = c(1, 120), gmtpath = NA){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   geneList = sort(geneList, decreasing = TRUE)
+
+  ## Prepare gene set annotation
+  gene2path = gsGetter(gmtpath, type, limit, organism)
+  idx = duplicated(gene2path$PathwayID)
+  pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
+                        PathwayName = gene2path$PathwayName[!idx],
+                        stringsAsFactors = FALSE)
 
   ## Gene ID conversion
   if(keytype != "Entrez"){
@@ -56,33 +63,6 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
     geneList = geneList[!idx]
     names(geneList) = gene[!idx]
   }
-
-  ## Prepare gene set annotation
-  if(is.na(gmtpath)){
-    msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                       paste0(organism, "_msig_entrez.gmt.gz"))
-    gmtpath = gzfile(msigdb)
-    gene2path = ReadGMT(gmtpath, limit = limit)
-    close(gmtpath)
-    gene2path$PathwayName = paste0(toupper(substr(gene2path$PathwayName, 0, 1)),
-                                   substr(gene2path$PathwayName, 2,
-                                          nchar(gene2path$PathwayName)))
-    ## Select gene set type
-    if(type != "All"){
-      type = unlist(strsplit(type, "\\+"))
-      idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
-      gene2path = gene2path[idx, ]
-    }
-
-  }else{
-    gene2path = ReadGMT(gmtpath, limit = limit)
-  }
-
-  ## Maping the pathway id to pathway name.
-  gene2path = gene2path[!is.na(gene2path$Gene), ]
-  idx = duplicated(gene2path$PathwayID)
-  pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
-                        PathwayName = gene2path$PathwayName[!idx])
 
   ## Enrichment analysis
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
