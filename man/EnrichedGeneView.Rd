@@ -6,9 +6,9 @@
 \title{Visualize enriched pathways and genes in those pathways}
 \usage{
 EnrichedGeneView(enrichment, geneList, rank_by = "p.adjust", top = 5,
-  bottom = 5, custom_pid = NULL, keytype = "Symbol",
-  gene_cutoff = c(-log2(1.5), log2(1.5)), custom_gene = NULL,
-  charLength = 40, filename = NULL, width = 7, height = 5, ...)
+  bottom = 0, keytype = "Symbol", gene_cutoff = c(-log2(1.5),
+  log2(1.5)), custom_gene = NULL, charLength = 40, filename = NULL,
+  width = 7, height = 5, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result or an \code{enrichResult} object.}
@@ -20,8 +20,6 @@ EnrichedGeneView(enrichment, geneList, rank_by = "p.adjust", top = 5,
 \item{top}{An integer, specifying the number of positively enriched terms to show.}
 
 \item{bottom}{An integer, specifying the number of negatively enriched terms to show.}
-
-\item{custom_pid}{A character vector (pathway IDs), customizing pathways to show.}
 
 \item{keytype}{"Entrez" or "Symbol".}
 

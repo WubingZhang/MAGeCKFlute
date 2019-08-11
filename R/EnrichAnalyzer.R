@@ -9,9 +9,9 @@
 #'
 #' @param geneList A numeric vector with gene as names.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
-#' 'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
-#' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
+#' @param type Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
+#' 'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
+#' combination of them (e.g. 'GOBP+GOMF').
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
@@ -46,7 +46,7 @@ EnrichAnalyzer = function(geneList, keytype = "Entrez",
                          limit = c(1, 120),
                          universe = NULL,
                          filter = TRUE,
-                         gmtpath = NA){
+                         gmtpath = NULL){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   methods = c("ORT", "GSEA", "HGT")

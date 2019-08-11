@@ -10,7 +10,6 @@
 #'
 #' @param top An integer, specifying the number of positively enriched terms to show.
 #' @param bottom An integer, specifying the number of negatively enriched terms to show.
-#' @param custom_pid A character vector (pathway IDs), customizing pathways to show.
 #'
 #' @param keytype "Entrez" or "Symbol".
 #' @param gene_cutoff A two-length numeric vector, specifying cutoff for genes to show.
@@ -33,8 +32,7 @@
 
 EnrichedGeneView=function(enrichment, geneList,
                           rank_by = "p.adjust",
-                          top = 5, bottom = 5,
-                          custom_pid = NULL,
+                          top = 5, bottom = 0,
                           keytype = "Symbol",
                           gene_cutoff = c(-log2(1.5), log2(1.5)),
                           custom_gene = NULL,
@@ -58,9 +56,9 @@ EnrichedGeneView=function(enrichment, geneList,
   enrichment$logP = round(-log10(enrichment$p.adjust), 1)
   enrichment = enrichment[!is.na(enrichment$ID), ]
   if(tolower(rank_by) == "p.adjust"){
-    enrichment = enrichment[order(enrichment$p.adjust), ]
+    enrichment = enrichment[order(enrichment$p.adjust, -abs(enrichment$NES)), ]
   }else if(tolower(rank_by) == "nes"){
-    enrichment = enrichment[order(abs(enrichment$NES), decreasing = TRUE), ]
+    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$p.adjust), ]
   }
 
   ## Normalize term description ##
@@ -82,13 +80,14 @@ EnrichedGeneView=function(enrichment, geneList,
     tmp = enrichment[enrichment$NES>0, ]
     pid_pos = tmp$ID[1:min(nrow(tmp), top)]
   }
-  idx = enrichment$ID %in% c(custom_pid, pid_neg, pid_pos)
+  idx = enrichment$ID %in% c(pid_neg, pid_pos)
   if(sum(idx)==0) return(noEnrichPlot("No eligible terms!!!"))
+  enrichment = enrichment[idx, ]
+  enrichment$ID = factor(enrichment$ID, levels=c(pid_neg, pid_pos))
+  enrichment = enrichment[order(enrichment$ID), ]
+  enrichment$Description = factor(enrichment$Description, levels=unique(enrichment$Description))
 
   ## Prepare data for plotting ##
-  enrichment = enrichment[idx, ]
-  enrichment$Description = factor(enrichment$Description,
-                                  levels=enrichment$Description)
   geneNames = strsplit(enrichment$geneName, "\\/")
   geneIds = strsplit(enrichment$geneID, "\\/")
   gg = data.frame(ID = rep(enrichment$ID, enrichment$Count),

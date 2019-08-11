@@ -8,16 +8,16 @@
 \usage{
 enrich.GSE(geneList, keytype = "Entrez", type = "CORUM+KEGG",
   organism = "hsa", pvalueCutoff = 0.25, limit = c(1, 120),
-  gmtpath = NA)
+  gmtpath = NULL)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
-'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
-or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).}
+\item{type}{Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
+'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
+combination of them (e.g. 'GOBP+GOMF').}
 
 \item{organism}{'hsa' or 'mmu'.}
 

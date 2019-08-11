@@ -5,7 +5,7 @@
 \alias{gsGetter}
 \title{Extract pathway annotation from GMT file.}
 \usage{
-gsGetter(gmtpath = NA, type = "All", limit = c(0, Inf),
+gsGetter(gmtpath = NULL, type = "All", limit = c(0, Inf),
   organism = "hsa")
 }
 \arguments{
@@ -13,8 +13,8 @@ gsGetter(gmtpath = NA, type = "All", limit = c(0, Inf),
 
 \item{type}{Geneset category for testing.}
 
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
-maximal size of gene sets for enrichent analysis.}
+\item{limit}{A two-length vector, specifying the minimal and
+maximal size of gene sets to load.}
 
 \item{organism}{'hsa' or 'mmu'.}
 }

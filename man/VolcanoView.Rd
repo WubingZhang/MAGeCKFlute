@@ -8,8 +8,9 @@
 VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
   topnames = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
   mycolour = c("gray80", "#e41a1c", "#377eb8"), alpha = 0.6,
-  main = NULL, xlab = "Log2 Fold Change", ylab = "-Log10(Adjust.P)",
-  filename = NULL, width = 4, height = 2.5, ...)
+  force = 0.1, main = NULL, xlab = "Log2 Fold Change",
+  ylab = "-Log10(Adjust.P)", filename = NULL, width = 4,
+  height = 2.5, ...)
 }
 \arguments{
 \item{df}{Data frame}
@@ -32,6 +33,8 @@ which will be plot after log10 transformation.}
 \item{mycolour}{A color vector, specifying colors of non-significant, significant up and down-regulated genes.}
 
 \item{alpha}{Parameter in ggplot.}
+
+\item{force}{Parameter for geom_text_repel.}
 
 \item{main}{Title of volcano figure.}
 

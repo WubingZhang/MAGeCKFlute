@@ -10,7 +10,6 @@
 #' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
 #' @param top An integer, specifying the number of top enriched terms to show.
 #' @param bottom An integer, specifying the number of bottom enriched terms to show.
-#' @param custom_pid A character vector (pathway IDs), customizing pathways to show.
 
 #' @param x Character, "NES" or "LogP", indicating the variable on the x-axis.
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
@@ -32,8 +31,7 @@
 #' @export
 EnrichedView = function(enrichment,
                         rank_by = "p.adjust",
-                        top = 5, bottom = 5,
-                        custom_pid = NULL,
+                        top = 5, bottom = 0,
                         x = "LogP",
                         charLength = 40,
                         filename = NULL,
@@ -54,9 +52,9 @@ EnrichedView = function(enrichment,
   enrichment$logP = round(-log10(enrichment$p.adjust), 1)
   enrichment = enrichment[!is.na(enrichment$ID), ]
   if(tolower(rank_by) == "p.adjust"){
-    enrichment = enrichment[order(enrichment$p.adjust), ]
+    enrichment = enrichment[order(enrichment$p.adjust, -abs(enrichment$NES)), ]
   }else if(tolower(rank_by) == "nes"){
-    enrichment = enrichment[order(abs(enrichment$NES), decreasing = TRUE), ]
+    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$p.adjust), ]
   }
 
   ## Normalize term description ##
@@ -78,13 +76,14 @@ EnrichedView = function(enrichment,
     tmp = enrichment[enrichment$NES>0, ]
     pid_pos = tmp$ID[1:min(nrow(tmp), top)]
   }
-  idx = enrichment$ID %in% c(custom_pid, pid_neg, pid_pos)
+  idx = enrichment$ID %in% c(pid_neg, pid_pos)
   if(sum(idx)==0) return(noEnrichPlot("No eligible terms!!!"))
+  enrichment = enrichment[idx, ]
+  enrichment$ID = factor(enrichment$ID, levels=c(pid_neg, pid_pos))
+  enrichment = enrichment[order(enrichment$ID), ]
+  enrichment$Description = factor(enrichment$Description, levels=unique(enrichment$Description))
 
   ## Prepare data for plotting ##
-  enrichment = enrichment[idx, ]
-  enrichment$Description = factor(enrichment$Description,
-                                  levels=enrichment$Description)
   if(x=="NES"){
     enrichment$x = enrichment$NES
     enrichment$size = enrichment$logP
@@ -92,6 +91,7 @@ EnrichedView = function(enrichment,
     enrichment$x = enrichment$logP
     enrichment$size = enrichment$NES
   }
+
   # Visualize the top enriched terms
   enrichment$col = "Up"
   enrichment$col[enrichment$NES<0] = "Down"
@@ -112,6 +112,7 @@ EnrichedView = function(enrichment,
                   panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                   panel.border = element_blank(), panel.background = element_blank(),
                   legend.key = element_rect(fill = "transparent"))
+  p1 = p1 + guides(color = FALSE)
   if(x=="NES")
     p1 = p1 + labs(x = "Enrichment score", y = NULL, col = "Group", size = "LogP")
   else

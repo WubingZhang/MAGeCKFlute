@@ -7,9 +7,9 @@
 #'
 #' @param geneList A numeric vector with gene as names.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'CORUM', 'CPX' (ComplexPortal),
-#' 'GOBP', 'GOMF', 'GOCC', 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID',
-#' or any combination of them (e.g. 'GOBP+GOMF+CORUM'), or 'All' (all categories).
+#' @param type Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
+#' 'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
+#' combination of them (e.g. 'GOBP+GOMF').
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
 #' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
@@ -39,7 +39,7 @@
 enrich.HGT = function(geneList, keytype = "Entrez",
                       type = "CORUM+KEGG",
                       organism = 'hsa', pvalueCutoff = 0.05,
-                      limit = c(1, 120), universe = NULL, gmtpath = NA){
+                      limit = c(1, 120), universe = NULL, gmtpath = NULL){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
