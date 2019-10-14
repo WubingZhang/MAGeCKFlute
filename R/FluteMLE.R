@@ -20,7 +20,7 @@
 #' @param bottom An integer, specifying number of bottom selected genes to be labeled in rank figure.
 #' @param interestGenes A character vector, specifying interested genes to be labeled in rank figure.
 #'
-#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
+#' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param enrich_kegg One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
@@ -81,7 +81,7 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
                      keytype = "Symbol", organism = "hsa", # Input dataset
                      scale_cutoff = 2, top = 10, bottom = 10,
                      interestGenes = NA, # Parameters for rank visualization
-                     limit = c(1, 120), pvalueCutoff=0.25,
+                     limit = c(2, 200), pvalueCutoff=0.25,
                      enrich_kegg = "ORT",
                      posControl = NULL, loess = FALSE,
                      prefix = "", width = 10, height = 7,

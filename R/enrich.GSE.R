@@ -9,14 +9,17 @@
 #'
 #' @param geneList A order ranked numeric vector with geneid as names.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
-#' 'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
-#' combination of them (e.g. 'GOBP+GOMF').
+#' @param type Molecular signatures for testing, available datasets include
+#' Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
+#' Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
+#' combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
+#' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param gmtpath The path to customized gmt file.
+#' @param nPerm The number of permutations.
+#' @param by One of 'fgsea' or 'DOSE'
 #'
 #' @return A enrichResult instance.
 #'
@@ -40,9 +43,10 @@
 #' @export
 
 enrich.GSE <- function(geneList, keytype = "Entrez",
-                       type = "CORUM+KEGG",
+                       type = "Pathway+GOBP",
                        organism = 'hsa', pvalueCutoff = 0.25,
-                       limit = c(1, 120), gmtpath = NULL){
+                       limit = c(2, 200), gmtpath = NULL,
+                       nPerm = 2000, by = "fgsea"){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
@@ -68,7 +72,7 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
   message("\t", len, " genes are mapped ...")
   enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
-                     TERM2NAME = pathways,
+                     TERM2NAME = pathways, nPerm = nPerm, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")])
 
   ## Add enriched gene symbols into enrichedRes table

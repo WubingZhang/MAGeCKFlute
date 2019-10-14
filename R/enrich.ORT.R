@@ -9,12 +9,13 @@
 #'
 #' @param geneList A numeric vector with gene as names.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
-#' 'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
-#' combination of them (e.g. 'GOBP+GOMF').
+#' @param type Molecular signatures for testing, available datasets include
+#' Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
+#' Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
+#' combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
+#' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param gmtpath The path to customized gmt file.
@@ -39,9 +40,9 @@
 #' @export
 
 enrich.ORT <- function(geneList, keytype = "Entrez",
-                       type = "CORUM+KEGG",
+                       type = "Pathway+GOBP",
                        organism = 'hsa', pvalueCutoff = 0.05,
-                       limit = c(1, 120), universe=NULL, gmtpath = NULL){
+                       limit = c(2, 200), universe=NULL, gmtpath = NULL){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 

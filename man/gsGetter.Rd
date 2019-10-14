@@ -11,7 +11,10 @@ gsGetter(gmtpath = NULL, type = "All", limit = c(0, Inf),
 \arguments{
 \item{gmtpath}{The path to customized gmt file.}
 
-\item{type}{Geneset category for testing.}
+\item{type}{Molecular signatures for testing, available datasets include
+Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
+Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
+combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets to load.}
@@ -25,7 +28,7 @@ A three-column data frame.
 Extract pathway annotation from GMT file.
 }
 \examples{
-gene2path = gsGetter()
+gene2path = gsGetter(type = "REACTOME+CORUM")
 head(gene2path)
 
 }

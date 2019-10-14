@@ -15,7 +15,7 @@ EnrichedGeneView(enrichment, geneList, rank_by = "p.adjust", top = 5,
 
 \item{geneList}{A numeric geneList used in enrichment anlaysis.}
 
-\item{rank_by}{"p.adjust" or "NES", specifying the indices for ranking pathways.}
+\item{rank_by}{"p.adjust", "pvalue", or "NES", specifying the indices for ranking pathways.}
 
 \item{top}{An integer, specifying the number of positively enriched terms to show.}
 

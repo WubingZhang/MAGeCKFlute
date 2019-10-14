@@ -7,24 +7,31 @@
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
 TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
-  organism = "hsa", useBiomart = FALSE,
-  ensemblHost = "www.ensembl.org")
+  organism = "hsa", fromOrg = organism, toOrg = organism,
+  ensemblHost = "www.ensembl.org", update = FALSE)
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}
 
-\item{fromType}{The input ID type, one of "Symbol" (default), "Entrez" and "Ensembl";
-you can also input other valid attribute names for biomaRt.}
+\item{fromType}{The input ID type, one of "entrez", "symbol"(default), "hgnc",
+"ensembl", "fullname" and "uniprotswissprot";
+you can also input other valid attribute names for biomaRt.
+Look at the code in examples to check valid attributes.}
 
-\item{toType}{The output ID type, one of "Symbol", "Entrez" (default), "Ensembl";
-you can also input other valid attribute names for biomaRt.}
+\item{toType}{The output ID type, similar to `fromType`.}
 
-\item{organism}{One of "hsa"(or 'Human'), "mmu"(or 'Mouse'), "bta", "cfa", "ptr", "rno", and "ssc".}
+\item{organism}{"hsa"(default), "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional.}
 
-\item{useBiomart}{Boolean, indicating whether use Biomart to do the transformation.}
+\item{fromOrg}{"hsa", "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional
+(Only used when transform gene ids between organisms).}
+
+\item{toOrg}{"hsa"(default), "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional
+(Only used when transform gene ids between organisms).}
 
 \item{ensemblHost}{String, specifying ensembl host, you can use `listEnsemblArchives()`
 to show all available Ensembl archives hosts.}
+
+\item{update}{Boolean, specifying whether update built-in gene annotation (needs network and takes time).}
 }
 \value{
 A character vector, named by unique input gene ids.
@@ -33,9 +40,12 @@ A character vector, named by unique input gene ids.
 Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
+ds = c("hsapiens_gene_ensembl", "mmusculus_gene_ensembl")
+ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
+listAttributes(ensembl)
 data(mle.gene_summary)
 TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
-
+TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol", fromOrg = "hsa", toOrg = "mmu")
 }
 \seealso{
 \code{\link[pathview]{eg2id}}

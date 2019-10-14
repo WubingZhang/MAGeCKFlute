@@ -7,11 +7,11 @@
 #' @rdname EnrichedView
 #' @param enrichment A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.
 
-#' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
+#' @param rank_by "pvalue" or "NES", specifying the indices for ranking pathways.
 #' @param top An integer, specifying the number of top enriched terms to show.
 #' @param bottom An integer, specifying the number of bottom enriched terms to show.
 
-#' @param x Character, "NES" or "LogP", indicating the variable on the x-axis.
+#' @param x Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
 
 #' @param filename Figure file name to create on disk. Default filename="NULL".
@@ -30,14 +30,12 @@
 #' }
 #' @export
 EnrichedView = function(enrichment,
-                        rank_by = "p.adjust",
+                        rank_by = "pvalue",
                         top = 5, bottom = 0,
-                        x = "LogP",
+                        x = "LogFDR",
                         charLength = 40,
                         filename = NULL,
                         width = 7, height = 4, ...){
-  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
-  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
   # No enriched pathways
   if(is.null(enrichment) || nrow(enrichment)==0){
@@ -47,14 +45,17 @@ EnrichedView = function(enrichment,
     }
     return(p1)
   }
+  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
   ## Rank enriched pathways ##
-  enrichment$logP = round(-log10(enrichment$p.adjust), 1)
+  enrichment$logP = round(-log10(enrichment$pvalue), 1)
+  enrichment$logFDR = round(-log10(enrichment$p.adjust), 1)
   enrichment = enrichment[!is.na(enrichment$ID), ]
-  if(tolower(rank_by) == "p.adjust"){
-    enrichment = enrichment[order(enrichment$p.adjust, -abs(enrichment$NES)), ]
+  if(tolower(rank_by) == "pvalue"){
+    enrichment = enrichment[order(enrichment$pvalue, -abs(enrichment$NES)), ]
   }else if(tolower(rank_by) == "nes"){
-    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$p.adjust), ]
+    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$pvalue), ]
   }
 
   ## Normalize term description ##
@@ -86,9 +87,12 @@ EnrichedView = function(enrichment,
   ## Prepare data for plotting ##
   if(x=="NES"){
     enrichment$x = enrichment$NES
-    enrichment$size = enrichment$logP
-  }else{
+    enrichment$size = enrichment$logFDR
+  }else if(x=="LogP"){
     enrichment$x = enrichment$logP
+    enrichment$size = enrichment$NES
+  }else{
+    enrichment$x = enrichment$logFDR
     enrichment$size = enrichment$NES
   }
 
@@ -105,8 +109,8 @@ EnrichedView = function(enrichment,
                    panel.background=element_blank())
   p1 = p1 + theme(legend.position="right")
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
-  p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                  plot.title = element_text(hjust = 0.5, size=18),
+  p1 = p1 + theme(text = element_text(colour="black",size = 11, family = "Helvetica"),
+                  plot.title = element_text(hjust = 0.5, size=14),
                   axis.text = element_text(colour="gray10"))
   p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
                   panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -114,9 +118,9 @@ EnrichedView = function(enrichment,
                   legend.key = element_rect(fill = "transparent"))
   p1 = p1 + guides(color = FALSE)
   if(x=="NES")
-    p1 = p1 + labs(x = "Enrichment score", y = NULL, col = "Group", size = "LogP")
+    p1 = p1 + labs(x = "Enrichment score", y = NULL, col = "Group", size = "LogFDR")
   else
-    p1 = p1 + labs(x = "LogP", y = NULL, col = "Group", size = "NES")
+    p1 = p1 + labs(x = x, y = NULL, col = "Group", size = "NES")
 
   if(!is.null(filename)){
     ggsave(plot=p1, filename=filename, units = "in", width=width, height=height, ...)

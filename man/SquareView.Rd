@@ -7,11 +7,11 @@
 \title{Scatter plot of 9-Square}
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
-  label = 0, label.top = TRUE, top = 5, genelist = c(),
-  x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
-  groups = c("midleft", "topcenter", "midright", "bottomcenter"),
-  groupnames = paste0("Group", 1:length(groups)), main = NULL,
-  filename = NULL, width = 6, height = 4, ...)
+  label = 0, label.top = TRUE, annotate_size = TRUE, top = 5,
+  genelist = c(), x_cutoff = NULL, y_cutoff = NULL,
+  intercept = NULL, groups = c("midleft", "topcenter", "midright",
+  "bottomcenter"), groupnames = paste0("Group", 1:length(groups)),
+  main = NULL, filename = NULL, width = 6, height = 4, ...)
 }
 \arguments{
 \item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
@@ -23,6 +23,8 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 \item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
 \item{label.top}{Boolean, whether label the top selected genes, default label the top 10 genes in each group.}
+
+\item{annotate_size}{Boolean, whether label the size of samples in each labeled group.}
 
 \item{top}{Integer, specifying the number of top selected genes to be labeled. Default is 5.}
 

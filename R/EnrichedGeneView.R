@@ -6,7 +6,7 @@
 #'
 #' @param enrichment A data frame of enrichment result or an \code{enrichResult} object.
 #' @param geneList A numeric geneList used in enrichment anlaysis.
-#' @param rank_by "p.adjust" or "NES", specifying the indices for ranking pathways.
+#' @param rank_by "p.adjust", "pvalue", or "NES", specifying the indices for ranking pathways.
 #'
 #' @param top An integer, specifying the number of positively enriched terms to show.
 #' @param bottom An integer, specifying the number of negatively enriched terms to show.
@@ -40,10 +40,7 @@ EnrichedGeneView=function(enrichment, geneList,
                           filename = NULL,
                           width = 7, height = 5, ...){
 
-  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
-  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
-
-  ## No enriched pathways ##
+  # No enriched pathways
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1 = noEnrichPlot("No enriched terms")
     if(!is.null(filename)){
@@ -51,14 +48,17 @@ EnrichedGeneView=function(enrichment, geneList,
     }
     return(p1)
   }
+  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
+  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
   ## Rank enriched pathways ##
   enrichment$logP = round(-log10(enrichment$p.adjust), 1)
+  if(rank_by=="pvalue")  enrichment$logP = round(-log10(enrichment$pvalue), 1)
   enrichment = enrichment[!is.na(enrichment$ID), ]
-  if(tolower(rank_by) == "p.adjust"){
-    enrichment = enrichment[order(enrichment$p.adjust, -abs(enrichment$NES)), ]
+  if(tolower(rank_by) %in% c("pvalue", "p.adjust")){
+    enrichment = enrichment[order(enrichment$pvalue, -abs(enrichment$NES)), ]
   }else if(tolower(rank_by) == "nes"){
-    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$p.adjust), ]
+    enrichment = enrichment[order(-abs(enrichment$NES), enrichment$pvalue), ]
   }
 
   ## Normalize term description ##

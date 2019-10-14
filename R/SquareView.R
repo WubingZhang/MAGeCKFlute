@@ -14,6 +14,7 @@
 #'
 #' @param label An integer or a character specifying the column used as the label, default value is 0 (row names).
 #' @param label.top Boolean, whether label the top selected genes, default label the top 10 genes in each group.
+#' @param annotate_size Boolean, whether label the size of samples in each labeled group.
 #' @param top Integer, specifying the number of top selected genes to be labeled. Default is 5.
 #' @param genelist Character vector, specifying labeled genes.
 #'
@@ -52,7 +53,9 @@
 #'
 
 SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
-                     label = 0, label.top = TRUE, top = 5, genelist = c(),
+                     label = 0, label.top = TRUE,
+                     annotate_size = TRUE,
+                     top = 5, genelist = c(),
                      x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
                      groups = c("midleft", "topcenter", "midright", "bottomcenter"),
                      groupnames = paste0("Group", 1:length(groups)),
@@ -152,30 +155,32 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   # p = p + guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)
     p = p + ggrepel::geom_text_repel(aes(x=x,y=y,label=Gene), color=col_label, data=label_gg)
-  if("topleft" %in% groups)
-    p = p + annotate("text", color="red", x = x_cutoff[1], y=max(gg$y),
-                     vjust=0, hjust = 3, label=sum(gg$group=="topleft"))
-  if("topcenter" %in% groups)
-    p = p + annotate("text", color="red", x = 0, y=max(gg$y),
-                     vjust=0, hjust = 0, label=sum(beta$group=="topcenter"))
-  if("topright" %in% groups)
-    p = p + annotate("text", color="red", x = x_cutoff[2], y=max(gg$y),
-                     vjust=0, hjust = -3, label=sum(beta$group=="topright"))
-  if("midleft" %in% groups)
-    p = p + annotate("text", color="red", x = min(gg$x), y=0,
-                     vjust=0, hjust = -1, label=sum(beta$group=="midleft"))
-  if("midright" %in% groups)
-    p = p + annotate("text", color="red", x = max(gg$x), y=0,
-                     vjust=0, hjust = 1, label=sum(beta$group=="midright"))
-  if("bottomleft" %in% groups)
-    p = p + annotate("text", color="red", x = x_cutoff[1], y=min(gg$y),
-                     vjust=0, hjust = 3, label=sum(beta$group=="bottomleft"))
-  if("bottomcenter" %in% groups)
-    p = p + annotate("text", color="red", x = 0, y=min(gg$y),
-                     vjust=0, hjust = 0, label=sum(beta$group=="bottomcenter"))
-  if("bottomright" %in% groups)
-    p = p + annotate("text", color="red", x = x_cutoff[2], y=min(gg$y),
-                     vjust=0, hjust = -3, label=sum(beta$group=="bottomright"))
+  if(annotate_size){
+    if("topleft" %in% groups)
+      p = p + annotate("text", color="red", x = x_cutoff[1], y=max(gg$y),
+                       vjust=0, hjust = 3, label=sum(gg$group=="topleft"))
+    if("topcenter" %in% groups)
+      p = p + annotate("text", color="red", x = 0, y=max(gg$y),
+                       vjust=0, hjust = 0, label=sum(beta$group=="topcenter"))
+    if("topright" %in% groups)
+      p = p + annotate("text", color="red", x = x_cutoff[2], y=max(gg$y),
+                       vjust=0, hjust = -3, label=sum(beta$group=="topright"))
+    if("midleft" %in% groups)
+      p = p + annotate("text", color="red", x = min(gg$x), y=0,
+                       vjust=0, hjust = -1, label=sum(beta$group=="midleft"))
+    if("midright" %in% groups)
+      p = p + annotate("text", color="red", x = max(gg$x), y=0,
+                       vjust=0, hjust = 1, label=sum(beta$group=="midright"))
+    if("bottomleft" %in% groups)
+      p = p + annotate("text", color="red", x = x_cutoff[1], y=min(gg$y),
+                       vjust=0, hjust = 3, label=sum(beta$group=="bottomleft"))
+    if("bottomcenter" %in% groups)
+      p = p + annotate("text", color="red", x = 0, y=min(gg$y),
+                       vjust=0, hjust = 0, label=sum(beta$group=="bottomcenter"))
+    if("bottomright" %in% groups)
+      p = p + annotate("text", color="red", x = x_cutoff[2], y=min(gg$y),
+                       vjust=0, hjust = -3, label=sum(beta$group=="bottomright"))
+  }
   p = p + theme(legend.key = element_rect(fill = "transparent"))
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),

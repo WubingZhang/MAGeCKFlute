@@ -5,20 +5,20 @@
 \alias{EnrichedView}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, rank_by = "p.adjust", top = 5, bottom = 0,
-  x = "LogP", charLength = 40, filename = NULL, width = 7,
+EnrichedView(enrichment, rank_by = "pvalue", top = 5, bottom = 0,
+  x = "LogFDR", charLength = 40, filename = NULL, width = 7,
   height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.}
 
-\item{rank_by}{"p.adjust" or "NES", specifying the indices for ranking pathways.}
+\item{rank_by}{"pvalue" or "NES", specifying the indices for ranking pathways.}
 
 \item{top}{An integer, specifying the number of top enriched terms to show.}
 
 \item{bottom}{An integer, specifying the number of bottom enriched terms to show.}
 
-\item{x}{Character, "NES" or "LogP", indicating the variable on the x-axis.}
+\item{x}{Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.}
 
 \item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab.}
 

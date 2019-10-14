@@ -3,25 +3,24 @@
 \docType{methods}
 \name{getOrg}
 \alias{getOrg}
-\title{Determine the gene annotation package.}
+\title{Get the kegg code of specific mammalia organism.}
 \usage{
-getOrg(organism, update = FALSE)
+getOrg(organism)
 }
 \arguments{
-\item{organism}{Character, KEGG species code, or the common species name, used to determine
-the gene annotation package. For all potential values check: data(bods); bods. Default org="hsa",
+\item{organism}{Character, KEGG species code, or the common species name.
+For all potential values check: data(bods); bods. Default org="hsa",
 and can also be "human" (case insensitive).}
 
 \item{update}{Boolean, indicating whether download recent annotation from NCBI.}
 }
 \value{
 A list containing three elements:
-\item{organism}{species}
+\item{org}{species}
 \code{pkg}{annotation package name}
-\code{Symbol_Entrez}{a data frame, mapping between gene symbol and entrez id}
 }
 \description{
-Determine the gene annotation package. for specific organism
+Get the kegg code of specific mammalia organism.
 }
 \examples{
 ann = getOrg("human")

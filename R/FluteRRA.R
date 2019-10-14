@@ -12,7 +12,7 @@
 #' @param lfcCutoff A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
 #' for negative selection and positive selection.
 #' @param organism "hsa" or "mmu".
-#' @param limit A two-length vector (default: c(1, 120)), specifying the minimal and
+#' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param prefix A character, indicating the prefix of output file name.
@@ -51,7 +51,7 @@
 FluteRRA <- function(gene_summary, sgrna_summary,
                      lfcCutoff = c(-1, 1),
                      organism = "hsa",
-                     limit = c(1, 120),
+                     limit = c(2, 200),
                      pvalueCutoff = 0.25,
                      prefix = "Test",
                      width = 12, height = 6,
@@ -103,14 +103,14 @@ FluteRRA <- function(gene_summary, sgrna_summary,
                             organism=organism, pvalueCutoff=pvalueCutoff,
                             limit = limit)
   p1 = EnrichedView(kegg.neg, bottom = 8) + labs(title = "Enrichment: neg")
-  p2 = EnrichedGeneView(kegg.neg@result, geneList, keytype = "Entrez",
+  p2 = EnrichedGeneView(kegg.neg, geneList, keytype = "Entrez",
                         gene_cutoff = lfcCutoff, top = 0, bottom = 5)
 
   kegg.pos = EnrichAnalyzer(geneList=geneList[idx2], universe=universe,
                             organism=organism, pvalueCutoff=pvalueCutoff,
                             limit = limit)
   p3 = EnrichedView(kegg.pos, top = 8) + labs(title = "Enrichment: pos")
-  p4 = EnrichedGeneView(kegg.pos@result, geneList, keytype = "Entrez",
+  p4 = EnrichedGeneView(kegg.pos, geneList, keytype = "Entrez",
                         gene_cutoff = lfcCutoff, top = 5, bottom = 0)
   grid.arrange(p2, p4, ncol = 1)
 

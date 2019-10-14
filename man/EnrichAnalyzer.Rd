@@ -6,9 +6,9 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-EnrichAnalyzer(geneList, keytype = "Entrez", type = "CORUM+KEGG",
+EnrichAnalyzer(geneList, keytype = "Entrez", type = "Pathway+GOBP",
   method = "ORT", organism = "hsa", pvalueCutoff = 0.25,
-  limit = c(1, 120), universe = NULL, filter = TRUE,
+  limit = c(2, 200), universe = NULL, filter = TRUE,
   gmtpath = NULL)
 }
 \arguments{
@@ -16,9 +16,10 @@ EnrichAnalyzer(geneList, keytype = "Entrez", type = "CORUM+KEGG",
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP', 'GOMF', 'GOCC', 'KEGG',
-'BIOCARTA', 'REACTOME', 'CORUM', 'PID', 'HARKMARK', 'c2', 'c6', 'c7', or any
-combination of them (e.g. 'GOBP+GOMF').}
+\item{type}{Molecular signatures for testing, available datasets include
+Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
+Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
+combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 
@@ -26,7 +27,7 @@ combination of them (e.g. 'GOBP+GOMF').}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{limit}{A two-length vector (default: c(1, 120)), specifying the minimal and
+\item{limit}{A two-length vector (default: c(2, 200)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
@@ -43,7 +44,7 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-keggA = EnrichAnalyzer(geneList[1:500], method = "HGT")
+keggA = EnrichAnalyzer(geneList[1:500], pvalueCutoff = 1)
 head(keggA@result)
 
 }

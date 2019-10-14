@@ -56,6 +56,7 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE){
       var0=c(var0,var.data.tmp0)
     }
   }
+  var0 = unique(var0)
   tmp2 = tmp
   if(length(var0)>0) tmp2=tmp[setdiff(1:nrow(tmp),var0),]
   if(ncol(batch)>2){
