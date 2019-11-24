@@ -6,7 +6,7 @@
 \alias{enrichGSE}
 \title{Gene set enrichment analysis}
 \usage{
-enrich.GSE(geneList, keytype = "Entrez", type = "Pathway+GOBP",
+enrich.GSE(geneList, keytype = "Symbol", type = "Pathway+GOBP",
   organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
   gmtpath = NULL, nPerm = 2000, by = "fgsea")
 }
@@ -42,7 +42,7 @@ A universal gene set enrichment analysis tools
 \examples{
 data(geneList, package = "DOSE")
 \dontrun{
-    enrichRes = enrich.GSE(geneList)
+    enrichRes = enrich.GSE(geneList, keytype = "entrez")
     head(slot(enrichRes, "result"))
 }
 

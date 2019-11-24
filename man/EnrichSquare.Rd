@@ -57,21 +57,6 @@ Each item in the returned list has two sub items:
 \description{
 Do enrichment analysis for selected treatment related genes in 9-squares
 }
-\examples{
-data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary)
-p = SquareView(dd, ctrlname = "dmso", treatname = "plx")
-\dontrun{
- # Read beta score from gene summary table in MAGeCK MLE results
- E1 = EnrichSquare(p$data, organism="hsa")
- print(E1$kegg1$gridPlot)
-}
-}
-\seealso{
-\code{\link{SquareView}}
-
-\code{\link{EnrichSquare}}
-}
 \author{
 Wubing Zhang
 }

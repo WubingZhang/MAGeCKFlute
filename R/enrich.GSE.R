@@ -33,21 +33,18 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' \dontrun{
-#'     enrichRes = enrich.GSE(geneList)
+#'     enrichRes = enrich.GSE(geneList, keytype = "entrez")
 #'     head(slot(enrichRes, "result"))
 #' }
 #'
-#' @import clusterProfiler
-#' @import data.table
-#' @import DOSE
+#' @import data.table DOSE
 #' @export
 
-enrich.GSE <- function(geneList, keytype = "Entrez",
+enrich.GSE <- function(geneList, keytype = "Symbol",
                        type = "Pathway+GOBP",
                        organism = 'hsa', pvalueCutoff = 0.25,
                        limit = c(2, 200), gmtpath = NULL,
                        nPerm = 2000, by = "fgsea"){
-  requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   geneList = sort(geneList, decreasing = TRUE)
@@ -72,6 +69,7 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
   message("\t", len, " genes are mapped ...")
   enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
+                     minGSSize = 0, maxGSSize = max(limit),
                      TERM2NAME = pathways, nPerm = nPerm, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")])
 
@@ -89,7 +87,9 @@ enrich.GSE <- function(geneList, keytype = "Entrez",
     enrichedRes@result$Count = unlist(lapply(geneID, length))
     cnames = c("ID", "Description", "NES", "pvalue", "p.adjust",
                "geneID", "geneName", "Count")
-    enrichedRes@result = enrichedRes@result[, cnames]
+    res = enrichedRes@result[, cnames]
+    res = res[order(res$pvalue), ]
+    enrichedRes@result = res
   }
   return(enrichedRes)
 }

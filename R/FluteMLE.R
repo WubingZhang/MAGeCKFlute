@@ -192,18 +192,18 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	                    filename = file.path(outputDir1, "violin_ess_negative_normalized.png"))
 	    P2 = DensityView(dd[idx, idx_distr], xlab = "Essential.B.S.", main = "Negative control normalized",
 	                     filename = file.path(outputDir1, "density_ess_negative_normalized.png"))
-	    P3 = CellCycleView(dd[, idx_distr], ctrlname, treatname, main="Negative control normalized",
+	    P3 = ConsistencyView(dd[, idx_distr], ctrlname, treatname, main="Negative control normalized",
 	                       filename = file.path(outputDir3, "Linear_all_negative_normalized.png"))
-	    P4 = CellCycleView(dd[idx, idx_distr], ctrlname, treatname, main = "Negative control normalized",
+	    P4 = ConsistencyView(dd[idx, idx_distr], ctrlname, treatname, main = "Negative control normalized",
 	                       filename = file.path(outputDir3, "Linear_ess_negative_normalized.png"))
 	    #Essential normalized
 	    P5 = ViolinView(dd_essential[idx, idx_distr], ylab = "Essential.B.S.", main = "Cell cycle  normalized",
 	                    filename = file.path(outputDir1, "violin_ess_essential_normalized.png"))
 	    P6 = DensityView(dd_essential[idx, idx_distr], xlab = "Essential.B.S.", main = "Cell cycle  normalized",
 	                     filename = file.path(outputDir1, "density_ess_essential_normalized.png"))
-	    P7 = CellCycleView(dd_essential[, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
+	    P7 = ConsistencyView(dd_essential[, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
 	                       filename = file.path(outputDir3, "Linear_all_essential_normalized.png"))
-	    P8 = CellCycleView(dd_essential[idx, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
+	    P8 = ConsistencyView(dd_essential[idx, idx_distr], ctrlname, treatname, main = "Cell cycle  normalized",
 	                       filename = file.path(outputDir3, "Linear_ess_essential_normalized.png"))
 
 	    #loess normalized
@@ -212,9 +212,9 @@ FluteMLE <- function(gene_summary, ctrlname, treatname,
 	                      filename = file.path(outputDir1, "violin_ess_loess_normalized.png"))
 	      P10 = DensityView(dd_loess[idx,idx_distr], xlab = "Essential.B.S.", main = "Loess  normalized",
 	                        filename = file.path(outputDir1, "density_ess_loess_normalized.png"))
-	      P11 = CellCycleView(dd_loess[,idx_distr], ctrlname, treatname, main = "Loess  normalized",
+	      P11 = ConsistencyView(dd_loess[,idx_distr], ctrlname, treatname, main = "Loess  normalized",
 	                          filename = file.path(outputDir3, "Linear_all_loess_normalized.png"))
-	      P12 = CellCycleView(dd_loess[idx,idx_distr], ctrlname, treatname, main = "Loess  normalized",
+	      P12 = ConsistencyView(dd_loess[idx,idx_distr], ctrlname, treatname, main = "Loess  normalized",
 	                          filename = file.path(outputDir3, "Linear_ess_loess_normalized.png"))
 
 	      grid.arrange(P1, P5, P9, P2, P6, P10, ncol = 3)

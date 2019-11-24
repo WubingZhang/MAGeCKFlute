@@ -1,8 +1,11 @@
-CHANGES IN VERSION 1.4.5
+CHANGES IN VERSION 1.7.0
 -------------------------
 
     o Incorporate gene id conversion between organisms into TransGeneID.
-    o
+    o Incorporate visualization functions from enrichplot.
+    o Add new functions for visualization.
+    o Debug the read file commands.
+    o Add documents for enrichment analysis.
 
 CHANGES IN VERSION 1.4.4
 -------------------------

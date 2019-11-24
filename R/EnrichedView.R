@@ -37,6 +37,8 @@ EnrichedView = function(enrichment,
                         filename = NULL,
                         width = 7, height = 4, ...){
 
+  if(is(enrichment, "enrichResult")) enrichment = slot(enrichment, "result")
+  if(is(enrichment, "gseaResult")) enrichment = slot(enrichment, "result")
   # No enriched pathways
   if(is.null(enrichment) || nrow(enrichment)==0){
     p1 = noEnrichPlot("No enriched terms")
@@ -45,8 +47,6 @@ EnrichedView = function(enrichment,
     }
     return(p1)
   }
-  if(is(enrichment, "enrichResult")) enrichment = enrichment@result
-  if(is(enrichment, "gseaResult")) enrichment = enrichment@result
 
   ## Rank enriched pathways ##
   enrichment$logP = round(-log10(enrichment$pvalue), 1)

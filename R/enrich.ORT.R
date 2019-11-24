@@ -32,18 +32,16 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:100]
-#' enrichedRes <- enrich.ORT(genes)
+#' enrichedRes <- enrich.ORT(genes, keytype = "entrez")
 #' head(slot(enrichedRes, "result"))
 #'
 #' @import DOSE
-#' @import clusterProfiler
 #' @export
 
-enrich.ORT <- function(geneList, keytype = "Entrez",
+enrich.ORT <- function(geneList, keytype = "Symbol",
                        type = "Pathway+GOBP",
-                       organism = 'hsa', pvalueCutoff = 0.05,
+                       organism = 'hsa', pvalueCutoff = 0.25,
                        limit = c(2, 200), universe=NULL, gmtpath = NULL){
-  requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   ## Prepare gene set annotation
@@ -74,10 +72,13 @@ enrich.ORT <- function(geneList, keytype = "Entrez",
   message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
   enrichedRes = enricher(gene, universe = universe,
+                         minGSSize = 0, maxGSSize = max(limit),
                          TERM2NAME = pathways, pvalueCutoff = pvalueCutoff,
                          TERM2GENE = gene2path[,c("PathwayID","Gene")])
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
-    enrichedRes@result = enrichedRes@result[enrichedRes@result$p.adjust<pvalueCutoff, ]
+    res = enrichedRes@result[enrichedRes@result$p.adjust<=pvalueCutoff, ]
+    res = res[order(res$pvalue), ]
+    enrichedRes@result = res
   }
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){

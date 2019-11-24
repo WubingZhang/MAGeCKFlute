@@ -26,8 +26,8 @@
 #'
 #' @export
 #'
-
 BatchRemove <- function(mat, batchMat, log2trans=FALSE){
+  requireNamespace("sva", quietly=TRUE) || stop("need sva package")
   mat = as.data.frame(mat, stringsAsFactors = FALSE)
   batchMat = as.data.frame(batchMat, stringsAsFactors = FALSE)
   colnames(batchMat)[1:2] = c("Sample", "Batch")

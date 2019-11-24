@@ -145,7 +145,7 @@
 #' pv.out <- KeggPathwayView(gene.data, pathway.id = "04110",
 #'   species = "hsa", out.suffix = "gse16873", kegg.native = TRUE)
 #' }
-#' @import pathview
+#' @import pathview png
 #' @export
 KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                           species = "hsa", kegg.dir = ".",
@@ -165,6 +165,8 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                           high = list(gene = "red", cpd ="yellow"),
                           na.col = "transparent", ...)
 {
+  requireNamespace("pathview", quietly=TRUE) || stop("need pathview package")
+  requireNamespace("png", quietly=TRUE) || stop("need png package")
   dtypes = !is.null(gene.data) + (!is.null(cpd.data))
   cond0 = dtypes == 1 & is.numeric(limit) & length(limit) >
     1

@@ -6,8 +6,8 @@
 \alias{enrichORT}
 \title{Do enrichment analysis using over-representation test}
 \usage{
-enrich.ORT(geneList, keytype = "Entrez", type = "Pathway+GOBP",
-  organism = "hsa", pvalueCutoff = 0.05, limit = c(2, 200),
+enrich.ORT(geneList, keytype = "Symbol", type = "Pathway+GOBP",
+  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
   universe = NULL, gmtpath = NULL)
 }
 \arguments{
@@ -40,7 +40,7 @@ Do enrichment analysis using over-representation test
 \examples{
 data(geneList, package = "DOSE")
 genes <- geneList[1:100]
-enrichedRes <- enrich.ORT(genes)
+enrichedRes <- enrich.ORT(genes, keytype = "entrez")
 head(slot(enrichedRes, "result"))
 
 }

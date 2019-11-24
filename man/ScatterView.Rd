@@ -3,51 +3,82 @@
 \docType{methods}
 \name{ScatterView}
 \alias{ScatterView}
-\alias{scatterview}
 \title{Scatter plot}
 \usage{
-ScatterView(beta, ctrlname = "Control", treatname = "Treatment",
-  scale_cutoff = 2, main = NULL, filename = NULL, width = 5,
-  height = 4, ...)
+ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
+  top = 0, toplabels = NULL, model = c("none", "ninesquare",
+  "volcano", "rank")[1], groups = NULL, group_col = NULL,
+  groupnames = NULL, auto_cut = FALSE, auto_cut_x = auto_cut,
+  auto_cut_y = auto_cut, auto_cut_diag = auto_cut, x_cut = NULL,
+  y_cut = NULL, slope = 1, intercept = NULL, display_cut = FALSE,
+  legend = FALSE, main = NULL, xlab = x, ylab = y, ...)
 }
 \arguments{
-\item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
+\item{data}{Data frame.}
 
-\item{ctrlname}{A character, specifying the names of control samples.}
+\item{x}{A character, specifying the x-axis.}
 
-\item{treatname}{A character, specifying the names of treatment samples.}
+\item{y}{A character, specifying the y-axis.}
 
-\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
+\item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
-\item{main}{As in 'plot'.}
+\item{label.top}{Boolean, indicates whether label the name of top hits in the groups.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-don't save the figure on disk.}
+\item{top}{Integer, specifying the number of top terms in the groups to be labeled.}
 
-\item{width}{As in ggsave.}
+\item{toplabels}{Character vector, specifying terms to be labeled.}
 
-\item{height}{As in ggsave.}
+\item{model}{One of "none" (default), "ninesquare", "volcano", and "rank".}
 
-\item{...}{Other available parameters in function 'ggsave'.}
+\item{groups}{Specify the colored groups. Optional groups include "topleft", "topcenter",
+"topright", "midleft", "midcenter", "midright", "bottomleft", "bottomcenter", "bottomright".}
+
+\item{group_col}{A vector of colors for specified groups.}
+
+\item{groupnames}{A vector of group names to show on the legend.}
+
+\item{auto_cut}{Boolean, take 1.5 fold standard deviation as cutoff.}
+
+\item{auto_cut_x}{Boolean, take 1.5 fold standard deviation as cutoff on x-axis.}
+
+\item{auto_cut_y}{Boolean, take 1.5 fold standard deviation as cutoff on y-axis.}
+
+\item{auto_cut_diag}{Boolean, take 1.5 fold standard deviation as cutoff on diagonal.}
+
+\item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
+
+\item{y_cut}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
+
+\item{slope}{A numberic value indicating slope of the diagonal cutoff.}
+
+\item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
+
+\item{display_cut}{Boolean, indicating whether display the dashed line of cutoffs.}
+
+\item{legend}{Whether show the color legend.}
+
+\item{main}{Title of the figure.}
+
+\item{xlab}{Title of x-axis}
+
+\item{ylab}{Title of y-axis.}
+
+\item{...}{Other available parameters in function 'geom_text_repel'.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Scatter plot of all genes, in which x-axis is mean beta score in Control samples, y-axis
-is mean beta scores in Treatment samples.
+Scatter plot supporting groups.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
 dd = ReadBeta(mle.gene_summary)
-ScatterView(dd, ctrlname = "dmso", treatname = "plx")
-
+ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
+x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 
 }
 \seealso{
-\code{\link{SquareView}}
+\code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

@@ -40,15 +40,9 @@ A character vector, named by unique input gene ids.
 Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
-ds = c("hsapiens_gene_ensembl", "mmusculus_gene_ensembl")
-ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
-listAttributes(ensembl)
 data(mle.gene_summary)
 TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
 TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol", fromOrg = "hsa", toOrg = "mmu")
-}
-\seealso{
-\code{\link[pathview]{eg2id}}
 }
 \author{
 Wubing Zhang

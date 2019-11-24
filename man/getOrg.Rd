@@ -11,8 +11,6 @@ getOrg(organism)
 \item{organism}{Character, KEGG species code, or the common species name.
 For all potential values check: data(bods); bods. Default org="hsa",
 and can also be "human" (case insensitive).}
-
-\item{update}{Boolean, indicating whether download recent annotation from NCBI.}
 }
 \value{
 A list containing three elements:

@@ -30,16 +30,16 @@
 #' @examples
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:300]
-#' enrichRes <- enrich.HGT(genes, type = "KEGG")
+#' enrichRes <- enrich.HGT(genes, type = "KEGG", keytype = "entrez")
 #' head(slot(enrichRes, "result"))
 #'
-#' @import DOSE
 #' @importFrom data.table fread
+#' @import DOSE
 #' @export
 
-enrich.HGT = function(geneList, keytype = "Entrez",
+enrich.HGT = function(geneList, keytype = "Symbol",
                       type = "Pathway+GOBP",
-                      organism = 'hsa', pvalueCutoff = 0.05,
+                      organism = 'hsa', pvalueCutoff = 0.25,
                       limit = c(2, 200), universe = NULL, gmtpath = NULL){
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
@@ -115,7 +115,7 @@ enrich.HGT = function(geneList, keytype = "Entrez",
       res = res[, idx]
     }else res=data.frame()
   }
-
+  res = res[order(res$pvalue), ]
   ## Create enrichResult object ##
   new("enrichResult",
       result         = res,

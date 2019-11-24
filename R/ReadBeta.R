@@ -21,20 +21,11 @@
 #' @export
 ReadBeta <- function(gene_summary){
   message(Sys.time(), " # Read gene summary file ...")
-  if(is.character(gene_summary) && file.exists(gene_summary)){
-    dd=read.table(file = gene_summary, header = TRUE,
-                  check.names = FALSE, stringsAsFactors = FALSE)
-  }else if(is.data.frame(gene_summary) &&
-          ("Gene" %in% names(gene_summary)) &&
-          any(grepl(".beta", names(gene_summary)))){
-    dd = gene_summary
-  }else{
-    stop("gene_summary is invalid!")
+  if(is.null(dim(gene_summary))){
+    gene_summary = read.table(file = gene_summary, sep = "\t", header = TRUE, quote = "",
+                              comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)
   }
-
-  idx = grepl(".beta",names(dd))
-  idx[1] = TRUE; dd = dd[,idx]
+  dd = gene_summary[, c(1,seq(3,ncol(gene_summary),6))]
   names(dd) = gsub(".beta", "", names(dd))
-
   return(dd)
 }

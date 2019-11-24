@@ -24,25 +24,7 @@
 #' subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
 #' \code{enrichRes} is a enrichResult instance
 #'
-#' @author Binbin Wang
-#'
-#' @seealso \code{\link{EnrichSquare}}
-#'
-#'
-#' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
-#' data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
-#' \dontrun{
-#'   #GO and KEGG enrichment analysis
-#'  enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
-#'   print(enrich_result$keggA$gridPlot)
-#'   print(enrich_result$goA$gridPlot)
-#' }
-#'
-#' @import clusterProfiler
-#' @export
+#' @author Wubing Zhang
 
 # Enrichment for GroupA and GroupB genes
 EnrichAB <- function(data, pvalue = 0.25,
@@ -127,73 +109,6 @@ EnrichAB <- function(data, pvalue = 0.25,
              filename=file.path(out.dir,paste0("GroupB_go_",filename,".png")),
              units = "in", width=6.5, height=4)
     }
-
-    ####===========GSEA results===================================
-    # if(gsea){
-    #   p1=ggplot()
-    #   p1=p1+geom_text(aes(x=0,y=0,label="No enriched terms"),size=6)
-    #   p1=p1+theme_void()
-    #
-    #   dir.create(file.path(out.dir,"GSEA_results"), showWarnings=FALSE)
-    #   ##=========GroupA GSEA plot=================================
-    #   if(!is.null(gseA$enrichRes) && nrow(gseA$enrichRes@result)>0){
-    #     for(term in gseA$enrichRes@result$ID[nrow(gseA$enrichRes@result):1]){
-    #       png(file.path(out.dir,paste0("GSEA_results/GroupA_gse_",
-    #                                    term, "_", filename,".png")),
-    #           units = "in", width=6.5, height=4, res=300)
-    #       p1 = gseaplot(gseA$enrichRes, term)$runningScore
-    #       dev.off()
-    #     }
-    #     p1 <- p1+xlab("Ranked list of genes")+ylab("Enrichment score")
-    #     p1 <- p1+labs(title=as.character(gseA$enrichRes@result$Description[1]))
-    #     p1 <- p1+theme(axis.text.x=element_text(size=6, face="plain",
-    #                                             colour='black'))
-    #     p1 <- p1+theme(axis.text.y=element_text(size=6, face="plain",
-    #                                             colour='black'))
-    #     p1=p1+theme(plot.title = element_text(hjust = 0.5,size=10,
-    #                                           face="plain", colour='black'))
-    #     p1 <- p1+theme(panel.grid.minor=element_blank(),
-    #                    panel.background=element_blank())
-    #     write.table(gseA$enrichRes@result,
-    #           file.path(out.dir,
-    #               paste0("GSEA_results/GroupA_gse_",filename,".txt")),
-    #           sep="\t", row.names = FALSE,col.names = TRUE,quote= FALSE)
-    #   }
-    #   gseA$gseaplot = p1
-    #   ##=========GroupB GSEA plot==================================
-    #   if(!is.null(gseB$enrichRes) && nrow(gseB$enrichRes@result)>0){
-    #     for(term in gseB$enrichRes@result$ID[nrow(gseB$enrichRes@result):1]){
-    #       png(file.path(out.dir,paste0("GSEA_results/GroupB_gse_",
-    #                                    term, "_", filename,".png")),
-    #           units = "in", width=6.5, height=4, res=300)
-    #       p1 = gseaplot(gseB$enrichRes, term)$runningScore
-    #       dev.off()
-    #     }
-    #     p1 <- p1+xlab("Ranked list of genes")+ylab("Enrichment score")
-    #     p1 <- p1+labs(title=as.character(gseB$enrichRes@result$Description[1]))
-    #     p1 <- p1+theme(axis.text.x=element_text(size=6, face="plain",
-    #                                             colour='black'))
-    #     p1 <- p1+theme(axis.text.y=element_text(size=6, face="plain",
-    #                                             colour='black'))
-    #     p1=p1+theme(plot.title = element_text(hjust = 0.5,size=10,
-    #                                           face="plain", colour='black'))
-    #     p1 <- p1+theme(panel.grid.minor=element_blank(),
-    #                    panel.background=element_blank())
-    #     write.table(gseB$enrichRes@result,
-    #                 file.path(out.dir,paste0("GSEA_results/GroupB_gse_",
-    #                                          filename,".txt")),
-    #                 sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-    #   }
-    #   gseB$gseaplot = p1
-    # }
-
-  }
-  ##=========Return results=====================================
-  # if(gsea){
-  #   return(list(keggA=keggA, goA=goA, gseA=gseA,
-  #               keggB=keggB, goB=goB, gseB=gseB))
-  # }else{
     return(list(keggA=keggA, goA=goA, keggB=keggB, goB=goB))
-  # }
+  }
 }
-

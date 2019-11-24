@@ -6,8 +6,8 @@
 \alias{Hypergeometric}
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
-enrich.HGT(geneList, keytype = "Entrez", type = "Pathway+GOBP",
-  organism = "hsa", pvalueCutoff = 0.05, limit = c(2, 200),
+enrich.HGT(geneList, keytype = "Symbol", type = "Pathway+GOBP",
+  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
   universe = NULL, gmtpath = NULL)
 }
 \arguments{
@@ -40,7 +40,7 @@ Do enrichment analysis using Hypergeometric test
 \examples{
 data(geneList, package = "DOSE")
 genes <- geneList[1:300]
-enrichRes <- enrich.HGT(genes, type = "KEGG")
+enrichRes <- enrich.HGT(genes, type = "KEGG", keytype = "entrez")
 head(slot(enrichRes, "result"))
 
 }

@@ -33,20 +33,20 @@
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
-#' keggA = EnrichAnalyzer(geneList[1:500], pvalueCutoff = 1)
+#' keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
 #' head(keggA@result)
 #'
 #' @import DOSE
 #' @export
 
-EnrichAnalyzer = function(geneList, keytype = "Entrez",
+EnrichAnalyzer = function(geneList, keytype = "Symbol",
                          type = "Pathway+GOBP",
-                         method = "ORT",
+                         method = "HGT",
                          organism = 'hsa',
                          pvalueCutoff = 0.25,
                          limit = c(2, 200),
                          universe = NULL,
-                         filter = TRUE,
+                         filter = FALSE,
                          gmtpath = NULL){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")

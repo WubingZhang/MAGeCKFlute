@@ -59,11 +59,12 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
     }
     idx = which(toupper(rownames(normalized)) %in% toupper(posControl))
     if(length(idx)>0){
-      mid = apply(normalized[idx,], 2, median)
-      mid = abs(mid - 0.2)
+      mid = apply(normalized[idx,], 2, median, na.rm = TRUE)
+      # mad = apply(normalized[idx,], 2, mad, na.rm = TRUE)
+      mid = abs(mid - 0.1)
       normalized = t(t(normalized) / mid)
     }else{
-      warning("No positive control genes provided !!!", call. = FALSE)
+      warning("No positive control genes are mapped !!!", call. = FALSE)
     }
   }
   if(method=="loess"){

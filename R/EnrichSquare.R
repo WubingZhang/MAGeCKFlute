@@ -41,21 +41,6 @@
 #' \item{enrichRes}{a enrichResult instance.}
 #'
 #' @author Wubing Zhang
-#'
-#'
-#' @seealso \code{\link{SquareView}}
-#' @seealso \code{\link{EnrichSquare}}
-#'
-#' @examples
-#' data(mle.gene_summary)
-#' dd = ReadBeta(mle.gene_summary)
-#' p = SquareView(dd, ctrlname = "dmso", treatname = "plx")
-#' \dontrun{
-#'  # Read beta score from gene summary table in MAGeCK MLE results
-#'  E1 = EnrichSquare(p$data, organism="hsa")
-#'  print(E1$kegg1$gridPlot)
-#'}
-#' @export
 
 #enrichment for square grouped genes
 EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",

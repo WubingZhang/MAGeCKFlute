@@ -24,12 +24,7 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @seealso \code{\link[pathview]{eg2id}}
-#'
 #' @examples
-#' ds = c("hsapiens_gene_ensembl", "mmusculus_gene_ensembl")
-#' ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
-#' listAttributes(ensembl)
 #' data(mle.gene_summary)
 #' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
 #' TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol", fromOrg = "hsa", toOrg = "mmu")
@@ -39,7 +34,6 @@
 TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
                         organism = "hsa", fromOrg = organism, toOrg = organism,
                         ensemblHost = "www.ensembl.org", update = FALSE){
-  requireNamespace("biomaRt")
 
   #### Verify  parameters ####
   genes = as.character(genes)
@@ -65,6 +59,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     if(all(c(fromType, toType) %in% c("entrez", "symbol", "hgnc", "ensembl"))){
       ann <- getGeneAnn(organism, update)[, c(fromType, toType)]
     }else{
+      requireNamespace("biomaRt")
       ds = datasets[grepl(organism, datasets)]
       ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds, host = ensemblHost)
       ## decide the attributes automatically
@@ -353,7 +348,6 @@ getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
 #' @param organism Character, KEGG species code, or the common species name.
 #' For all potential values check: data(bods); bods. Default org="hsa",
 #' and can also be "human" (case insensitive).
-#' @param update Boolean, indicating whether download recent annotation from NCBI.
 #' @return A list containing three elements:
 #' \item{org}{species}
 #' \code{pkg}{annotation package name}

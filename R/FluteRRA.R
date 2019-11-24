@@ -48,7 +48,8 @@
 #'
 #' @export
 
-FluteRRA <- function(gene_summary, sgrna_summary,
+FluteRRA <- function(gene_summary,
+                     sgrna_summary = gsub("gene_summary", "sgrna_summary", gene_summary),
                      lfcCutoff = c(-1, 1),
                      organism = "hsa",
                      limit = c(2, 200),
@@ -72,12 +73,12 @@ FluteRRA <- function(gene_summary, sgrna_summary,
   dd = ReadRRA(gene_summary)
   dd.sgrna = ReadsgRRA(sgrna_summary)
 
-  p1 = VolcanoView(dd, x = "LFC", y = "FDR", Label = "Official")
+  p1 = VolcanoView(dd, x = "LFC", y = "FDR", Label = "id")
   ggsave(file.path(out.dir_sub,"RRA/VolcanoView_RRA.png"), p1,
          units = "in", width = 6.5, height = 4)
 
   geneList = dd$LFC
-  names(geneList) = dd$Official
+  names(geneList) = dd$id
   p2 = RankView(geneList)
   p2 = p2 + labs(x = "Log2 Fold Change")
   ggsave(file.path(out.dir_sub,"RRA/RankView_Gene.png"), p2,
@@ -92,7 +93,7 @@ FluteRRA <- function(gene_summary, sgrna_summary,
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
-  dd$EntrezID = TransGeneID(dd$Official, "Symbol", "Entrez", organism = organism)
+  dd$EntrezID = TransGeneID(dd$id, "Symbol", "Entrez", organism = organism)
   idx = is.na(dd$EntrezID) | duplicated(dd$EntrezID)
   dd = dd[!idx,]
 

@@ -6,7 +6,8 @@
 \alias{RRApipeline}
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
-FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
+FluteRRA(gene_summary, sgrna_summary = gsub("gene_summary",
+  "sgrna_summary", gene_summary), lfcCutoff = c(-1, 1),
   organism = "hsa", limit = c(2, 200), pvalueCutoff = 0.25,
   prefix = "Test", width = 12, height = 6, outdir = ".")
 }

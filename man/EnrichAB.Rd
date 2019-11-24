@@ -41,22 +41,6 @@ subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot ob
 Do enrichment analysis for selected genes, in which positive selection and negative selection
 are termed as GroupA and GroupB
 }
-\examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
-data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
-\dontrun{
-  #GO and KEGG enrichment analysis
- enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
-  print(enrich_result$keggA$gridPlot)
-  print(enrich_result$goA$gridPlot)
-}
-
-}
-\seealso{
-\code{\link{EnrichSquare}}
-}
 \author{
-Binbin Wang
+Wubing Zhang
 }

@@ -1,84 +1,239 @@
 #' Scatter plot
 #'
-#' Scatter plot of all genes, in which x-axis is mean beta score in Control samples, y-axis
-#' is mean beta scores in Treatment samples.
+#' Scatter plot supporting groups.
 #'
 #' @docType methods
 #' @name ScatterView
 #' @rdname ScatterView
-#' @aliases scatterview
+#' @aliases ScatterView
 #'
-#' @param beta Data frame, including \code{ctrlname} and \code{treatname} as columns.
-#' @param ctrlname A character, specifying the names of control samples.
-#' @param treatname A character, specifying the names of treatment samples.
-#' @param scale_cutoff Boolean or numeric, whether scale cutoff to whole genome level,
-#' or how many standard deviation will be used as cutoff.
-#' @param main As in 'plot'.
-#' @param filename Figure file name to create on disk. Default filename="NULL", which means
-#' don't save the figure on disk.
-#' @param width As in ggsave.
-#' @param height As in ggsave.
-#' @param ... Other available parameters in function 'ggsave'.
+#' @param data Data frame.
+#' @param x A character, specifying the x-axis.
+#' @param y A character, specifying the y-axis.
+#'
+#' @param label An integer or a character specifying the column used as the label, default value is 0 (row names).
+#' @param label.top Boolean, indicates whether label the name of top hits in the groups.
+#' @param top Integer, specifying the number of top terms in the groups to be labeled.
+#' @param toplabels Character vector, specifying terms to be labeled.
+#'
+#' @param model One of "none" (default), "ninesquare", "volcano", and "rank".
+#' @param groups Specify the colored groups. Optional groups include "topleft", "topcenter",
+#' "topright", "midleft", "midcenter", "midright", "bottomleft", "bottomcenter", "bottomright".
+#' @param group_col A vector of colors for specified groups.
+#' @param groupnames A vector of group names to show on the legend.
+#'
+#' @param auto_cut Boolean, take 1.5 fold standard deviation as cutoff.
+#' @param auto_cut_x Boolean, take 1.5 fold standard deviation as cutoff on x-axis.
+#' @param auto_cut_y Boolean, take 1.5 fold standard deviation as cutoff on y-axis.
+#' @param auto_cut_diag Boolean, take 1.5 fold standard deviation as cutoff on diagonal.
+#' @param x_cut An one or two-length numeric vector, specifying the cutoff used for x-axis.
+#' @param y_cut An one or two-length numeric vector, specifying the cutoff used for y-axis.
+#' @param slope A numberic value indicating slope of the diagonal cutoff.
+#' @param intercept A numberic value indicating intercept of the diagonal cutoff.
+#'
+#' @param display_cut Boolean, indicating whether display the dashed line of cutoffs.
+#' @param legend Whether show the color legend.
+#'
+#' @param main Title of the figure.
+#' @param xlab Title of x-axis
+#' @param ylab Title of y-axis.
+#' @param ... Other available parameters in function 'geom_text_repel'.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
 #' @author Wubing Zhang
 #'
-#'
-#' @seealso \code{\link{SquareView}}
-#'
+#' @seealso \code{\link{ScatterView}}
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(mle.gene_summary)
-#' ScatterView(dd, ctrlname = "dmso", treatname = "plx")
+#' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
+#' x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 #'
-#'
+#' @import ggplot2 ggpubr ggrepel
 #' @export
 #'
+#'
 
-ScatterView <- function(beta, ctrlname="Control",treatname="Treatment", scale_cutoff=2,
-                        main=NULL, filename=NULL, width=5, height=4, ...){
+ScatterView<-function(data, x = "x", y = "y", label = 0,
+                      label.top = TRUE, top = 0, toplabels = NULL,
+                      model = c("none", "ninesquare", "volcano", "rank")[1],
+                      groups = NULL, group_col = NULL, groupnames = NULL,
+                      auto_cut = FALSE, auto_cut_x = auto_cut,
+                      auto_cut_y = auto_cut, auto_cut_diag = auto_cut,
+                      x_cut = NULL, y_cut = NULL, slope = 1, intercept = NULL,
+                      display_cut = FALSE, legend = FALSE,
+                      # shape = 21, size = NULL, color = NULL, fill = NULL,
+                      main = NULL, xlab = x, ylab = y, ...){
+  requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
+  requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
+  requireNamespace("ggpubr", quietly=TRUE) || stop("need ggpubr package")
+  df = as.data.frame(data, stringsAsFactors = FALSE)
 
-  beta$Control=rowMeans(beta[,ctrlname,drop= FALSE])
-  beta$Treatment=rowMeans(beta[,treatname,drop= FALSE])
-  intercept=CutoffCalling(beta$Treatment-beta$Control, scale=scale_cutoff)
-  beta$diff = beta$Treatment - beta$Control
-  beta$group="no"
-  beta$group[beta$diff>intercept]="up"
-  beta$group[beta$diff<(-intercept)]="down"
+  ## Add label column in the data frame.
+  if(label==0) data$Label = rownames(data)
+  else data$Label = as.character(data[, label])
 
-  data=beta
-  message(Sys.time(), " # Scatter plot of ", main, " Treat-Ctrl beta scores ...")
-  mycolour=c("no"="aliceblue",  "up"="#e41a1c","down"="#377eb8")
-  xmin=min(data$Control)
-  xmax=max(data$Control)
-  ymin=min(data$Treatment)
-  ymax=max(data$Treatment)
-  #=========
-  p=ggplot(data,aes(x=Control,y=Treatment,colour=group))
-  p=p+geom_jitter(position = "jitter", show.legend = FALSE)
-  p=p+scale_color_manual(values=mycolour)
-  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
-  p=p+geom_abline(intercept = -intercept)
-  p=p+geom_abline(intercept = +intercept)
-  p=p+labs(x="Control beta score",y="Treatment beta score",title=main)
-  p=p+annotate("text",color="#e41a1c",x=xmin, y=ymax,hjust = 0,
-               label=paste("GroupA: ",as.character(dim(data[data$group=="up",])[1]),sep=""))
-  p=p+annotate("text",color="#377eb8",x=xmax, y=ymin,hjust = 1,
-               label=paste("GroupB: ",as.character(dim(data[data$group=="down",])[1]),sep=""))
-  #============
-  if(!is.null(filename)){
-    write.table(beta, file.path(dirname(filename), paste0("GroupAB_", main, ".txt")),
-                sep = "\t", quote = FALSE, row.names = FALSE)
-    ggsave(plot=p,filename=filename,units = "in", width=width, height =height, ...)
+  ## Compute the cutoff used for each dimension.
+  model = tolower(model)
+  if(model == "ninesquare"){
+    if(length(x_cut)==0)
+      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+    if(length(y_cut)==0)
+      y_cut = c(-CutoffCalling(data[,y], 1.5), CutoffCalling(data[,y], 1.5))
+    if(length(intercept)==0)
+      intercept = c(-CutoffCalling(data[,y]-data[,x], 1.5), CutoffCalling(data[,y]-data[,x], 1.5))
   }
+  if(model == "volcano"){
+    if(length(x_cut)==0)
+      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+    if(length(y_cut)==0) y_cut = -log10(0.05)
+  }
+  if(model == "rank"){
+    if(length(x_cut)==0)
+      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+  }
+  if(model == "none"){
+    if(auto_cut_x)
+      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+    if(auto_cut_y)
+      y_cut = c(-CutoffCalling(data[,y], 1.5), CutoffCalling(data[,y], 1.5))
+    if(auto_cut_diag)
+      intercept = c(-CutoffCalling(data[,y]-data[,x], 1.5), CutoffCalling(data[,y]-data[,x], 1.5))
+  }
+  ## Decide the colored groups
+  avail_groups = c("topleft", "topcenter", "topright", "midleft", "midcenter",
+                   "midright", "bottomleft", "bottomcenter", "bottomright")
+  if(model == "ninesquare") groups = c("midleft", "topcenter", "midright", "bottomcenter")
+  if(model == "volcano") groups = c("topleft", "topright")
+  if(model == "rank") groups = c("topleft", "topright")
+  groups = intersect(groups, avail_groups)
+
+  ## Annotate the groups in the data frame
+  if(length(x_cut)>0){
+    idx1 = data[,x] < min(x_cut)
+    idx2 = data[,x] > max(x_cut)
+  }else if(length(y_cut)>0|length(intercept)>0){
+    idx1 = FALSE; idx2 = TRUE
+  }else{ idx1 = FALSE; idx2 = FALSE}
+  if(length(y_cut)>0){
+    idx3 = data[,y] < min(y_cut)
+    idx4 = data[,y] > max(y_cut)
+  }else if(length(x_cut)>0|length(intercept)>0){
+    idx3 = FALSE; idx4 = TRUE
+  }else{ idx3 = FALSE; idx4 = FALSE}
+  if(length(intercept)>0){
+    idx5 = data[,y]<slope*data[,x]+min(intercept)
+    idx6 = data[,y]>slope*data[,x]+max(intercept)
+  }else if(length(x_cut)>0|length(y_cut)>0){
+    idx5 = FALSE; idx6 = TRUE
+  }else{ idx5 = FALSE; idx6 = FALSE}
+
+  if(length(y_cut)>0 & length(x_cut)==0 & length(intercept)==0){
+    idx5 = TRUE; idx6 = TRUE
+  }
+  if(length(x_cut)>0 & length(y_cut)==0 & length(intercept)==0){
+    idx5 = TRUE; idx6 = TRUE
+  }
+  if(length(intercept)>0 & length(y_cut)==0 & length(x_cut)==0){
+    idx1 = idx2 = idx3 = idx4
+    if(length(groups)==0) groups = c("bottomright", "topright")
+  }
+  data$group="none"
+  data$group[idx1&idx6 & (!idx3)&(!idx4)] = "midleft"
+  data$group[(!idx1)&(!idx2) & (!idx3)&(!idx4) & (!idx5)&(!idx6)] = "midcenter"
+  data$group[idx2 & (!idx3)&(!idx4) & idx5] = "midright"
+  data$group[idx1 & idx3 & idx5] = "bottomleft"
+  data$group[(!idx1)&(!idx2) & idx3 & idx5] = "bottomcenter"
+  data$group[idx2 & idx3 & idx5] = "bottomright"
+  data$group[idx1 & idx4&idx6] = "topleft"
+  data$group[(!idx1)&(!idx2) & idx4&idx6] = "topcenter"
+  data$group[idx2 & idx4&idx6] = "topright"
+  # print(unique(data$group))
+  data$group[!data$group%in%groups] = "none"
+  ## Select the colors
+  mycolour=c("#377eb8", "#ff7f00", "#a65628", "#4daf4a", "#005CB7",
+             "#e41a1c", "#984ea3", "#f781bf", "#BABABA")
+  names(mycolour) = c("topleft", "topcenter", "topright", "midleft", "midright",
+                      "bottomleft", "bottomcenter", "bottomright", "none")
+  ## Group names
+  if(length(groupnames)!=length(groups)) groupnames = groups
+  if(length(groups)>0) names(groupnames) = groups
+  if(length(group_col)==length(groups)) mycolour[groups] = group_col
+  if(length(groups)==0) mycolour["none"] = "#FF6F61"
+  ## Label top gene names ##
+  data$rank = top + 1
+  for(g in groups){
+    idx1 = data$group==g
+    x_symb = 0; y_symb = 0;
+    if(g=="topleft"){ x_symb = 1; y_symb = -1 }
+    if(g=="topcenter"){ x_symb = 0; y_symb = -1 }
+    if(g=="topright"){ x_symb = -1; y_symb = -1 }
+    if(g=="midleft"){ x_symb = 1; y_symb = 0 }
+    if(g=="midright"){ x_symb = -1; y_symb = 0 }
+    if(g=="bottomleft"){ x_symb = 1; y_symb = 1 }
+    if(g=="bottomcenter"){ x_symb = 0; y_symb = 1 }
+    if(g=="bottomright"){ x_symb = -1; y_symb = 1 }
+    tmp = data[,c(x,y)]
+    tmp[,x] = (tmp[,x]-min(tmp[,x])) / (max(tmp[,x])-min(tmp[,x]))
+    tmp[,y] = (tmp[,y]-min(tmp[,y])) / (max(tmp[,y])-min(tmp[,y]))
+    data$rank[idx1] = rank((x_symb*tmp[,x]+y_symb*tmp[,y])[idx1])
+  }
+  data$rank[data$rank==0] = Inf
+  data$Label[data$rank>top & !(data$Label %in% toplabels)] = ""
+  data$group=factor(data$group, levels = c(groups, "none"))
+
+  gg = data
+  ## Plot the scatter figure ##
+  p = ggplot(gg, aes_string(x, y, label="Label", color = "group", fill = "group"))
+  p = p + geom_point(shape = 21, alpha = 0.8)
+  p = p + scale_color_manual(values = mycolour, labels = groupnames)
+  p = p + scale_fill_manual(values = mycolour, labels = groupnames)
+  if(display_cut){
+    if(length(x_cut)>0)
+      p = p + geom_vline(xintercept = x_cut,linetype = "dotted")
+    if(length(y_cut)>0)
+      p = p + geom_hline(yintercept = y_cut,linetype = "dotted")
+    if(length(intercept)>0)
+      p = p + geom_abline(slope=slope, intercept=intercept, linetype = "dotted")
+  }
+  p = p + labs(x=xlab, y = ylab, title = main)
+  if(label.top)
+    p = p + ggrepel::geom_text_repel(...)
+  p = p + ggpubr::theme_pubr()
+  if(!legend) p = p + theme(legend.position = "none")
   return(p)
 }
 
+
+#' Quantile of normal distribution.
+#'
+#' Compute cutoff from a normal-distributed vector.
+#'
+#' @docType methods
+#' @name CutoffCalling
+#' @rdname CutoffCalling
+#'
+#' @param d A numeric vector.
+#' @param scale Boolean or numeric, specifying how many standard deviation will be used as cutoff.
+#'
+#' @return A numeric value.
+#' @export
+#' @examples
+#' CutoffCalling(rnorm(10000))
+
+CutoffCalling=function(d, scale=1){
+  param=1
+  if(is.logical(scale) & scale){
+    param = round(length(d) / 20000, digits = 1)
+  }else if(is.numeric(scale)){param = scale}
+
+  Control_mean=0
+  sorted_beta=sort(abs(d))
+  temp=quantile(sorted_beta,0.68)
+  temp_2=qnorm(0.84)
+  cutoff=round(temp/temp_2,digits = 3)
+  names(cutoff)=NULL
+  cutoff=cutoff*param
+  return(cutoff)
+}

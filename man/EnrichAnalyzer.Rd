@@ -6,9 +6,9 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-EnrichAnalyzer(geneList, keytype = "Entrez", type = "Pathway+GOBP",
-  method = "ORT", organism = "hsa", pvalueCutoff = 0.25,
-  limit = c(2, 200), universe = NULL, filter = TRUE,
+EnrichAnalyzer(geneList, keytype = "Symbol", type = "Pathway+GOBP",
+  method = "HGT", organism = "hsa", pvalueCutoff = 0.25,
+  limit = c(2, 200), universe = NULL, filter = FALSE,
   gmtpath = NULL)
 }
 \arguments{
@@ -44,7 +44,7 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-keggA = EnrichAnalyzer(geneList[1:500], pvalueCutoff = 1)
+keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
 head(keggA@result)
 
 }

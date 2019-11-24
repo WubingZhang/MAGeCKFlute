@@ -1,7 +1,6 @@
 .onLoad <- function(libname, pkgname) {
-  disclaimer="MAGeCKFlute is an open source software package. Particullary,
-users are required to formally cite the original MAGeCKFlute paper in publications
-or products. For details, do citation(\"MAGeCKFlute\") within R.\n\n"
+  disclaimer="MAGeCKFlute is an open source software package.
+Users are required to formally cite the original MAGeCKFlute paper in publications."
   packageStartupMessage(paste(strwrap(disclaimer, 80), collapse="\n"))
 }
 
