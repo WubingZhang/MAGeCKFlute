@@ -43,7 +43,7 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE){
   index=intersect(batchMat[,1], colnames(mat))
   if(length(index)<2) stop("Too less samples ...")
   dt = mat[, index]
-  if(log2trans) dt = log(dt+1)
+  if(log2trans) dt = log2(dt+1)
   ##
   tmp=dt
   var0=numeric()
