@@ -17,8 +17,9 @@
 #' @param toplabels Character vector, specifying terms to be labeled.
 #'
 #' @param model One of "none" (default), "ninesquare", "volcano", and "rank".
-#' @param groups Specify the colored groups. Optional groups include "topleft", "topcenter",
-#' "topright", "midleft", "midcenter", "midright", "bottomleft", "bottomcenter", "bottomright".
+#' @param groups Specify the colored groups. Optional groups include "top", "mid", "bottom",
+#' "left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
+#' "midright", "bottomleft", "bottomcenter", "bottomright".
 #' @param group_col A vector of colors for specified groups.
 #' @param groupnames A vector of group names to show on the legend.
 #'
@@ -68,8 +69,8 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("ggpubr", quietly=TRUE) || stop("need ggpubr package")
-  df = as.data.frame(data, stringsAsFactors = FALSE)
-
+  data = as.data.frame(data, stringsAsFactors = FALSE)
+  data = na.omit(data)
   ## Add label column in the data frame.
   if(label==0) data$Label = rownames(data)
   else data$Label = as.character(data[, label])
@@ -103,64 +104,104 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   }
   ## Decide the colored groups
   avail_groups = c("topleft", "topcenter", "topright", "midleft", "midcenter",
-                   "midright", "bottomleft", "bottomcenter", "bottomright")
+                   "midright", "bottomleft", "bottomcenter", "bottomright",
+                   "top", "mid", "bottom", "left", "center", "right", "none")
+  ## Select the colors
+  mycolour = c("#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#ffffb3", "#fdb462",
+               "#b3de69", "#fccde5", "#bc80bd",
+             "#8da0cb", "#fc8d62", "#66c2a5", "#e78ac3", "#a6d854", "#e5c494", "#d9d9d9")
+  names(mycolour) = avail_groups
+
   if(model == "ninesquare") groups = c("midleft", "topcenter", "midright", "bottomcenter")
   if(model == "volcano") groups = c("topleft", "topright")
-  if(model == "rank") groups = c("topleft", "topright")
+  if(model == "rank") groups = c("left", "right")
   groups = intersect(groups, avail_groups)
 
   ## Annotate the groups in the data frame
   if(length(x_cut)>0){
     idx1 = data[,x] < min(x_cut)
     idx2 = data[,x] > max(x_cut)
-  }else if(length(y_cut)>0|length(intercept)>0){
-    idx1 = FALSE; idx2 = TRUE
-  }else{ idx1 = FALSE; idx2 = FALSE}
+  }else{
+    idx1 = NA
+    idx2 = NA
+  }
   if(length(y_cut)>0){
     idx3 = data[,y] < min(y_cut)
     idx4 = data[,y] > max(y_cut)
-  }else if(length(x_cut)>0|length(intercept)>0){
-    idx3 = FALSE; idx4 = TRUE
-  }else{ idx3 = FALSE; idx4 = FALSE}
+  }else{
+    idx3 = NA
+    idx4 = NA
+  }
   if(length(intercept)>0){
     idx5 = data[,y]<slope*data[,x]+min(intercept)
     idx6 = data[,y]>slope*data[,x]+max(intercept)
-  }else if(length(x_cut)>0|length(y_cut)>0){
-    idx5 = FALSE; idx6 = TRUE
-  }else{ idx5 = FALSE; idx6 = FALSE}
-
-  if(length(y_cut)>0 & length(x_cut)==0 & length(intercept)==0){
-    idx5 = TRUE; idx6 = TRUE
-  }
-  if(length(x_cut)>0 & length(y_cut)==0 & length(intercept)==0){
-    idx5 = TRUE; idx6 = TRUE
-  }
-  if(length(intercept)>0 & length(y_cut)==0 & length(x_cut)==0){
-    idx1 = idx2 = idx3 = idx4
-    if(length(groups)==0) groups = c("bottomright", "topright")
+  }else{
+    idx5 = NA; idx6 = NA
   }
   data$group="none"
-  data$group[idx1&idx6 & (!idx3)&(!idx4)] = "midleft"
-  data$group[(!idx1)&(!idx2) & (!idx3)&(!idx4) & (!idx5)&(!idx6)] = "midcenter"
-  data$group[idx2 & (!idx3)&(!idx4) & idx5] = "midright"
-  data$group[idx1 & idx3 & idx5] = "bottomleft"
-  data$group[(!idx1)&(!idx2) & idx3 & idx5] = "bottomcenter"
-  data$group[idx2 & idx3 & idx5] = "bottomright"
-  data$group[idx1 & idx4&idx6] = "topleft"
-  data$group[(!idx1)&(!idx2) & idx4&idx6] = "topcenter"
-  data$group[idx2 & idx4&idx6] = "topright"
-  # print(unique(data$group))
-  data$group[!data$group%in%groups] = "none"
-  ## Select the colors
-  mycolour=c("#377eb8", "#ff7f00", "#a65628", "#4daf4a", "#005CB7",
-             "#e41a1c", "#984ea3", "#f781bf", "#BABABA")
-  names(mycolour) = c("topleft", "topcenter", "topright", "midleft", "midright",
-                      "bottomleft", "bottomcenter", "bottomright", "none")
+  for(gr in groups){
+    if(gr=="topleft") idx = cbind(idx1, idx4, idx6)
+    if(gr=="topcenter") idx = cbind(!idx1, !idx2, idx4, idx6)
+    if(gr=="topright") idx = cbind(idx2, idx4, idx6)
+    if(gr=="midleft") idx = cbind(idx1, idx6 , !idx3, !idx4)
+    if(gr=="midcenter") idx = cbind(!idx1, !idx2, !idx3, !idx4, !idx5, !idx6)
+    if(gr=="midright") idx = cbind(idx2, !idx3, !idx4, idx5)
+    if(gr=="bottomleft") idx = cbind(idx1, idx3, idx5)
+    if(gr=="bottomcenter") idx = cbind(!idx1, !idx2, idx3, idx5)
+    if(gr=="bottomright") idx = cbind(idx2, idx3, idx5)
+    if(gr=="top"){
+      if(length(y_cut)>0 & length(intercept)>0)
+         idx = idx4 & idx6
+      else if(length(y_cut)>0)
+        idx = idx4
+      else idx = idx6
+    }
+    if(gr=="mid") idx = (!idx3) & (!idx4)
+    if(gr=="bottom"){
+      if(length(y_cut)>0 & length(intercept)>0)
+        idx = idx3 & idx5
+      else if(length(y_cut)>0)
+        idx = idx3
+      else idx = idx5
+    }
+    if(gr=="left"){
+      if(length(x_cut)>0 & length(intercept)>0)
+        if(slope>0) idx = idx1 & idx6 else idx = idx1 & idx5
+      else if(length(x_cut)>0)
+        idx = idx1
+      else
+        if(slope>0) idx = idx6 else idx = idx5
+    }
+    if(gr=="center") idx = (!idx1) & (!idx2)
+    if(gr=="right"){
+      if(length(x_cut)>0 & length(intercept)>0)
+        if(slope>0) idx = idx2 & idx5 else idx = idx2 & idx6
+        else if(length(x_cut)>0)
+          idx = idx2
+        else
+          if(slope>0) idx = idx5 else idx = idx6
+    }
+    ## Assign groups
+    if(is.null(ncol(idx))){
+      if(sum(!is.na(idx))>0) data$group[idx] = gr
+      else warning("No cutpoint for group:", gr)
+    }else{
+      idx = idx[, !is.na(idx[1,])]
+      if(is.null(ncol(idx)))
+        warning("No cutpoint for group:", gr)
+      else if(ncol(idx)<4 & gr=="midcenter")
+        warning("No cutpoint for group:", gr)
+      else
+        data$group[rowSums(idx)==ncol(idx)] = gr
+    }
+  }
+
   ## Group names
   if(length(groupnames)!=length(groups)) groupnames = groups
   if(length(groups)>0) names(groupnames) = groups
   if(length(group_col)==length(groups)) mycolour[groups] = group_col
   if(length(groups)==0) mycolour["none"] = "#FF6F61"
+
   ## Label top gene names ##
   data$rank = top + 1
   for(g in groups){
@@ -174,6 +215,10 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
     if(g=="bottomleft"){ x_symb = 1; y_symb = 1 }
     if(g=="bottomcenter"){ x_symb = 0; y_symb = 1 }
     if(g=="bottomright"){ x_symb = -1; y_symb = 1 }
+    if(g=="top"){ x_symb = 0; y_symb = -1 }
+    if(g=="bottom"){ x_symb = 0; y_symb = 1 }
+    if(g=="left"){ x_symb = 1; y_symb = 0 }
+    if(g=="right"){ x_symb = -1; y_symb = 0 }
     tmp = data[,c(x,y)]
     tmp[,x] = (tmp[,x]-min(tmp[,x])) / (max(tmp[,x])-min(tmp[,x]))
     tmp[,y] = (tmp[,y]-min(tmp[,y])) / (max(tmp[,y])-min(tmp[,y]))
@@ -200,7 +245,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   p = p + labs(x=xlab, y = ylab, title = main)
   if(label.top)
     p = p + ggrepel::geom_text_repel(...)
-  p = p + ggpubr::theme_pubr()
+  p = p + ggpubr::theme_pubr() + theme(plot.title = element_text(hjust = 0.5))
   if(!legend) p = p + theme(legend.position = "none")
   return(p)
 }

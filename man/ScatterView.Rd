@@ -30,8 +30,9 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
 
 \item{model}{One of "none" (default), "ninesquare", "volcano", and "rank".}
 
-\item{groups}{Specify the colored groups. Optional groups include "topleft", "topcenter",
-"topright", "midleft", "midcenter", "midright", "bottomleft", "bottomcenter", "bottomright".}
+\item{groups}{Specify the colored groups. Optional groups include "top", "mid", "bottom",
+"left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
+"midright", "bottomleft", "bottomcenter", "bottomright".}
 
 \item{group_col}{A vector of colors for specified groups.}
 

@@ -7,11 +7,10 @@
 \title{Downstream analysis based on MAGeCK-MLE result}
 \usage{
 FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
-  organism = "hsa", scale_cutoff = 2, top = 10, bottom = 10,
-  interestGenes = NA, limit = c(2, 200), pvalueCutoff = 0.25,
-  enrich_kegg = "ORT", posControl = NULL, loess = FALSE,
-  prefix = "", width = 10, height = 7, outdir = ".",
-  view_allpath = FALSE)
+  organism = "hsa", norm_method = "none", posControls = NULL,
+  top = 10, bottom = 10, toplabels = NA, scale_cutoff = 2,
+  limit = c(2, 200), pvalueCutoff = 0.25, prefix = "", width = 10,
+  height = 7, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{A data frame, which contains columns of 'Gene',
@@ -25,25 +24,17 @@ FluteMLE(gene_summary, ctrlname, treatname, keytype = "Symbol",
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
-
 \item{top}{An integer, specifying number of top selected genes to be labeled in rank figure.}
 
 \item{bottom}{An integer, specifying number of bottom selected genes to be labeled in rank figure.}
 
-\item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
+\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
+or how many standard deviation will be used as cutoff.}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
-
-\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
-
-\item{posControl}{A character vector, specifying a list of positive control gene symbols.}
-
-\item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
 \item{prefix}{A character, indicating the prefix of output file name, which can't contain special characters.}
 
@@ -52,6 +43,14 @@ maximal size of gene sets for enrichent analysis.}
 \item{height}{The height of summary pdf in inches.}
 
 \item{outdir}{Output directory on disk.}
+
+\item{interestGenes}{A character vector, specifying interested genes to be labeled in rank figure.}
+
+\item{enrich_kegg}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
+
+\item{posControl}{A character vector, specifying a list of positive control gene symbols.}
+
+\item{loess}{Boolean, whether include loess normalization in the pipeline.}
 
 \item{view_allpath}{Boolean, whether output all pathway view figures.}
 }

@@ -16,10 +16,10 @@ install_bitbucket("liulab/MAGeCKFlute")
 ~~~
 
 ## Quick start
-Please browse the [tutorial page](https://www.bioconductor.org/packages/3.9/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute.html).
+Please browse the [tutorial page](https://www.bioconductor.org/packages/3.10/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute.html).
 
 ## Version history
-Please browse the [version tracking page] (https://www.bioconductor.org/packages/3.9/bioc/news/MAGeCKFlute/NEWS).
+Please browse the [version tracking page] (https://www.bioconductor.org/packages/3.10/bioc/news/MAGeCKFlute/NEWS).
 	
 ## Contacts
 
