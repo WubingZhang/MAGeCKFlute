@@ -6,7 +6,7 @@
 #' @name EnrichSquare
 #' @rdname EnrichSquare
 #'
-#' @param beta Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.
+#' @param beta Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'Diff'.
 #' @param pvalue Pvalue cutoff.
 #' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
@@ -54,18 +54,18 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
   idx2 = gg$group=="topcenter"
   idx3 = gg$group=="midright"
   idx4 = gg$group=="bottomcenter"
-  universe = rownames(gg)
+  universe = gg$Gene
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx1]; names(geneList) = rownames(gg)[idx1]
+  geneList = gg$Diff[idx1]; names(geneList) = gg$Gene[idx1]
   kegg1=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method, type = "KEGG",
                        organism=organism, pvalueCutoff = pvalue,
-                       limit = limit)
+                       limit = limit, keytype = "Entrez")
   go1=EnrichAnalyzer(geneList = geneList, universe=universe,
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
                      organism=organism, pvalueCutoff = pvalue,
-                     limit = limit)
+                     limit = limit, keytype = "Entrez")
   kegg1 = list(enrichRes = kegg1,
                gridPlot = EnrichedView(kegg1, top = 8, bottom = 0)
                + labs(title = "KEGG: Group1"))
@@ -75,14 +75,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
 
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx2]; names(geneList) = rownames(gg)[idx2]
+  geneList = gg$Diff[idx2]; names(geneList) = gg$Gene[idx2]
   kegg2=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method, type = "KEGG",
                        organism=organism, pvalueCutoff=pvalue,
-                       limit = limit)
+                       limit = limit, keytype = "Entrez")
   go2=EnrichAnalyzer(geneList = geneList, universe=universe,
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
-                     organism=organism, pvalueCutoff=pvalue, limit = limit)
+                     organism=organism, pvalueCutoff=pvalue,
+                     limit = limit, keytype = "Entrez")
   kegg2 = list(enrichRes = kegg2,
                gridPlot = EnrichedView(kegg2, top = 8, bottom = 0)
                + labs(title = "KEGG: Group2"))
@@ -91,13 +92,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
              + labs(title = "Gene Ontology: Group2"))
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx3]; names(geneList) = rownames(gg)[idx3]
+  geneList = gg$Diff[idx3]; names(geneList) = gg$Gene[idx3]
   kegg3=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method,type = "KEGG",
-                       organism=organism, pvalueCutoff = pvalue, limit = limit)
+                       organism=organism, pvalueCutoff = pvalue,
+                       limit = limit, keytype = "Entrez")
   go3=EnrichAnalyzer(geneList = geneList, universe=universe,
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
-                     organism=organism, pvalueCutoff=pvalue, limit = limit)
+                     organism=organism, pvalueCutoff=pvalue,
+                     limit = limit, keytype = "Entrez")
   kegg3 = list(enrichRes = kegg3,
                gridPlot = EnrichedView(kegg3, top = 0, bottom = 8)
                + labs(title = "KEGG: Group3"))
@@ -106,13 +109,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
              + labs(title = "Gene Ontology: Group3"))
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx4]; names(geneList) = rownames(gg)[idx4]
+  geneList = gg$Diff[idx4]; names(geneList) = gg$Gene[idx4]
   kegg4=EnrichAnalyzer(geneList = geneList, universe=universe,
                        method = enrich_method, type = "KEGG",
-                       organism=organism, pvalueCutoff = pvalue, limit = limit)
+                       organism=organism, pvalueCutoff = pvalue,
+                       limit = limit, keytype = "Entrez")
   go4=EnrichAnalyzer(geneList = geneList, universe=universe,
                      method = enrich_method, type = "GOBP+GOMF+GOCC",
-                     organism=organism, pvalueCutoff=pvalue, limit = limit)
+                     organism=organism, pvalueCutoff=pvalue,
+                     limit = limit, keytype = "Entrez")
   kegg4 = list(enrichRes = kegg4,
                gridPlot = EnrichedView(kegg4, top = 0, bottom = 8)
                + labs(title = "KEGG: Group4"))
@@ -121,13 +126,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
              + labs(title = "Gene Ontology: Group4"))
 
   #====GO_KEGG_enrichment=====
-  geneList = abs(gg$diff[idx1|idx2]); names(geneList) = rownames(gg)[idx1|idx2]
+  geneList = abs(gg$Diff[idx1|idx2]); names(geneList) = gg$Gene[idx1|idx2]
   kegg12=EnrichAnalyzer(geneList = geneList, universe=universe,
                         method = enrich_method, type = "KEGG",
-                        organism=organism, pvalueCutoff = pvalue, limit = limit)
+                        organism=organism, pvalueCutoff = pvalue,
+                        limit = limit, keytype = "Entrez")
   go12=EnrichAnalyzer(geneList = geneList, universe=universe,
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, pvalueCutoff = pvalue, limit = limit)
+                      organism=organism, pvalueCutoff = pvalue,
+                      limit = limit, keytype = "Entrez")
   kegg12 = list(enrichRes = kegg12,
                 gridPlot = EnrichedView(kegg12, top = 8, bottom = 0)
                 + labs(title = "KEGG: Group1&2"))
@@ -136,13 +143,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
               + labs(title = "Gene Ontology: Group1&2"))
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx1|idx3]; names(geneList) = rownames(gg)[idx1|idx3]
+  geneList = gg$Diff[idx1|idx3]; names(geneList) = gg$Gene[idx1|idx3]
   kegg13=EnrichAnalyzer(geneList = geneList, universe=universe,
                         method = enrich_method, type = "KEGG",
-                        organism=organism, pvalueCutoff = pvalue, limit = limit)
+                        organism=organism, pvalueCutoff = pvalue,
+                        limit = limit, keytype = "Entrez")
   go13=EnrichAnalyzer(geneList = geneList, universe=universe,
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, pvalueCutoff = pvalue, limit = limit)
+                      organism=organism, pvalueCutoff = pvalue,
+                      limit = limit, keytype = "Entrez")
   kegg13 = list(enrichRes = kegg13,
                 gridPlot = EnrichedView(kegg13, top = 4, bottom = 4)
                + labs(title = "KEGG: Group1&3"))
@@ -151,14 +160,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
              + labs(title = "Gene Ontology: Group1&3"))
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx4|idx2]; names(geneList) = rownames(gg)[idx4|idx2]
+  geneList = gg$Diff[idx4|idx2]; names(geneList) = gg$Gene[idx4|idx2]
   kegg24=EnrichAnalyzer(geneList = geneList, universe=universe,
                         method = enrich_method,type = "KEGG",
                         organism=organism, pvalueCutoff = pvalue,
-                        limit = limit)
+                        limit = limit, keytype = "Entrez")
   go24=EnrichAnalyzer(geneList = geneList, universe=universe,
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, limit = limit, pvalueCutoff = pvalue)
+                      organism=organism, limit = limit,
+                      pvalueCutoff = pvalue, keytype = "Entrez")
   kegg24 = list(enrichRes = kegg24,
                 gridPlot = EnrichedView(kegg24, top = 4, bottom = 4)
                 + labs(title = "KEGG: Group2&4"))
@@ -167,13 +177,15 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
               + labs(title = "Gene Ontology: Group2&4"))
 
   #====GO_KEGG_enrichment=====
-  geneList = gg$diff[idx3|idx4]; names(geneList) = rownames(gg)[idx3|idx4]
+  geneList = gg$Diff[idx3|idx4]; names(geneList) = gg$Gene[idx3|idx4]
   kegg34=EnrichAnalyzer(geneList = geneList, universe=universe,
-                        method = enrich_method, type = "KEGG", limit = limit,
-                        organism=organism, pvalueCutoff = pvalue)
+                        method = enrich_method, type = "KEGG",
+                        limit = limit, organism=organism,
+                        pvalueCutoff = pvalue, keytype = "Entrez")
   go34=EnrichAnalyzer(geneList = geneList, universe=universe,
                       method = enrich_method, type = "GOBP+GOMF+GOCC",
-                      organism=organism, limit = limit, pvalueCutoff = pvalue)
+                      organism=organism, limit = limit,
+                      pvalueCutoff = pvalue, keytype = "Entrez")
   kegg34 = list(enrichRes = kegg34,
                 gridPlot = EnrichedView(kegg34, top = 0, bottom = 8)
                 + labs(title = "KEGG: Group3&4"))
@@ -182,7 +194,7 @@ EnrichSquare <- function(beta, pvalue = 0.05, enrich_method = "ORT",
               + labs(title = "Gene Ontology: Group3&4"))
 
 
-  ###========Output results==================
+  ### Output results
   if(!is.null(filename)){
     if(!is.null(kegg1$enrichRes)){
       write.table(kegg1$enrichRes@result,

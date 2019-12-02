@@ -12,7 +12,7 @@
 #' @param y A character, specifying the y-axis.
 #'
 #' @param label An integer or a character specifying the column used as the label, default value is 0 (row names).
-#' @param label.top Boolean, indicates whether label the name of top hits in the groups.
+#' @param label.top Boolean, specifying whether label top hits.
 #' @param top Integer, specifying the number of top terms in the groups to be labeled.
 #' @param toplabels Character vector, specifying terms to be labeled.
 #'
@@ -103,13 +103,13 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
       intercept = c(-CutoffCalling(data[,y]-data[,x], 1.5), CutoffCalling(data[,y]-data[,x], 1.5))
   }
   ## Decide the colored groups
-  avail_groups = c("topleft", "topcenter", "topright", "midleft", "midcenter",
-                   "midright", "bottomleft", "bottomcenter", "bottomright",
+  avail_groups = c("topleft", "topright", "bottomleft", "bottomright",
+                   "midleft", "topcenter", "midright", "bottomcenter", "midcenter",
                    "top", "mid", "bottom", "left", "center", "right", "none")
   ## Select the colors
-  mycolour = c("#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#ffffb3", "#fdb462",
-               "#b3de69", "#fccde5", "#bc80bd",
-             "#8da0cb", "#fc8d62", "#66c2a5", "#e78ac3", "#a6d854", "#e5c494", "#d9d9d9")
+  mycolour = c("#1f78b4", "#fb8072", "#33a02c", "#ff7f00",
+               "#bc80bd", "#66c2a5", "#6a3d9a", "#fdb462", "#ffed6f",
+               "#e78ac3", "#fdb462", "#8da0cb", "#66c2a5", "#fccde5", "#fc8d62", "#d9d9d9")
   names(mycolour) = avail_groups
 
   if(model == "ninesquare") groups = c("midleft", "topcenter", "midright", "bottomcenter")
@@ -195,7 +195,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
         data$group[rowSums(idx)==ncol(idx)] = gr
     }
   }
-
+  data$group=factor(data$group, levels = unique(c(groups, "none")))
   ## Group names
   if(length(groupnames)!=length(groups)) groupnames = groups
   if(length(groups)>0) names(groupnames) = groups
@@ -225,15 +225,32 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
     data$rank[idx1] = rank((x_symb*tmp[,x]+y_symb*tmp[,y])[idx1])
   }
   data$rank[data$rank==0] = Inf
-  data$Label[data$rank>top & !(data$Label %in% toplabels)] = ""
-  data$group=factor(data$group, levels = c(groups, "none"))
-
-  gg = data
+  if(mode(toplabels)=="list"){
+    data$Label[data$rank>top & !(data$Label %in% unlist(toplabels))] = ""
+    data$Color = data$Label;
+    if(length(toplabels)>0){
+      tmp = stack(toplabels)
+      tmp = tmp[!duplicated(tmp[,1]), ]
+      rownames(tmp) = tmp[,1]
+      data$Color[data$Color%in%tmp[,1]] = as.character(tmp[data$Color[data$Color%in%tmp[,1]], 2])
+      data$Color[!(data$Color%in%tmp[,2]) & data$Color!=""] = "Top hits"
+    }
+  }else{
+    data$Label[data$rank>top & !(data$Label %in% toplabels)] = ""
+  }
   ## Plot the scatter figure ##
-  p = ggplot(gg, aes_string(x, y, label="Label", color = "group", fill = "group"))
-  p = p + geom_point(shape = 21, alpha = 0.8)
-  p = p + scale_color_manual(values = mycolour, labels = groupnames)
-  p = p + scale_fill_manual(values = mycolour, labels = groupnames)
+  gg = data
+  if(mode(toplabels)!="list"){
+    p = ggplot(gg, aes_string(x, y, label="Label", color = "group"), alpha = 0.8)
+    p = p + geom_point(shape = 16)
+    p = p + scale_color_manual(values = mycolour, labels = groupnames)
+  }else{
+    p = ggplot(gg, aes_string(x, y, label="Label"), alpha = 0.8)
+    p = p + geom_point(shape = 16, color = "#d9d9d9")
+    p = p + geom_point(aes(color = Color), shape = 16, data = gg[gg$Color!="", ])
+  }
+  if(label.top)
+    p = p + ggrepel::geom_text_repel(...)
   if(display_cut){
     if(length(x_cut)>0)
       p = p + geom_vline(xintercept = x_cut,linetype = "dotted")
@@ -242,9 +259,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
     if(length(intercept)>0)
       p = p + geom_abline(slope=slope, intercept=intercept, linetype = "dotted")
   }
-  p = p + labs(x=xlab, y = ylab, title = main)
-  if(label.top)
-    p = p + ggrepel::geom_text_repel(...)
+  p = p + labs(x=xlab, y = ylab, title = main, color = NULL)
   p = p + ggpubr::theme_pubr() + theme(plot.title = element_text(hjust = 0.5))
   if(!legend) p = p + theme(legend.position = "none")
   return(p)

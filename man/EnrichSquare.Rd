@@ -10,7 +10,7 @@ EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
   out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.}
+\item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'Diff'.}
 
 \item{pvalue}{Pvalue cutoff.}
 

@@ -7,16 +7,19 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, sgrna_summary = gsub("gene_summary",
-  "sgrna_summary", gene_summary), lfcCutoff = c(-1, 1),
-  organism = "hsa", limit = c(2, 200), pvalueCutoff = 0.25,
-  prefix = "Test", width = 12, height = 6, outdir = ".")
+  "sgrna_summary", gene_summary), keytype = "Symbol", score = c("lfc",
+  "rra")[1], cutoff = c(-1, 1), organism = "hsa", top = 5,
+  toplabels = NULL, limit = c(2, 200), pvalueCutoff = 0.25,
+  proj = NA, width = 12, height = 6, outdir = ".")
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}
 
 \item{sgrna_summary}{A file path or a data frame of sgRNA summary data.}
 
-\item{lfcCutoff}{A two-length vector (default: c(-1, 1)), specifying the logFC cutoff
+\item{score}{"lfc" (default) or "rra", specifying the score type.}
+
+\item{cutoff}{A two-length vector (default: c(-1, 1)), specifying the cutoff
 for negative selection and positive selection.}
 
 \item{organism}{"hsa" or "mmu".}
@@ -26,7 +29,7 @@ maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
-\item{prefix}{A character, indicating the prefix of output file name.}
+\item{proj}{A character, indicating the prefix of output file name.}
 
 \item{width}{The width of summary pdf in inches.}
 
@@ -35,7 +38,7 @@ maximal size of gene sets for enrichent analysis.}
 \item{outdir}{Output directory on disk.}
 }
 \value{
-All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
+All of the pipeline results is output into the \code{out.dir}/\code{proj}_Results,
 which includes a pdf file and a folder named 'RRA'.
 }
 \description{
@@ -57,7 +60,7 @@ data("rra.gene_summary")
 data("rra.sgrna_summary")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(rra.gene_summary, rra.sgrna_summary, prefix="RRA", organism="hsa")
+    FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="RRA", organism="hsa")
 }
 
 

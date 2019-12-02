@@ -22,7 +22,7 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
 
 \item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
-\item{label.top}{Boolean, indicates whether label the name of top hits in the groups.}
+\item{label.top}{Boolean, specifying whether label top hits.}
 
 \item{top}{Integer, specifying the number of top terms in the groups to be labeled.}
 

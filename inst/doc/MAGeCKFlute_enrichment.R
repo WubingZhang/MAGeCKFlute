@@ -61,12 +61,13 @@ gseaplot(gseRes1, geneSetID = 1, by = "preranked", title = gseRes1$Description[1
 gseaplot2(gseRes1, geneSetID = 1:3)
 
 ## ----pathway, fig.height=4, fig.width=7, dpi=150-------------------------
+## KEGG and REACTOME pathways
 enrich = EnrichAnalyzer(geneList = genelist[genelist< -1], type = "KEGG+REACTOME")
 EnrichedView(enrich, bottom = 5)
+## Only KEGG pathways
 enrich = EnrichAnalyzer(geneList = genelist[genelist< -1], type = "KEGG")
 EnrichedView(enrich, bottom = 5)
-
-## ---- fig.height=4, fig.width=7, dpi=150---------------------------------
+## Gene ontology
 enrichGo = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP+GOMF")
 EnrichedView(enrichGo, bottom = 5)
 

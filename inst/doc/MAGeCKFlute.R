@@ -61,7 +61,7 @@ dd.rra$RandomIndex = sample(1:nrow(dd.rra), nrow(dd.rra))
 dd.rra = dd.rra[order(-dd.rra$LFC), ]
 p2 = ScatterView(dd.rra, x = "RandomIndex", y = "LFC", label = "id",
                  y_cut = CutoffCalling(dd.rra$LFC,2), 
-                 groups = "topright", toplabels = dd.rra$id[1:5])
+                 groups = "top", toplabels = dd.rra$id[1:5])
 p2 + ylim(0, NA)
 
 ## ----sgRNARank, fig.height=4, fig.width=7--------------------------------
@@ -109,7 +109,7 @@ ConsistencyView(dd_essential, ctrlname, treatname)
 MAView(dd_essential, ctrlname, treatname)
 
 ## ----selection2, fig.height=5, fig.width=7-------------------------------
-p1 = ScatterView(dd_essential, ctrlname, treatname, auto_cut_diag = TRUE)
+p1 = ScatterView(dd_essential, ctrlname, treatname, groups = c("top", "bottom"), auto_cut_diag = TRUE, display_cut = TRUE)
 print(p1)
 
 ## ----rank, fig.height=5, fig.width=7-------------------------------------

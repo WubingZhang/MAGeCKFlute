@@ -1,38 +1,38 @@
-CHANGES IN VERSION 1.7.0
+CHANGES IN VERSION 1.7.0 (Bioconductor 3.10)
 -------------------------
 
     o Incorporate gene id conversion between organisms into TransGeneID.
     o Incorporate visualization functions from enrichplot.
-    o Add new functions for visualization.
+    o Add new functions for visualization, such as ScatterView and BarView.
     o Debug the read file commands.
-    o Add documents for enrichment analysis.
+    o Add additional document for enrichment analysis.
 
-CHANGES IN VERSION 1.4.4
+CHANGES IN VERSION 1.4.4 (Bioconductor 3.9)
 -------------------------
 
     o Remove duplicated rows in BatchRemove results.
     o Add other MsigDB genesets into MAGeCKFlute.
     o Prioritize EnrichedView function.
 
-CHANGES IN VERSION 1.4.3
+CHANGES IN VERSION 1.4.3 (Bioconductor 3.9)
 -------------------------
 
     o Remove bugs when perform enrichment analysis based on use-defined gene sets.
     o Prioritize NormalizeBeta.
     o Customize KEGG pathways (04***).
 
-CHANGES IN VERSION 1.4.1
+CHANGES IN VERSION 1.4.1 (Bioconductor 3.9)
 -------------------------
 
     o Prioritize many functions.
 
-CHANGES IN VERSION 1.4.0
+CHANGES IN VERSION 1.4.0 (Bioconductor 3.9)
 -------------------------
 
     o Add new parameters in EnrichedGeneView to allow users to customize pathways and genes to show.
 
 
-CHANGES IN VERSION 1.3.0
+CHANGES IN VERSION 1.3.0 (Bioconductor 3.9)
 -------------------------
 
     o Fix the bug about essential gene issue for different organism.
@@ -44,14 +44,14 @@ CHANGES IN VERSION 1.3.0
     by computing the Jaccard similarity coefficient between enriched terms, and removing big gene sets.
 
 
-CHANGES IN VERSION 1.2.3
+CHANGES IN VERSION 1.2.3 (Bioconductor 3.9)
 -------------------------
 
     o Prioritize FluteMLE.
     o Remove warnings from vignettes.
 
 
-CHANGES IN VERSION 1.2.2
+CHANGES IN VERSION 1.2.2 (Bioconductor 3.9)
 -------------------------
 
     o Revise ReadRRA function.
@@ -64,7 +64,7 @@ CHANGES IN VERSION 1.2.2
     o Export all the hidden functions.
 
 
-CHANGES IN VERSION 1.2.1
+CHANGES IN VERSION 1.2.1 (Bioconductor 3.9)
 -------------------------
 
     o Add VolcanoView to show positive and negative selected genes.
@@ -73,7 +73,7 @@ CHANGES IN VERSION 1.2.1
     o Merge MsigDB, KEGG, and GO genesets together and integrate them into package.
 
 
-CHANGES IN VERSION 1.1.6
+CHANGES IN VERSION 1.1.6 (Bioconductor 3.9)
 -------------------------
 
     o Add functions to plot figures in NatureProtocol manuscript.
@@ -81,7 +81,7 @@ CHANGES IN VERSION 1.1.6
     o Remove null figures in pathview part.
 
 
-CHANGES IN VERSION 1.1.9
+CHANGES IN VERSION 1.1.9 (Bioconductor 3.9)
 -------------------------
 
     o Add parameter 'pathway_limit' / 'limit' / 'gmtpath' in FluteRRA, FluteMLE, and all enrichment functions which enable users to customize gene sets for enrichment analysis.
@@ -89,21 +89,21 @@ CHANGES IN VERSION 1.1.9
     o Add enrichment score in enrichment results from all algorithms.
 
 
-CHANGES IN VERSION 1.1.1
+CHANGES IN VERSION 1.1.1 (Bioconductor 3.9)
 -------------------------
 
     o Speed up the enrichment analysis.
     o Release memory in time.
 
 
-CHANGES IN VERSION 0.99.19
+CHANGES IN VERSION 0.99.19 (Bioconductor 3.9)
 -------------------------
 
     o Beutify figures.
     o Remove some unnecessary dependencies.
 
 
-CHANGES IN VERSION 0.99.18
+CHANGES IN VERSION 0.99.18 (Bioconductor 3.9)
 -------------------------
 
     o Add HeatmapView and BatchRemove.
@@ -112,7 +112,7 @@ CHANGES IN VERSION 0.99.18
     o Label top ten essential genes in SquareView.
     o Change some default parameter values to be better.
 
-CHANGES IN VERSION 0.99.10
+CHANGES IN VERSION 0.99.10 (Bioconductor 3.9)
 -------------------------
 
     o Change all plot function names ended with 'View'.
@@ -121,7 +121,7 @@ CHANGES IN VERSION 0.99.10
     o Revise all documents
 
 
-CHANGES IN VERSION 0.99.1
+CHANGES IN VERSION 0.99.1 (Bioconductor 3.9)
 -------------------------
 
     o Remove some new errors, such as error trigered by no GroupA genes.
@@ -130,7 +130,7 @@ CHANGES IN VERSION 0.99.1
     o Add annotation of other organisms.
 
 
-CHANGES IN VERSION 0.99.0
+CHANGES IN VERSION 0.99.0 (Bioconductor 3.9)
 -------------------------
 
     o FluteMLE and FluteRRA are two main functions in MAGeCKFlute package. FluteMLE run pipeline from gene beta scores caculated by MAGeCK MLE, while FluteRRA run pipeline based on MAGeCK RRA results.

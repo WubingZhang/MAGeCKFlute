@@ -39,37 +39,37 @@ EnrichAB <- function(data, pvalue = 0.25,
   gg = data
 
   ##=====enrichment for GroupA======
-  idx1 = gg$group=="up"; genes = gg$EntrezID[idx1]
-  geneList = gg$diff[idx1]; names(geneList) = genes
+  idx1 = gg$group=="top"; genes = gg$EntrezID[idx1]
+  geneList = gg$Diff[idx1]; names(geneList) = genes
   keggA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                          method = enrich_method, type = "KEGG",
                          organism = organism, pvalueCutoff = pvalue,
-                         limit = limit)
+                         limit = limit, keytype = "Entrez")
   keggA = list(enrichRes = keggA,
                gridPlot = EnrichedView(keggA, top = 8, bottom = 0)
                + labs(title = "KEGG: GroupA"))
   goA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
-                       limit = limit)
+                       limit = limit, keytype = "Entrez")
   goA = list(enrichRes = goA,
              gridPlot = EnrichedView(goA, top = 8, bottom = 0)
                + labs(title = "Gene Ontology: GroupA"))
 
 
-  idx2 = gg$group=="down"; genes = gg$EntrezID[idx2]
-  geneList = gg$diff[idx2]; names(geneList) = genes
+  idx2 = gg$group=="bottom"; genes = gg$EntrezID[idx2]
+  geneList = gg$Diff[idx2]; names(geneList) = genes
   keggB=EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = enrich_method, type = "KEGG",
                        organism = organism, pvalueCutoff = pvalue,
-                       limit = limit)
+                       limit = limit, keytype = "Entrez")
   keggB = list(enrichRes = keggB,
                gridPlot = EnrichedView(keggB, top = 0, bottom = 8)
                + labs(title = "KEGG: GroupB"))
   goB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                        method = "ORT", type = "GOBP+GOMF+GOCC",
                        organism = organism, pvalueCutoff = pvalue,
-                       limit = limit)
+                       limit = limit, keytype = "Entrez")
   goB = list(enrichRes = goB,
              gridPlot = EnrichedView(goB, top = 0, bottom = 8)
                + labs(title = "Gene Ontology: GroupB"))
@@ -92,7 +92,7 @@ EnrichAB <- function(data, pvalue = 0.25,
              filename=file.path(out.dir,paste0("GroupA_go_",filename,".png")),
              units = "in", width=6.5, height=4)
     }
-    ##=========Save GroupB enrichment results===========================
+    ## Save GroupB enrichment results
     if(!is.null(keggB$enrichRes)){
       write.table(keggB$enrichRes@result,
                   file.path(out.dir,paste0("GroupB_kegg_",filename,".txt")),
