@@ -6,6 +6,7 @@ CHANGES IN VERSION 1.7.0 (Bioconductor 3.10)
     o Add new functions for visualization, such as ScatterView and BarView.
     o Debug the read file commands.
     o Add additional document for enrichment analysis.
+    o Integrate Depmap data into the pipeline.
 
 CHANGES IN VERSION 1.4.4 (Bioconductor 3.9)
 -------------------------

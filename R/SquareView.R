@@ -45,7 +45,6 @@
 #' SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 #'
 #'
-#' @importFrom ggExtra ggMarginal
 #' @importFrom ggrepel geom_text_repel
 #' @export
 #'
@@ -57,7 +56,6 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
                      groups = c("midleft", "topcenter", "midright", "bottomcenter"),
                      groupnames = paste0("Group", 1:length(groups)),
                      main = NULL, filename = NULL, width = 6, height = 4, ...){
-  requireNamespace("ggExtra", quietly=TRUE) || stop("need ggExtra package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
   message(Sys.time(), " # Square plot for ", main, " beta scores ...")

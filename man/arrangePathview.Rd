@@ -6,9 +6,8 @@
 \title{Kegg pathway view and arrange grobs on page}
 \usage{
 arrangePathview(genelist, pathways = c(), top = 4, ncol = 2,
-  title = "Group A", sub = "Negative control normalized",
-  organism = "hsa", view_allpath = FALSE, output = ".",
-  path.archive = ".", kegg.native = TRUE)
+  title = NULL, sub = NULL, organism = "hsa", view_allpath = FALSE,
+  output = ".", path.archive = ".", kegg.native = TRUE)
 }
 \arguments{
 \item{genelist}{a data frame with columns of ENTREZID, Control and Treatment. The columns

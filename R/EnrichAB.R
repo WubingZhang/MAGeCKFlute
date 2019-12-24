@@ -19,14 +19,11 @@
 #' @param height As in ggsave.
 #' @param ... Other available parameters in ggsave.
 #'
-#' @return A list containing enrichment results for each group genes. This list contains items four
-#' items, \code{keggA}, \code{keggB}, \code{goA}, \code{goB}. Four items are all list object, containing
-#' subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
-#' \code{enrichRes} is a enrichResult instance
+#' @return A list containing enrichment results for each group genes. This list contains eight
+#' items, which contain subitems of \code{gridPlot} and \code{enrichRes}.
 #'
 #' @author Wubing Zhang
-
-# Enrichment for GroupA and GroupB genes
+#'
 EnrichAB <- function(data, pvalue = 0.25,
                      enrich_method = "ORT",
                      organism = "hsa",
@@ -41,74 +38,89 @@ EnrichAB <- function(data, pvalue = 0.25,
   ##=====enrichment for GroupA======
   idx1 = gg$group=="top"; genes = gg$EntrezID[idx1]
   geneList = gg$Diff[idx1]; names(geneList) = genes
-  keggA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
-                         method = enrich_method, type = "KEGG",
+  enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
+                         method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                          organism = organism, pvalueCutoff = pvalue,
                          limit = limit, keytype = "Entrez")
-  keggA = list(enrichRes = keggA,
-               gridPlot = EnrichedView(keggA, top = 8, bottom = 0)
-               + labs(title = "KEGG: GroupA"))
-  goA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
-                       method = "ORT", type = "GOBP+GOMF+GOCC",
-                       organism = organism, pvalueCutoff = pvalue,
-                       limit = limit, keytype = "Entrez")
-  goA = list(enrichRes = goA,
-             gridPlot = EnrichedView(goA, top = 8, bottom = 0)
-               + labs(title = "Gene Ontology: GroupA"))
-
+  if(!is.null(enrichA) && nrow(enrichA@result)>0){
+    keggA = enrichA@result[grepl("KEGG", enrichA@result$ID), ]
+    gobpA = enrichA@result[grepl("GOBP", enrichA@result$ID), ]
+    reactomeA = enrichA@result[grepl("REACTOME", enrichA@result$ID), ]
+    complexA = enrichA@result[grepl("CPX|CORUM", enrichA@result$ID), ]
+    keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = 5, bottom = 0)
+                 + labs(title = "KEGG: GroupA"))
+    gobpA = list(enrichRes = gobpA, gridPlot = EnrichedView(gobpA, top = 5, bottom = 0)
+               + labs(title = "GOBP: GroupA"))
+    reactomeA = list(enrichRes = reactomeA, gridPlot = EnrichedView(reactomeA, top = 5, bottom = 0)
+                     + labs(title = "REACTOME: GroupA"))
+    complexA = list(enrichRes = complexA, gridPlot = EnrichedView(complexA, top = 5, bottom = 0)
+                    + labs(title = "Complex: GroupA"))
+  }else{
+    keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
+  }
 
   idx2 = gg$group=="bottom"; genes = gg$EntrezID[idx2]
   geneList = gg$Diff[idx2]; names(geneList) = genes
-  keggB=EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
-                       method = enrich_method, type = "KEGG",
-                       organism = organism, pvalueCutoff = pvalue,
-                       limit = limit, keytype = "Entrez")
-  keggB = list(enrichRes = keggB,
-               gridPlot = EnrichedView(keggB, top = 0, bottom = 8)
-               + labs(title = "KEGG: GroupB"))
-  goB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
-                       method = "ORT", type = "GOBP+GOMF+GOCC",
-                       organism = organism, pvalueCutoff = pvalue,
-                       limit = limit, keytype = "Entrez")
-  goB = list(enrichRes = goB,
-             gridPlot = EnrichedView(goB, top = 0, bottom = 8)
-               + labs(title = "Gene Ontology: GroupB"))
+  enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
+                           method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
+                           organism = organism, pvalueCutoff = pvalue,
+                           limit = limit, keytype = "Entrez")
+  if(!is.null(enrichB) && nrow(enrichB@result)>0){
+    keggB = enrichB@result[grepl("KEGG", enrichB@result$ID), ]
+    gobpB = enrichB@result[grepl("GOBP", enrichB@result$ID), ]
+    reactomeB = enrichB@result[grepl("REACTOME", enrichB@result$ID), ]
+    complexB = enrichB@result[grepl("CPX|CORUM", enrichB@result$ID), ]
+    keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = 5)
+                 + labs(title = "KEGG: GroupB"))
+    gobpB = list(enrichRes = gobpB, gridPlot = EnrichedView(gobpB, top = 0, bottom = 5)
+               + labs(title = "GOBP: GroupB"))
+    reactomeB = list(enrichRes = reactomeB, gridPlot = EnrichedView(reactomeB, top = 0, bottom = 5)
+                     + labs(title = "REACTOME: GroupB"))
+    complexB = list(enrichRes = complexB, gridPlot = EnrichedView(complexB, top = 0, bottom = 5)
+                    + labs(title = "Complex: GroupB"))
+  }else{
+    keggB = gobpB = reactomeB = complexB = list(enrichRes = NULL, gridPlot = noEnrichPlot())
+  }
 
   if(!is.null(filename)){
     ## Save GroupA enrichment results
-    if(!is.null(keggA$enrichRes)){
-      write.table(keggA$enrichRes@result,
-                  file.path(out.dir,paste0("GroupA_kegg_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(keggA$gridPlot,
-             filename=file.path(out.dir,paste0("GroupA_kegg_", filename,".png")),
+    if(!is.null(enrichA) && nrow(enrichA@result)>0){
+      write.table(keggA$enrichRes, file.path(out.dir,paste0("GroupA_kegg_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(keggA$gridPlot, filename=file.path(out.dir,paste0("GroupA_kegg_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(reactomeA$enrichRes, file.path(out.dir,paste0("GroupA_reactome_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(reactomeA$gridPlot, filename=file.path(out.dir,paste0("GroupA_reactome_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(gobpA$enrichRes, file.path(out.dir,paste0("GroupA_gobp_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(gobpA$gridPlot, filename=file.path(out.dir,paste0("GroupA_gobp_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(complexA$enrichRes, file.path(out.dir,paste0("GroupA_complex_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(complexA$gridPlot, filename=file.path(out.dir,paste0("GroupA_complex_", filename,".png")),
              units = "in", width=6.5, height=4)
     }
-    if(!is.null(goA$enrichRes)){
-      write.table(goA$enrichRes@result,
-                  file.path(out.dir,paste0("GroupA_go_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(goA$gridPlot,
-             filename=file.path(out.dir,paste0("GroupA_go_",filename,".png")),
+    if(!is.null(enrichB) && nrow(enrichB@result)>0){
+      write.table(keggB$enrichRes, file.path(out.dir,paste0("GroupB_kegg_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(keggB$gridPlot, filename=file.path(out.dir,paste0("GroupB_kegg_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(reactomeB$enrichRes, file.path(out.dir,paste0("GroupB_reactome_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(reactomeB$gridPlot, filename=file.path(out.dir,paste0("GroupB_reactome_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(gobpB$enrichRes, file.path(out.dir,paste0("GroupB_gobp_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(gobpB$gridPlot, filename=file.path(out.dir,paste0("GroupB_gobp_", filename,".png")),
+             units = "in", width=6.5, height=4)
+      write.table(complexB$enrichRes, file.path(out.dir,paste0("GroupB_complex_",filename,".txt")),
+                  sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+      ggsave(complexB$gridPlot, filename=file.path(out.dir,paste0("GroupB_complex_", filename,".png")),
              units = "in", width=6.5, height=4)
     }
-    ## Save GroupB enrichment results
-    if(!is.null(keggB$enrichRes)){
-      write.table(keggB$enrichRes@result,
-                  file.path(out.dir,paste0("GroupB_kegg_",filename,".txt")),
-                  sep="\t", row.names = FALSE,col.names = TRUE,quote=FALSE)
-      ggsave(keggB$gridPlot,
-             filename=file.path(out.dir,paste0("GroupB_kegg_",filename,".png")),
-             units = "in", width=6.5, height=4)
-    }
-    if(!is.null(goB$enrichRes)){
-      write.table(goB$enrichRes@result,
-                  file.path(out.dir,paste0("GroupB_go_",filename,".txt")),
-                  sep="\t", row.names = FALSE, col.names = TRUE, quote=FALSE)
-      ggsave(goB$gridPlot,
-             filename=file.path(out.dir,paste0("GroupB_go_",filename,".png")),
-             units = "in", width=6.5, height=4)
-    }
-    return(list(keggA=keggA, goA=goA, keggB=keggB, goB=goB))
   }
+  return(list(keggA=keggA, gobpA=gobpA, reactomeA=reactomeA, complexA=complexA,
+              keggB=keggB, gobpB=gobpB, reactomeB=reactomeB, complexB=complexB))
 }

@@ -32,10 +32,8 @@ max size of pathways for enrichent analysis.}
 \item{...}{Other available parameters in ggsave.}
 }
 \value{
-A list containing enrichment results for each group genes. This list contains items four
-items, \code{keggA}, \code{keggB}, \code{goA}, \code{goB}. Four items are all list object, containing
-subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
-\code{enrichRes} is a enrichResult instance
+A list containing enrichment results for each group genes. This list contains eight
+items, which contain subitems of \code{gridPlot} and \code{enrichRes}.
 }
 \description{
 Do enrichment analysis for selected genes, in which positive selection and negative selection

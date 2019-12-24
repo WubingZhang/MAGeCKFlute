@@ -34,7 +34,7 @@
 #' @examples
 #' data(rra.gene_summary)
 #' rra = ReadRRA(rra.gene_summary)
-#' VolcanoView(rra, x = "LFC", y = "FDR", Label = "Official")
+#' VolcanoView(rra, x = "Score", y = "FDR", Label = "id")
 #'
 #' @import ggrepel
 #' @export

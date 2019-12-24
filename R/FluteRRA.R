@@ -9,10 +9,15 @@
 #'
 #' @param gene_summary A file path or a data frame of gene summary data.
 #' @param sgrna_summary A file path or a data frame of sgRNA summary data.
-#' @param score "lfc" (default) or "rra", specifying the score type.
-#' @param cutoff A two-length vector (default: c(-1, 1)), specifying the cutoff
-#' for negative selection and positive selection.
+#' @param keytype "Entrez" or "Symbol".
 #' @param organism "hsa" or "mmu".
+#' @param incorporateDepmap Boolean, indicating whether incorporate Depmap data into analysis.
+#' @param cell_lines A character vector, specifying the cell lines in Depmap to be considered.
+#' @param lineages A character vector, specifying the lineages in Depmap to be considered.
+#' @param omitEssential Boolean, indicating whether omit common essential genes from the downstream analysis.
+#' @param top An integer, specifying number of top selected genes to be labeled in rank figure.
+#' @param toplabels A character vector, specifying interested genes to be labeled in rank figure.
+#' @param scale_cutoff Boolean or numeric, specifying how many standard deviation will be used as cutoff.
 #' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
@@ -43,19 +48,21 @@
 #' data("rra.sgrna_summary")
 #' \dontrun{
 #'     # Run the FluteRRA pipeline
-#'     FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="RRA", organism="hsa")
+#'     FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="PLX", organism="hsa")
 #' }
 #'
 #'
 #' @export
+#' @import ggplot2
 
 FluteRRA <- function(gene_summary,
                      sgrna_summary = gsub("gene_summary", "sgrna_summary", gene_summary),
                      keytype = "Symbol",
-                     score = c("lfc", "rra")[1],
-                     cutoff = c(-1, 1),
                      organism = "hsa",
+                     incorporateDepmap = TRUE, cell_lines = NA, lineages = "All",
+                     omitEssential = TRUE,
                      top = 5, toplabels = NULL,
+                     scale_cutoff = 2,
                      limit = c(2, 200),
                      pvalueCutoff = 0.25,
                      proj = NA,
@@ -63,11 +70,12 @@ FluteRRA <- function(gene_summary,
                      outdir = "."){
 
   ## Prepare the output environment ##
+  requireNamespace("ggplot2")
   message(Sys.time(), " # Create output dir and pdf file ...")
   outdir = file.path(outdir, paste0("MAGeCKFlute_", proj))
   dir.create(file.path(outdir), showWarnings = FALSE)
   dir.create(file.path(outdir,"RRA"), showWarnings=FALSE)
-  output_pdf = paste0("FluteRRA_", proj, "_", norm_method, ".pdf")
+  output_pdf = paste0("FluteRRA_", proj, ".pdf")
 
   pdf(file.path(outdir, output_pdf), width = width, height = height)
 
@@ -76,9 +84,9 @@ FluteRRA <- function(gene_summary,
   dd = ReadRRA(gene_summary)
   dd.sgrna = ReadsgRRA(sgrna_summary)
   dd$LogFDR = -log10(dd$FDR)
-  dd$Symbol = TransGeneID(dd$id, keytype, "Symbol", organism = organism)
   dd$EntrezID = TransGeneID(dd$id, keytype, "Entrez", organism = organism)
-  dd.sgrna$Symbol = TransGeneID(dd.sgrna$Gene, keytype, "Entrez", organism = organism)
+  dd$Symbol = TransGeneID(dd$id, keytype, "Symbol", organism = organism)
+  dd.sgrna$Symbol = TransGeneID(dd.sgrna$Gene, keytype, "Symbol", organism = organism)
   idx1 = is.na(dd$EntrezID)
   idx2 = !is.na(dd$EntrezID) & duplicated(dd$EntrezID)
   idx = idx1|idx2
@@ -87,50 +95,143 @@ FluteRRA <- function(gene_summary,
   if(sum(idx2)>0) warning(sum(idx2), " genes have duplicate entrez id: ",
                           paste0(dd$id[idx2], collapse = ", "))
   dd = dd[!idx, ]
+  dd.sgrna = dd.sgrna[!is.na(dd.sgrna$Symbol), ]
+  cutoff = c(-CutoffCalling(dd$Score, scale_cutoff), CutoffCalling(dd$Score, scale_cutoff))
 
+  if(incorporateDepmap){
+    dd = IncorporateDepmap(dd, symbol = "Symbol", cell_lines = cell_lines, lineages = lineages)
+    ## Nine-squares ##
+    p.square = ScatterView(dd, x = "Depmap", y = "Score", label = "Symbol", model = "ninesquare",
+                     auto_cut_x = TRUE, y_cut = cutoff, auto_cut_diag = TRUE,
+                     top = top, display_cut = TRUE) + ylab("Customized")
+    ggsave(file.path(outdir, "RRA/SquareView_Customized_Depmap.png"), p.square, width = 5, height = 4)
+    E1 = EnrichSquare(p.square$data, id = "Symbol", keytype = "Symbol", x = "Depmap", y = "Score",
+                      pvalue = pvalueCutoff, organism=organism, filename="RRA",
+                      limit = limit, out.dir=file.path(outdir, "RRA/"))
+  }
+
+  if(omitEssential){
+    dd = OmitCommonEssential(dd, symbol = "Symbol")
+    dd.sgrna = OmitCommonEssential(dd.sgrna, symbol = "Symbol")
+  }
+  dd$RandomIndex = sample(1:nrow(dd), nrow(dd))
   p1 = ScatterView(dd, x = "Score", y = "LogFDR", label = "Symbol",
-                   model = "volcano", top = top, toplabels = toplabels,
+                   x_cut = cutoff, model = "volcano", top = top, toplabels = toplabels,
                    display_cut = TRUE)
   ggsave(file.path(outdir,"RRA/VolcanoView_RRA.png"), p1,
-         units = "in", width = 6.5, height = 4)
+         units = "in", width = 5, height = 4)
 
-  geneList = dd$Score
-  names(geneList) = dd$Symbol
-  dd$Rank = rank(dd$Score)
-  p2 = ScatterView(dd, x = "Score", y = "Rank", label = "Symbol",
-                   top = top, toplabels = toplabels, model = "rank",
-                   display_cut = TRUE)
-  ggsave(file.path(outdir,"RRA/RankView_Gene.png"), p2,
-         units = "in", width = 6.5, height = 4)
-  p3 = sgRankView(dd.sgrna, top = top, bottom = 0)
-  ggsave(file.path(outdir,"RRA/RankView_sgRNA_top_.png"),
-         p3, units = "in", width = 6.5, height = 4)
-  p4 = sgRankView(dd.sgrna, top = 0, bottom = top)
-  ggsave(file.path(outdir,"RRA/RankView_sgRNA_bottom_.png"),
-         p4, units = "in", width = 6.5, height = 4)
+  # geneList = dd$Score
+  # names(geneList) = dd$Symbol
+  # dd$Rank = rank(dd$Score)
+  # p2 = ScatterView(dd, x = "Rank", y = "Score", label = "Symbol",
+  #                  y_cut = cutoff, groups = c("top", "bottom"),
+  #                  top = top, toplabels = toplabels,
+  #                  display_cut = TRUE)
+  # ggsave(file.path(outdir,"RRA/RankView_Gene.png"), p2,
+  #        units = "in", width = 3, height = 5)
+  p2 = sgRankView(dd.sgrna, top = top, bottom = top)
+  ggsave(file.path(outdir,"RRA/RankView_sgRNA.png"), p2, units = "in", width = 6.5, height = 5)
+  p3 = ScatterView(dd, x = "RandomIndex", y = "Score", label = "Symbol",
+                   y_cut = cutoff, groups = "top", top = top) + suppressWarnings(ylim(0, NA))
+  ggsave(file.path(outdir, "RRA/ScatterView_Positive.png"), p2, width = 5, height = 4)
+  p4 = ScatterView(dd, x = "RandomIndex", y = "Score", label = "Symbol",
+                   auto_cut_y = TRUE, groups = "bottom", top = top) + suppressWarnings(ylim(NA, 0))
+  ggsave(file.path(outdir, "RRA/ScatterView_Negative.png"), p2, width = 5, height = 4)
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
   universe = dd$EntrezID
   geneList = dd$Score; names(geneList) = dd$EntrezID
   idx1 = dd$Score<cutoff[1]; idx2 = dd$Score>cutoff[2]
-  kegg.neg = EnrichAnalyzer(geneList=geneList[idx1], universe=universe,
-                            organism=organism, pvalueCutoff=pvalueCutoff,
-                            limit = limit, keytype = "Entrez")
-  p1 = EnrichedView(kegg.neg, bottom = top) + labs(title = "Enrichment: neg")
-
   kegg.pos = EnrichAnalyzer(geneList=geneList[idx2], universe=universe,
                             organism=organism, pvalueCutoff=pvalueCutoff,
-                            limit = limit, keytype = "Entrez")
-  p2 = EnrichedView(kegg.pos, top = top) + labs(title = "Enrichment: pos")
-  grid.arrange(p1, p2, ncol = 1)
+                            limit = limit, keytype = "Entrez", type = "KEGG+REACTOME+GOBP+Complex")
+  if(!is.null(kegg.pos) && nrow(kegg.pos@result)>0){
+    keggA = kegg.pos@result[grepl("KEGG", kegg.pos@result$ID), ]
+    gobpA = kegg.pos@result[grepl("GOBP", kegg.pos@result$ID), ]
+    reactomeA = kegg.pos@result[grepl("REACTOME", kegg.pos@result$ID), ]
+    complexA = kegg.pos@result[grepl("CPX|CORUM", kegg.pos@result$ID), ]
+    keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = top, bottom = 0)
+                 + labs(title = "KEGG: positive"))
+    gobpA = list(enrichRes = gobpA, gridPlot = EnrichedView(gobpA, top = top, bottom = 0)
+                 + labs(title = "GOBP: positive"))
+    reactomeA = list(enrichRes = reactomeA, gridPlot = EnrichedView(reactomeA, top = top, bottom = 0)
+                     + labs(title = "REACTOME: positive"))
+    complexA = list(enrichRes = complexA, gridPlot = EnrichedView(complexA, top = top, bottom = 0)
+                    + labs(title = "Complex: positive"))
+  }else{
+    keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
+  }
+  kegg.neg = EnrichAnalyzer(geneList=geneList[idx1], universe=universe,
+                            organism=organism, pvalueCutoff=pvalueCutoff,
+                            limit = limit, keytype = "Entrez", type = "KEGG+REACTOME+GOBP+Complex")
+  if(!is.null(kegg.neg) && nrow(kegg.neg@result)>0){
+    keggB = kegg.neg@result[grepl("KEGG", kegg.neg@result$ID), ]
+    gobpB = kegg.neg@result[grepl("GOBP", kegg.neg@result$ID), ]
+    reactomeB = kegg.neg@result[grepl("REACTOME", kegg.neg@result$ID), ]
+    complexB = kegg.neg@result[grepl("CPX|CORUM", kegg.neg@result$ID), ]
+    keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = top)
+                 + labs(title = "KEGG: negative"))
+    gobpB = list(enrichRes = gobpB, gridPlot = EnrichedView(gobpB, top = 0, bottom = top)
+                 + labs(title = "GOBP: negative"))
+    reactomeB = list(enrichRes = reactomeB, gridPlot = EnrichedView(reactomeB, top = 0, bottom = top)
+                     + labs(title = "REACTOME: negative"))
+    complexB = list(enrichRes = complexB, gridPlot = EnrichedView(complexB, top = 0, bottom = top)
+                    + labs(title = "Complex: negative"))
+  }else{
+    keggB = gobpB = reactomeB = complexB = list(enrichRes = NULL, gridPlot = noEnrichPlot())
+  }
+  grid.arrange(keggA$gridPlot, gobpA$gridPlot, reactomeA$gridPlot, complexA$gridPlot, ncol = 2)
+  grid.arrange(keggB$gridPlot, gobpB$gridPlot, reactomeB$gridPlot, complexB$gridPlot, ncol = 2)
 
   ## Save enrichment results ##
-  ggsave(file.path(outdir, "RRA/EnrichedView_neg.png"), p1,
-         units = "in", width = 6.5, height = 4)
-  ggsave(file.path(outdir, "RRA/EnrichedView_pos.png"), p2,
-         units = "in", width = 6.5, height = 4)
-  saveRDS(kegg.neg, file.path(outdir, "RRA/EnrichRes_kegg.neg.rds"))
-  saveRDS(kegg.pos, file.path(outdir, "RRA/EnrichRes_kegg.pos.rds"))
+  if(!is.null(kegg.pos) && nrow(kegg.pos@result)>0){
+    write.table(keggA$enrichRes, file.path(outdir, "RRA/Positive_kegg.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE, quote=FALSE)
+    ggsave(keggA$gridPlot, filename=file.path(outdir, "RRA/Positive_kegg.png"),
+           units = "in", width=6.5, height=4)
+    write.table(reactomeA$enrichRes, file.path(outdir, "RRA/Positive_reactome.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(reactomeA$gridPlot, filename=file.path(outdir, "RRA/Positive_reactome.png"),
+           units = "in", width=6.5, height=4)
+    write.table(gobpA$enrichRes, file.path(outdir, "RRA/Positive_gobp.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(gobpA$gridPlot, filename=file.path(outdir, "RRA/Positive_gobp.png"),
+           units = "in", width=6.5, height=4)
+    write.table(complexA$enrichRes, file.path(outdir, "RRA/Positive_complex.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(complexA$gridPlot, filename=file.path(outdir, "RRA/Positive_complex.png"),
+           units = "in", width=6.5, height=4)
+  }
+  if(!is.null(kegg.neg) && nrow(kegg.neg@result)>0){
+    write.table(keggB$enrichRes, file.path(outdir, "RRA/Negative_kegg.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE, quote=FALSE)
+    ggsave(keggB$gridPlot, filename=file.path(outdir, "RRA/Negative_kegg.png"),
+           units = "in", width=6.5, height=4)
+    write.table(reactomeB$enrichRes, file.path(outdir, "RRA/Negative_reactome.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(reactomeB$gridPlot, filename=file.path(outdir, "RRA/Negative_reactome.png"),
+           units = "in", width=6.5, height=4)
+    write.table(gobpB$enrichRes, file.path(outdir, "RRA/Negative_gobp.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(gobpB$gridPlot, filename=file.path(outdir, "RRA/Negative_gobp.png"),
+           units = "in", width=6.5, height=4)
+    write.table(complexB$enrichRes, file.path(outdir, "RRA/Negative_complex.txt"),
+                sep="\t", row.names = FALSE, col.names = TRUE,quote=FALSE)
+    ggsave(complexB$gridPlot, filename=file.path(outdir, "RRA/Negative_complex.png"),
+           units = "in", width=6.5, height=4)
+  }
+  if(incorporateDepmap){
+    grid.arrange(p.square, ncol = 1)
+    grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg3$gridPlot, E1$reactome3$gridPlot, E1$gobp3$gridPlot, E1$complex3$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg4$gridPlot, E1$reactome4$gridPlot, E1$gobp4$gridPlot, E1$complex4$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg12$gridPlot, E1$reactome12$gridPlot, E1$gobp12$gridPlot, E1$complex12$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg13$gridPlot, E1$reactome13$gridPlot, E1$gobp13$gridPlot, E1$complex13$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg24$gridPlot, E1$reactome24$gridPlot, E1$gobp24$gridPlot, E1$complex24$gridPlot, ncol = 2)
+    grid.arrange(E1$kegg34$gridPlot, E1$reactome34$gridPlot, E1$gobp34$gridPlot, E1$complex34$gridPlot, ncol = 2)
+  }
   dev.off()
 }

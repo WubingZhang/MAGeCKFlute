@@ -5,21 +5,32 @@ This package implements methods to perform quality control (QC), normalization, 
 ## Install package MAGeCKFlute
 
 ~~~
+# Bioconductor version (stable)
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 BiocManager::install("MAGeCKFlute")
 
-#or
+# The newest version (devel): may include new features
 install.packages("devtools")
 library(devtools)
 install_bitbucket("liulab/MAGeCKFlute")
 ~~~
 
-## Quick start
-Please browse the [tutorial page](https://www.bioconductor.org/packages/3.10/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute.html).
+## Install package MAGeCKFlute using conda
+
+~~~
+conda install -c bioconda bioconductor-mageckflute
+~~~
+
+
+## Documentation
+Details on how to use MAGeCKFlute are available on bioconductor website:
+https://www.bioconductor.org/packages/3.10/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute.html
+https://www.bioconductor.org/packages/3.10/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute_enrichment.html
+
 
 ## Version history
-Please browse the [version tracking page] (https://www.bioconductor.org/packages/3.10/bioc/news/MAGeCKFlute/NEWS).
+Please browse the [version tracking page](https://www.bioconductor.org/packages/3.10/bioc/news/MAGeCKFlute/NEWS).
 	
 ## Contacts
 

@@ -5,7 +5,7 @@ knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
 ## ----load----------------------------------------------------------------
 library(MAGeCKFlute)
 df = ReadRRA(rra.gene_summary)
-genelist= df$LFC
+genelist= df$Score
 names(genelist) = df$id
 
 ## ----HGT-----------------------------------------------------------------

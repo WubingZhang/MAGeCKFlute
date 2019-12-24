@@ -25,7 +25,7 @@ ReadBeta <- function(gene_summary){
     gene_summary = read.table(file = gene_summary, sep = "\t", header = TRUE, quote = "",
                               comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)
   }
-  dd = gene_summary[, c(1,seq(3,ncol(gene_summary),6))]
+  dd = gene_summary[, c(1,seq(3,ncol(gene_summary),6)), drop=FALSE]
   names(dd) = gsub(".beta", "", names(dd))
   return(dd)
 }

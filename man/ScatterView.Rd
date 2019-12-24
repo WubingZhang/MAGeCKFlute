@@ -11,7 +11,8 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
   groupnames = NULL, auto_cut = FALSE, auto_cut_x = auto_cut,
   auto_cut_y = auto_cut, auto_cut_diag = auto_cut, x_cut = NULL,
   y_cut = NULL, slope = 1, intercept = NULL, display_cut = FALSE,
-  legend = FALSE, main = NULL, xlab = x, ylab = y, ...)
+  color = NULL, shape = 16, size = 1, main = NULL, xlab = x,
+  ylab = y, ...)
 }
 \arguments{
 \item{data}{Data frame.}
@@ -56,7 +57,11 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
 
 \item{display_cut}{Boolean, indicating whether display the dashed line of cutoffs.}
 
-\item{legend}{Whether show the color legend.}
+\item{color}{A character, specifying the column name of color in the data frame.}
+
+\item{shape}{A character, specifying the column name of shape in the data frame.}
+
+\item{size}{A character, specifying the column name of size in the data frame.}
 
 \item{main}{Title of the figure.}
 

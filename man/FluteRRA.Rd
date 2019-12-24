@@ -7,9 +7,10 @@
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
 FluteRRA(gene_summary, sgrna_summary = gsub("gene_summary",
-  "sgrna_summary", gene_summary), keytype = "Symbol", score = c("lfc",
-  "rra")[1], cutoff = c(-1, 1), organism = "hsa", top = 5,
-  toplabels = NULL, limit = c(2, 200), pvalueCutoff = 0.25,
+  "sgrna_summary", gene_summary), keytype = "Symbol", organism = "hsa",
+  incorporateDepmap = TRUE, cell_lines = NA, lineages = "All",
+  omitEssential = TRUE, top = 5, toplabels = NULL,
+  scale_cutoff = 2, limit = c(2, 200), pvalueCutoff = 0.25,
   proj = NA, width = 12, height = 6, outdir = ".")
 }
 \arguments{
@@ -17,12 +18,23 @@ FluteRRA(gene_summary, sgrna_summary = gsub("gene_summary",
 
 \item{sgrna_summary}{A file path or a data frame of sgRNA summary data.}
 
-\item{score}{"lfc" (default) or "rra", specifying the score type.}
-
-\item{cutoff}{A two-length vector (default: c(-1, 1)), specifying the cutoff
-for negative selection and positive selection.}
+\item{keytype}{"Entrez" or "Symbol".}
 
 \item{organism}{"hsa" or "mmu".}
+
+\item{incorporateDepmap}{Boolean, indicating whether incorporate Depmap data into analysis.}
+
+\item{cell_lines}{A character vector, specifying the cell lines in Depmap to be considered.}
+
+\item{lineages}{A character vector, specifying the lineages in Depmap to be considered.}
+
+\item{omitEssential}{Boolean, indicating whether omit common essential genes from the downstream analysis.}
+
+\item{top}{An integer, specifying number of top selected genes to be labeled in rank figure.}
+
+\item{toplabels}{A character vector, specifying interested genes to be labeled in rank figure.}
+
+\item{scale_cutoff}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
@@ -60,7 +72,7 @@ data("rra.gene_summary")
 data("rra.sgrna_summary")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="RRA", organism="hsa")
+    FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="PLX", organism="hsa")
 }
 
 

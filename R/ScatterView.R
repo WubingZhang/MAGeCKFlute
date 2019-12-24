@@ -33,8 +33,11 @@
 #' @param intercept A numberic value indicating intercept of the diagonal cutoff.
 #'
 #' @param display_cut Boolean, indicating whether display the dashed line of cutoffs.
-#' @param legend Whether show the color legend.
 #'
+#' @param color A character, specifying the column name of color in the data frame.
+#' @param shape A character, specifying the column name of shape in the data frame.
+#' @param size A character, specifying the column name of size in the data frame.
+
 #' @param main Title of the figure.
 #' @param xlab Title of x-axis
 #' @param ylab Title of y-axis.
@@ -56,21 +59,20 @@
 #'
 #'
 
-ScatterView<-function(data, x = "x", y = "y", label = 0,
-                      label.top = TRUE, top = 0, toplabels = NULL,
+ScatterView<-function(data, x = "x", y = "y",
+                      label = 0, label.top = TRUE, top = 0, toplabels = NULL,
                       model = c("none", "ninesquare", "volcano", "rank")[1],
                       groups = NULL, group_col = NULL, groupnames = NULL,
                       auto_cut = FALSE, auto_cut_x = auto_cut,
                       auto_cut_y = auto_cut, auto_cut_diag = auto_cut,
                       x_cut = NULL, y_cut = NULL, slope = 1, intercept = NULL,
-                      display_cut = FALSE, legend = FALSE,
-                      # shape = 21, size = NULL, color = NULL, fill = NULL,
+                      display_cut = FALSE, color = NULL, shape = 16, size = 1,
                       main = NULL, xlab = x, ylab = y, ...){
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("ggpubr", quietly=TRUE) || stop("need ggpubr package")
   data = as.data.frame(data, stringsAsFactors = FALSE)
-  data = na.omit(data)
+  data = data[!(is.na(data[,x])|is.na(data[,y])), ]
   ## Add label column in the data frame.
   if(label==0) data$Label = rownames(data)
   else data$Label = as.character(data[, label])
@@ -227,28 +229,55 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   data$rank[data$rank==0] = Inf
   if(mode(toplabels)=="list"){
     data$Label[data$rank>top & !(data$Label %in% unlist(toplabels))] = ""
-    data$Color = data$Label;
+    data$group = data$Label;
     if(length(toplabels)>0){
       tmp = stack(toplabels)
       tmp = tmp[!duplicated(tmp[,1]), ]
       rownames(tmp) = tmp[,1]
-      data$Color[data$Color%in%tmp[,1]] = as.character(tmp[data$Color[data$Color%in%tmp[,1]], 2])
-      data$Color[!(data$Color%in%tmp[,2]) & data$Color!=""] = "Top hits"
+      data$group[data$group%in%tmp[,1]] = as.character(tmp[data$group[data$group%in%tmp[,1]], 2])
+      data$group[!(data$group%in%tmp[,2]) & data$group!=""] = "Top hits"
     }
   }else{
     data$Label[data$rank>top & !(data$Label %in% toplabels)] = ""
   }
+
+  ## Color issue
+  if(is.null(color)){
+    color = "group"
+  }else if(!color%in%colnames(gg)){
+    color = "group"
+    mycolour["none"] = color
+  }
   ## Plot the scatter figure ##
   gg = data
-  if(mode(toplabels)!="list"){
-    p = ggplot(gg, aes_string(x, y, label="Label", color = "group"), alpha = 0.8)
-    p = p + geom_point(shape = 16)
-    p = p + scale_color_manual(values = mycolour, labels = groupnames)
-  }else{
-    p = ggplot(gg, aes_string(x, y, label="Label"), alpha = 0.8)
-    p = p + geom_point(shape = 16, color = "#d9d9d9")
-    p = p + geom_point(aes(color = Color), shape = 16, data = gg[gg$Color!="", ])
+  ## Plot the figure
+  p = ggplot(gg, aes_string(x, y, label="Label", color = color))
+  if(all(c(shape,size)%in%colnames(gg)))
+    p = p + geom_point(aes(shape = shape, size = size), alpha = 0.6)
+  else if(shape%in%colnames(gg))
+    p = p + geom_point(aes(shape = shape), size = size, alpha = 0.6)
+  else if(size%in%colnames(gg))
+    p = p + geom_point(aes(size = size), shape = shape, alpha = 0.6)
+  else
+    p = p + geom_point(size = size, shape = shape, alpha = 0.6)
+
+  ## Color
+  if(color=="group"){
+    if(mode(toplabels)!="list")
+      p = p + scale_color_manual(values = mycolour, labels = groupnames)
+    else
+      p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462", "#bc80bd", "#b3de69", "#bebada", "#8dd3c7", "#ffffb3", "#fccde5", "#ccebc5", "#ffed6f"))
+  }else if(color%in%colnames(gg)){
+    if(mode(gg[,color])=="numeric")
+      p = p + scale_color_gradient2(low = "#377eb8", high = "#e41a1c", midpoint = 0)
+    else if(!"try-error"%in%class(try(col2rgb(gg[1,color]),silent=TRUE))){
+      mycolour = unique(gg[,color]); names(mycolour) = mycolour
+      p = p + scale_color_manual(values = mycolour)
+    }
   }
+  # else if(!"try-error"%in%class(try(col2rgb(x),silent=TRUE)))
+  #   p = p + scale_color_manual(values = color)
+
   if(label.top)
     p = p + ggrepel::geom_text_repel(...)
   if(display_cut){
@@ -261,7 +290,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   }
   p = p + labs(x=xlab, y = ylab, title = main, color = NULL)
   p = p + ggpubr::theme_pubr() + theme(plot.title = element_text(hjust = 0.5))
-  if(!legend) p = p + theme(legend.position = "none")
+
   return(p)
 }
 

@@ -28,7 +28,7 @@ Binbin Wang, Mei Wang, Wubing Zhang. "Integrative analysis of pooled CRISPR gene
 ```{r load}
 library(MAGeCKFlute)
 df = ReadRRA(rra.gene_summary)
-genelist= df$LFC
+genelist= df$Score
 names(genelist) = df$id
 ```
 

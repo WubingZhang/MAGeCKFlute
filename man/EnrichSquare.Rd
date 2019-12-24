@@ -5,12 +5,21 @@
 \alias{EnrichSquare}
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
-EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
+EnrichSquare(beta, id = "Gene", keytype = "Symbol", x = "Control",
+  y = "Treatment", pvalue = 0.05, enrich_method = "ORT",
   organism = "hsa", limit = c(1, 120), filename = NULL,
   out.dir = ".", width = 6.5, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'Diff'.}
+\item{beta}{Data frame, with columns of "Gene", "group", and "Diff".}
+
+\item{id}{A character, indicating the gene column in the data.}
+
+\item{keytype}{A character, "Symbol" or "Entrez".}
+
+\item{x}{A character, indicating the x-axis in the 9-square scatter plot.}
+
+\item{y}{A character, indicating the y-axis in the 9-square scatter plot.}
 
 \item{pvalue}{Pvalue cutoff.}
 
@@ -32,24 +41,7 @@ max size of pathways for enrichent analysis.}
 \item{...}{Other available parameters in ggsave.}
 }
 \value{
-A list containing enrichment results for each group genes. This list contains several elements:
-\item{kegg1}{a list record enriched KEGG pathways for Group1 genes in 9-Square}
-\item{kegg2}{a list record enriched KEGG pathways for Group2 genes in 9-Square}
-\item{kegg3}{a list record enriched KEGG pathways for Group3 genes in 9-Square}
-\item{kegg4}{a list record enriched KEGG pathways for Group4 genes in 9-Square}
-\item{kegg12}{a list record enriched KEGG pathways for Group1&Group2 genes in 9-Square}
-\item{kegg13}{a list record enriched KEGG pathways for Group1&Group3 genes in 9-Square}
-\item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
-\item{kegg34}{a list record enriched KEGG pathways for Group3&Group4 genes in 9-Square}
-\item{go1}{a list record enriched GO terms for Group1 genes in 9-Square}
-\item{go2}{a list record enriched GO terms for Group2 genes in 9-Square}
-\item{go3}{a list record enriched GO terms for Group3 genes in 9-Square}
-\item{go4}{a list record enriched GO terms for Group4 genes in 9-Square}
-\item{go12}{a list record enriched GO terms for Group1&Group2 genes in 9-Square}
-\item{go13}{a list record enriched GO terms for Group1&Group3 genes in 9-Square}
-\item{go24}{a list record enriched GO terms for Group2&Group4 genes in 9-Square}
-\item{go34}{a list record enriched GO terms for Group3&Group4 genes in 9-Square}
-
+A list containing enrichment results for each group genes.
 Each item in the returned list has two sub items:
 \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}
 \item{enrichRes}{a enrichResult instance.}

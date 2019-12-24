@@ -230,13 +230,12 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 
   #### Merge HGNC and NCBI annotation ####
   if(org=="hsa"){
-    data = rbind.data.frame(ensembl_ann, hgnc_ann, ncbi_ann)
-  }else data = rbind.data.frame(ensembl_ann, ncbi_ann)
-  idx = duplicated(paste(data$entrez, data$symbol, data$ensembl, sep = "_"))
+    data = rbind.data.frame(ncbi_ann, hgnc_ann, ensembl_ann)
+  }else data = rbind.data.frame(ncbi_ann, ensembl_ann)
+  data$entrez = as.character(as.integer(data$entrez))
+  data$hgnc = as.character(as.integer(data$hgnc))
+  idx = duplicated(paste(data$entrez, data$symbol, sep = "_"))
   data = data[!idx, ]
-  data$entrez = as.integer(data$entrez)
-  data$hgnc = as.integer(data$hgnc)
-  data = data[order(data$entrez), ]
   rownames(data) = NULL
   saveRDS(data, rdsann)
   return(data)

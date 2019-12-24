@@ -510,7 +510,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @export
 
 arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
-                            title="Group A", sub="Negative control normalized",
+                            title=NULL, sub=NULL,
                             organism='hsa', view_allpath= FALSE,
                             output=".", path.archive = ".", kegg.native = TRUE){
   requireNamespace("png", quietly=TRUE) || stop("need png package")

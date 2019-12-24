@@ -41,8 +41,8 @@ Some other interested genes can be labeled too.
 \examples{
 data(rra.gene_summary)
 rra = ReadRRA(rra.gene_summary)
-rankdata = rra$LFC
-names(rankdata) = rra$Official
+rankdata = rra$Score
+names(rankdata) = rra$id
 RankView(rankdata)
 
 }
