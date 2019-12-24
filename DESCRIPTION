@@ -6,10 +6,10 @@ Version: 1.7.0
 Date: 2019-12-24
 Author: Wubing Zhang, Feizhen Wu, Binbin Wang
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
-Description: MAGeCKFlute is designed for analyzing CRISPR screenings. 
-    It takes gene summary file returned by MAGeCK, as input, and surports quality control, 
-    normalization, and screen hit identification in the CRISPR screen. 
-    Furthermore, for identified hits, customized functional enrichment analysis will be 
+Description: MAGeCKFlute is designed for analyzing CRISPR screenings.
+    It takes gene summary file returned by MAGeCK, as input, and surports quality control,
+    normalization, and screen hit identification in the CRISPR screen.
+    Furthermore, for identified hits, customized functional enrichment analysis will be
     done on biological pathways, protein complex and other molecular customized signatures.
 License: GPL (>=3)
 VignetteBuilder: knitr

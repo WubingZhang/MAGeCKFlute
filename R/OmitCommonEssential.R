@@ -22,7 +22,16 @@
 #' @export
 
 OmitCommonEssential <- function(dd, symbol = "id", lineages = "All", dependency = -0.5){
-  Depmap_19Q3 = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_19Q3.rds"))
+  depmap_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_19Q3.rds")
+  if(file.exists(depmap_rds)){
+    Depmap_19Q3 = readRDS(depmap_rds)
+  }else{
+    locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"), "Achilles_gene_effect.csv")
+    download.file("https://ndownloader.figshare.com/files/20234073", locfname, quiet = FALSE)
+    Depmap_19Q3 = t(read.csv(locfname, header = TRUE, row.names = 1, stringsAsFactors = FALSE, check.names = FALSE))
+    rownames(Depmap_19Q3) = gsub(" .*", "", rownames(Depmap_19Q3))
+    saveRDS(Depmap_19Q3, depmap_rds)
+  }
   if(!"all" %in% tolower(lineages)){
     sampleinfo = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_sample_info.rds"))
     idx = sampleinfo$lineage%in%tolower(lineages)
