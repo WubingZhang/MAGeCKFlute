@@ -11,7 +11,7 @@ vignette: >
   %\VignetteIndexEntry{MAGeCKFlute_enrichment.Rmd}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
-package: "1.6.1"
+package: "1.6.2"
 abstract: >
   The high-throughput CRISPR screens, including knockout and activation/inhibition screens, has revolutionized investigation of gene functions in a wide array of scientific domains, such as somatic cell reprogramming, stem cell differentiation, tumor development/progression, and drug response. It has created computational challenges, such as how to identify the robust gene hits and extract biological insight from the identified hits. To address these challenges, we developed MAGeCKFlute, an integrative analysis pipeline for pooled CRISPR functional genetic screens. The method derives its power on hit identification by normalizing the distribution of gene essentiality score. Probing biological insights, we incorporate multiple public available gene sets, including molecular signatures from MsigDB, pathways from KEGG, REACTOME and protein complexes from CORUM and ComplexPortal database. Utilizing the published enrichment analysis methods and hypergeometric test, MAGeCKFlute shows it's capacity in the identification of essential protein complexes and pathways.
 ---
