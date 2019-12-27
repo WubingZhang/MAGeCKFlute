@@ -40,7 +40,7 @@ OmitCommonEssential <- function(dd, symbol = "id", lineages = "All", dependency 
       Depmap_19Q3 = Depmap_19Q3[, idx]
     }else{ warning("Less than 5 cell lines are avaible, so ignore lineage setting.")}
   }
-  idx = rowSums(Depmap_19Q3<dependency, na.rm = TRUE)>0.7*ncol(Depmap_19Q3)
+  idx = rowSums(Depmap_19Q3<dependency, na.rm = TRUE)>0.6*ncol(Depmap_19Q3)
   lethal_genes = rownames(Depmap_19Q3)[idx]
   dd = dd[!(dd[,symbol] %in% lethal_genes), ]
   return(dd)

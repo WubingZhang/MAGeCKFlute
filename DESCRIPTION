@@ -16,9 +16,9 @@ VignetteBuilder: knitr
 Depends: R (>= 3.5)
 Suggests: knitr
 Imports: clusterProfiler, DOSE, enrichplot, gridExtra, pathview, biomaRt, sva,
-  ggsci, ggplot2, ggrepel, ggpubr, data.table, pheatmap, png
+  ggsci, ggplot2, ggrepel, ggpubr, data.table, pheatmap, png, grDevices, grid, stats, utils
 LazyData: TRUE
 NeedsCompilation: no
 biocViews: FunctionalGenomics, CRISPR, BatchEffect, QualityControl, Normalization, GeneSetEnrichment,
-        Pathways, Visualization
+        Pathways, Visualization, PooledScreens, GeneTarget, KEGG
 RoxygenNote: 6.1.1
