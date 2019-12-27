@@ -21,17 +21,24 @@
 #' @export
 #'
 IncorporateDepmap <- function(dd, symbol = "id", cell_lines = NA, lineages = "All", na.rm = TRUE){
+  ## Load Depmap data
   depmap_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_19Q3.rds")
   if(file.exists(depmap_rds)){
     Depmap_19Q3 = readRDS(depmap_rds)
   }else{
-    locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"), "Achilles_gene_effect.csv")
-    download.file("https://ndownloader.figshare.com/files/20234073", locfname, quiet = FALSE)
-    Depmap_19Q3 = t(read.csv(locfname, header = TRUE, row.names = 1, stringsAsFactors = FALSE, check.names = FALSE))
+    Depmap_19Q3 = t(read.csv("https://ndownloader.figshare.com/files/20234073", header = TRUE,
+                             row.names = 1, stringsAsFactors = FALSE, check.names = FALSE))
     rownames(Depmap_19Q3) = gsub(" .*", "", rownames(Depmap_19Q3))
     saveRDS(Depmap_19Q3, depmap_rds)
   }
-  sampleinfo = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_sample_info.rds"))
+  meta_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_sample_info.rds")
+  if(file.exists(meta_rds)){
+    sampleinfo = readRDS(meta_rds)
+  }else{
+    sampleinfo = read.csv("https://ndownloader.figshare.com/files/20274744",
+                          row.names = 1, header = TRUE, stringsAsFactors = FALSE)
+    saveRDS(sampleinfo, meta_rds)
+  }
   sampleinfo = sampleinfo[colnames(Depmap_19Q3), ]
   idx1 = sampleinfo$lineage%in%lineages
   idx2 = sampleinfo$stripped_cell_line_name%in%cell_lines |
