@@ -1,4 +1,4 @@
-CHANGES IN VERSION 1.7.0 (Bioconductor 3.10)
+CHANGES IN VERSION 1.6.1 (Bioconductor 3.10)
 -------------------------
 
     o Incorporate gene id conversion between organisms into TransGeneID.
@@ -7,6 +7,12 @@ CHANGES IN VERSION 1.7.0 (Bioconductor 3.10)
     o Debug the read file commands.
     o Add additional document for enrichment analysis.
     o Integrate Depmap data into the pipeline.
+
+CHANGES IN VERSION 1.6.0 (Bioconductor 3.10)
+-------------------------
+
+    o Prioritize visualization functions in MAGeCKFlute.
+    o Debug FluteMLE and FluteRRA.
 
 CHANGES IN VERSION 1.4.4 (Bioconductor 3.9)
 -------------------------
