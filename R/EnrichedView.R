@@ -90,10 +90,10 @@ EnrichedView = function(enrichment,
     enrichment$size = enrichment$logFDR
   }else if(x=="LogP"){
     enrichment$x = enrichment$logP
-    enrichment$size = enrichment$NES
+    enrichment$size = abs(enrichment$NES)
   }else{
     enrichment$x = enrichment$logFDR
-    enrichment$size = enrichment$NES
+    enrichment$size = abs(enrichment$NES)
   }
 
   # Visualize the top enriched terms

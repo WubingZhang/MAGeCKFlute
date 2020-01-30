@@ -17,9 +17,11 @@ EnrichAnalyzer(geneList, keytype = "Symbol", type = "Pathway+GOBP",
 \item{keytype}{"Entrez" or "Symbol".}
 
 \item{type}{Molecular signatures for testing, available datasets include
-Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
-Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
-combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
+Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
+MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
+C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+and Complex (CORUM). Any combination of them are also accessible
+(e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
 

@@ -39,6 +39,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   ## ===========Enrichment===================
   gg = as.data.frame(beta[, c(id, x, y, "group")], stringsAsFactors = FALSE)
   colnames(gg) = c("Gene", "Control", "Treatment", "group")
+  gg = gg[!(is.na(gg$Gene)|duplicated(gg$Gene)), ]
   gg$Diff = gg$Treatment - gg$Control
   idx1 = gg$group=="midleft"
   idx2 = gg$group=="topcenter"
@@ -49,7 +50,8 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   #====GO_KEGG_enrichment=====
   geneList = gg$Control[idx1]; names(geneList) = gg$Gene[idx1]
   enrich1 = EnrichAnalyzer(geneList = geneList, universe=universe,
-                           method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
+                           method = enrich_method,
+                           type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
                            limit = limit, keytype = keytype)
   if(!is.null(enrich1) && nrow(enrich1@result)>0){
@@ -58,13 +60,13 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
     reactome1 = enrich1@result[grepl("REACTOME", enrich1@result$ID), ]
     complex1 = enrich1@result[grepl("CPX|CORUM", enrich1@result$ID), ]
     kegg1 = list(enrichRes = kegg1, gridPlot = EnrichedView(kegg1, top = 0, bottom = 5)
-                 + labs(title = "KEGG: Group1 (middleleft)"))
+                 + labs(title = "KEGG: Group1"))
     gobp1 = list(enrichRes = gobp1, gridPlot = EnrichedView(gobp1, top = 0, bottom = 5)
-                 + labs(title = "GOBP: Group1 (middleleft)"))
+                 + labs(title = "GOBP: Group1"))
     reactome1 = list(enrichRes = reactome1, gridPlot = EnrichedView(reactome1, top = 0, bottom = 5)
-                     + labs(title = "REACTOME: Group1 (middleleft)"))
+                     + labs(title = "REACTOME: Group1"))
     complex1 = list(enrichRes = complex1, gridPlot = EnrichedView(complex1, top = 0, bottom = 5)
-                    + labs(title = "Complex: Group1 (middleleft)"))
+                    + labs(title = "Complex: Group1"))
   }else{
     kegg1 = gobp1 = reactome1 = complex1 = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
@@ -81,13 +83,13 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
     reactome2 = enrich2@result[grepl("REACTOME", enrich2@result$ID), ]
     complex2 = enrich2@result[grepl("CPX|CORUM", enrich2@result$ID), ]
     kegg2 = list(enrichRes = kegg2, gridPlot = EnrichedView(kegg2, top = 5, bottom = 0)
-                 + labs(title = "KEGG: Group2 (topmiddle)"))
+                 + labs(title = "KEGG: Group2"))
     gobp2 = list(enrichRes = gobp2, gridPlot = EnrichedView(gobp2, top = 5, bottom = 0)
-                 + labs(title = "GOBP: Group2 (topmiddle)"))
+                 + labs(title = "GOBP: Group2"))
     reactome2 = list(enrichRes = reactome2, gridPlot = EnrichedView(reactome2, top = 5, bottom = 0)
-                     + labs(title = "REACTOME: Group2 (topmiddle)"))
+                     + labs(title = "REACTOME: Group2"))
     complex2 = list(enrichRes = complex2, gridPlot = EnrichedView(complex2, top = 5, bottom = 0)
-                    + labs(title = "Complex: Group2 (topmiddle)"))
+                    + labs(title = "Complex: Group2"))
   }else{
     kegg2 = gobp2 = reactome2 = complex2 = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
@@ -104,13 +106,13 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
     reactome3 = enrich3@result[grepl("REACTOME", enrich3@result$ID), ]
     complex3 = enrich3@result[grepl("CPX|CORUM", enrich3@result$ID), ]
     kegg3 = list(enrichRes = kegg3, gridPlot = EnrichedView(kegg3, top = 5, bottom = 0)
-                 + labs(title = "KEGG: Group3 (middleright)"))
+                 + labs(title = "KEGG: Group3"))
     gobp3 = list(enrichRes = gobp3, gridPlot = EnrichedView(gobp3, top = 5, bottom = 0)
-                 + labs(title = "GOBP: Group3 (middleright)"))
+                 + labs(title = "GOBP: Group3"))
     reactome3 = list(enrichRes = reactome3, gridPlot = EnrichedView(reactome3, top = 5, bottom = 0)
-                     + labs(title = "REACTOME: Group3 (middleright)"))
+                     + labs(title = "REACTOME: Group3"))
     complex3 = list(enrichRes = complex3, gridPlot = EnrichedView(complex3, top = 5, bottom = 0)
-                    + labs(title = "Complex: Group3 (middleright)"))
+                    + labs(title = "Complex: Group3"))
   }else{
     kegg3 = gobp3 = reactome3 = complex3 = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
@@ -127,13 +129,13 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
     reactome4 = enrich4@result[grepl("REACTOME", enrich4@result$ID), ]
     complex4 = enrich4@result[grepl("CPX|CORUM", enrich4@result$ID), ]
     kegg4 = list(enrichRes = kegg4, gridPlot = EnrichedView(kegg4, top = 0, bottom = 5)
-                 + labs(title = "KEGG: Group4 (bottommiddle)"))
+                 + labs(title = "KEGG: Group4"))
     gobp4 = list(enrichRes = gobp4, gridPlot = EnrichedView(gobp4, top = 0, bottom = 5)
-                 + labs(title = "GOBP: Group4 (bottommiddle)"))
+                 + labs(title = "GOBP: Group4"))
     reactome4 = list(enrichRes = reactome4, gridPlot = EnrichedView(reactome4, top = 0, bottom = 5)
-                     + labs(title = "REACTOME: Group4 (bottommiddle)"))
+                     + labs(title = "REACTOME: Group4"))
     complex4 = list(enrichRes = complex4, gridPlot = EnrichedView(complex4, top = 0, bottom = 5)
-                    + labs(title = "Complex: Group4 (bottommiddle)"))
+                    + labs(title = "Complex: Group4"))
   }else{
     kegg4 = gobp4 = reactome4 = complex4 = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }

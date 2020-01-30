@@ -56,6 +56,7 @@ sgRankView <- function(df, gene = NULL,
   gene = unique(gene)
 
   subdf = df[df$Gene%in%gene, ]
+  if(nrow(subdf)<2) return(ggplot())
   subdf$Gene = factor(subdf$Gene, levels = gene)
   subdf = subdf[order(subdf$Gene), ]
   subdf$index = rep(1:length(gene), as.numeric(table(subdf$Gene)[gene]))

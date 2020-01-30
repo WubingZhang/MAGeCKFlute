@@ -6,20 +6,24 @@
 \title{Extract pathway annotation from GMT file.}
 \usage{
 gsGetter(gmtpath = NULL, type = "All", limit = c(0, Inf),
-  organism = "hsa")
+  organism = "hsa", update = FALSE)
 }
 \arguments{
 \item{gmtpath}{The path to customized gmt file.}
 
 \item{type}{Molecular signatures for testing, available datasets include
-Pathway (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO (GOBP, GOCC, GOMF),
-Complex (CORUM, CPX), c1, c2, c3, c4, c6, c7, HALLMARK. It also allows any
-combination of them (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
+Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
+MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
+C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+and Complex (CORUM). Any combination of them are also accessible
+(e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets to load.}
 
 \item{organism}{'hsa' or 'mmu'.}
+
+\item{update}{Boolean, indicating whether update the gene sets from source database.}
 }
 \value{
 A three-column data frame.

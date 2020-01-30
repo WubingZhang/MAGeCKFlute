@@ -21,18 +21,22 @@
 #'
 #' @export
 
-OmitCommonEssential <- function(dd, symbol = "id", lineages = "All", dependency = -0.5){
+OmitCommonEssential <- function(dd, symbol = "id",
+                                lineages = "All",
+                                dependency = -0.5){
   ## Load Depmap data
   depmap_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_19Q3.rds")
   if(file.exists(depmap_rds)){
     Depmap_19Q3 = readRDS(depmap_rds)
   }else{
-    Depmap_19Q3 = t(read.csv("https://ndownloader.figshare.com/files/20234073", header = TRUE,
-                             row.names = 1, stringsAsFactors = FALSE, check.names = FALSE))
+    Depmap_19Q3 = t(read.csv("https://ndownloader.figshare.com/files/20234073",
+                             header = TRUE, row.names = 1, stringsAsFactors = FALSE,
+                             check.names = FALSE))
     rownames(Depmap_19Q3) = gsub(" .*", "", rownames(Depmap_19Q3))
     saveRDS(Depmap_19Q3, depmap_rds)
   }
-  meta_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_sample_info.rds")
+  meta_rds = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                       "Depmap_sample_info.rds")
   if(file.exists(meta_rds)){
     sampleinfo = readRDS(meta_rds)
   }else{

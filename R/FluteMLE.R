@@ -16,7 +16,7 @@
 #' @param incorporateDepmap Boolean, indicating whether incorporate Depmap data into analysis.
 #' @param cell_lines A character vector, specifying the cell lines in Depmap to be considered.
 #' @param lineages A character vector, specifying the lineages in Depmap to be considered.
-#' @param norm_method One of "none" (default), "cell_cycle" or "loess".
+#' @param norm_method One of "none", "cell_cycle" (default) or "loess".
 #' @param posControl A character vector, specifying a list of positive control gene symbols.
 #' @param omitEssential Boolean, indicating whether omit common essential genes from the downstream analysis.
 #' @param top An integer, specifying number of top selected genes to be labeled in rank figure.
@@ -69,14 +69,14 @@
 
 FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      keytype = "Symbol", organism = "hsa", # Input dataset
-                     incorporateDepmap = FALSE, cell_lines = NA, lineages = "All",
-                     norm_method = "none", posControl = NULL,
+                     incorporateDepmap = FALSE,
+                     cell_lines = NA, lineages = "All",
+                     norm_method = "cell_cycle", posControl = NULL,
                      omitEssential = TRUE,
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
                      pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
                      width = 10, height = 7, outdir = ".", view_allpath = FALSE){
-
 	## Prepare the running environment ##
   {
     message(Sys.time(), " # Create output dir and pdf file...")
@@ -92,23 +92,24 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
     beta$EntrezID = TransGeneID(beta$Gene, keytype, "Entrez", organism = organism)
     beta$Symbol = TransGeneID(beta$EntrezID, "Entrez", "Symbol", organism = organism)
 
+    message(Sys.time(), " # Transform id to official human gene name ...")
+    beta$HumanGene = TransGeneID(beta$EntrezID, "Entrez", "Symbol",
+                                 fromOrg = organism, toOrg = "hsa")
     idx1 = is.na(beta$EntrezID)
     idx2 = !is.na(beta$EntrezID) & duplicated(beta$EntrezID)
     idx = idx1|idx2
-    if(sum(idx1)>0) warning(sum(idx1), " genes are not eligible: ",
+    if(sum(idx1)>0) message(sum(idx1), " genes are not eligible: ",
                            paste0(beta$Gene[idx1], collapse = ", "))
-    if(sum(idx2)>0) warning(sum(idx2), " genes have duplicate entrez id: ",
+    if(sum(idx2)>0) message(sum(idx2), " genes are duplicated: ",
                             paste0(beta$Gene[idx2], collapse = ", "))
 
     dd = beta[!idx, ]
-    if(incorporateDepmap & "Depmap"%in%c(ctrlname, treatname))
-      dd = IncorporateDepmap(dd, symbol = "Symbol", cell_lines = cell_lines, lineages = lineages)
     if(!all(c(ctrlname, treatname) %in% colnames(beta)))
       stop("Sample name doesn't match !!!")
-
-    dd = beta[, c("Symbol", "EntrezID", ctrlname, treatname)]
-    colnames(dd)[1] = "Gene"
-    if(tolower(norm_method)=="posctrl")
+    if(incorporateDepmap & "Depmap"%in%c(ctrlname, treatname))
+      dd = IncorporateDepmap(dd, symbol = "HumanGene", cell_lines = cell_lines,
+                             lineages = lineages)
+    if(tolower(norm_method)=="cell_cycle")
       dd = NormalizeBeta(dd, samples = c(ctrlname, treatname),
                          method = "cell_cycle", posControl = posControl)
     if(tolower(norm_method)=="loess")
@@ -133,11 +134,11 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  ## Essential genes ##
 	  data(Zuber_Essential)
 	  if(is.null(posControl))
-	    idx = toupper(dd$Gene) %in% toupper(Zuber_Essential$GeneSymbol)
+	    idx = toupper(dd$HumanGene) %in% toupper(Zuber_Essential$GeneSymbol)
 	  else
 	    idx = toupper(dd$Gene) %in% toupper(posControl)
 
-	  if(sum(idx) > 6){
+	  if(sum(idx) > 10){
 	    P1 = ViolinView(dd[idx, idx_distr], ylab = "Essential.B.S.", main = "Essential genes",
 	                    filename = paste0(outputDir1, "ViolinView_posctrl_", norm_method, ".png"))
 	    P2 = DensityView(dd[idx, idx_distr], xlab = "Essential.B.S.", main = "Essential genes",
@@ -152,18 +153,25 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
   ## Combine replicates ##
   {
-    dd$Control = rowMeans(dd[, ctrlname, drop = FALSE])
-    dd$Treatment = rowMeans(dd[, treatname, drop = FALSE])
+    dd$Control = Biobase::rowMedians(as.matrix(dd[, ctrlname, drop = FALSE]))
+    dd$Treatment = Biobase::rowMedians(as.matrix(dd[, treatname, drop = FALSE]))
     dd$Diff = dd$Treatment - dd$Control
-    x_cut = c(-CutoffCalling(dd$Control, scale_cutoff), CutoffCalling(dd$Control, scale_cutoff))
-    y_cut = c(-CutoffCalling(dd$Treatment, scale_cutoff), CutoffCalling(dd$Treatment, scale_cutoff))
-    intercept = c(-CutoffCalling(dd$Diff, scale_cutoff), CutoffCalling(dd$Diff, scale_cutoff))
+    write.table(dd, paste0(outputDir1, proj, "_processed_data.txt"),
+                sep = "\t", row.names = FALSE, quote = FALSE)
+    x_cut = c(-CutoffCalling(dd$Control, scale_cutoff),
+              CutoffCalling(dd$Control, scale_cutoff))
+    y_cut = c(-CutoffCalling(dd$Treatment, scale_cutoff),
+              CutoffCalling(dd$Treatment, scale_cutoff))
+    intercept = c(-CutoffCalling(dd$Diff, scale_cutoff),
+                  CutoffCalling(dd$Diff, scale_cutoff))
     if(omitEssential){
-      dd = OmitCommonEssential(dd, symbol = "Gene")
+      dd = OmitCommonEssential(dd, symbol = "HumanGene", dependency = -0.4)
+      write.table(dd, paste0(outputDir1, proj, "_omitessential_data.txt"),
+                  sep = "\t", row.names = FALSE, quote = FALSE)
     }
     dd$Rank = rank(dd$Diff)
     dd$RandomIndex = sample(1:nrow(dd), nrow(dd))
-
+    dd$Gene = dd$Symbol
   }
 
 	## Drug-targeted genes ##
@@ -171,19 +179,23 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  outputDir2 = file.path(outdir, "Selection/")
 	  dir.create(outputDir2, showWarnings = FALSE)
 
-	  p1 = ScatterView(dd, ctrlname, treatname, groups = c("top", "bottom"), intercept = intercept)
+	  p1 = ScatterView(dd, "Control", "Treatment", groups = c("top", "bottom"),
+	                   groupnames = c("GroupA", "GroupB"), intercept = intercept)
 	  ggsave(paste0(outputDir2, "ScatterView_TreatvsCtrl_", norm_method, ".png"),
 	         p1, width = 4, height = 3)
+	  write.table(p1$data, paste0(outputDir2, "Data_ScatterView_TreatvsCtrl.txt"),
+	              sep = "\t", row.names = FALSE, quote = FALSE)
 	  p2 = ScatterView(dd, x = "Rank", y = "Diff", label = "Gene",
-	                   groups = c("top", "bottom"), top = top, y_cut = y_cut)
+	                   groups = c("top", "bottom"), groupnames = c("GroupA", "GroupB"),
+	                   top = top, y_cut = y_cut)
 	  ggsave(paste0(outputDir2, "RankView_Treat-Ctrl_", norm_method, ".png"),
 	         p2, width = 3, height = 5)
-	  p3 = suppressMessages(ScatterView(dd, x = "RandomIndex", y = "Diff", label = "Gene",
-	                   y_cut = y_cut, groups = "top", top = top) + ylim(0, NA))
+	  p3 = ScatterView(dd[dd$Diff>0, ], x = "RandomIndex", y = "Diff", label = "Gene",
+	                   y_cut = y_cut, groups = "top", groupnames = c("GroupA"), top = top)
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Positive_", norm_method, ".png"),
 	         p3, width = 4, height = 3)
-	  p4 = suppressMessages(ScatterView(dd, x = "RandomIndex", y = "Diff", label = "Gene",
-	                   y_cut = y_cut, groups = "bottom", top = top) + ylim(NA,0))
+	  p4 = ScatterView(dd[dd$Diff<0, ], x = "RandomIndex", y = "Diff", label = "Gene",
+	                   y_cut = y_cut, groups = "bottom", groupnames = c("GroupB"), top = top)
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Negative_", norm_method, ".png"),
 	         p4, width = 4, height = 3)
 
@@ -198,7 +210,8 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir4, showWarnings=FALSE)
 
 	  E1 = EnrichAB(p1$data, pvalue = pvalueCutoff, enrich_method = enrich_method,
-	                organism = organism, limit = limit, filename = norm_method, out.dir = outputDir3)
+	                organism = "hsa", limit = limit,
+	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
 	  grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
 	  grid.arrange(E1$keggB$gridPlot, E1$reactomeB$gridPlot, E1$gobpB$gridPlot, E1$complexB$gridPlot, ncol = 2)
@@ -217,16 +230,21 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	## Nine-squares ##
 	{
 	  p1 = ScatterView(dd, x = "Control", y = "Treatment", label = "Gene",
-	                   model = "ninesquare", top = top, display_cut = TRUE,
+	                   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
+	                   groupnames = c("Group1", "Group2", "Group3", "Group4"),
+	                   top = top, display_cut = TRUE,
 	                   x_cut = x_cut, y_cut = y_cut, intercept = intercept)
-	  ggsave(paste0(outputDir2, "SquareView_", norm_method, ".png"), p1, width = 4, height = 3)
+	  ggsave(paste0(outputDir2, "SquareView_", norm_method, ".png"), p1, width = 5, height = 4)
+	  write.table(p1$data, paste0(outputDir2, proj, "squareview_data.txt"),
+	              sep = "\t", row.names = FALSE, quote = FALSE)
 	  grid.arrange(p1, ncol = 1)
 	}
 
 	## Nine-Square grouped gene enrichment ##
 	{
-	  E1 = EnrichSquare(p1$data, id = "Gene", keytype = "Symbol", x = "Control", y = "Treatment",
-	                    organism=organism, pvalue = pvalueCutoff, enrich_method = enrich_method,
+	  E1 = EnrichSquare(p1$data, id = "HumanGene", keytype = "Symbol",
+	                    x = "Control", y = "Treatment", organism="hsa",
+	                    pvalue = pvalueCutoff, enrich_method = enrich_method,
 	                    filename=norm_method, limit = limit, out.dir=outputDir3)
     # EnrichView
 	  grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)

@@ -14,7 +14,7 @@ EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
+\item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
 \item{organism}{"hsa" or "mmu".}
 

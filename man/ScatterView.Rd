@@ -5,14 +5,14 @@
 \alias{ScatterView}
 \title{Scatter plot}
 \usage{
-ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
-  top = 0, toplabels = NULL, model = c("none", "ninesquare",
-  "volcano", "rank")[1], groups = NULL, group_col = NULL,
-  groupnames = NULL, auto_cut = FALSE, auto_cut_x = auto_cut,
-  auto_cut_y = auto_cut, auto_cut_diag = auto_cut, x_cut = NULL,
-  y_cut = NULL, slope = 1, intercept = NULL, display_cut = FALSE,
-  color = NULL, shape = 16, size = 1, main = NULL, xlab = x,
-  ylab = y, ...)
+ScatterView(data, x = "x", y = "y", label = 0, model = c("none",
+  "ninesquare", "volcano", "rank")[1], x_cut = NULL, y_cut = NULL,
+  slope = 1, intercept = NULL, auto_cut = FALSE,
+  auto_cut_x = auto_cut, auto_cut_y = auto_cut,
+  auto_cut_diag = auto_cut, groups = NULL, group_col = NULL,
+  groupnames = NULL, label.top = TRUE, top = 0, toplabels = NULL,
+  display_cut = FALSE, color = NULL, shape = 16, size = 1,
+  main = NULL, xlab = x, ylab = y, ...)
 }
 \arguments{
 \item{data}{Data frame.}
@@ -23,21 +23,15 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
 
 \item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
-\item{label.top}{Boolean, specifying whether label top hits.}
-
-\item{top}{Integer, specifying the number of top terms in the groups to be labeled.}
-
-\item{toplabels}{Character vector, specifying terms to be labeled.}
-
 \item{model}{One of "none" (default), "ninesquare", "volcano", and "rank".}
 
-\item{groups}{Specify the colored groups. Optional groups include "top", "mid", "bottom",
-"left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
-"midright", "bottomleft", "bottomcenter", "bottomright".}
+\item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
 
-\item{group_col}{A vector of colors for specified groups.}
+\item{y_cut}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
 
-\item{groupnames}{A vector of group names to show on the legend.}
+\item{slope}{A numberic value indicating slope of the diagonal cutoff.}
+
+\item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
 
 \item{auto_cut}{Boolean, take 1.5 fold standard deviation as cutoff.}
 
@@ -47,13 +41,19 @@ ScatterView(data, x = "x", y = "y", label = 0, label.top = TRUE,
 
 \item{auto_cut_diag}{Boolean, take 1.5 fold standard deviation as cutoff on diagonal.}
 
-\item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
+\item{groups}{A character vector specifying groups. Optional groups include "top", "mid", "bottom",
+"left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
+"midright", "bottomleft", "bottomcenter", "bottomright".}
 
-\item{y_cut}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
+\item{group_col}{A vector of colors for specified groups.}
 
-\item{slope}{A numberic value indicating slope of the diagonal cutoff.}
+\item{groupnames}{A vector of group names to show on the legend.}
 
-\item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
+\item{label.top}{Boolean, specifying whether label top hits.}
+
+\item{top}{Integer, specifying the number of top terms in the groups to be labeled.}
+
+\item{toplabels}{Character vector, specifying terms to be labeled.}
 
 \item{display_cut}{Boolean, indicating whether display the dashed line of cutoffs.}
 
@@ -82,9 +82,6 @@ dd = ReadBeta(mle.gene_summary)
 ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
 x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 
-}
-\seealso{
-\code{\link{ScatterView}}
 }
 \author{
 Wubing Zhang

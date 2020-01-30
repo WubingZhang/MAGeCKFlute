@@ -20,7 +20,9 @@
 #' head(dd.rra)
 #' @export
 #'
-IncorporateDepmap <- function(dd, symbol = "id", cell_lines = NA, lineages = "All", na.rm = TRUE){
+IncorporateDepmap <- function(dd, symbol = "id",
+                              cell_lines = NA, lineages = "All",
+                              na.rm = FALSE){
   ## Load Depmap data
   depmap_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap_19Q3.rds")
   if(file.exists(depmap_rds)){

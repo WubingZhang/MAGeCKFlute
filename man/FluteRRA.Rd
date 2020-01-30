@@ -6,12 +6,12 @@
 \alias{RRApipeline}
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
-FluteRRA(gene_summary, sgrna_summary = gsub("gene_summary",
-  "sgrna_summary", gene_summary), keytype = "Symbol", organism = "hsa",
-  incorporateDepmap = TRUE, cell_lines = NA, lineages = "All",
-  omitEssential = TRUE, top = 5, toplabels = NULL,
-  scale_cutoff = 2, limit = c(2, 200), pvalueCutoff = 0.25,
-  proj = NA, width = 12, height = 6, outdir = ".")
+FluteRRA(gene_summary, sgrna_summary = NULL, keytype = "Symbol",
+  organism = "hsa", incorporateDepmap = TRUE, cell_lines = NA,
+  lineages = "All", omitEssential = TRUE, top = 5,
+  toplabels = NULL, scale_cutoff = 2, limit = c(2, 200),
+  pvalueCutoff = 0.25, proj = NA, width = 12, height = 6,
+  outdir = ".")
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}

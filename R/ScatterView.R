@@ -10,34 +10,34 @@
 #' @param data Data frame.
 #' @param x A character, specifying the x-axis.
 #' @param y A character, specifying the y-axis.
-#'
 #' @param label An integer or a character specifying the column used as the label, default value is 0 (row names).
-#' @param label.top Boolean, specifying whether label top hits.
-#' @param top Integer, specifying the number of top terms in the groups to be labeled.
-#' @param toplabels Character vector, specifying terms to be labeled.
 #'
 #' @param model One of "none" (default), "ninesquare", "volcano", and "rank".
-#' @param groups Specify the colored groups. Optional groups include "top", "mid", "bottom",
+#' @param x_cut An one or two-length numeric vector, specifying the cutoff used for x-axis.
+#' @param y_cut An one or two-length numeric vector, specifying the cutoff used for y-axis.
+#' @param slope A numberic value indicating slope of the diagonal cutoff.
+#' @param intercept A numberic value indicating intercept of the diagonal cutoff.
+#' @param auto_cut Boolean, take 1.5 fold standard deviation as cutoff.
+#' @param auto_cut_x Boolean, take 1.5 fold standard deviation as cutoff on x-axis.
+#' @param auto_cut_y Boolean, take 1.5 fold standard deviation as cutoff on y-axis.
+#' @param auto_cut_diag Boolean, take 1.5 fold standard deviation as cutoff on diagonal.
+#'
+#' @param groups A character vector specifying groups. Optional groups include "top", "mid", "bottom",
 #' "left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
 #' "midright", "bottomleft", "bottomcenter", "bottomright".
 #' @param group_col A vector of colors for specified groups.
 #' @param groupnames A vector of group names to show on the legend.
 #'
-#' @param auto_cut Boolean, take 1.5 fold standard deviation as cutoff.
-#' @param auto_cut_x Boolean, take 1.5 fold standard deviation as cutoff on x-axis.
-#' @param auto_cut_y Boolean, take 1.5 fold standard deviation as cutoff on y-axis.
-#' @param auto_cut_diag Boolean, take 1.5 fold standard deviation as cutoff on diagonal.
-#' @param x_cut An one or two-length numeric vector, specifying the cutoff used for x-axis.
-#' @param y_cut An one or two-length numeric vector, specifying the cutoff used for y-axis.
-#' @param slope A numberic value indicating slope of the diagonal cutoff.
-#' @param intercept A numberic value indicating intercept of the diagonal cutoff.
+#' @param label.top Boolean, specifying whether label top hits.
+#' @param top Integer, specifying the number of top terms in the groups to be labeled.
+#' @param toplabels Character vector, specifying terms to be labeled.
 #'
 #' @param display_cut Boolean, indicating whether display the dashed line of cutoffs.
 #'
 #' @param color A character, specifying the column name of color in the data frame.
 #' @param shape A character, specifying the column name of shape in the data frame.
 #' @param size A character, specifying the column name of size in the data frame.
-
+#'
 #' @param main Title of the figure.
 #' @param xlab Title of x-axis
 #' @param ylab Title of y-axis.
@@ -46,8 +46,6 @@
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
 #'
 #' @author Wubing Zhang
-#'
-#' @seealso \code{\link{ScatterView}}
 #'
 #' @examples
 #' dd = ReadBeta(mle.gene_summary)
@@ -59,13 +57,13 @@
 #'
 #'
 
-ScatterView<-function(data, x = "x", y = "y",
-                      label = 0, label.top = TRUE, top = 0, toplabels = NULL,
+ScatterView<-function(data, x = "x", y = "y", label = 0,
                       model = c("none", "ninesquare", "volcano", "rank")[1],
-                      groups = NULL, group_col = NULL, groupnames = NULL,
+                      x_cut = NULL, y_cut = NULL, slope = 1, intercept = NULL,
                       auto_cut = FALSE, auto_cut_x = auto_cut,
                       auto_cut_y = auto_cut, auto_cut_diag = auto_cut,
-                      x_cut = NULL, y_cut = NULL, slope = 1, intercept = NULL,
+                      groups = NULL, group_col = NULL, groupnames = NULL,
+                      label.top = TRUE, top = 0, toplabels = NULL,
                       display_cut = FALSE, color = NULL, shape = 16, size = 1,
                       main = NULL, xlab = x, ylab = y, ...){
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
