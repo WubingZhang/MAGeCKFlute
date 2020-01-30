@@ -9,7 +9,7 @@
 #'
 #' @param data A data frame.
 #' @param pvalue Pvalue cutoff.
-#' @param enrich_method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
+#' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param organism "hsa" or "mmu".
 #' @param limit A two-length vector (default: c(1, 120)), specifying the min and
 #' max size of pathways for enrichent analysis.
@@ -33,20 +33,21 @@ EnrichAB <- function(data, pvalue = 0.25,
 
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("Need clusterProfiler package")
   message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
-  gg = data
+  gg = data[!(is.na(data$HumanGene)|duplicated(data$HumanGene)), ]
 
   ##=====enrichment for GroupA======
-  idx1 = gg$group=="top"; genes = gg$EntrezID[idx1]
+  idx1 = gg$group=="top"; genes = gg$HumanGene[idx1]
   geneList = gg$Diff[idx1]; names(geneList) = genes
-  enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
-                         method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
+  enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$HumanGene,
+                         method = enrich_method,
+                         type = "KEGG+REACTOME+GOBP+Complex",
                          organism = organism, pvalueCutoff = pvalue,
-                         limit = limit, keytype = "Entrez")
+                         limit = limit, keytype = "Symbol")
   if(!is.null(enrichA) && nrow(enrichA@result)>0){
     keggA = enrichA@result[grepl("KEGG", enrichA@result$ID), ]
     gobpA = enrichA@result[grepl("GOBP", enrichA@result$ID), ]
     reactomeA = enrichA@result[grepl("REACTOME", enrichA@result$ID), ]
-    complexA = enrichA@result[grepl("CPX|CORUM", enrichA@result$ID), ]
+    complexA = enrichA@result[grepl("CORUM", enrichA@result$ID), ]
     keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = 5, bottom = 0)
                  + labs(title = "KEGG: GroupA"))
     gobpA = list(enrichRes = gobpA, gridPlot = EnrichedView(gobpA, top = 5, bottom = 0)
@@ -59,17 +60,17 @@ EnrichAB <- function(data, pvalue = 0.25,
     keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
 
-  idx2 = gg$group=="bottom"; genes = gg$EntrezID[idx2]
+  idx2 = gg$group=="bottom"; genes = gg$HumanGene[idx2]
   geneList = gg$Diff[idx2]; names(geneList) = genes
-  enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
+  enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$HumanGene,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism = organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = "Entrez")
+                           limit = limit, keytype = "Symbol")
   if(!is.null(enrichB) && nrow(enrichB@result)>0){
     keggB = enrichB@result[grepl("KEGG", enrichB@result$ID), ]
     gobpB = enrichB@result[grepl("GOBP", enrichB@result$ID), ]
     reactomeB = enrichB@result[grepl("REACTOME", enrichB@result$ID), ]
-    complexB = enrichB@result[grepl("CPX|CORUM", enrichB@result$ID), ]
+    complexB = enrichB@result[grepl("CORUM", enrichB@result$ID), ]
     keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = 5)
                  + labs(title = "KEGG: GroupB"))
     gobpB = list(enrichRes = gobpB, gridPlot = EnrichedView(gobpB, top = 0, bottom = 5)

@@ -6,7 +6,7 @@
 \title{Incorporate Depmap screen into analysis}
 \usage{
 IncorporateDepmap(dd, symbol = "id", cell_lines = NA,
-  lineages = "All", na.rm = TRUE)
+  lineages = "All", na.rm = FALSE)
 }
 \arguments{
 \item{dd}{A data frame.}

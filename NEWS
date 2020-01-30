@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.6.3 (Bioconductor 3.10)
+-------------------------
+
+    o Download GO terms from source database.
+    o Use human genes to do enrichment analaysis in pipelines.
+    o Revise BatchRemove to have the same parameters as paper mentioned.
+    o Revise FluteRRA to surport only gene summary as input.
+
 CHANGES IN VERSION 1.6.2 (Bioconductor 3.10)
 -------------------------
 

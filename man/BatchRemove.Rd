@@ -5,7 +5,8 @@
 \alias{BatchRemove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, log2trans = FALSE)
+BatchRemove(mat, batchMat, log2trans = FALSE, pca = TRUE,
+  positive = FALSE, cluster = FALSE, outdir = NULL)
 }
 \arguments{
 \item{mat}{A data frame, each row is a gene, and each column is a sample.}
@@ -14,6 +15,14 @@ BatchRemove(mat, batchMat, log2trans = FALSE)
 and the second column is `Batch`. The remaining columns could be Covariates.}
 
 \item{log2trans}{Boolean, specifying whether do logarithmic transformation before batch removal.}
+
+\item{pca}{Boolean, specifying whether return pca plot.}
+
+\item{positive}{Boolean, specifying whether all values should be positive.}
+
+\item{cluster}{Boolean, specifying whether perform hierarchical clustering.}
+
+\item{outdir}{Output directory for hierarchical cluster tree.}
 }
 \value{
 A list contrains two objects, including \code{data} and \code{p}.

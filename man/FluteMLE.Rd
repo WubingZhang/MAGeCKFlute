@@ -8,7 +8,7 @@
 \usage{
 FluteMLE(gene_summary, treatname, ctrlname = "Depmap",
   keytype = "Symbol", organism = "hsa", incorporateDepmap = FALSE,
-  cell_lines = NA, lineages = "All", norm_method = "none",
+  cell_lines = NA, lineages = "All", norm_method = "cell_cycle",
   posControl = NULL, omitEssential = TRUE, top = 10,
   toplabels = NA, scale_cutoff = 2, limit = c(0, 200),
   pvalueCutoff = 0.25, enrich_method = "ORT", proj = NA,
@@ -32,7 +32,7 @@ If there is no controls in your CRISPR screen, you can specify "Depmap" as ctrln
 
 \item{lineages}{A character vector, specifying the lineages in Depmap to be considered.}
 
-\item{norm_method}{One of "none" (default), "cell_cycle" or "loess".}
+\item{norm_method}{One of "none", "cell_cycle" (default) or "loess".}
 
 \item{posControl}{A character vector, specifying a list of positive control gene symbols.}
 

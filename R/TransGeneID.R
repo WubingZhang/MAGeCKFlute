@@ -199,23 +199,26 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
     locfname2 = file.path(system.file("extdata", package = "MAGeCKFlute"), "HGNC_GeneID_annotation.txt.gz")
     if((!file.exists(locfname2)) | update){
       ## Download gene information from HGNC
-      refname <- "https://www.genenames.org/cgi-bin/download/custom?col=gd_hgnc_id&col=gd_app_sym&col=gd_app_name&col=gd_aliases&col=gd_pub_acc_ids&col=gd_pub_refseq_ids&col=gd_pub_ensembl_id&col=gd_pub_eg_id&col=md_refseq_id&col=md_prot_id&status=Approved&status=Entry%20Withdrawn&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
+      refname <- "ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt"
       download.file(refname, locfname2, quiet = TRUE)
     }
     ## Reorder the mapping file
     hgnc_ann = read.csv(gzfile(locfname2), sep = "\t", header = TRUE,
-                        quote = "", stringsAsFactors = FALSE, comment.char = "")
-    hgnc_ann = hgnc_ann[, c(8,2,4,1,7,3)]
-    names(hgnc_ann) = c("entrez", "symbol", "synonyms", "hgnc", "ensembl", "fullname")
-    hgnc_ann$hgnc = gsub("HGNC:", "", hgnc_ann$hgnc)
+                        stringsAsFactors = FALSE, comment.char = "")
+    hgnc_ann = hgnc_ann[, c("entrez_id", "symbol", "hgnc_id", "ensembl_gene_id", "name",
+                            "alias_symbol", "prev_symbol", "refseq_accession")]
+    hgnc_ann$alias_symbol = paste0(hgnc_ann$alias_symbol, '|', hgnc_ann$prev_symbol)
+
     synonyms_row = matrix(unlist(apply(hgnc_ann, 1, function(x){
-      tmp = unlist(strsplit(x[3], ", "))
-      if(length(tmp)>0) return(as.vector(rbind(x[1], tmp, x[4], x[5], x[6])))
+      tmp = unlist(strsplit(x[6], "\\|"))
+      if(length(tmp)>0) return(as.vector(rbind(x[1], tmp, x[3], x[4])))
       return(NULL)
-    })) , ncol=5, byrow = TRUE)
-    colnames(synonyms_row) = c("entrez", "symbol", "hgnc", "ensembl", "fullname")
-    hgnc_ann = rbind(hgnc_ann[,-3], synonyms_row)
-    hgnc_ann = hgnc_ann[, -5]
+    })) , ncol=4, byrow = TRUE)
+    colnames(synonyms_row) = c("entrez", "symbol", "hgnc", "ensembl")
+    synonyms_row = synonyms_row[synonyms_row[,2]!="", ]
+    names(hgnc_ann)[1:4] = c("entrez", "symbol", "hgnc", "ensembl")
+    hgnc_ann$hgnc = gsub("HGNC:", "", hgnc_ann$hgnc)
+    hgnc_ann = rbind(hgnc_ann[,1:4], synonyms_row)
   }
 
   #### Ensembl gene annotation ####
@@ -233,7 +236,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
     data = rbind.data.frame(ncbi_ann, hgnc_ann, ensembl_ann)
   }else data = rbind.data.frame(ncbi_ann, ensembl_ann)
   data$entrez = as.character(as.integer(data$entrez))
-  data$hgnc = as.character(as.integer(data$hgnc))
+  data$hgnc = gsub(" *", "", data$hgnc)
   idx = duplicated(paste(data$entrez, data$symbol, sep = "_"))
   data = data[!idx, ]
   rownames(data) = NULL
@@ -368,7 +371,8 @@ getOrg <- function(organism){
   res=list()
   ##======
   # Get the mapping from organism to package
-  ridx = c(which(tolower(bods[,2])==tolower(organism)), which(tolower(bods[,3])==tolower(organism)))
+  ridx = c(which(tolower(bods[,2])==tolower(organism)),
+           which(tolower(bods[,3])==tolower(organism)))
   stopifnot(length(ridx)==1)
   res$org = bods[ridx,3]
   res$pkg = bods[ridx,1]
