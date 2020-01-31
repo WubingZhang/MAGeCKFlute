@@ -27,7 +27,8 @@
 #' @examples
 #' data(mle.gene_summary)
 #' TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
-#' TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol", fromOrg = "hsa", toOrg = "mmu")
+#' TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol",
+#' fromOrg = "hsa", toOrg = "mmu")
 #' @import biomaRt
 #' @export
 

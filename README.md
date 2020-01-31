@@ -36,3 +36,4 @@ Please browse the [version tracking page](https://www.bioconductor.org/packages/
 
 * Wubing Zhang (Watson5bZhang@gmail.com)
 * Binbin Wang (wangbinbintj@gmail.com)
+* Wei Li (li.david.wei@gmail.com)
