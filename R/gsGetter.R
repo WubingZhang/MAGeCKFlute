@@ -35,9 +35,9 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf), organism =
   if("MSIGDB" %in% type) type = c("C1", "C2", "C3", "C4", "GO", "C6", "C7", "HALLMARK", type)
   if("C2" %in% type) type = c("KEGG", "REACTOME", "C2", type)
   if("GO" %in% type) type = c("GOBP", "GOCC", "GOMF", type)
-  if("PATHWAY" %in% type) type = c("KEGG", "REACTOME", "C2_CP")
+  if("PATHWAY" %in% type) type = c("KEGG", "REACTOME", "C2_CP", type)
   if("COMPLEX" %in% type) type = c("CORUM", type)
-
+  type = setdiff(type, c("ALL", "MSIGDB", "C2", "GO", "PATHWAY", "COMPLEX"))
   ## read GMT files
   if(!is.null(gmtpath)){
     gene2path = ReadGMT(gmtpath, limit = limit)
@@ -51,7 +51,7 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf), organism =
       if(!file.exists(gsfile)) retrieve_gs(organism=organism)
       tmp = readRDS(gsfile)
       colnames(tmp) = c("ENTREZID", "PathwayID", "PathwayName")
-      tmp = tmp[grepl(paste(type,collapse="|"), tmp$PathwayID), ]
+      tmp = tmp[grepl(paste(paste0("^",type),collapse="|"), tmp$PathwayID), ]
       gene2path = rbind(gene2path, tmp)
     }
     if("KEGG" %in% type){
@@ -84,7 +84,7 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf), organism =
       if(!file.exists(gsfile)) retrieve_gs(organism=organism)
       tmp = readRDS(gsfile)
       colnames(tmp) = c("ENTREZID", "PathwayID", "PathwayName")
-      tmp = tmp[grepl(paste(type,collapse="|"), tmp$PathwayID), ]
+      tmp = tmp[grepl(paste(paste0("^",type),collapse="|"), tmp$PathwayID), ]
       gene2path = rbind(gene2path, tmp)
     }
     gene2path = na.omit(gene2path)
