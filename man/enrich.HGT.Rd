@@ -8,7 +8,7 @@
 \usage{
 enrich.HGT(geneList, keytype = "Symbol", type = "Pathway+GOBP",
   organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
-  universe = NULL, gmtpath = NULL)
+  universe = NULL, gmtpath = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -32,6 +32,8 @@ maximal size of gene sets for enrichent analysis.}
 \item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
 
 \item{gmtpath}{The path to customized gmt file.}
+
+\item{verbose}{Boolean}
 }
 \value{
 A enrichResult instance.

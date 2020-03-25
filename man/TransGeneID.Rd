@@ -40,10 +40,9 @@ A character vector, named by unique input gene ids.
 Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
-data(mle.gene_summary)
-TransGeneID(mle.gene_summary$Gene[1:10], organism="hsa")
-TransGeneID(mle.gene_summary$Gene[1:10], toType="Symbol",
-fromOrg = "hsa", toOrg = "mmu")
+TransGeneID("HLA-A", organism="hsa")
+TransGeneID("H2-K1", toType="Symbol", fromOrg = "mmu", toOrg = "hsa")
+
 }
 \author{
 Wubing Zhang

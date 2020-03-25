@@ -17,6 +17,7 @@
 #' @param out.dir Path to save plot to (combined with filename).
 #' @param width As in ggsave.
 #' @param height As in ggsave.
+#' @param verbose Boolean
 #' @param ... Other available parameters in ggsave.
 #'
 #' @return A list containing enrichment results for each group genes. This list contains eight
@@ -29,10 +30,11 @@ EnrichAB <- function(data, pvalue = 0.25,
                      organism = "hsa",
                      limit = c(1, 120),
                      filename = NULL, out.dir = ".",
-                     width = 6.5, height = 4, ...){
+                     width = 6.5, height = 4,
+                     verbose = TRUE, ...){
 
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("Need clusterProfiler package")
-  message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
+  if(verbose) message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
   gg = data[!(is.na(data$HumanGene)|duplicated(data$HumanGene)), ]
 
   ##=====enrichment for GroupA======
@@ -65,7 +67,7 @@ EnrichAB <- function(data, pvalue = 0.25,
   enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$HumanGene,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism = organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = "Symbol")
+                           limit = limit, keytype = "Symbol", verbose = verbose)
   if(!is.null(enrichB) && nrow(enrichB@result)>0){
     keggB = enrichB@result[grepl("KEGG", enrichB@result$ID), ]
     gobpB = enrichB@result[grepl("GOBP", enrichB@result$ID), ]

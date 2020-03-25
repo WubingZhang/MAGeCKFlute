@@ -7,7 +7,7 @@
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
   organism = "hsa", limit = c(1, 120), filename = NULL,
-  out.dir = ".", width = 6.5, height = 4, ...)
+  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data frame.}
@@ -28,6 +28,8 @@ max size of pathways for enrichent analysis.}
 \item{width}{As in ggsave.}
 
 \item{height}{As in ggsave.}
+
+\item{verbose}{Boolean}
 
 \item{...}{Other available parameters in ggsave.}
 }

@@ -38,14 +38,13 @@
 #===Distribution of beta scores======================================
 DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
                         filename = NULL, width = 5, height = 4, ...){
-  message(Sys.time(), " # Density plot for ", main, " ", xlab, " ...")
   if(!is.null(samples) && length(samples)>0){ beta = beta[, samples, drop = FALSE]}
   dd1 = data.table::melt(beta,id=NULL)
   if(!"variable" %in% colnames(dd1)){
     dd1$variable = colnames(beta)
   }
   #==========
-  p=ggplot(data=dd1,aes(x=value,color=variable,group=variable))
+  p=ggplot(data=dd1, aes_string(x="value",color="variable",group="variable"))
   p=p+geom_density()
   # p=p+facet_wrap(~variable,nrow=1)
   p=p+scale_color_npg()
@@ -104,15 +103,13 @@ DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
 
 DensityDiffView <- function(beta, ctrlname="Control", treatname="Treatment", main=NULL,
                             filename=NULL, width = 5, height = 4, ...){
-
-  message(Sys.time(), " # Density plot for ", main, " treat-control beta scores...")
   d = beta
   d$Diff = rowMeans(d[,treatname,drop=FALSE])-rowMeans(d[,ctrlname,drop=FALSE])
   d$r = rnorm(length(d$Diff), mean=0, sd=sd(d$Diff)-0.01)
-  p = ggplot(d,aes(x=Diff))
-  p = p + geom_histogram(aes(y = ..density..), fill="gray90", binwidth=0.02)
+  p = ggplot(d, aes_string("Diff"))
   p = p + geom_density(colour="black")
-  p = p + geom_density(aes(x=r,y=..density..), linetype="dashed", colour="red")
+  # p = p + geom_histogram(aes(y = ..density..), fill="gray90", binwidth=0.02)
+  p = p + geom_density(aes_string("r"), linetype="dashed", colour="red")
   p = p + geom_vline(xintercept = 0,linetype="dashed")
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),

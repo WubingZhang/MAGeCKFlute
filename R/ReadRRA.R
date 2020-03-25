@@ -24,7 +24,6 @@
 #'
 
 ReadRRA <- function(gene_summary, score = c("lfc", "rra")[1]){
-  message(Sys.time(), " # Read gene summary file ...")
   if(is.null(dim(gene_summary))){
     gene_summary = read.table(file = gene_summary, sep = "\t", header = TRUE, quote = "",
                     comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)

@@ -15,7 +15,7 @@ KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id,
   both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene =
   NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
   mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red",
-  cpd = "yellow"), na.col = "transparent", ...)
+  cpd = "yellow"), na.col = "transparent", verbose = TRUE, ...)
 }
 \arguments{
 \item{gene.data}{Either vector (single sample) or a matrix-like data (multiple sample).
@@ -126,6 +126,8 @@ Examples are log, abs or users' own functions. Default limit=list(gene=NULL, cpd
 
 \item{na.col}{Color used for NA's or missing values in gene.data and cpd.data. d na.col="transparent".}
 
+\item{verbose}{Boolean}
+
 \item{\dots}{Extra arguments passed to keggview.native or keggview.graph function.}
 }
 \value{
@@ -178,13 +180,10 @@ data(mle.gene_summary)
 dd = ReadBeta(mle.gene_summary)
 gene.data = dd$plx
 names(gene.data) = rownames(dd)
-\dontrun{
+
 pv.out <- KeggPathwayView(gene.data, pathway.id = "04110",
   species = "hsa", out.suffix = "gse16873", kegg.native = TRUE)
-}
-}
-\seealso{
-\code{\link{pathview}}
+
 }
 \author{
 Wubing Zhang

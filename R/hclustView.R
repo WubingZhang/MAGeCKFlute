@@ -25,7 +25,7 @@
 #'
 #' @importFrom dendextend labels_colors
 #' @importFrom dendextend colored_bars
-#'
+#' @importFrom graphics par plot
 #' @export
 #'
 
@@ -42,10 +42,10 @@ hclustView <- function(d, method="average", label_cols=NULL, bar_cols=NULL, main
     }
   }else mar4 = max(nchar(hc$labels))/2
 
-  par(mar=c(4, 2, 2, mar4), ...)  #
+  graphics::par(mar=c(4, 2, 2, mar4), ...)  #
   dend=as.dendrogram(hc)
   if(!is.null(label_cols)) dendextend::labels_colors(dend) <- label_cols[order.dendrogram(dend)]
-  plot(dend, main=main, xlab=xlab, horiz = horiz)
+  graphics::plot(dend, main=main, xlab=xlab, horiz = horiz)
   if(!is.null(bar_cols)) dendextend::colored_bars(bar_cols, dend, horiz = horiz)
 }
 

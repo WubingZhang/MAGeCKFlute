@@ -14,10 +14,11 @@
 #' @return A data frame with Depmap column attached.
 #'
 #' @examples
-#' dd.rra = ReadRRA(rra.gene_summary)
-#' depmap_similarity = ResembleDepmap(dd.rra)
-#' dd.rra = IncorporateDepmap(dd.rra, cell_lines=rownames(depmap_similarity)[1:3])
-#' head(dd.rra)
+#' \dontrun{
+#'   dd.rra = ReadRRA(rra.gene_summary)
+#'   dd.rra = IncorporateDepmap(dd.rra, cell_lines=rownames(depmap_similarity)[1:3])
+#'   head(dd.rra)
+#' }
 #' @export
 #'
 IncorporateDepmap <- function(dd, symbol = "id",

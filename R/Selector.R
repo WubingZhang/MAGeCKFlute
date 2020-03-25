@@ -33,11 +33,11 @@ Selector <- function(mat, cutoff = 0, type = "<", select = 0.8){
   genes = names(gene_count)[gene_count>=round(select*ncol(mat))]
   #============
   p = ggplot(gg)
-  p = p + geom_line(aes(x=Num,y=GeneNum),colour = "#2972A3")
+  p = p + geom_line(aes_string(x="Num",y="GeneNum"),colour = "#2972A3")
   p = p + geom_vline(xintercept = round(select*ncol(mat)),linetype=2,size=0.5)
   p = p + geom_hline(yintercept = gg[gg$Num==round(select*ncol(mat)), 2],linetype=2,size=0.5)
-  p = p + geom_point(aes(x=x,y=y),data=text, shape=17, size=2, color="#d66648")
-  p = p + geom_text(aes(x=x,y=y),data=text, label=paste("(",text$x,", ",text$y,")",sep=""),
+  p = p + geom_point(aes_string(x="x",y="y"),data=text, shape=17, size=2, color="#d66648")
+  p = p + geom_text(aes_string(x="x",y="y"),data=text, label=paste("(",text$x,", ",text$y,")",sep=""),
                     colour = "black",size=3.5)
   p = p + ylab("Gene number")+xlab("Sample number")+scale_colour_npg()
   p = p + theme(text = element_text(colour="black",size = 14),

@@ -21,6 +21,7 @@
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param gmtpath The path to customized gmt file.
+#' @param verbose Boolean
 #'
 #' @return A enrichedResult instance.
 #'
@@ -43,7 +44,8 @@
 enrich.ORT <- function(geneList, keytype = "Symbol",
                        type = "Pathway+GOBP",
                        organism = 'hsa', pvalueCutoff = 0.25,
-                       limit = c(2, 200), universe=NULL, gmtpath = NULL){
+                       limit = c(2, 200), universe=NULL,
+                       gmtpath = NULL, verbose = TRUE){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   ## Prepare gene set annotation
@@ -71,7 +73,7 @@ enrich.ORT <- function(geneList, keytype = "Symbol",
 
   ## Enrichment analysis
   len = length(unique(intersect(gene, gene2path$Gene)))
-  message("\t", len, " genes are mapped ...")
+  if(verbose) message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
   enrichedRes = enricher(gene, universe = universe,
                          minGSSize = 0, maxGSSize = max(limit),

@@ -58,7 +58,6 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
                      main = NULL, filename = NULL, width = 6, height = 4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
-  message(Sys.time(), " # Square plot for ", main, " beta scores ...")
   if(!all(c(ctrlname, treatname) %in% colnames(beta))){
     stop("Sample names are not consistent with column names of beta.")
   }
@@ -137,7 +136,7 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   label_gg = gg[!is.na(gg$text), ]
   col_label = rep("#004b84", nrow(label_gg))
   col_label[label_gg$group=="Others"]="gray60"
-  p = ggplot(gg, aes(x=x, y=y, colour=group))
+  p = ggplot(gg, aes_string(x="x", y="y", colour="group"))
   p = p + geom_jitter(size = 1, alpha=0.8)
   p = p + scale_color_manual(values=mycolour, labels = groupnames)
   # p = p + scale_fill_discrete(guide = FALSE)
@@ -149,7 +148,8 @@ SquareView<-function(beta, ctrlname = "Control", treatname = "Treatment",
   p = p + labs(x="Control beta score", y = "Treatment beta score")
   # p = p + guides(col = guide_legend(ncol = 3, byrow = TRUE))
   if(label.top)
-    p = p + ggrepel::geom_text_repel(aes(x=x,y=y,label=Gene), color=col_label, data=label_gg)
+    p = p + ggrepel::geom_text_repel(aes_string(x="x",y="y",label="Gene"),
+                                     color=col_label, data=label_gg)
   if("topleft" %in% groups)
     p = p + annotate("text", color="red", x = x_cutoff[1], y=max(gg$y),
                      vjust=0, hjust = 3, label=sum(gg$group=="topleft"))

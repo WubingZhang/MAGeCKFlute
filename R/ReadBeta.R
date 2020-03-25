@@ -20,7 +20,6 @@
 #'
 #' @export
 ReadBeta <- function(gene_summary){
-  message(Sys.time(), " # Read gene summary file ...")
   if(is.null(dim(gene_summary))){
     gene_summary = read.table(file = gene_summary, sep = "\t", header = TRUE, quote = "",
                               comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)

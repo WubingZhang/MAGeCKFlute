@@ -73,9 +73,9 @@ VolcanoView <- function(df, x = "logFC", y = "adj.P.Val",
     mycolour = c(mycolour, "black")
     names(mycolour) = c("no", "up", "down", "black")
     #=========
-    p = ggplot(gg, aes(x=gg[,x], y=gg[,y], label=Label))
-    p = p + geom_point(aes(fill=group), shape = 21, alpha=alpha, show.legend = FALSE)
-    p = p + geom_point(aes(colour=color), shape = 21, alpha=alpha, show.legend = FALSE)
+    p = ggplot(gg, aes_string(x="x", y="y", label="Label"))
+    p = p + geom_point(aes_string(fill="group"), shape = 21, alpha=alpha, show.legend = FALSE)
+    p = p + geom_point(aes_string(colour="color"), shape = 21, alpha=alpha, show.legend = FALSE)
     p = p + scale_color_manual(values=mycolour)
     p = p + scale_fill_manual(values=mycolour)
     p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),

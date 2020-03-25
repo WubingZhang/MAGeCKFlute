@@ -30,6 +30,7 @@
 #' @param height The height of summary pdf in inches.
 #' @param outdir Output directory on disk.
 #' @param view_allpath Boolean, whether output all pathway view figures (time-consuming).
+#' @param verbose Boolean
 #'
 #' @author Wubing Zhang
 #'
@@ -76,7 +77,8 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
                      pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
-                     width = 10, height = 7, outdir = ".", view_allpath = FALSE){
+                     width = 10, height = 7, outdir = ".",
+                     view_allpath = FALSE, verbose = TRUE){
 	## Prepare the running environment ##
   {
     message(Sys.time(), " # Create output dir and pdf file...")
@@ -104,11 +106,12 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                             paste0(beta$Gene[idx2], collapse = ", "))
 
     dd = beta[!idx, ]
-    if(!all(c(ctrlname, treatname) %in% colnames(beta)))
-      stop("Sample name doesn't match !!!")
-    if(incorporateDepmap & "Depmap"%in%c(ctrlname, treatname))
+    if(incorporateDepmap)
       dd = IncorporateDepmap(dd, symbol = "HumanGene", cell_lines = cell_lines,
                              lineages = lineages)
+    if(!all(c(ctrlname, treatname) %in% colnames(dd)))
+      stop("Sample name doesn't match !!!")
+    ## Normalization
     if(tolower(norm_method)=="cell_cycle")
       dd = NormalizeBeta(dd, samples = c(ctrlname, treatname),
                          method = "cell_cycle", posControl = posControl)
@@ -132,6 +135,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  grid.arrange(P1, P2, P3, P4, ncol = 2)
 
 	  ## Essential genes ##
+	  Zuber_Essential = NULL
 	  data(Zuber_Essential)
 	  if(is.null(posControl))
 	    idx = toupper(dd$HumanGene) %in% toupper(Zuber_Essential$GeneSymbol)

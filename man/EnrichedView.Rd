@@ -5,18 +5,22 @@
 \alias{EnrichedView}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, rank_by = "pvalue", top = 5, bottom = 0,
-  x = "LogFDR", charLength = 40, filename = NULL, width = 7,
-  height = 4, ...)
+EnrichedView(enrichment, rank_by = "pvalue", mode = 1, subset = NULL,
+  top = 0, bottom = 0, x = "LogFDR", charLength = 40,
+  filename = NULL, width = 7, height = 4, ...)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.}
 
 \item{rank_by}{"pvalue" or "NES", specifying the indices for ranking pathways.}
 
-\item{top}{An integer, specifying the number of top enriched terms to show.}
+\item{mode}{1 or 2.}
 
-\item{bottom}{An integer, specifying the number of bottom enriched terms to show.}
+\item{subset}{A vector of pathway ids.}
+
+\item{top}{An integer, specifying the number of positively enriched terms to show.}
+
+\item{bottom}{An integer, specifying the number of negatively enriched terms to show.}
 
 \item{x}{Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.}
 

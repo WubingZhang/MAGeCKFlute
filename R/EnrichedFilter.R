@@ -33,6 +33,7 @@ EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   idx <- which(ijc>cutoff, arr.ind = TRUE)
   colnames(idx) = c("row", "col")
   idx = as.data.table(idx)
+  max_value = NULL
   if(nrow(idx)>0){
     imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
     enrichment <- enrichment[setdiff(1:nrow(enrichment), imat$max_value), ]

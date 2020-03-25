@@ -89,6 +89,7 @@
 #' @param mid A list of two colors with "gene" and "cpd" as the names.
 #' @param high A list of two colors with "gene" and "cpd" as the names.
 #' @param na.col Color used for NA's or missing values in gene.data and cpd.data. d na.col="transparent".
+#' @param verbose Boolean
 #' @param \dots Extra arguments passed to keggview.native or keggview.graph function.
 #'
 #' @details The function KeggPathwayView is a revised version of pathview function in pathview package.
@@ -133,7 +134,6 @@
 #'
 #' @author Wubing Zhang
 #'
-#' @seealso \code{\link{pathview}}
 #'
 #' @examples
 #' #load data
@@ -141,11 +141,12 @@
 #' dd = ReadBeta(mle.gene_summary)
 #' gene.data = dd$plx
 #' names(gene.data) = rownames(dd)
-#' \dontrun{
+#'
 #' pv.out <- KeggPathwayView(gene.data, pathway.id = "04110",
 #'   species = "hsa", out.suffix = "gse16873", kegg.native = TRUE)
-#' }
-#' @import pathview png
+#'
+#' @importFrom KEGGREST keggConv
+#' @import pathview
 #' @export
 KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                           species = "hsa", kegg.dir = ".",
@@ -163,19 +164,16 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                           low = list(gene = "deepskyblue1", cpd = "blue"),
                           mid = list(gene = "gray", cpd = "gray"),
                           high = list(gene = "red", cpd ="yellow"),
-                          na.col = "transparent", ...)
+                          na.col = "transparent", verbose = TRUE, ...)
 {
-  requireNamespace("pathview", quietly=TRUE) || stop("need pathview package")
-  requireNamespace("png", quietly=TRUE) || stop("need png package")
+  requireNamespace("KEGGREST")
   dtypes = !is.null(gene.data) + (!is.null(cpd.data))
-  cond0 = dtypes == 1 & is.numeric(limit) & length(limit) >
-    1
+  cond0 = dtypes == 1 & is.numeric(limit) & length(limit) > 1
   if (cond0) {
     if (limit[1] != limit[2] & is.null(names(limit)))
       limit = list(gene = limit[1:2], cpd = limit[1:2])
   }
-  if (is.null(trans.fun))
-    trans.fun = list(gene = NULL, cpd = NULL)
+  if (is.null(trans.fun)) trans.fun = list(gene = NULL, cpd = NULL)
   arg.len2 = c("discrete", "limit", "bins", "both.dirs", "trans.fun",
                "low", "mid", "high")
   for (arg in arg.len2) {
@@ -215,50 +213,52 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
                      species = c("Human", "Mouse", "Rat", "Bovine", "Canine", "Chimp", "Pig"),
                      "kegg code" = c("hsa", "mmu", "rno", "bta", "cfa", "ptr", "ssc"),
                      check.names = FALSE, stringsAsFactors = FALSE)
-  if (species != "ko") {
-    species.data = kegg.species.code(species, na.rm =TRUE,
-                                     code.only = FALSE)
-  }else {
-    species.data = c(kegg.code = "ko", entrez.gnodes = "0",
-                     kegg.geneid = "K01488", ncbi.geneid = "")
-    gene.idtype = "KEGG"
-    msg.fmt = "Only KEGG ortholog gene ID is supported,
-      make sure it looks like \"%s\"!"
-    msg = sprintf(msg.fmt, species.data["kegg.geneid"])
-    message(Sys.time(), " # Note: ", msg)
-  }
-  if (length(dim(species.data)) == 2) {
-    message(Sys.time(), " # Note: More than two valide species!")
-    species.data = species.data[1, ]
-  }
-  species = species.data["kegg.code"]
-  entrez.gnodes = species.data["entrez.gnodes"] == 1
-  if (is.na(species.data["ncbi.geneid"])) {
-    if (!is.na(species.data["kegg.geneid"])) {
-      msg.fmt = "Only native KEGG gene ID is supported for this species,
-      \nmake sure it looks like \"%s\"!"
-      msg = sprintf(msg.fmt, species.data["kegg.geneid"])
-      message(Sys.time(), " #  Note: ", msg)
-    }else {
-      stop("This species is not annotated in KEGG!")
-    }
-  }
+  # if (species != "ko") {
+  #   species.data = kegg.species.code(species, na.rm =TRUE,
+  #                                    code.only = FALSE)
+  # }else {
+  #   species.data = c(kegg.code = "ko", entrez.gnodes = "0",
+  #                    kegg.geneid = "K01488", ncbi.geneid = "")
+  #   gene.idtype = "KEGG"
+  #   msg.fmt = "Only KEGG ortholog gene ID is supported,
+  #     make sure it looks like \"%s\"!"
+  #   msg = sprintf(msg.fmt, species.data["kegg.geneid"])
+  #   if(verbose) message(Sys.time(), " # Note: ", msg)
+  # }
+  # if (length(dim(species.data)) == 2) {
+  #   if(verbose) message(Sys.time(), " # Note: More than two valide species!")
+  #   species.data = species.data[1, ]
+  # }
+  # species = species.data["kegg.code"]
+  # entrez.gnodes = species.data["entrez.gnodes"] == 1
+  entrez.gnodes = TRUE
+  # if (is.na(species.data["ncbi.geneid"])) {
+  #   if (!is.na(species.data["kegg.geneid"])) {
+  #     msg.fmt = "Only native KEGG gene ID is supported for this species,
+  #     \nmake sure it looks like \"%s\"!"
+  #     msg = sprintf(msg.fmt, species.data["kegg.geneid"])
+  #     if(verbose) message(Sys.time(), " #  Note: ", msg)
+  #   }else {
+  #     stop("This species is not annotated in KEGG!")
+  #   }
+  # }
   if (is.null(gene.annotpkg))
     gene.annotpkg = bods[match(species, bods[, 3]), 1]
   if (length(grep("ENTREZ|KEGG", gene.idtype)) < 1 & !is.null(gene.data)) {
     if (is.na(gene.annotpkg))
       stop("No proper gene annotation package available!")
-    if (!gene.idtype %in% gene.idtype.bods[[species]])
+    if (!gene.idtype %in% c("ENTREZ|SYMBOL|KEGG"))
       stop("Wrong input gene ID type!")
-    gene.idmap = id2eg(gd.names, category = gene.idtype,
-                       pkg.name = gene.annotpkg, unique.map =FALSE)
+    gene.idmap = TransGeneID(gd.names, fromType = gene.idtype,
+                             toType = "ENTREZ", organism = species)
+    gene.idmap = cbind(names(gene.idmap), gene.idmap)
     gene.data = mol.sum(gene.data, gene.idmap)
     gene.idtype = "ENTREZ"
   }
   if (gene.idtype == "ENTREZ" & !entrez.gnodes & !is.null(gene.data)) {
-    message(Sys.time(), " #  Info: Getting gene ID data from KEGG...")
+    if(verbose) message(Sys.time(), " #  Info: Getting gene ID data from KEGG...")
     gene.idmap = keggConv("ncbi-geneid", species)
-    message(Sys.time(), " #  Info: Done with data retrieval!")
+    if(verbose) message(Sys.time(), " #  Info: Done with data retrieval!")
     kegg.ids = gsub(paste(species, ":", sep = ""), "", names(gene.idmap))
     ncbi.ids = gsub("ncbi-geneid:", "", gene.idmap)
     gene.idmap = cbind(ncbi.ids, kegg.ids)
@@ -281,6 +281,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
     }else stop("wrong cpd.data format!")
   }
   if (length(grep("kegg", cpd.idtype)) < 1 & !is.null(cpd.data)) {
+    rn.list = NULL
     data(rn.list)
     cpd.types = c(names(rn.list), "name")
     cpd.types = tolower(cpd.types)
@@ -491,6 +492,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #'   directory. Default kegg.dir="." (current working directory).
 #' @param kegg.native logical, whether to render pathway graph as native KEGG graph (.png)
 #'  or using graphviz layout engine (.pdf). Default kegg.native=TRUE.
+#' @param verbose Boolean
 #'
 #' @return plot on the current device
 #'
@@ -506,15 +508,15 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 #'
 #' @importFrom png readPNG
-#' @importFrom grid grid.raster
+#' @importFrom grid rasterGrob
+#' @importFrom gridExtra grid.arrange
 #' @export
 
 arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
                             title=NULL, sub=NULL,
                             organism='hsa', view_allpath= FALSE,
-                            output=".", path.archive = ".", kegg.native = TRUE){
-  requireNamespace("png", quietly=TRUE) || stop("need png package")
-  requireNamespace("grid", quietly=TRUE) || stop("need grid package")
+                            output=".", path.archive = ".",
+                            kegg.native = TRUE, verbose = TRUE){
   #====No pathways supplied======================
   if(length(pathways)<1){
     p=ggplot()
@@ -530,7 +532,7 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
     keggID=pathways[1:top]
   }
 
-  message(Sys.time(), " # Starting plot kegg pathways for ", sub, " ", title)
+  if(verbose) message(Sys.time(), " # Starting plot kegg pathways for ", sub, " ", title)
 
   p1 <- suppressWarnings(KeggPathwayView(gene.data  = genelist[,c("Control","Treatment")],
                         pathway.id = keggID, species=organism, kegg.dir = path.archive,
@@ -563,9 +565,12 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
       grid::rasterGrob(png::readPNG(figure, native = FALSE),interpolate = FALSE)})
     for(i in 1:ceiling(length(thePlots)/ncol)){
       if(ncol*i <= length(thePlots))
-        do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):(ncol*i)], ncol = ncol, top=title, bottom=sub))
+        do.call(gridExtra::grid.arrange, c(thePlots[(ncol*(i-1)+1):(ncol*i)], ncol = ncol, top=title, bottom=sub))
       else
-        do.call(grid.arrange, c(thePlots[(ncol*(i-1)+1):length(thePlots)], ncol = ncol, top=title, bottom=sub))
+        do.call(gridExtra::grid.arrange, c(thePlots[(ncol*(i-1)+1):length(thePlots)], ncol = ncol, top=title, bottom=sub))
     }
   }
 }
+
+
+

@@ -18,7 +18,6 @@
 #' @export
 #'
 ReadsgRRA <- function(sgRNA_summary){
-  message(Sys.time(), " # Read sgRNA summary file ...")
   if(is.null(dim(sgRNA_summary))){
     sgRNA_summary = read.table(file = sgRNA_summary, sep = "\t", header = TRUE, quote = "",
                     comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)

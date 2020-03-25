@@ -11,7 +11,7 @@ FluteRRA(gene_summary, sgrna_summary = NULL, keytype = "Symbol",
   lineages = "All", omitEssential = TRUE, top = 5,
   toplabels = NULL, scale_cutoff = 2, limit = c(2, 200),
   pvalueCutoff = 0.25, proj = NA, width = 12, height = 6,
-  outdir = ".")
+  outdir = ".", verbose = TRUE)
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}
@@ -48,6 +48,8 @@ maximal size of gene sets for enrichent analysis.}
 \item{height}{The height of summary pdf in inches.}
 
 \item{outdir}{Output directory on disk.}
+
+\item{verbose}{Boolean}
 }
 \value{
 All of the pipeline results is output into the \code{out.dir}/\code{proj}_Results,

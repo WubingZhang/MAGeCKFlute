@@ -23,6 +23,7 @@
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param filter Boolean, specifying whether filter out redundancies from the enrichment results.
 #' @param gmtpath The path to customized gmt file.
+#' @param verbose Boolean
 #'
 #' @return \code{enrichRes} is an enrichResult instance.
 #'
@@ -35,8 +36,10 @@
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
-#' keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
-#' head(keggA@result)
+#' \dontrun{
+#'   keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
+#'   head(keggA@result)
+#' }
 #'
 #' @import DOSE
 #' @export
@@ -49,7 +52,8 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
                          limit = c(2, 200),
                          universe = NULL,
                          filter = FALSE,
-                         gmtpath = NULL){
+                         gmtpath = NULL,
+                         verbose = TRUE){
 
   requireNamespace("stats", quietly=TRUE) || stop("need stats package")
   methods = c("ORT", "GSEA", "HGT")
@@ -57,20 +61,23 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
   method = methods[toupper(method)]
 
   # Gene Set Enrichment Analysis
-  message(Sys.time(), " # Running ", type, " enrichment analysis")
+  if(verbose) message(Sys.time(), " # Running ", type, " enrichment analysis")
   if(method == "GSEA"){
     enrichRes <- enrich.GSE(geneList, keytype = keytype, type = type,
                             organism = organism,
                             pvalueCutoff = 1,
-                            limit = limit, gmtpath = gmtpath)
+                            limit = limit, gmtpath = gmtpath,
+                            verbose = verbose)
   }else if(method == "ORT"){
     enrichRes <- enrich.ORT(geneList, keytype = keytype, type = type,
                             organism = organism, pvalueCutoff = 1,
-                            limit = limit, universe = universe, gmtpath = gmtpath)
+                            limit = limit, universe = universe,
+                            gmtpath = gmtpath, verbose = verbose)
   }else if(method == "HGT"){
     enrichRes = enrich.HGT(geneList, keytype = keytype, type = type,
                            organism = organism, pvalueCutoff = 1,
-                           limit = limit, universe = universe, gmtpath = gmtpath)
+                           limit = limit, universe = universe,
+                           gmtpath = gmtpath, verbose = verbose)
   }else{
     stop("Avaliable methods: GSEA, ORT, and HGT. ")
   }
