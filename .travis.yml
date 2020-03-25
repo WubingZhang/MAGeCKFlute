@@ -6,7 +6,6 @@ language: c
 os:
   - linux
   - osx
-  - windows
 
 # use containers
 sudo: false
@@ -36,9 +35,6 @@ before_install:
         elif  [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
           echo "downloading miniconda.sh for osx";
           wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
-        elif [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
-          echo "downloading miniconda.sh for windows";
-          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe -O $HOME/download/miniconda.exe;
         fi;
     fi;
 
@@ -55,9 +51,9 @@ install:
   # Install miniconda
   - if [[ -d $MINICONDA_SUB_PATH ]]; then
         echo "miniconda for posix already available from cache";
-      else
-        echo "installing miniconda for posix";
-        bash $HOME/download/miniconda.sh -b -u -p $MINICONDA_PATH;
+    else
+      echo "installing miniconda for posix";
+      bash $HOME/download/miniconda.sh -b -u -p $MINICONDA_PATH;
     fi;
   - export PATH="$MINICONDA_PATH:$MINICONDA_SUB_PATH:$PATH";
   - hash -r
@@ -69,6 +65,7 @@ install:
   #- echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
   - echo '.travis.yml' > .Rbuildignore
   - conda install -c conda-forge r-devtools r-biocmanager
+  - conda install -c r r-xml
   - conda install -c bioconda bioconductor-clusterprofiler bioconductor-pathview
   - Rscript -e 'BiocManager::install(c("data.table", "msigdbr", "dendextend"), quiet=T)'
   - Rscript -e 'devtools::install_github("WubingZhang/MAGeCKFlute")'
