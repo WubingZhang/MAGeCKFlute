@@ -25,6 +25,7 @@
 #' @param width The width of summary pdf in inches.
 #' @param height The height of summary pdf in inches.
 #' @param outdir Output directory on disk.
+#' @param verbose Boolean
 #'
 #' @author Wubing Zhang
 #'
@@ -68,7 +69,8 @@ FluteRRA <- function(gene_summary,
                      pvalueCutoff = 0.25,
                      proj = NA,
                      width = 12, height = 6,
-                     outdir = "."){
+                     outdir = ".",
+                     verbose = TRUE){
 
   ## Prepare the output environment ##
   requireNamespace("ggplot2")

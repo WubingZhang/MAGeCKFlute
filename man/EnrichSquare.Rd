@@ -8,7 +8,7 @@
 EnrichSquare(beta, id = "Gene", keytype = "Symbol", x = "Control",
   y = "Treatment", pvalue = 0.05, enrich_method = "ORT",
   organism = "hsa", limit = c(1, 120), filename = NULL,
-  out.dir = ".", width = 6.5, height = 4, ...)
+  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
 }
 \arguments{
 \item{beta}{Data frame, with columns of "Gene", "group", and "Diff".}
@@ -37,6 +37,8 @@ max size of pathways for enrichent analysis.}
 \item{width}{As in ggsave.}
 
 \item{height}{As in ggsave.}
+
+\item{verbose}{Boolean.}
 
 \item{...}{Other available parameters in ggsave.}
 }

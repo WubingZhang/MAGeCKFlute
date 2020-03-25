@@ -40,7 +40,6 @@
 RankView <- function(rankdata, genelist=NULL, top=10, bottom=10, cutoff=NULL,
                      main=NULL, filename=NULL, width=5, height=4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
-  message(Sys.time(), " # Rank genes and plot ...")
   if(length(cutoff)==0) cutoff = CutoffCalling(rankdata, 2)
   if(length(cutoff)==1) cutoff = sort(c(-cutoff, cutoff))
   data = data.frame(Gene = names(rankdata), diff = rankdata, stringsAsFactors=FALSE)
@@ -52,11 +51,11 @@ RankView <- function(rankdata, genelist=NULL, top=10, bottom=10, cutoff=NULL,
   idx=(data$Rank<=bottom) | (data$Rank>(max(data$Rank)-top)) | (data$Gene %in% genelist)
   mycolour = c("no"="gray80",  "up"="#e41a1c","down"="#377eb8")
   p = ggplot(data)
-  p = p + geom_jitter(aes(x=diff,y=Rank,color=group), size = 0.5)
+  p = p + geom_jitter(aes_string(x="diff",y="Rank",color="group"), size = 0.5)
   if(!all(cutoff==0)) p = p + geom_vline(xintercept = cutoff, linetype = "dotted")
   if(sum(idx)>0)
-    p = p + geom_label_repel(aes(x=diff, y=Rank,fill=group,label = Gene),data=data[idx,],
-                             fontface = 'bold', color = 'white', size = 2.5,
+    p = p + geom_label_repel(aes_string(x="diff", y="Rank",fill="group",label = "Gene"),
+                             data=data[idx,], fontface = 'bold', color = 'white', size = 2.5,
                              box.padding = unit(0.4, "lines"), segment.color = 'grey50',
                              point.padding = unit(0.3, "lines"), segment.size = 0.3)
   p = p + scale_color_manual(values=mycolour)

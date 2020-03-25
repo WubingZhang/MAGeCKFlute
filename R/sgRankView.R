@@ -26,7 +26,7 @@
 #' sgRankView(sgrra)
 #'
 #' @import ggplot2
-#' @import data.table
+#' @importFrom stats aggregate
 #' @export
 #'
 sgRankView <- function(df, gene = NULL,
@@ -43,8 +43,8 @@ sgRankView <- function(df, gene = NULL,
   df = as.data.frame(df, stringsAsFactors = FALSE)
   df = df[order(df$LFC), ]
   df$Gene = as.character(df$Gene)
-  tmp = as.data.table(df)
-  tmp = tmp[, .(mid=median(LFC)), by = Gene]
+  tmp = stats::aggregate(df$LFC, by = list(df$Gene), median)
+  colnames(tmp) = c("Gene", "mid")
   tmp = tmp[order(tmp$mid), ]
   if(top>0){
     idx = max((nrow(tmp)-top+1), 1)
@@ -100,10 +100,10 @@ sgRankView <- function(df, gene = NULL,
   #depict
   cols <- c("pos"="#e41a1c","neg"="#377eb8", "tbg" = 608, "black"="black")
   p = ggplot()
-  p = p + geom_polygon(aes(x, y, fill=value, group=id), color="gray20", data=bgcol)
+  p = p + geom_polygon(aes_string("x", "y", fill="value", group="id"), color="gray20", data=bgcol)
   if(!is.null(neg_ctrl))
-    p = p + geom_segment(aes(LFC, y, xend = LFC, yend = yend, color = color), data = background)
-  p = p + geom_segment(aes(LFC, y, xend = LFC, yend = yend, color = color), data = subdf)
+    p = p + geom_segment(aes_string("LFC", "y", xend = "LFC", yend = "yend", color = "color"), data = background)
+  p = p + geom_segment(aes_string("LFC", "y", xend = "LFC", yend = "yend", color = "color"), data = subdf)
   p = p + scale_color_manual(values = cols)
   p = p + scale_fill_manual(values = c("bg"= bg.col))
   # p = p + scale_x_continuous(expand = c(0, 0))

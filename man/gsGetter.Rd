@@ -12,9 +12,9 @@ gsGetter(gmtpath = NULL, type = "All", limit = c(0, Inf),
 \item{gmtpath}{The path to customized gmt file.}
 
 \item{type}{Molecular signatures for testing, available datasets include
-Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
-MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
-C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+Pathway (KEGG, REACTOME, C2_CP:PID, C2_CP:BIOCARTA), GO (GOBP, GOCC, GOMF),
+MSIGDB (C1, C2 (C2_CP (C2_CP:PID, C2_CP:BIOCARTA), C2_CGP),
+C3 (C3_MIR, C3_TFT), C4 (C4_CGN, C4_CM), C5 (C5_BP, C5_CC, C5_MF), C6, C7, H)
 and Complex (CORUM). Any combination of them are also accessible
 (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 

@@ -108,7 +108,7 @@ EnrichedGeneView=function(enrichment, geneList,
   gg = gg[order(gg$GeneScore), ]
   gg$Gene = factor(gg$Gene, levels = unique(gg$Gene))
   # Plot the dot heatmap
-  p1 = ggplot(data=gg, aes(x=Gene, y=Term, size=Size, color = GeneScore))
+  p1 = ggplot(data=gg, aes_string(x="Gene", y="Term", size="Size", color = "GeneScore"))
   p1 = p1 + geom_point()
   p1 = p1 + scale_color_gradient2(low = "#081087", high = "#c12603")
   p1 = p1 + theme(panel.grid.major=element_line(colour="gray90"),

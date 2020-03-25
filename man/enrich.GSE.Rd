@@ -8,7 +8,7 @@
 \usage{
 enrich.GSE(geneList, keytype = "Symbol", type = "Pathway+GOBP",
   organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
-  gmtpath = NULL, nPerm = 2000, by = "fgsea")
+  gmtpath = NULL, nPerm = 2000, by = "fgsea", verbose = TRUE)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
@@ -34,6 +34,8 @@ maximal size of gene sets for enrichent analysis.}
 \item{nPerm}{The number of permutations.}
 
 \item{by}{One of 'fgsea' or 'DOSE'}
+
+\item{verbose}{Boolean}
 }
 \value{
 A enrichResult instance.

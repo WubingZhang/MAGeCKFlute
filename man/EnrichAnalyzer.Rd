@@ -9,7 +9,7 @@
 EnrichAnalyzer(geneList, keytype = "Symbol", type = "Pathway+GOBP",
   method = "HGT", organism = "hsa", pvalueCutoff = 0.25,
   limit = c(2, 200), universe = NULL, filter = FALSE,
-  gmtpath = NULL)
+  gmtpath = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
@@ -37,6 +37,8 @@ maximal size of gene sets for enrichent analysis.}
 \item{filter}{Boolean, specifying whether filter out redundancies from the enrichment results.}
 
 \item{gmtpath}{The path to customized gmt file.}
+
+\item{verbose}{Boolean}
 }
 \value{
 \code{enrichRes} is an enrichResult instance.
@@ -46,8 +48,10 @@ Enrichment analysis
 }
 \examples{
 data(geneList, package = "DOSE")
-keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
-head(keggA@result)
+\dontrun{
+  keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
+  head(keggA@result)
+}
 
 }
 \seealso{

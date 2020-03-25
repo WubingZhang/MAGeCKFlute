@@ -31,7 +31,8 @@
 
 BarView <- function(df, x = "x", y = "y", fill = "#FC6665",
                     bar.width = 0.8, position = "dodge",
-                    dodge.width = 0.8, main = NA, xlab = NULL, ylab = NA, ...){
+                    dodge.width = 0.8, main = NA,
+                    xlab = NULL, ylab = NA, ...){
   requireNamespace("ggplot2")
   requireNamespace("ggpubr")
   ## Check if fill is valid color

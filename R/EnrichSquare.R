@@ -20,6 +20,7 @@
 #' @param out.dir Path to save plot to (combined with filename).
 #' @param width As in ggsave.
 #' @param height As in ggsave.
+#' @param verbose Boolean.
 #' @param ... Other available parameters in ggsave.
 #'
 #' @return A list containing enrichment results for each group genes.
@@ -33,9 +34,10 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                          x = "Control", y = "Treatment",
                          pvalue = 0.05, enrich_method = "ORT",
                          organism = "hsa", limit = c(1, 120),
-                         filename=NULL, out.dir=".", width=6.5, height=4, ...){
-  message(Sys.time(), " # Enrichment analysis of 9 Square grouped genes ...")
+                         filename=NULL, out.dir=".",
+                         width=6.5, height=4, verbose = TRUE, ...){
 
+  if(verbose) message(Sys.time(), " # Enrichment analysis of 9 Square grouped genes ...")
   ## ===========Enrichment===================
   gg = as.data.frame(beta[, c(id, x, y, "group")], stringsAsFactors = FALSE)
   colnames(gg) = c("Gene", "Control", "Treatment", "group")
@@ -53,7 +55,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            method = enrich_method,
                            type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich1) && nrow(enrich1@result)>0){
     kegg1 = enrich1@result[grepl("KEGG", enrich1@result$ID), ]
     gobp1 = enrich1@result[grepl("GOBP", enrich1@result$ID), ]
@@ -76,7 +78,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich2 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich2) && nrow(enrich2@result)>0){
     kegg2 = enrich2@result[grepl("KEGG", enrich2@result$ID), ]
     gobp2 = enrich2@result[grepl("GOBP", enrich2@result$ID), ]
@@ -99,7 +101,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich3 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich3) && nrow(enrich3@result)>0){
     kegg3 = enrich3@result[grepl("KEGG", enrich3@result$ID), ]
     gobp3 = enrich3@result[grepl("GOBP", enrich3@result$ID), ]
@@ -122,7 +124,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich4 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich4) && nrow(enrich4@result)>0){
     kegg4 = enrich4@result[grepl("KEGG", enrich4@result$ID), ]
     gobp4 = enrich4@result[grepl("GOBP", enrich4@result$ID), ]
@@ -145,7 +147,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich12 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich12) && nrow(enrich12@result)>0){
     kegg12 = enrich12@result[grepl("KEGG", enrich12@result$ID), ]
     gobp12 = enrich12@result[grepl("GOBP", enrich12@result$ID), ]
@@ -168,7 +170,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich13 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich13) && nrow(enrich13@result)>0){
     kegg13 = enrich13@result[grepl("KEGG", enrich13@result$ID), ]
     gobp13 = enrich13@result[grepl("GOBP", enrich13@result$ID), ]
@@ -191,7 +193,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich24 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich24) && nrow(enrich24@result)>0){
     kegg24 = enrich24@result[grepl("KEGG", enrich24@result$ID), ]
     gobp24 = enrich24@result[grepl("GOBP", enrich24@result$ID), ]
@@ -214,7 +216,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
   enrich34 = EnrichAnalyzer(geneList = geneList, universe=universe,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism=organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = keytype)
+                           limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich34) && nrow(enrich34@result)>0){
     kegg34 = enrich34@result[grepl("KEGG", enrich34@result$ID), ]
     gobp34 = enrich34@result[grepl("GOBP", enrich34@result$ID), ]

@@ -7,7 +7,8 @@
 \usage{
 arrangePathview(genelist, pathways = c(), top = 4, ncol = 2,
   title = NULL, sub = NULL, organism = "hsa", view_allpath = FALSE,
-  output = ".", path.archive = ".", kegg.native = TRUE)
+  output = ".", path.archive = ".", kegg.native = TRUE,
+  verbose = TRUE)
 }
 \arguments{
 \item{genelist}{a data frame with columns of ENTREZID, Control and Treatment. The columns
@@ -41,6 +42,8 @@ and only plot top enriched pathways.}
 
 \item{kegg.native}{logical, whether to render pathway graph as native KEGG graph (.png)
 or using graphviz layout engine (.pdf). Default kegg.native=TRUE.}
+
+\item{verbose}{Boolean}
 }
 \value{
 plot on the current device

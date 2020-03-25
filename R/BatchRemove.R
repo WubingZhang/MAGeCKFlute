@@ -105,7 +105,7 @@ BatchRemove <- function(mat, batchMat, log2trans=FALSE,
     }else{ gg1$shape = "NA"; gg2$shape = "NA" }
     gg = rbind.data.frame(gg1, gg2)
     p1 = ggplot(gg)
-    p1 = p1 + geom_point(aes(x=PC1, y=PC2, color=col, shape=shape),size = 1)
+    p1 = p1 + geom_point(aes_string("PC1", "PC2", color="col", shape="shape"),size = 1)
     p1 = p1 + scale_color_discrete(name="Batch", breaks = unique(gg$col))
     p1 = p1 + scale_shape_discrete(name="Batch", breaks = unique(gg$col))
     p1 = p1 + theme_bw(14)+theme(plot.title = element_text(hjust = 0.5,size=12))

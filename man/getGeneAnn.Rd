@@ -19,8 +19,10 @@ A data frame.
 Retrieve gene annotations from the NCBI, HNSC, and Uniprot databases.
 }
 \examples{
-ann = getGeneAnn("hsa")
-head(ann)
+\dontrun{
+  ann = getGeneAnn("hsa")
+  head(ann)
+}
 
 }
 \author{

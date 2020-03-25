@@ -5,9 +5,11 @@
 \alias{retrieve_gs}
 \title{Update genesets from source database}
 \usage{
-retrieve_gs(organism = "hsa")
+retrieve_gs(type = c("KEGG", "REACTOME", "CORUM"), organism = "hsa")
 }
 \arguments{
+\item{type}{A vector of databases, such as KEGG, REACTOME, CORUM.}
+
 \item{organism}{'hsa' or 'mmu'.}
 }
 \value{
@@ -15,10 +17,6 @@ save data to local library.
 }
 \description{
 Update genesets from source database
-}
-\examples{
-retrieve_gs()
-
 }
 \author{
 Wubing Zhang

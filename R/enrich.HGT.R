@@ -19,6 +19,7 @@
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param gmtpath The path to customized gmt file.
+#' @param verbose Boolean
 #'
 #' @return A enrichResult instance.
 #'
@@ -42,7 +43,9 @@
 enrich.HGT = function(geneList, keytype = "Symbol",
                       type = "Pathway+GOBP",
                       organism = 'hsa', pvalueCutoff = 0.25,
-                      limit = c(2, 200), universe = NULL, gmtpath = NULL){
+                      limit = c(2, 200), universe = NULL,
+                      gmtpath = NULL, verbose = TRUE){
+
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
@@ -98,7 +101,7 @@ enrich.HGT = function(geneList, keytype = "Symbol",
 
   ## Test using above function ##
   len = length(unique(intersect(gene, gene2path$Gene)))
-  message("\t", len, " genes are mapped ...")
+  if(verbose) message("\t", len, " genes are mapped ...")
   m = length(gene)
   n = length(universe) - m
   res = sapply(pathways$PathwayID, HGT)

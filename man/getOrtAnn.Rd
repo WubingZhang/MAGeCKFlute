@@ -21,8 +21,10 @@ A data frame.
 Retreive reference orthologs annotation.
 }
 \examples{
-ann = getOrtAnn("hsa", "mmu")
-head(ann)
+\dontrun{
+  ann = getOrtAnn("mmu", "hsa")
+  head(ann)
+}
 
 }
 \author{

@@ -22,6 +22,7 @@
 #' @param gmtpath The path to customized gmt file.
 #' @param nPerm The number of permutations.
 #' @param by One of 'fgsea' or 'DOSE'
+#' @param verbose Boolean
 #'
 #' @return A enrichResult instance.
 #'
@@ -46,7 +47,7 @@ enrich.GSE <- function(geneList, keytype = "Symbol",
                        type = "Pathway+GOBP",
                        organism = 'hsa', pvalueCutoff = 0.25,
                        limit = c(2, 200), gmtpath = NULL,
-                       nPerm = 2000, by = "fgsea"){
+                       nPerm = 2000, by = "fgsea", verbose = TRUE){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   geneList = sort(geneList, decreasing = TRUE)
@@ -69,12 +70,12 @@ enrich.GSE <- function(geneList, keytype = "Symbol",
 
   ## Enrichment analysis
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
-  message("\t", len, " genes are mapped ...")
+  if(verbose) message("\t", len, " genes are mapped ...")
   enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
                      minGSSize = 0, maxGSSize = max(limit),
                      TERM2NAME = pathways, nPerm = nPerm, by = by,
-                     TERM2GENE = gene2path[,c("PathwayID","Gene")])
-
+                     TERM2GENE = gene2path[,c("PathwayID","Gene")],
+                     verbose = verbose)
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     colnames(enrichedRes@result)[11] = "geneID"

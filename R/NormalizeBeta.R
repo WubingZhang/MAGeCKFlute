@@ -47,13 +47,13 @@
 #===normalize function=====================================
 NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
                           posControl=NULL, samples=NULL){
-  message(Sys.time(), " # Normalize beta scores ...")
   normalized = beta[, colnames(beta)[setdiff(1:ncol(beta), id)]]
   if(id!=0) rownames(normalized) = beta[, id]
   if(!is.null(samples)) normalized = normalized[, samples]
   normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
     if(is.null(posControl)){
+      Zuber_Essential = NULL
       data(Zuber_Essential)
       posControl=Zuber_Essential$GeneSymbol
     }

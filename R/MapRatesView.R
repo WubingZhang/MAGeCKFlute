@@ -51,9 +51,9 @@ MapRatesView <- function(countSummary,
 
   fill = c("#9BC7E9", "#1C6DAB")
   p <- ggplot(gg)
-  p = p + geom_bar(aes(y = count, x = Label, fill = category),
+  p = p + geom_bar(aes_string(y = "count", x = "Label", fill = "category"),
                    stat="identity", width=0.8, alpha=0.9)
-  p = p + geom_text(aes(x = Label, y = pos, label = percent), size=4)
+  p = p + geom_text(aes_string(x = "Label", y = "pos", label = "percent"), size=4)
   p = p + labs(x=NULL, y="Reads", title="Mapping ratio")
   p = p + scale_y_continuous(expand = c(0,0))
   p = p + scale_fill_manual(values=fill)
