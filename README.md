@@ -20,7 +20,7 @@ Before start installation, you may also need to install the libxml2 which is req
 conda install -c anaconda libxml2
 ~~~
 
-### Installation using R
+### Installation using R (recommended)
 ~~~
 > install.packages(c("devtools", "BiocManager"), repos = "https://cloud.r-project.org")
 > BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggsci", "ggrepel", "ggpubr", "knitr", "clusterProfiler"))
@@ -29,7 +29,9 @@ conda install -c anaconda libxml2
 > BiocManager::install("MAGeCKFlute") # Released version
 ~~~
 
-### Install package MAGeCKFlute using conda
+### Installation using conda
+
+Installation of some dependencies through conda may generate conflicts, so it's better to install the MAGeCKFlute within R.
 
 ~~~
 conda install -c bioconda bioconductor-mageckflute
