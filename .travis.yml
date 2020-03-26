@@ -64,10 +64,11 @@ install:
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
   - conda install -c bioconda bioconductor-clusterprofiler
-  - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
+  - Rscript -e 'BiocManager::install(c("DOSE", "enrichplot"), quiet=T)'
   - Rscript -e 'BiocManager::install("pathview", quiet=T)'
-  - Rscript -e 'BiocManager::install(c("data.table", "msigdbr", "dendextend", "pheatmap"), quiet=T)'
-  - Rscript -e 'BiocManager::install(c("biomaRt", "sva", "ggsci", "ggrepel", "ggpubr"), quiet=T)'
+  - Rscript -e 'BiocManager::install("biomaRt", quiet=T)'
+  - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("sva", "ggsci", "ggrepel", "ggpubr"), quiet=T)'
 
 # Build and check package
 script:
