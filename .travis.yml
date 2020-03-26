@@ -14,11 +14,7 @@ sudo: false
 branches:
   only:
    - master
-
-# cache local R libraries directory:
-cache:
-  directories:
-    - ~/miniconda
+   - RELEASE_3_10
 
 before_install:
   # Set conda path info
@@ -64,11 +60,11 @@ install:
   - conda install r r-recommended r-markdown
   #- echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
   - echo '.travis.yml' > .Rbuildignore
-  - conda install -c conda-forge r-devtools r-biocmanager
+  - conda install -c conda-forge tar r-devtools r-biocmanager
+  - conda install -c anaconda libxml2
   - conda install -c r r-xml
   - conda install -c bioconda bioconductor-clusterprofiler bioconductor-pathview
   - Rscript -e 'BiocManager::install(c("data.table", "msigdbr", "dendextend"), quiet=T)'
-  - Rscript -e 'devtools::install_github("WubingZhang/MAGeCKFlute")'
 
 # Build and check package
 script:
