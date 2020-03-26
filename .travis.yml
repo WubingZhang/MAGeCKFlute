@@ -63,8 +63,11 @@ install:
   - conda install -c conda-forge tar r-devtools r-biocmanager
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
-  - Rscript -e 'BiocManager::install(c("clusterProfiler", "pathview", "data.table", "msigdbr", "dendextend", "pheatmap"), quiet=T)'
-  - Rscript -e 'BiocManager::install(c("enrichplot", "biomaRt", "sva", "ggsci", "ggrepel", "ggpubr"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("enrichplot", "DOSE"), quiet=T)'
+  - Rscript -e 'BiocManager::install("clusterProfiler", quiet=T)'
+  - Rscript -e 'BiocManager::install("pathview", quiet=T)'
+  - Rscript -e 'BiocManager::install(c("data.table", "msigdbr", "dendextend", "pheatmap"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("biomaRt", "sva", "ggsci", "ggrepel", "ggpubr"), quiet=T)'
 
 # Build and check package
 script:
