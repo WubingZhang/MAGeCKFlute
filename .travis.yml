@@ -16,6 +16,10 @@ branches:
    - master
    - RELEASE_3_10
 
+cache:
+  directories:
+    - ~/miniconda
+
 before_install:
   # Set conda path info
   - MINICONDA_PATH=$HOME/miniconda;
