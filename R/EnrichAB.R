@@ -35,19 +35,19 @@ EnrichAB <- function(data, pvalue = 0.25,
 
   requireNamespace("clusterProfiler", quietly=TRUE) || stop("Need clusterProfiler package")
   if(verbose) message(Sys.time(), " # Enrichment analysis of GroupA and GroupB genes ...")
-  gg = data[!(is.na(data$HumanGene)|duplicated(data$HumanGene)), ]
+  gg = data
 
   ##=====enrichment for GroupA======
-  idx1 = gg$group=="top"; genes = gg$HumanGene[idx1]
+  idx1 = gg$group=="top"; genes = gg$EntrezID[idx1]
   geneList = gg$Diff[idx1]; names(geneList) = genes
-  enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$HumanGene,
-                         method = enrich_method,
-                         type = "KEGG+REACTOME+GOBP+Complex",
-                         organism = organism, pvalueCutoff = pvalue,
-                         limit = limit, keytype = "Symbol")
+  enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
+                           method = enrich_method,
+                           type = "KEGG+REACTOME+GOBP+Complex",
+                           organism = organism, pvalueCutoff = pvalue,
+                           limit = limit, keytype = "entrez")
   if(!is.null(enrichA) && nrow(enrichA@result)>0){
     keggA = enrichA@result[grepl("KEGG", enrichA@result$ID), ]
-    gobpA = enrichA@result[grepl("GOBP", enrichA@result$ID), ]
+    gobpA = enrichA@result[grepl("^GO", enrichA@result$ID), ]
     reactomeA = enrichA@result[grepl("REACTOME", enrichA@result$ID), ]
     complexA = enrichA@result[grepl("CORUM", enrichA@result$ID), ]
     keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = 5, bottom = 0)
@@ -62,15 +62,15 @@ EnrichAB <- function(data, pvalue = 0.25,
     keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
 
-  idx2 = gg$group=="bottom"; genes = gg$HumanGene[idx2]
+  idx2 = gg$group=="bottom"; genes = gg$EntrezID[idx2]
   geneList = gg$Diff[idx2]; names(geneList) = genes
-  enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$HumanGene,
+  enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
                            organism = organism, pvalueCutoff = pvalue,
-                           limit = limit, keytype = "Symbol", verbose = verbose)
+                           limit = limit, keytype = "entrez", verbose = verbose)
   if(!is.null(enrichB) && nrow(enrichB@result)>0){
     keggB = enrichB@result[grepl("KEGG", enrichB@result$ID), ]
-    gobpB = enrichB@result[grepl("GOBP", enrichB@result$ID), ]
+    gobpB = enrichB@result[grepl("^GO", enrichB@result$ID), ]
     reactomeB = enrichB@result[grepl("REACTOME", enrichB@result$ID), ]
     complexB = enrichB@result[grepl("CORUM", enrichB@result$ID), ]
     keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = 5)

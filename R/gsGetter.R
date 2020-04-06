@@ -130,7 +130,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     gene2path$PathwayName = pathways[gene2path$PathwayID, "PathwayName"]
     locfname = file.path(system.file("extdata", package = "MAGeCKFlute"),
                          paste0("kegg.all.entrez.", organism, ".rds"))
-    gene2path$PathwayID = gsub(organism, "KEGG:", gene2path$PathwayID)
+    gene2path$PathwayID = paste0("KEGG_", gene2path$PathwayID)
     saveRDS(gene2path, locfname)
   }
 
@@ -151,8 +151,9 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     gene2corum = data.frame(EntrezID = unlist(genes),
                        ComplexID = rep(corum$ComplexID, nset),
                        ComplexName = rep(corum$ComplexName, nset))
-    gene2corum$ComplexID = paste0("CORUM:", gene2corum$ComplexID)
-    gene2corum$EntrezID = TransGeneID(gene2corum$EntrezID, "Symbol", "Entrez", organism = organism)
+    gene2corum$ComplexID = paste0("CORUM_", gene2corum$ComplexID)
+    gene2corum$EntrezID = TransGeneID(gene2corum$EntrezID, "Symbol",
+                                      "Entrez", organism = organism)
     gene2corum = na.omit(gene2corum)
     locfname = file.path(system.file("extdata", package = "MAGeCKFlute"),
                          paste0("corum.all.entrez.", organism, ".rds"))
@@ -165,7 +166,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     colnames(gene2path) = c("EntrezID", "PathwayID", "link", "PathwayName", "Evidence", "Organism")
     gene2path = gene2path[grepl(organism, gene2path$PathwayID, ignore.case = TRUE), ]
     gene2path = gene2path[, c(1,2,4)]
-    gene2path$PathwayID = gsub(paste0("R-", toupper(organism), "-"), "REACTOME:", gene2path$PathwayID)
+    gene2path$PathwayID = gsub(paste0("R-", toupper(organism), "-"), "REACTOME_", gene2path$PathwayID)
     locfname = file.path(system.file("extdata", package = "MAGeCKFlute"),
                          paste0("reactome.all.entrez.", organism, ".rds"))
     saveRDS(gene2path, locfname)

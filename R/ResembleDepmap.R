@@ -16,9 +16,11 @@
 #'
 #' @examples
 #' dd.rra = ReadRRA(rra.gene_summary)
-#' rra.omit = OmitCommonEssential(dd.rra)
-#' depmap_similarity = ResembleDepmap(rra.omit)
-#' head(depmap_similarity)
+#' \dontrun{
+#'   rra.omit = OmitCommonEssential(dd.rra)
+#'   depmap_similarity = ResembleDepmap(rra.omit)
+#'   head(depmap_similarity)
+#' }
 #' @export
 
 ResembleDepmap <- function(dd, symbol = "id", score = "Score", lineages = "All",

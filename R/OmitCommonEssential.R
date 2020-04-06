@@ -16,8 +16,10 @@
 #' @examples
 #' dd.rra = ReadRRA(rra.gene_summary)
 #' dim(dd.rra)
-#' rra.omit = OmitCommonEssential(dd.rra)
-#' dim(rra.omit)
+#' \dontrun{
+#'   rra.omit = OmitCommonEssential(dd.rra)
+#'   dim(rra.omit)
+#' }
 #'
 #' @export
 

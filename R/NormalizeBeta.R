@@ -48,7 +48,7 @@
 NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
                           posControl=NULL, samples=NULL){
   normalized = beta[, colnames(beta)[setdiff(1:ncol(beta), id)]]
-  if(id!=0) rownames(normalized) = beta[, id]
+  if(id==0) ids = rownames(beta) else ids = as.character(beta[,id])
   if(!is.null(samples)) normalized = normalized[, samples]
   normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
@@ -57,7 +57,7 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
       data(Zuber_Essential)
       posControl=Zuber_Essential$GeneSymbol
     }
-    idx = which(toupper(rownames(normalized)) %in% toupper(posControl))
+    idx = which(ids %in% toupper(posControl))
     if(length(idx)>0){
       mid = apply(normalized[idx,], 2, median, na.rm = TRUE)
       # mad = apply(normalized[idx,], 2, mad, na.rm = TRUE)

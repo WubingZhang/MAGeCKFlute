@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.6.4 (Bioconductor 3.10)
+-------------------------
+
+    o Config Travis CI test.
+    o Download Depmap data automatically and save as rdata.
+
 CHANGES IN VERSION 1.6.3 (Bioconductor 3.10)
 -------------------------
 

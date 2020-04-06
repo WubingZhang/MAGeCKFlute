@@ -45,8 +45,10 @@ Visualize enriched pathways and genes in those pathways
 }
 \examples{
 data(geneList, package = "DOSE")
-enrichRes <- enrich.GSE(geneList, keytype = "Entrez")
-EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
+\dontrun{
+  enrichRes <- enrich.GSE(geneList, keytype = "Entrez")
+  EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
+}
 }
 \author{
 Wubing Zhang

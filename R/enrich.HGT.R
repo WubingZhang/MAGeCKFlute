@@ -40,8 +40,7 @@
 #' @import DOSE
 #' @export
 
-enrich.HGT = function(geneList, keytype = "Symbol",
-                      type = "Pathway+GOBP",
+enrich.HGT = function(geneList, keytype = "Symbol", type = "GOBP",
                       organism = 'hsa', pvalueCutoff = 0.25,
                       limit = c(2, 200), universe = NULL,
                       gmtpath = NULL, verbose = TRUE){

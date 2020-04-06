@@ -86,38 +86,66 @@ FluteRRA <- function(gene_summary,
   message(Sys.time(), " # Read RRA result ...")
   dd = ReadRRA(gene_summary)
   dd$LogFDR = -log10(dd$FDR)
-  dd$EntrezID = TransGeneID(dd$id, keytype, "Entrez", organism = organism)
-  dd$Symbol = TransGeneID(dd$EntrezID, "Entrez", "Symbol", organism = organism)
-  dd$HumanGene = TransGeneID(dd$id, keytype, "Symbol",
-                             fromOrg = organism, toOrg = "hsa")
-  idx1 = is.na(dd$Symbol)
-  idx2 = !is.na(dd$Symbol) & duplicated(dd$Symbol)
+  if(tolower(keytype)!="entrez"){
+    dd$EntrezID = TransGeneID(dd$id, keytype, "Entrez", organism = organism)
+  }else{
+    dd$EntrezID = dd$id
+  }
+  if(tolower(keytype)!="symbol"){
+    dd$Symbol = TransGeneID(dd$id, keytype, "Symbol", organism = organism)
+  }else{
+    dd$Symbol = dd$id
+  }
+  if(organism != "hsa"){
+    dd$HumanGene = TransGeneID(dd$id, keytype, "Symbol",
+                               fromOrg = organism, toOrg = "hsa")
+  }else{
+    dd$HumanGene = dd$Symbol
+  }
+  idx1 = is.na(dd$EntrezID)
+  idx2 = !is.na(dd$EntrezID) & duplicated(dd$EntrezID)
   idx = idx1|idx2
-  if(sum(idx1)>0) message(sum(idx1), " genes are not eligible: ",
+  if(sum(idx1)>0) message(sum(idx1), " genes genes fail to convert into Entrez IDs: ",
                           paste0(dd$id[idx1], collapse = ", "))
-  if(sum(idx2)>0) message(sum(idx2), " genes are duplicated: ",
+  if(sum(idx2)>0) message(sum(idx2), " genes have duplicate Entrez IDs: ",
                           paste0(dd$id[idx2], collapse = ", "))
   dd = dd[!idx, ]
 
   if(!is.null(sgrna_summary)){
     dd.sgrna = ReadsgRRA(sgrna_summary)
     dd.sgrna = dd.sgrna[dd.sgrna$Gene%in%dd$id, ]
-    dd.sgrna$HumanGene = TransGeneID(dd.sgrna$Gene, keytype, "Symbol",
-                                     fromOrg = organism, toOrg = "hsa")
+    if(tolower(keytype)!="entrez"){
+      dd.sgrna$EntrezID = TransGeneID(dd.sgrna$id, keytype, "Entrez", organism = organism)
+    }else{
+      dd.sgrna$EntrezID = dd.sgrna$id
+    }
+    if(tolower(keytype)!="symbol"){
+      dd.sgrna$Symbol = TransGeneID(dd.sgrna$id, keytype, "Symbol", organism = organism)
+    }else{
+      dd.sgrna$Symbol = dd.sgrna$id
+    }
+    if(organism != "hsa"){
+      dd.sgrna$HumanGene = TransGeneID(dd.sgrna$Gene, keytype, "Symbol",
+                                       fromOrg = organism, toOrg = "hsa")
+    }else{
+      dd.sgrna$HumanGene = dd.sgrna$Symbol
+    }
   }else{
-    dd.sgrna = data.frame(sgrna = NA, Gene = NA, LFC = NA, HumanGene = NA)
+    dd.sgrna = data.frame(sgrna = NA, Gene = NA, LFC = NA,
+                          EntrezID = NA, Symbol = NA, HumanGene = NA)
   }
   cutoff = c(-CutoffCalling(dd$Score, scale_cutoff),
              CutoffCalling(dd$Score, scale_cutoff))
-
   write.table(dd, file.path(outdir, paste0("RRA/", proj, "_processed_data.txt")),
               sep = "\t", row.names = FALSE, quote = FALSE)
+
   if(incorporateDepmap){
     dd = IncorporateDepmap(dd, symbol = "HumanGene", cell_lines = cell_lines,
                            lineages = lineages)
     ## Nine-squares ##
-    p.square = ScatterView(dd, x = "Depmap", y = "Score",
-                           label = "Symbol", model = "ninesquare",
+    p.square = ScatterView(dd, x = "Depmap", y = "Score", label = "Symbol",
+                           groups = c("midleft", "topcenter", "midright", "bottomcenter"),
+                           groupnames = c("Group1", "Group2", "Group3", "Group4"),
                            auto_cut_x = TRUE, y_cut = cutoff,
                            auto_cut_diag = TRUE, top = top,
                            display_cut = TRUE) + ylab("Customized")
@@ -126,9 +154,9 @@ FluteRRA <- function(gene_summary,
     write.table(dd, file.path(outdir, paste0("RRA/", proj, "_incorporate_depmap.txt")),
                 sep = "\t", row.names = FALSE, quote = FALSE)
 
-    E1 = EnrichSquare(p.square$data, id = "HumanGene", keytype = "Symbol",
+    E1 = EnrichSquare(p.square$data, id = "EntrezID", keytype = "entrez",
                       x = "Depmap", y = "Score", pvalue = pvalueCutoff,
-                      organism="hsa", filename="RRA", limit = limit,
+                      organism=organism, filename="RRA", limit = limit,
                       out.dir=file.path(outdir, "RRA/"))
   }
   if(omitEssential){
@@ -164,17 +192,17 @@ FluteRRA <- function(gene_summary,
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
-  dd = dd[!(is.na(dd$HumanGene)|duplicated(dd$HumanGene)), ]
-  universe = dd$HumanGene
-  geneList = dd$Score; names(geneList) = dd$HumanGene
+  # dd = dd[!(is.na(dd$HumanGene)|duplicated(dd$HumanGene)), ]
+  universe = dd$EntrezID
+  geneList = dd$Score; names(geneList) = dd$EntrezID
   idx1 = dd$Score<cutoff[1]; idx2 = dd$Score>cutoff[2]
   kegg.pos = EnrichAnalyzer(geneList=geneList[idx2], universe=universe,
-                            organism="hsa", pvalueCutoff=pvalueCutoff,
-                            limit = limit, keytype = "Symbol",
+                            organism=organism, pvalueCutoff=pvalueCutoff,
+                            limit = limit, keytype = "entrez",
                             type = "KEGG+REACTOME+GOBP+Complex")
   if(!is.null(kegg.pos) && nrow(kegg.pos@result)>0){
     keggA = kegg.pos@result[grepl("KEGG", kegg.pos@result$ID), ]
-    gobpA = kegg.pos@result[grepl("GOBP", kegg.pos@result$ID), ]
+    gobpA = kegg.pos@result[grepl("^GO", kegg.pos@result$ID), ]
     reactomeA = kegg.pos@result[grepl("REACTOME", kegg.pos@result$ID), ]
     complexA = kegg.pos@result[grepl("CPX|CORUM", kegg.pos@result$ID), ]
     keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = top, bottom = 0)
@@ -189,12 +217,12 @@ FluteRRA <- function(gene_summary,
     keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
   kegg.neg = EnrichAnalyzer(geneList=geneList[idx1], universe=universe,
-                            organism="hsa", pvalueCutoff=pvalueCutoff,
-                            limit = limit, keytype = "Symbol",
+                            organism=organism, pvalueCutoff=pvalueCutoff,
+                            limit = limit, keytype = "entrez",
                             type = "KEGG+REACTOME+GOBP+Complex")
   if(!is.null(kegg.neg) && nrow(kegg.neg@result)>0){
     keggB = kegg.neg@result[grepl("KEGG", kegg.neg@result$ID), ]
-    gobpB = kegg.neg@result[grepl("GOBP", kegg.neg@result$ID), ]
+    gobpB = kegg.neg@result[grepl("^GO", kegg.neg@result$ID), ]
     reactomeB = kegg.neg@result[grepl("REACTOME", kegg.neg@result$ID), ]
     complexB = kegg.neg@result[grepl("CPX|CORUM", kegg.neg@result$ID), ]
     keggB = list(enrichRes = keggB,

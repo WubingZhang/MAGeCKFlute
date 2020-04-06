@@ -12,7 +12,7 @@
 #' @author Yihan Xiao
 #' @examples
 #' data(geneList, package = "DOSE")
-#' enrichRes <- enrich.GSE(geneList, keytype = "entrez")
+#' enrichRes <- enrich.HGT(geneList, keytype = "entrez")
 #' EnrichedFilter(enrichRes)
 #' @import data.table
 #' @export

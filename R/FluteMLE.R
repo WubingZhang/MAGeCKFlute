@@ -91,18 +91,30 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
   ## Beta Score Preparation ##
   {
     beta = ReadBeta(gene_summary)
-    beta$EntrezID = TransGeneID(beta$Gene, keytype, "Entrez", organism = organism)
-    beta$Symbol = TransGeneID(beta$EntrezID, "Entrez", "Symbol", organism = organism)
+    if(tolower(keytype)!="entrez"){
+      beta$EntrezID = TransGeneID(beta$Gene, keytype, "Entrez", organism = organism)
+    }else{
+      beta$EntrezID = beta$Gene
+    }
+    if(tolower(keytype)!="symbol"){
+      beta$Symbol = TransGeneID(beta$Gene, keytype, "Symbol", organism = organism)
+    }else{
+      beta$Symbol = beta$Gene
+    }
+    if(organism != "hsa"){
+      beta$HumanGene = TransGeneID(beta$Symbol, "Symbol", "Symbol",
+                                   fromOrg = organism, toOrg = "hsa")
+    }else{
+      beta$HumanGene = beta$Symbol
+    }
 
     message(Sys.time(), " # Transform id to official human gene name ...")
-    beta$HumanGene = TransGeneID(beta$EntrezID, "Entrez", "Symbol",
-                                 fromOrg = organism, toOrg = "hsa")
     idx1 = is.na(beta$EntrezID)
     idx2 = !is.na(beta$EntrezID) & duplicated(beta$EntrezID)
     idx = idx1|idx2
-    if(sum(idx1)>0) message(sum(idx1), " genes are not eligible: ",
+    if(sum(idx1)>0) message(sum(idx1), " genes fail to convert into Entrez IDs: ",
                            paste0(beta$Gene[idx1], collapse = ", "))
-    if(sum(idx2)>0) message(sum(idx2), " genes are duplicated: ",
+    if(sum(idx2)>0) message(sum(idx2), " genes have duplicate Entrez IDs: ",
                             paste0(beta$Gene[idx2], collapse = ", "))
 
     dd = beta[!idx, ]
@@ -113,10 +125,10 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
       stop("Sample name doesn't match !!!")
     ## Normalization
     if(tolower(norm_method)=="cell_cycle")
-      dd = NormalizeBeta(dd, samples = c(ctrlname, treatname),
+      dd = NormalizeBeta(dd, id = "HumanGene", samples = c(ctrlname, treatname),
                          method = "cell_cycle", posControl = posControl)
     if(tolower(norm_method)=="loess")
-      dd = NormalizeBeta(dd, samples = c(ctrlname, treatname), method = "loess")
+      dd = NormalizeBeta(dd, id = "HumanGene", samples = c(ctrlname, treatname), method = "loess")
   }
 	## Distribution of beta scores ##
 	{
@@ -189,16 +201,16 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	         p1, width = 4, height = 3)
 	  write.table(p1$data, paste0(outputDir2, "Data_ScatterView_TreatvsCtrl.txt"),
 	              sep = "\t", row.names = FALSE, quote = FALSE)
-	  p2 = ScatterView(dd, x = "Rank", y = "Diff", label = "Gene",
+	  p2 = ScatterView(dd, x = "Rank", y = "Diff", label = "Symbol",
 	                   groups = c("top", "bottom"), groupnames = c("GroupA", "GroupB"),
 	                   top = top, y_cut = y_cut)
 	  ggsave(paste0(outputDir2, "RankView_Treat-Ctrl_", norm_method, ".png"),
 	         p2, width = 3, height = 5)
-	  p3 = ScatterView(dd[dd$Diff>0, ], x = "RandomIndex", y = "Diff", label = "Gene",
+	  p3 = ScatterView(dd[dd$Diff>0, ], x = "RandomIndex", y = "Diff", label = "Symbol",
 	                   y_cut = y_cut, groups = "top", groupnames = c("GroupA"), top = top)
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Positive_", norm_method, ".png"),
 	         p3, width = 4, height = 3)
-	  p4 = ScatterView(dd[dd$Diff<0, ], x = "RandomIndex", y = "Diff", label = "Gene",
+	  p4 = ScatterView(dd[dd$Diff<0, ], x = "RandomIndex", y = "Diff", label = "Symbol",
 	                   y_cut = y_cut, groups = "bottom", groupnames = c("GroupB"), top = top)
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Negative_", norm_method, ".png"),
 	         p4, width = 4, height = 3)
@@ -214,7 +226,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir4, showWarnings=FALSE)
 
 	  E1 = EnrichAB(p1$data, pvalue = pvalueCutoff, enrich_method = enrich_method,
-	                organism = "hsa", limit = limit,
+	                organism = organism, limit = limit,
 	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
 	  grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
@@ -233,7 +245,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
 	## Nine-squares ##
 	{
-	  p1 = ScatterView(dd, x = "Control", y = "Treatment", label = "Gene",
+	  p1 = ScatterView(dd, x = "Control", y = "Treatment", label = "Symbol",
 	                   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
 	                   groupnames = c("Group1", "Group2", "Group3", "Group4"),
 	                   top = top, display_cut = TRUE,
@@ -246,8 +258,8 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
 	## Nine-Square grouped gene enrichment ##
 	{
-	  E1 = EnrichSquare(p1$data, id = "HumanGene", keytype = "Symbol",
-	                    x = "Control", y = "Treatment", organism="hsa",
+	  E1 = EnrichSquare(p1$data, id = "EntrezID", keytype = "entrez",
+	                    x = "Control", y = "Treatment", organism=organism,
 	                    pvalue = pvalueCutoff, enrich_method = enrich_method,
 	                    filename=norm_method, limit = limit, out.dir=outputDir3)
     # EnrichView
@@ -263,8 +275,8 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  # PathwayView
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg1$enrichRes$ID), ncol = 2,
-	                    title = "Group 1",
-	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
+	                    title = "Group 1", organism=organism,
+	                    view_allpath=view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg2$enrichRes) && nrow(E1$kegg2$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg2$enrichRes$ID), ncol = 2,
 	                    title = "Group 2",
@@ -275,24 +287,24 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg4$enrichRes) && nrow(E1$kegg4$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg4$enrichRes$ID), ncol = 2,
-	                    title = "Group 4",
-	                    organism = organism, view_allpath = view_allpath, output=outputDir4)
+	                    title = "Group 4", organism = organism,
+	                    view_allpath = view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg12$enrichRes) && nrow(E1$kegg12$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg12$enrichRes$ID), ncol = 2,
-	                    title = "Group 1 & Group 2",
-	                    organism=organism,view_allpath=view_allpath, output=outputDir4)
+	                    title = "Group 1 & Group 2", organism=organism,
+	                    view_allpath=view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg13$enrichRes) && nrow(E1$kegg13$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg13$enrichRes$ID), ncol = 2,
-	                    title = "Group 1 & Group 3",
-	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
+	                    title = "Group 1 & Group 3", organism=organism,
+	                    view_allpath=view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg24$enrichRes) && nrow(E1$kegg24$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg24$enrichRes$ID), ncol = 2,
-	                    title = "Group 2 & Group 4",
-	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
+	                    title = "Group 2 & Group 4", organism=organism,
+	                    view_allpath=view_allpath, output=outputDir4)
 	  if(!is.null(E1$kegg34$enrichRes) && nrow(E1$kegg34$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg34$enrichRes$ID), ncol = 2,
-	                    title = "Group 3 & Group 4",
-	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
+	                    title = "Group 3 & Group 4", organism=organism,
+	                    view_allpath=view_allpath, output=outputDir4)
   }
 	dev.off()
 }

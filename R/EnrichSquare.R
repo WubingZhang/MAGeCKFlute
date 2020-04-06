@@ -58,7 +58,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich1) && nrow(enrich1@result)>0){
     kegg1 = enrich1@result[grepl("KEGG", enrich1@result$ID), ]
-    gobp1 = enrich1@result[grepl("GOBP", enrich1@result$ID), ]
+    gobp1 = enrich1@result[grepl("^GO", enrich1@result$ID), ]
     reactome1 = enrich1@result[grepl("REACTOME", enrich1@result$ID), ]
     complex1 = enrich1@result[grepl("CPX|CORUM", enrich1@result$ID), ]
     kegg1 = list(enrichRes = kegg1, gridPlot = EnrichedView(kegg1, top = 0, bottom = 5)
@@ -81,7 +81,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich2) && nrow(enrich2@result)>0){
     kegg2 = enrich2@result[grepl("KEGG", enrich2@result$ID), ]
-    gobp2 = enrich2@result[grepl("GOBP", enrich2@result$ID), ]
+    gobp2 = enrich2@result[grepl("^GO", enrich2@result$ID), ]
     reactome2 = enrich2@result[grepl("REACTOME", enrich2@result$ID), ]
     complex2 = enrich2@result[grepl("CPX|CORUM", enrich2@result$ID), ]
     kegg2 = list(enrichRes = kegg2, gridPlot = EnrichedView(kegg2, top = 5, bottom = 0)
@@ -104,7 +104,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich3) && nrow(enrich3@result)>0){
     kegg3 = enrich3@result[grepl("KEGG", enrich3@result$ID), ]
-    gobp3 = enrich3@result[grepl("GOBP", enrich3@result$ID), ]
+    gobp3 = enrich3@result[grepl("^GO", enrich3@result$ID), ]
     reactome3 = enrich3@result[grepl("REACTOME", enrich3@result$ID), ]
     complex3 = enrich3@result[grepl("CPX|CORUM", enrich3@result$ID), ]
     kegg3 = list(enrichRes = kegg3, gridPlot = EnrichedView(kegg3, top = 5, bottom = 0)
@@ -127,7 +127,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich4) && nrow(enrich4@result)>0){
     kegg4 = enrich4@result[grepl("KEGG", enrich4@result$ID), ]
-    gobp4 = enrich4@result[grepl("GOBP", enrich4@result$ID), ]
+    gobp4 = enrich4@result[grepl("^GO", enrich4@result$ID), ]
     reactome4 = enrich4@result[grepl("REACTOME", enrich4@result$ID), ]
     complex4 = enrich4@result[grepl("CPX|CORUM", enrich4@result$ID), ]
     kegg4 = list(enrichRes = kegg4, gridPlot = EnrichedView(kegg4, top = 0, bottom = 5)
@@ -150,7 +150,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich12) && nrow(enrich12@result)>0){
     kegg12 = enrich12@result[grepl("KEGG", enrich12@result$ID), ]
-    gobp12 = enrich12@result[grepl("GOBP", enrich12@result$ID), ]
+    gobp12 = enrich12@result[grepl("^GO", enrich12@result$ID), ]
     reactome12 = enrich12@result[grepl("REACTOME", enrich12@result$ID), ]
     complex12 = enrich12@result[grepl("CPX|CORUM", enrich12@result$ID), ]
     kegg12 = list(enrichRes = kegg12, gridPlot = EnrichedView(kegg12, top = 5, bottom = 0)
@@ -173,7 +173,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich13) && nrow(enrich13@result)>0){
     kegg13 = enrich13@result[grepl("KEGG", enrich13@result$ID), ]
-    gobp13 = enrich13@result[grepl("GOBP", enrich13@result$ID), ]
+    gobp13 = enrich13@result[grepl("^GO", enrich13@result$ID), ]
     reactome13 = enrich13@result[grepl("REACTOME", enrich13@result$ID), ]
     complex13 = enrich13@result[grepl("CPX|CORUM", enrich13@result$ID), ]
     kegg13 = list(enrichRes = kegg13, gridPlot = EnrichedView(kegg13, top = 3, bottom = 3)
@@ -196,7 +196,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich24) && nrow(enrich24@result)>0){
     kegg24 = enrich24@result[grepl("KEGG", enrich24@result$ID), ]
-    gobp24 = enrich24@result[grepl("GOBP", enrich24@result$ID), ]
+    gobp24 = enrich24@result[grepl("^GO", enrich24@result$ID), ]
     reactome24 = enrich24@result[grepl("REACTOME", enrich24@result$ID), ]
     complex24 = enrich24@result[grepl("CPX|CORUM", enrich24@result$ID), ]
     kegg24 = list(enrichRes = kegg24, gridPlot = EnrichedView(kegg24, top = 3, bottom = 3)
@@ -219,7 +219,7 @@ EnrichSquare <- function(beta, id = "Gene", keytype = "Symbol",
                            limit = limit, keytype = keytype, verbose = verbose)
   if(!is.null(enrich34) && nrow(enrich34@result)>0){
     kegg34 = enrich34@result[grepl("KEGG", enrich34@result$ID), ]
-    gobp34 = enrich34@result[grepl("GOBP", enrich34@result$ID), ]
+    gobp34 = enrich34@result[grepl("^GO", enrich34@result$ID), ]
     reactome34 = enrich34@result[grepl("REACTOME", enrich34@result$ID), ]
     complex34 = enrich34@result[grepl("CPX|CORUM", enrich34@result$ID), ]
     kegg34 = list(enrichRes = kegg34, gridPlot = EnrichedView(kegg34, top = 0, bottom = 5)

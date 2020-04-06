@@ -26,8 +26,10 @@
 #' @author Wubing Zhang
 #' @examples
 #' data(geneList, package = "DOSE")
-#' enrichRes <- enrich.GSE(geneList, keytype = "Entrez")
-#' EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
+#' \dontrun{
+#'   enrichRes <- enrich.GSE(geneList, keytype = "Entrez")
+#'   EnrichedGeneView(enrichment=slot(enrichRes, "result"), geneList, keytype = "Entrez")
+#' }
 #' @export
 
 EnrichedGeneView=function(enrichment, geneList,

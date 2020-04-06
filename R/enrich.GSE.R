@@ -43,8 +43,7 @@
 #' @import data.table DOSE
 #' @export
 
-enrich.GSE <- function(geneList, keytype = "Symbol",
-                       type = "Pathway+GOBP",
+enrich.GSE <- function(geneList, keytype = "Symbol", type = "GOBP",
                        organism = 'hsa', pvalueCutoff = 0.25,
                        limit = c(2, 200), gmtpath = NULL,
                        nPerm = 2000, by = "fgsea", verbose = TRUE){

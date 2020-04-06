@@ -27,9 +27,11 @@ Compute the similarity between customized CRISPR screen with Depmap screens
 }
 \examples{
 dd.rra = ReadRRA(rra.gene_summary)
-rra.omit = OmitCommonEssential(dd.rra)
-depmap_similarity = ResembleDepmap(rra.omit)
-head(depmap_similarity)
+\dontrun{
+  rra.omit = OmitCommonEssential(dd.rra)
+  depmap_similarity = ResembleDepmap(rra.omit)
+  head(depmap_similarity)
+}
 }
 \author{
 Wubing Zhang
