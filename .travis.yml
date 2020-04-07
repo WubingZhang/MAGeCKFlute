@@ -70,7 +70,7 @@ install:
   - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
   - Rscript -e 'BiocManager::install("pathview", quiet=F)'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
-  - Rscript -e 'BiocManager::install("biomaRt", quiet=F)'
+  - Rscript -e 'BiocManager::install(c("biomaRt", "BiocCheck"), quiet=F)'
   - Rscript -e 'BiocManager::install(c("sva", "ggsci", "ggrepel", "ggpubr", "knitr"), quiet=T)'
   - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
   - Rscript -e 'BiocManager::install("enrichplot", quiet=F)'
