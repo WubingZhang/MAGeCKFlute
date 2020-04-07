@@ -280,17 +280,17 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
       ncpd = length(cpd.data)
     }else stop("wrong cpd.data format!")
   }
-  if (length(grep("kegg", cpd.idtype)) < 1 & !is.null(cpd.data)) {
-    rn.list = NULL
-    data(rn.list, package = "pathview")
-    cpd.types = c(names(rn.list), "name")
-    cpd.types = tolower(cpd.types)
-    cpd.types = cpd.types[-grep("kegg", cpd.types)]
-    if (!tolower(cpd.idtype) %in% cpd.types)
-      stop("Wrong input cpd ID type!")
-    cpd.idmap = cpd2kegg(cpdd.names, in.type = cpd.idtype)
-    cpd.data = mol.sum(cpd.data, cpd.idmap)
-  }
+  # if (length(grep("kegg", cpd.idtype)) < 1 & !is.null(cpd.data)) {
+  #   rn.list = NULL
+  #   data(rn.list, package = "pathview")
+  #   cpd.types = c(names(rn.list), "name")
+  #   cpd.types = tolower(cpd.types)
+  #   cpd.types = cpd.types[-grep("kegg", cpd.types)]
+  #   if (!tolower(cpd.idtype) %in% cpd.types)
+  #     stop("Wrong input cpd ID type!")
+  #   cpd.idmap = cpd2kegg(cpdd.names, in.type = cpd.idtype)
+  #   cpd.data = mol.sum(cpd.data, cpd.idmap)
+  # }
   warn.fmt = "    Parsing %s file failed, please check the file!"
   if (length(grep(species, pathway.id)) > 0) {
     pathway.name = pathway.id

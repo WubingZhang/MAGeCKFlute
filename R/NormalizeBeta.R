@@ -29,12 +29,10 @@
 #'
 #' @examples
 #' data(mle.gene_summary)
-#' data(Zuber_Essential)
 #' # Read beta score from gene summary table in MAGeCK MLE results
 #' dd = ReadBeta(mle.gene_summary)
 #' #Cell Cycle normalization
-#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"),
-#'     method="cell_cycle", posControl = Zuber_Essential$GeneSymbol)
+#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 #' head(dd_essential)
 #'
 #' #Optional loess normalization
@@ -53,8 +51,8 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
   normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
     if(is.null(posControl)){
-      Zuber_Essential = NULL
-      data(Zuber_Essential, package = "MAGeCKFlute")
+      Zuber_Essential = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
+                                "Zuber_Essential.rds"))
       posControl=Zuber_Essential$GeneSymbol
     }
     idx = which(ids %in% toupper(posControl))
