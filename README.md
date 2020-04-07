@@ -9,7 +9,7 @@ Installing the package in a fresh R environment may take a long time. It may fai
 
 
 ### Prerequisites
-To install rMAUPS, you have to first install conda following the document (https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent). Afterwards you have to register the bioconda and conda-forge channels as a package source for conda.
+To install MAGeCKFlute, you have to first install conda following the document (https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent). Afterwards you have to register the bioconda and conda-forge channels as a package source for conda.
 
 ~~~
 $ conda config --add channels conda-forge
