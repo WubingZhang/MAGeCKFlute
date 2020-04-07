@@ -30,7 +30,7 @@ Depends: R (>= 3.5)
 Suggests: knitr, testthat
 Imports: clusterProfiler, DOSE, enrichplot, gridExtra, biomaRt, sva,
   ggsci, ggplot2, ggrepel, ggpubr, data.table, pheatmap, png, grDevices, grid, stats, 
-  utils, dendextend, scales, Biobase, msigdbr, KEGGgraph, KEGGREST, graph, pathview, XML
+  utils, dendextend, scales, Biobase, msigdbr, KEGGgraph, KEGGREST, graph, graphics, pathview, XML
 LazyData: TRUE
 NeedsCompilation: no
 biocViews: FunctionalGenomics, CRISPR, BatchEffect, QualityControl, Normalization, GeneSetEnrichment,
