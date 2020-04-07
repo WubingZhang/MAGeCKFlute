@@ -148,7 +148,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
 	  ## Essential genes ##
 	  Zuber_Essential = NULL
-	  data(Zuber_Essential)
+	  data(Zuber_Essential, package = "MAGeCKFlute")
 	  if(is.null(posControl))
 	    idx = toupper(dd$HumanGene) %in% toupper(Zuber_Essential$GeneSymbol)
 	  else

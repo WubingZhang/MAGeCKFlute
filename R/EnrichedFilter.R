@@ -12,8 +12,10 @@
 #' @author Yihan Xiao
 #' @examples
 #' data(geneList, package = "DOSE")
-#' enrichRes <- enrich.HGT(geneList, keytype = "entrez")
-#' EnrichedFilter(enrichRes)
+#' \dontrun{
+#'   enrichRes <- enrich.HGT(geneList, keytype = "entrez")
+#'   EnrichedFilter(enrichRes)
+#' }
 #' @import data.table
 #' @export
 

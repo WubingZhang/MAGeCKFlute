@@ -54,7 +54,7 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
   if(method=="cell_cycle"){
     if(is.null(posControl)){
       Zuber_Essential = NULL
-      data(Zuber_Essential)
+      data(Zuber_Essential, package = "MAGeCKFlute")
       posControl=Zuber_Essential$GeneSymbol
     }
     idx = which(ids %in% toupper(posControl))

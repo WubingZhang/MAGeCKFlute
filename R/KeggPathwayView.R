@@ -282,7 +282,7 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
   }
   if (length(grep("kegg", cpd.idtype)) < 1 & !is.null(cpd.data)) {
     rn.list = NULL
-    data(rn.list)
+    data(rn.list, package = "pathview")
     cpd.types = c(names(rn.list), "name")
     cpd.types = tolower(cpd.types)
     cpd.types = cpd.types[-grep("kegg", cpd.types)]

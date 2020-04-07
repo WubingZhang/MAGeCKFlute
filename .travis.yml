@@ -16,6 +16,11 @@ branches:
    - master
    - RELEASE_3_10
 
+# cache local R libraries directory:
+cache:
+  directory:
+  - "~/miniconda"
+
 before_install:
   # Set conda path info
   - MINICONDA_PATH=$HOME/miniconda;
@@ -64,16 +69,16 @@ install:
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
   - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
-  - Rscript -e 'BiocManager::install("pathview", quiet=T)'
-  - Rscript -e 'BiocManager::install("biomaRt", quiet=T)'
+  - Rscript -e 'BiocManager::install("pathview", quiet=F)'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
+  - Rscript -e 'BiocManager::install("biomaRt", quiet=F)'
   - Rscript -e 'BiocManager::install(c("sva", "ggsci", "ggrepel", "ggpubr", "knitr"), quiet=T)'
   - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
-  - Rscript -e 'BiocManager::install("enrichplot", quiet=T)'
+  - Rscript -e 'BiocManager::install("enrichplot", quiet=F)'
   - Rscript -e 'BiocManager::install("clusterProfiler", quiet=T)'
 
 # Build and check package
 script:
-  - R CMD build . --no-manual
+  - R CMD build . --no-manual --no-build-vignettes
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
   - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran

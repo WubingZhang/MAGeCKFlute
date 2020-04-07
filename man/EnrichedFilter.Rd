@@ -20,8 +20,10 @@ Simplify the enrichment results based on Jaccard index
 }
 \examples{
 data(geneList, package = "DOSE")
-enrichRes <- enrich.HGT(geneList, keytype = "entrez")
-EnrichedFilter(enrichRes)
+\dontrun{
+  enrichRes <- enrich.HGT(geneList, keytype = "entrez")
+  EnrichedFilter(enrichRes)
+}
 }
 \author{
 Yihan Xiao
