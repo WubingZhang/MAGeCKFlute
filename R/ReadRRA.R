@@ -28,6 +28,11 @@ ReadRRA <- function(gene_summary, score = c("lfc", "rra")[1]){
     gene_summary = read.table(file = gene_summary, sep = "\t", header = TRUE, quote = "",
                     comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)
   }
+  if(all(c("id", "Score", "FDR")%in%colnames(gene_summary))){
+    dd = as.data.frame(gene_summary[,c("id", "Score", "FDR")], stringsAsFactors = FALSE)
+    dd$id = as.character(dd$id)
+    return(dd)
+  }
   gene_summary = gene_summary[, c(1, 3, 9, 8, 14, 5, 11)]
   colnames(gene_summary) = c("id", "negscore", "poscore", "neglfc", "poslfc", "negfdr", "posfdr")
   dd = gene_summary

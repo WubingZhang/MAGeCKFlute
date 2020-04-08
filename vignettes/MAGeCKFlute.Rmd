@@ -86,7 +86,7 @@ data("countsummary")
 head(countsummary)
 ```
 
-```{r CountQC, fig.height=5, fig.width=7}
+```{r CountQC, fig.height=5, fig.width=4.5}
 # Gini index
 BarView(countsummary, x = "Label", y = "GiniIndex",
         ylab = "Gini index", main = "Evenness of sgRNA reads")
@@ -117,6 +117,8 @@ For experiments with two experimental conditions, we recommend MAGeCK-RRA for  i
 library(MAGeCKFlute)
 data("rra.gene_summary")
 head(rra.gene_summary)
+data(rra.sgrna_summary)
+head(rra.sgrna_summary)
 ```
 
 ### Visualization of negative selections and positive selections
@@ -126,6 +128,7 @@ Two type of scores are optional, lfc (logrithm fold change) and rra (Robust Rank
 dd.rra = ReadRRA(rra.gene_summary)
 head(dd.rra)
 dd.sgrna = ReadsgRRA(rra.sgrna_summary)
+head(dd.sgrna)
 ```
 
 #### Compute the similarity between the CRISPR screen with Depmap screens
@@ -164,16 +167,16 @@ p1 = ScatterView(dd.rra, x = "Rank", y = "Score", label = "id",
 print(p1)
 # Label interested hits using parameter `toplabels` (in ScatterView) and `genelist` (in RankView).
 ScatterView(dd.rra, x = "Rank", y = "Score", label = "id", auto_cut_y = TRUE, 
-            groups = c("top", "bottom"), toplabels = c("NF1", "EP300", "NF2"))
+            groups = c("top", "bottom"), toplabels = c("EP300", "NF2"))
 ```
 
 ```{r rankrra2, fig.height=5, fig.width=6}
 # Or
 geneList= dd.rra$Score
 names(geneList) = dd.rra$id
-p2 = RankView(geneList, top = 5, bottom = 10) + ylab("Score")
+p2 = RankView(geneList, top = 5, bottom = 10) + xlab("Score")
 print(p2)
-RankView(geneList, top = 0, bottom = 0, genelist = c("NF1", "EP300", "NF2")) + ylab("Score")
+RankView(geneList, top = 0, bottom = 0, genelist = c("EP300", "NF2")) + xlab("Score")
 ```
 
 #### Dot plot
@@ -181,10 +184,11 @@ Visualize negative and positive selected genes separately.
 ```{r scatter, fig.height=4, fig.width=6}
 dd.rra$RandomIndex = sample(1:nrow(dd.rra), nrow(dd.rra))
 dd.rra = dd.rra[order(-dd.rra$Score), ]
-p2 = ScatterView(dd.rra, x = "RandomIndex", y = "Score", label = "id",
+gg = dd.rra[dd.rra$Score>0, ]
+p2 = ScatterView(gg, x = "RandomIndex", y = "Score", label = "id",
                  y_cut = CutoffCalling(dd.rra$Score,2), 
                  groups = "top", toplabels = dd.rra$id[1:5])
-p2 + ylim(0, NA)
+p2
 ```
 
 
@@ -199,8 +203,13 @@ For more information about functional enrichment analysis in MAGeCKFlute, please
 ```{r enrich_rra, fig.height=4, fig.width=9}
 geneList= dd.rra$Score
 names(geneList) = dd.rra$id
-enrich = EnrichAnalyzer(geneList = geneList, method = "GSEA", type = "GOBP")
-EnrichedView(enrich)
+enrich = EnrichAnalyzer(geneList = geneList[geneList>0.5], 
+                        method = "HGT", type = "KEGG")
+```
+
+```{r enrichview}
+EnrichedView(enrich, mode = 1, top = 5)
+EnrichedView(enrich, mode = 2, top = 5)
 ```
 
 ## Section III: Downstream analysis of MAGeCK MLE

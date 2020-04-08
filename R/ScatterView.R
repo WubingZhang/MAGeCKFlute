@@ -41,6 +41,8 @@
 #' @param main Title of the figure.
 #' @param xlab Title of x-axis
 #' @param ylab Title of y-axis.
+#' @param legend.position Position of legend, "none", "right", "top", "bottom", or
+#' a two-length vector indicating the position.
 #' @param ... Other available parameters in function 'geom_text_repel'.
 #'
 #' @return An object created by \code{ggplot}, which can be assigned and further customized.
@@ -65,7 +67,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
                       groups = NULL, group_col = NULL, groupnames = NULL,
                       label.top = TRUE, top = 0, toplabels = NULL,
                       display_cut = FALSE, color = NULL, shape = 16, size = 1,
-                      main = NULL, xlab = x, ylab = y, ...){
+                      main = NULL, xlab = x, ylab = y, legend.position = "none", ...){
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   requireNamespace("ggpubr", quietly=TRUE) || stop("need ggpubr package")
@@ -74,6 +76,8 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   ## Add label column in the data frame.
   if(label==0) data$Label = rownames(data)
   else data$Label = as.character(data[, label])
+
+  if(!is.null(groupnames)) legend.position = "right"
 
   ## Compute the cutoff used for each dimension.
   model = tolower(model)
@@ -288,6 +292,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   }
   p = p + labs(x=xlab, y = ylab, title = main, color = NULL)
   p = p + ggpubr::theme_pubr() + theme(plot.title = element_text(hjust = 0.5))
+  p = p + theme(legend.position = legend.position)
 
   return(p)
 }

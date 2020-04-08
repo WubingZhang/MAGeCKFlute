@@ -12,7 +12,7 @@ ScatterView(data, x = "x", y = "y", label = 0, model = c("none",
   auto_cut_diag = auto_cut, groups = NULL, group_col = NULL,
   groupnames = NULL, label.top = TRUE, top = 0, toplabels = NULL,
   display_cut = FALSE, color = NULL, shape = 16, size = 1,
-  main = NULL, xlab = x, ylab = y, ...)
+  main = NULL, xlab = x, ylab = y, legend.position = "none", ...)
 }
 \arguments{
 \item{data}{Data frame.}
@@ -68,6 +68,9 @@ ScatterView(data, x = "x", y = "y", label = 0, model = c("none",
 \item{xlab}{Title of x-axis}
 
 \item{ylab}{Title of y-axis.}
+
+\item{legend.position}{Position of legend, "none", "right", "top", "bottom", or
+a two-length vector indicating the position.}
 
 \item{...}{Other available parameters in function 'geom_text_repel'.}
 }
