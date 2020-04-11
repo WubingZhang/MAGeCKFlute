@@ -5,7 +5,10 @@ language: c
 
 os:
   - linux
+<<<<<<< HEAD
   - osx
+=======
+>>>>>>> RELEASE_3_10
 
 # use containers
 sudo: false
@@ -16,9 +19,16 @@ branches:
    - master
    - RELEASE_3_10
 
+<<<<<<< HEAD
 cache:
   directories:
     - ~/miniconda
+=======
+# cache local R libraries directory:
+cache:
+  directory:
+  - "~/miniconda"
+>>>>>>> RELEASE_3_10
 
 before_install:
   # Set conda path info
@@ -67,6 +77,7 @@ install:
   - conda install -c conda-forge tar r-devtools r-biocmanager
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
+<<<<<<< HEAD
   - Rscript -e 'BiocManager::install("pathview")'
   - Rscript -e 'BiocManager::install("biomaRt")'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
@@ -80,3 +91,20 @@ script:
   - R CMD build .
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
   #- R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
+=======
+  - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
+  - Rscript -e 'BiocManager::install("pathview", quiet=F)'
+  - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("biomaRt", "BiocCheck"), quiet=F)'
+  - Rscript -e 'BiocManager::install(c("sva", "ggsci", "ggrepel", "ggpubr", "knitr"), quiet=T)'
+  - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
+  - Rscript -e 'BiocManager::install("enrichplot", quiet=F)'
+  - Rscript -e 'BiocManager::install("clusterProfiler", quiet=T)'
+
+# Build and check package
+script:
+  - R CMD build . --no-manual --no-build-vignettes
+  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+  - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
+    #- R CMD BiocCheck "${PKG_FILE_NAME}"
+>>>>>>> RELEASE_3_10
