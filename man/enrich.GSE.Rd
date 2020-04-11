@@ -4,31 +4,38 @@
 \name{enrich.GSE}
 \alias{enrich.GSE}
 \alias{enrichGSE}
-\title{GSEA}
+\title{Gene set enrichment analysis}
 \usage{
-enrich.GSE(geneList, keytype = "Entrez", type = "GOBP+GOMF",
-  organism = "hsa", pvalueCutoff = 0.25, pAdjustMethod = "BH",
-  limit = c(3, 50), gmtpath = NA)
+enrich.GSE(geneList, keytype = "Symbol", type = "GOBP",
+  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
+  gmtpath = NULL, nPerm = 2000, by = "fgsea", verbose = TRUE)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}
 
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+\item{type}{Molecular signatures for testing, available datasets include
+Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
+MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
+C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+and Complex (CORUM). Any combination of them are also accessible
+(e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
-
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
-\item{gmtpath}{The path to gmt file.}
+\item{gmtpath}{The path to customized gmt file.}
+
+\item{nPerm}{The number of permutations.}
+
+\item{by}{One of 'fgsea' or 'DOSE'}
+
+\item{verbose}{Boolean}
 }
 \value{
 A enrichResult instance.
@@ -39,8 +46,8 @@ A universal gene set enrichment analysis tools
 \examples{
 data(geneList, package = "DOSE")
 \dontrun{
-    enrichRes = enrich.GSE(geneList, type = "KEGG", organism="hsa")
-    head(enrichRes@result)
+    enrichRes = enrich.GSE(geneList, keytype = "entrez")
+    head(slot(enrichRes, "result"))
 }
 
 }
@@ -49,7 +56,7 @@ data(geneList, package = "DOSE")
 
 \code{\link{enrich.ORT}}
 
-\code{\link{enrichment_analysis}}
+\code{\link{EnrichAnalyzer}}
 
 \code{\link[DOSE]{enrichResult-class}}
 }

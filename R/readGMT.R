@@ -15,7 +15,7 @@
 #'
 #' @export
 #'
-ReadGMT <- function(gmtpath, limit = c(3, 30)){
+ReadGMT <- function(gmtpath, limit = c(0, Inf)){
   c2 = readLines(gmtpath)
   c2_list = strsplit(c2, "\t")
   c2_pathway = t(matrix(unlist(lapply(c2_list, function(x) x[1:2])), nrow = 2))
@@ -29,4 +29,33 @@ ReadGMT <- function(gmtpath, limit = c(3, 30)){
   gene2path = gene2path[gene2path$PathwayID%in%limit_pathways, ]
   gene2path$PathwayName = c2_pathway[gene2path$PathwayID, 2]
   return(gene2path)
+}
+
+
+#' Write GMT file
+#'
+#' write data frame to a gmt file
+#'
+#' @docType methods
+#' @name ReadGMT
+#' @rdname ReadGMT
+#'
+#' @param gene2path A data frame. The columns should be Gene, Pathway ID, and Pathway Name.
+#' @param gmtfile Path to gmt file.
+#'
+#' @return Output gmt file to local folder.
+#'
+#' @author Wubing Zhang
+#' @examples
+#' gene2path = gsGetter(type = "Complex")
+#' writeGMT(gene2path, "Protein_complex.gmt")
+#'
+#' @export
+#'
+writeGMT <- function(gene2path, gmtfile){
+  genelists = lapply(unique(gene2path[,2]), function(x)
+    paste(gene2path[gene2path[,2]==x, 1], collapse = "\t"))
+  gmt = cbind(unique(gene2path[,2]), gene2path[!duplicated(gene2path[,2]),3], unlist(genelists))
+  write.table(gmt, gmtfile, sep = "\t", row.names = FALSE,
+              col.names = FALSE, quote = FALSE)
 }

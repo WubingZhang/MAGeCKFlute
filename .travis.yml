@@ -1,0 +1,84 @@
+# .travis.yml using container-based infrastructure
+
+# use c as catch-all language
+language: c
+
+os:
+  - linux
+
+# use containers
+sudo: false
+
+# only run for pushes to master branch
+branches:
+  only:
+   - master
+   - RELEASE_3_10
+
+# cache local R libraries directory:
+cache:
+  directory:
+  - "~/miniconda"
+
+before_install:
+  # Set conda path info
+  - MINICONDA_PATH=$HOME/miniconda;
+  - MINICONDA_SUB_PATH=$MINICONDA_PATH/bin;
+  # Obtain miniconda installer
+  - if [[ -f $HOME/download/miniconda.sh ]]; then
+        echo "miniconda.sh for posix already available from cache";
+      else
+        mkdir -p $HOME/download;
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+          echo "downloading miniconda.sh for linux";
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        elif  [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+          echo "downloading miniconda.sh for osx";
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
+        fi;
+    fi;
+
+# install the package and dependencies:
+# - create directory for R libraries (if not already exists)
+# - create .Renviron with location of R libraries
+# - define R repository in .Rprofile
+# - add .travis.yml to .Rbuildignore
+# - install devtools if not already installed
+# - install covr if not already installed
+# - update all installed packages
+# - install package with dependencies
+install:
+  # Install miniconda
+  - if [[ -d $MINICONDA_SUB_PATH ]]; then
+        echo "miniconda for posix already available from cache";
+    else
+      echo "installing miniconda for posix";
+      bash $HOME/download/miniconda.sh -b -u -p $MINICONDA_PATH;
+    fi;
+  - export PATH="$MINICONDA_PATH:$MINICONDA_SUB_PATH:$PATH";
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - conda install r r-recommended r-markdown
+  #- echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
+  - echo '.travis.yml' > .Rbuildignore
+  - conda install -c conda-forge tar r-devtools r-biocmanager
+  - conda install -c anaconda libxml2
+  - conda install -c r r-xml
+  - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
+  - Rscript -e 'BiocManager::install("pathview", quiet=F)'
+  - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("biomaRt", "BiocCheck"), quiet=F)'
+  - Rscript -e 'BiocManager::install(c("sva", "ggsci", "ggrepel", "ggpubr", "knitr"), quiet=T)'
+  - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
+  - Rscript -e 'BiocManager::install("enrichplot", quiet=F)'
+  - Rscript -e 'BiocManager::install("clusterProfiler", quiet=T)'
+
+# Build and check package
+script:
+  - R CMD build . --no-manual --no-build-vignettes
+  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+  - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
+    #- R CMD BiocCheck "${PKG_FILE_NAME}"

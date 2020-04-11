@@ -28,6 +28,10 @@ vignettes/*.pdf
 /*_cache/
 /cache/
 
+# ignore tests and doc
+tests/
+inst/doc/
+
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md

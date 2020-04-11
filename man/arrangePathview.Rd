@@ -6,9 +6,9 @@
 \title{Kegg pathway view and arrange grobs on page}
 \usage{
 arrangePathview(genelist, pathways = c(), top = 4, ncol = 2,
-  title = "Group A", sub = "Negative control normalized",
-  organism = "hsa", view_allpath = FALSE, output = ".",
-  path.archive = ".", kegg.native = TRUE)
+  title = NULL, sub = NULL, organism = "hsa", view_allpath = FALSE,
+  output = ".", path.archive = ".", kegg.native = TRUE,
+  verbose = TRUE)
 }
 \arguments{
 \item{genelist}{a data frame with columns of ENTREZID, Control and Treatment. The columns
@@ -42,6 +42,8 @@ and only plot top enriched pathways.}
 
 \item{kegg.native}{logical, whether to render pathway graph as native KEGG graph (.png)
 or using graphviz layout engine (.pdf). Default kegg.native=TRUE.}
+
+\item{verbose}{Boolean}
 }
 \value{
 plot on the current device
@@ -52,8 +54,8 @@ Kegg pathway view and arrange grobs on page.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
-colnames(dd)[3:4] = c("Control", "Treatment")
+dd = ReadBeta(mle.gene_summary)
+colnames(dd)[2:3] = c("Control", "Treatment")
 arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 
 }

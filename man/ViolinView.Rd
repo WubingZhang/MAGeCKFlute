@@ -36,7 +36,7 @@ Plots the violin of beta scores in Control and Treatment samples.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 ViolinView(dd, samples=c("dmso", "plx"))
 #or
 ViolinView(dd[, c("dmso", "plx")])

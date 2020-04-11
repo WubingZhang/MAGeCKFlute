@@ -6,9 +6,9 @@
 \alias{rankview}
 \title{View the rank of gene points}
 \usage{
-RankView(rankdata, genelist = NA, top = 20, bottom = 20,
-  cutoff = c(-sd(rankdata), sd(rankdata)), main = NULL,
-  filename = NULL, width = 5, height = 4, ...)
+RankView(rankdata, genelist = NULL, top = 10, bottom = 10,
+  cutoff = NULL, main = NULL, filename = NULL, width = 5,
+  height = 4, ...)
 }
 \arguments{
 \item{rankdata}{Numeric vector, with gene as names.}
@@ -19,7 +19,7 @@ RankView(rankdata, genelist = NA, top = 20, bottom = 20,
 
 \item{bottom}{Integer, specifying number of bottom genes to be labeled.}
 
-\item{cutoff}{A two-length numeric vector, in which first value is bottom cutoff, and second value is top cutoff.}
+\item{cutoff}{Numeric.}
 
 \item{main}{As in 'plot'.}
 
@@ -40,9 +40,9 @@ Some other interested genes can be labeled too.
 }
 \examples{
 data(rra.gene_summary)
-rra = ReadRRA(rra.gene_summary, organism = "hsa")
-rankdata = rra$LFC
-names(rankdata) = rra$Official
+rra = ReadRRA(rra.gene_summary)
+rankdata = rra$Score
+names(rankdata) = rra$id
 RankView(rankdata)
 
 }

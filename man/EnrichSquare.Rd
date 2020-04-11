@@ -5,23 +5,30 @@
 \alias{EnrichSquare}
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
-EnrichSquare(beta, pvalue = 0.05, enrich_method = "ORT",
-  organism = "hsa", pathway_limit = c(3, 50), adjust = "BH",
-  filename = NULL, out.dir = ".", width = 6.5, height = 4, ...)
+EnrichSquare(beta, id = "Gene", keytype = "Symbol", x = "Control",
+  y = "Treatment", pvalue = 0.05, enrich_method = "ORT",
+  organism = "hsa", limit = c(1, 120), filename = NULL,
+  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
 }
 \arguments{
-\item{beta}{Data frame, with rownames of Entrez IDs, which contains columns of 'group' and 'diff'.}
+\item{beta}{Data frame, with columns of "Gene", "group", and "Diff".}
+
+\item{id}{A character, indicating the gene column in the data.}
+
+\item{keytype}{A character, "Symbol" or "Entrez".}
+
+\item{x}{A character, indicating the x-axis in the 9-square scatter plot.}
+
+\item{y}{A character, indicating the y-axis in the 9-square scatter plot.}
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "DAVID", "GOstats", and "HGT"(HyperGemetric test).}
+\item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the min and
 max size of pathways for enrichent analysis.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
 
 \item{filename}{Suffix of output file name. NULL(default) means no output.}
 
@@ -31,48 +38,18 @@ max size of pathways for enrichent analysis.}
 
 \item{height}{As in ggsave.}
 
+\item{verbose}{Boolean.}
+
 \item{...}{Other available parameters in ggsave.}
 }
 \value{
-A list containing enrichment results for each group genes. This list contains several elements:
-\item{kegg1}{a list record enriched KEGG pathways for Group1 genes in 9-Square}
-\item{kegg2}{a list record enriched KEGG pathways for Group2 genes in 9-Square}
-\item{kegg3}{a list record enriched KEGG pathways for Group3 genes in 9-Square}
-\item{kegg4}{a list record enriched KEGG pathways for Group4 genes in 9-Square}
-\item{kegg13}{a list record enriched KEGG pathways for Group1&Group3 genes in 9-Square}
-\item{kegg14}{a list record enriched KEGG pathways for Group1&Group4 genes in 9-Square}
-\item{kegg23}{a list record enriched KEGG pathways for Group2&Group3 genes in 9-Square}
-\item{kegg24}{a list record enriched KEGG pathways for Group2&Group4 genes in 9-Square}
-\item{go1}{a list record enriched GO terms for Group1 genes in 9-Square}
-\item{go2}{a list record enriched GO terms for Group2 genes in 9-Square}
-\item{go3}{a list record enriched GO terms for Group3 genes in 9-Square}
-\item{go4}{a list record enriched GO terms for Group4 genes in 9-Square}
-\item{go13}{a list record enriched GO terms for Group1&Group3 genes in 9-Square}
-\item{go14}{a list record enriched GO terms for Group1&Group4 genes in 9-Square}
-\item{go23}{a list record enriched GO terms for Group2&Group3 genes in 9-Square}
-\item{go24}{a list record enriched GO terms for Group2&Group4 genes in 9-Square}
-
+A list containing enrichment results for each group genes.
 Each item in the returned list has two sub items:
 \item{gridPlot}{an object created by \code{ggplot}, which can be assigned and further customized.}
 \item{enrichRes}{a enrichResult instance.}
 }
 \description{
 Do enrichment analysis for selected treatment related genes in 9-squares
-}
-\examples{
-data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary, organism="hsa")
-p = SquareView(dd, ctrlname = "dmso", treatname = "plx")
-\dontrun{
- # Read beta score from gene summary table in MAGeCK MLE results
- E1 = EnrichSquare(p$data, organism="hsa")
- print(E1$kegg1$gridPlot)
-}
-}
-\seealso{
-\code{\link{SquareView}}
-
-\code{\link{EnrichSquare}}
 }
 \author{
 Wubing Zhang

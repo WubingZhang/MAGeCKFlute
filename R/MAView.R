@@ -29,7 +29,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' MAView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #' @export
@@ -40,7 +40,6 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
                     filename=NULL, width=5, height=4, ...){
   dd = beta
   dd[is.na(dd)] = 0
-  message(Sys.time(), " # MAplot for ", main, " beta scores ...")
   A = rowMeans(dd[,c(ctrlname, treatname)])
   M = rowMeans(dd[,treatname,drop= FALSE])-rowMeans(dd[,ctrlname,drop= FALSE])
   subset = sample(1:length(M), min(c(10000, length(M))))

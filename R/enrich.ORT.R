@@ -8,17 +8,20 @@
 #' @aliases enrichORT
 #'
 #' @param geneList A numeric vector with gene as names.
-#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param keytype "Entrez" or "Symbol".
-#' @param type Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-#' 'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-#' such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.
+#' @param type Molecular signatures for testing, available datasets include
+#' Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
+#' MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
+#' C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+#' and Complex (CORUM). Any combination of them are also accessible
+#' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param organism 'hsa' or 'mmu'.
 #' @param pvalueCutoff Pvalue cutoff.
-#' @param pAdjustMethod One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".
-#' @param limit A two-length vector (default: c(3, 50)), specifying the minimal and
+#' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
-#' @param gmtpath The path to gmt file.
+#' @param universe A character vector, specifying the backgound genelist, default is whole genome.
+#' @param gmtpath The path to customized gmt file.
+#' @param verbose Boolean
 #'
 #' @return A enrichedResult instance.
 #'
@@ -26,79 +29,71 @@
 #'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.GSE}}
-#' @seealso \code{\link{enrichment_analysis}}
+#' @seealso \code{\link{EnrichAnalyzer}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
 #' genes <- geneList[1:100]
-#' enrichedRes <- enrich.ORT(genes)
-#' head(enrichedRes@result)
+#' enrichedRes <- enrich.ORT(genes, keytype = "entrez")
+#' head(slot(enrichedRes, "result"))
 #'
 #' @import DOSE
-#' @import clusterProfiler
 #' @export
 
-enrich.ORT <- function(geneList, universe=NULL, keytype = "Entrez", type="GOBP+GOMF", organism='hsa',
-                       pvalueCutoff = 0.25, pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA){
-  requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
+enrich.ORT <- function(geneList, keytype = "Symbol", type = "GOBP",
+                       organism = 'hsa', pvalueCutoff = 0.25,
+                       limit = c(2, 200), universe=NULL,
+                       gmtpath = NULL, verbose = TRUE){
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
 
   ## Prepare gene set annotation
-  if(is.na(gmtpath)){
-    msigdb = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                       paste0(organism, "_msig_entrez.gmt.gz"))
-    gmtpath = gzfile(msigdb)
-  }
-  gene2path = ReadGMT(gmtpath, limit = c(1, 500))
-  close(gmtpath)
-  names(gene2path) = c("Gene","PathwayID", "PathwayName")
-  gene2path$PathwayName = toupper(gene2path$PathwayName)
-  if(type == "All") type = 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'
-  type = unlist(strsplit(type, "\\+"))
-  idx = toupper(gsub("_.*", "", gene2path$PathwayID)) %in% toupper(type)
-  gene2path = gene2path[idx, ]
-  gene2path = gene2path[!is.na(gene2path$Gene), ]
+  gene2path = gsGetter(gmtpath, type, limit, organism)
   idx = duplicated(gene2path$PathwayID)
   pathways = data.frame(PathwayID = gene2path$PathwayID[!idx],
                         PathwayName = gene2path$PathwayName[!idx],
                         stringsAsFactors = FALSE)
 
   ## Gene ID conversion
-  if(keytype == "Symbol"){
-    allsymbol = names(geneList)
-    gene = TransGeneID(allsymbol, "Symbol", "Entrez", organism = organism)
-    geneList = geneList[!duplicated(gene)]
-    names(geneList) = gene[!duplicated(gene)]
-    universe = TransGeneID(universe, "Symbol", "Entrez", organism = organism)
-    universe = universe[!is.na(universe)]
-  }
   gene = names(geneList)
-  gene2path$Gene = as.character(gene2path$Gene)
+  if(keytype != "Entrez"){
+    allsymbol = names(geneList)
+    gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
+    idx = duplicated(gene)|is.na(gene)
+    geneList = geneList[!idx]; names(geneList) = gene[!idx]
+  }
   if(!is.null(universe)){
-    universe = unique(as.character(universe))
+    universe = TransGeneID(universe, keytype, "Entrez", organism = organism)
+    universe = universe[!is.na(universe)]
   }else{
     universe = unique(c(gene, gene2path$Gene))
   }
+  gene = names(geneList)
 
   ## Enrichment analysis
+  len = length(unique(intersect(gene, gene2path$Gene)))
+  if(verbose) message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
-  enrichedRes = enricher(gene, pvalueCutoff = pvalueCutoff, pAdjustMethod = pAdjustMethod,
-                universe = universe, minGSSize = limit[1], maxGSSize = limit[2],
-                TERM2GENE = gene2path[,c("PathwayID","Gene")], TERM2NAME = pathways)
-
+  enrichedRes = enricher(gene, universe = universe,
+                         minGSSize = 0, maxGSSize = max(limit),
+                         TERM2NAME = pathways, pvalueCutoff = pvalueCutoff,
+                         TERM2GENE = gene2path[,c("PathwayID","Gene")])
+  if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
+    res = enrichedRes@result[enrichedRes@result$p.adjust<=pvalueCutoff, ]
+    res = res[order(res$pvalue), ]
+    enrichedRes@result = res
+  }
   ## Add enriched gene symbols into enrichedRes table
-  if(!is.null(enrichedRes)){
+  if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
     geneID = strsplit(enrichedRes@result$geneID, split = "/")
     geneName = lapply(geneID, function(gid){
-      SYMBOL = allsymbol[gid]
-      paste(SYMBOL, collapse = "/")
+      SYMBOL = allsymbol[gid]; paste(SYMBOL, collapse = "/")
     })
     enrichedRes@result$geneName = unlist(geneName)
-    enrichedRes@result$NES = unlist(apply(enrichedRes@result, 1, function(x){
-      enrichGenes = unlist(strsplit(x["geneID"], split = "/"))
-      NES = sum(geneList[enrichGenes]) / log2(length(enrichGenes)+1)
+    enrichedRes@result$NES = as.vector(sapply(enrichedRes@result$geneID, function(x){
+      enrichGenes = unlist(strsplit(x, split = "/"))
+      NES = mean(geneList[enrichGenes]) * length(enrichGenes)^0.6
       return(NES)
     }))
     idx = c("ID", "Description", "NES", "pvalue", "p.adjust",

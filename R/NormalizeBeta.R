@@ -9,30 +9,28 @@
 #' @rdname NormalizeBeta
 #' @aliases normalizebeta
 #'
-#' @param beta Data frame, in which rows are EntrezID, columns are samples.
-#' @param samples Character vector, specifying the samples in \code{beta} to be normalized.
-#' If NULL (default), normalize beta score of all samples in \code{beta}.
+#' @param beta Data frame.
+#' @param id An integer specifying the column of gene.
 #' @param method Character, one of 'cell_cycle'(default) and 'loess'.
-#' @param posControl A file path or a character vector, specifying a list of gene entrezids as positive
-#' controls used for cell cycle normalization
-#' @param minus Numeric, scale for cell cycle normalization. Between 0 and 1.
+#' or character string giving the name of the table column containing the gene names.
+#' @param posControl A character vector, specifying a list of positive control genes.
+#' @param samples Character vector, specifying the sample names in \emph{beta} columns.
+#' If NULL (default), take all \emph{beta} columns as samples.
 #'
-#' @return A data frame with same format as input data \code{beta}.
+#' @return A data frame with same format as input data \emph{beta}.
 #'
-#' @details In CRISPR screens, cells treated with different conditions (e.g., with or without
-#' drug) may have different proliferation rates. So we defined a list of core essential genes,
-#' which is equally negatively selected between samples with different proliferation rate.
-#' Normalization of gene beta scores is performed using these essential genes. \code{cell_cycle}
-#' in MAGeCKFlute normalizes the beta scores of all genes based on the median beta score of essential genes.
-#' After normalization, the beta scores are comparable across samples. \code{loess} is another
-#' optional normalization method, which is used to normalize array data before.
+#' @details In CRISPR screens, cells treated with different conditions (e.g., with or without drug)
+#' may have different proliferation rates. So it's necessary to normalize the proliferation rate
+#' based on defined positive control genes among samples. After normalization, the beta scores are
+#' comparable across samples. \code{loess} is another optional normalization method, which is used
+#' to normalize array data before.
 #'
 #' @author Wubing Zhang
 #'
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 #' head(dd_essential)
@@ -45,30 +43,32 @@
 #' @export
 
 #===normalize function=====================================
-NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NULL, minus=0.2){
-  message(Sys.time(), " # Normalize beta scores ...")
-  if(is.null(samples)) samples = setdiff(colnames(beta))
-
+NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
+                          posControl=NULL, samples=NULL){
+  normalized = beta[, colnames(beta)[setdiff(1:ncol(beta), id)]]
+  if(id==0) ids = rownames(beta) else ids = as.character(beta[,id])
+  if(!is.null(samples)) normalized = normalized[, samples]
+  normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
-    if(!is.null(posControl) && class(posControl)=="character" && file.exists(posControl)[1]){
-      tmp = read.table(posControl, sep = "\t", header = FALSE)
-      posControl = as.character(unlist(tmp))
-    }else{
-      data(Zuber_Essential)
-      posControl=Zuber_Essential
+    if(is.null(posControl)){
+      Zuber_Essential = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
+                                "Zuber_Essential.rds"))
+      posControl=Zuber_Essential$GeneSymbol
     }
-    idx = which(rownames(beta) %in% posControl$EntrezID)
-    normalized = as.matrix(beta[,samples])
-    mid = apply(normalized[idx,], 2, median)
-    mid = abs(mid - minus)
-    normalized = t(t(normalized) / mid)
+    idx = which(ids %in% toupper(posControl))
+    if(length(idx)>0){
+      mid = apply(normalized[idx,], 2, median, na.rm = TRUE)
+      # mad = apply(normalized[idx,], 2, mad, na.rm = TRUE)
+      mid = abs(mid - 0.1)
+      normalized = t(t(normalized) / mid)
+    }else{
+      warning("No positive control genes are mapped !!!", call. = FALSE)
+    }
   }
   if(method=="loess"){
-    normalized = as.matrix(beta[,samples])
     normalized = normalize.loess(normalized, log.it = FALSE, verbose=FALSE)
   }
-  beta[,samples] = normalized
-
+  beta[, samples] = normalized
   return(beta)
 }
 
@@ -101,7 +101,7 @@ NormalizeBeta <- function(beta, samples=NULL, method="cell_cycle", posControl=NU
 #' @seealso \code{\link{NormalizeBeta}}
 #'
 #' @examples
-#' beta = ReadBeta(mle.gene_summary, organism="hsa")
+#' beta = ReadBeta(mle.gene_summary)
 #' beta_loess = normalize.loess(beta[,c("dmso", "plx")])
 #'
 #' @export

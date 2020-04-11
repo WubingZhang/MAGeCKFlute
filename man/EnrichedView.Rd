@@ -3,28 +3,30 @@
 \docType{methods}
 \name{EnrichedView}
 \alias{EnrichedView}
-\alias{enrichview}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, plotTitle = NULL, type = "All",
-  color = "#3f90f7", termNum = 15, charLength = 40,
+EnrichedView(enrichment, rank_by = "pvalue", mode = 1, subset = NULL,
+  top = 0, bottom = 0, x = "LogFDR", charLength = 40,
   filename = NULL, width = 7, height = 4, ...)
 }
 \arguments{
-\item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and Count.}
+\item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.}
 
-\item{plotTitle}{Same as 'title' in 'plot'.}
+\item{rank_by}{"pvalue" or "NES", specifying the indices for ranking pathways.}
 
-\item{type}{"All" (Default), enriched geneset category for visualization.}
+\item{mode}{1 or 2.}
 
-\item{color}{Color of nodes.}
+\item{subset}{A vector of pathway ids.}
 
-\item{termNum}{Integer, specifying number of top enriched terms to show.}
+\item{top}{An integer, specifying the number of positively enriched terms to show.}
+
+\item{bottom}{An integer, specifying the number of negatively enriched terms to show.}
+
+\item{x}{Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.}
 
 \item{charLength}{Integer, specifying max length of enriched term name to show as coordinate lab.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-no output.}
+\item{filename}{Figure file name to create on disk. Default filename="NULL".}
 
 \item{width}{As in ggsave.}
 
@@ -39,15 +41,15 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Grid plot for enriched terms
 }
 \examples{
-data(geneList, package = "DOSE")
-enrichRes <- enrich.HGT(geneList[1:100])
-EnrichedView(enrichment=enrichRes@result)
+\dontrun{
+    data(geneList, package = "DOSE")
+    enrichRes = enrich.GSE(geneList, organism="hsa")
+    EnrichedView(slot(enrichRes, "result"))
+}
 }
 \seealso{
-\code{\link{KeggPathwayView}}
-
-\code{\link{EnrichedGSEView}}
+\code{\link{EnrichedView}}
 }
 \author{
-Feizhen Wu
+Wubing Zhang
 }

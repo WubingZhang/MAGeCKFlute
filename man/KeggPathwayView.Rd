@@ -15,7 +15,7 @@ KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id,
   both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene =
   NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
   mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red",
-  cpd = "yellow"), na.col = "transparent", ...)
+  cpd = "yellow"), na.col = "transparent", verbose = TRUE, ...)
 }
 \arguments{
 \item{gene.data}{Either vector (single sample) or a matrix-like data (multiple sample).
@@ -50,8 +50,8 @@ to use either "Homo sapiens" (scientific name) or "human" (common name).}
 \item{gene.idtype}{Character, ID type used for the gene.data, case insensitive. Default
 gene.idtype="entrez", i.e. Entrez Gene, which are the primary KEGG gene ID for many
 common model organisms. For other species, gene.idtype should be set to "KEGG" as KEGG
-use other types of gene IDs. For the common model organisms (to check the list, do:
-data(bods); bods), you may also specify other types of valid IDs. To check the ID list,
+use other types of gene IDs. For the common model organisms, you may also specify other
+types of valid IDs. To check the ID list,
  do: data(gene.idtype.list); gene.idtype.list.}
 
 \item{gene.annotpkg}{Character, the name of the annotation package to use for mapping
@@ -126,6 +126,8 @@ Examples are log, abs or users' own functions. Default limit=list(gene=NULL, cpd
 
 \item{na.col}{Color used for NA's or missing values in gene.data and cpd.data. d na.col="transparent".}
 
+\item{verbose}{Boolean}
+
 \item{\dots}{Extra arguments passed to keggview.native or keggview.graph function.}
 }
 \value{
@@ -174,19 +176,14 @@ The argument \code{low}, \code{mid}, and \code{high} specifies the color spectra
 }
 \examples{
 #load data
-data(gse16873.d)
-data(demo.paths)
-#KEGG view: gene data only
-\dontrun{
-i <- 1
-pv.out <- KeggPathwayView(gene.data = gse16873.d[, 1],
-       pathway.id = demo.paths$sel.paths[i], species = "hsa",
-        out.suffix = "gse16873", kegg.native = TRUE)
-}
+data(mle.gene_summary)
+dd = ReadBeta(mle.gene_summary)
+gene.data = dd$plx
+names(gene.data) = rownames(dd)
 
-}
-\seealso{
-\code{\link{pathview}}
+pv.out <- KeggPathwayView(gene.data, pathway.id = "04110",
+  species = "hsa", out.suffix = "gse16873", kegg.native = TRUE)
+
 }
 \author{
 Wubing Zhang

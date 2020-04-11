@@ -17,8 +17,8 @@
 #'
 #' @examples
 #' data(mle.gene_summary)
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
-#' gg = cor(dd[,3:ncol(dd)])
+#' dd = ReadBeta(mle.gene_summary)
+#' gg = cor(dd[,2:ncol(dd)])
 #' HeatmapView(gg, display_numbers = TRUE)
 #'
 #' @import pheatmap

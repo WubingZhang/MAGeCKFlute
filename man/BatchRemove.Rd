@@ -5,18 +5,24 @@
 \alias{BatchRemove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, log2trans = FALSE, positive = FALSE)
+BatchRemove(mat, batchMat, log2trans = FALSE, pca = TRUE,
+  positive = FALSE, cluster = FALSE, outdir = NULL)
 }
 \arguments{
-\item{mat}{Matrix, or a file path of data.}
+\item{mat}{A data frame, each row is a gene, and each column is a sample.}
 
-\item{batchMat}{Matrix like data object or a file path of batch table,
-in which the first two columns are `Samples`(matched colname of mat) and `Batch`, and
-remaining columns should be Covariates.}
+\item{batchMat}{A data frame, the first column should be `Samples`(matched colnames of mat)
+and the second column is `Batch`. The remaining columns could be Covariates.}
 
-\item{log2trans}{Boolean, specifying whether do log2 transition before batch removal.}
+\item{log2trans}{Boolean, specifying whether do logarithmic transformation before batch removal.}
+
+\item{pca}{Boolean, specifying whether return pca plot.}
 
 \item{positive}{Boolean, specifying whether all values should be positive.}
+
+\item{cluster}{Boolean, specifying whether perform hierarchical clustering.}
+
+\item{outdir}{Output directory for hierarchical cluster tree.}
 }
 \value{
 A list contrains two objects, including \code{data} and \code{p}.
@@ -25,13 +31,11 @@ A list contrains two objects, including \code{data} and \code{p}.
 Batch effect removal
 }
 \examples{
-data(bladderdata, package = "bladderbatch")
-dat <- bladderEset[1:50,]
-pheno = pData(dat)
-edata = exprs(dat)
-batchMat = pheno[, c("sample", "batch", "cancer")]
-batchMat$sample = rownames(batchMat)
+edata = matrix(c(rnorm(2000, 5), rnorm(2000, 8)), 1000)
+colnames(edata) = paste0("s", 1:4)
+batchMat = data.frame(sample = colnames(edata), batch = rep(1:2, each = 2))
 edata1 = BatchRemove(edata, batchMat)
+print(edata1$p)
 
 }
 \seealso{

@@ -8,11 +8,13 @@
 \usage{
 SquareView(beta, ctrlname = "Control", treatname = "Treatment",
   label = 0, label.top = TRUE, top = 5, genelist = c(),
-  scale_cutoff = 1, main = NULL, filename = NULL, width = 5,
-  height = 4, ...)
+  x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
+  groups = c("midleft", "topcenter", "midright", "bottomcenter"),
+  groupnames = paste0("Group", 1:length(groups)), main = NULL,
+  filename = NULL, width = 6, height = 4, ...)
 }
 \arguments{
-\item{beta}{Data frame, including columns of \code{ctrlname} and \code{treatname}, with Gene Symbol as rowname.}
+\item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
 
 \item{ctrlname}{A character, specifying the names of control samples.}
 
@@ -26,8 +28,16 @@ SquareView(beta, ctrlname = "Control", treatname = "Treatment",
 
 \item{genelist}{Character vector, specifying labeled genes.}
 
-\item{scale_cutoff}{Boolean or numeric, whether scale cutoff to whole genome level,
-or how many standard deviation will be used as cutoff.}
+\item{x_cutoff}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
+
+\item{y_cutoff}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
+
+\item{intercept}{An one or two-length numeric vector, specifying the intercept of diagonal.}
+
+\item{groups}{A character vector, specifying which group to be colored. Optional groups include "topleft",
+"topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".}
+
+\item{groupnames}{A character vector, specifying group names.}
 
 \item{main}{As in 'plot'.}
 
@@ -50,7 +60,7 @@ and colored treatment related genes.
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 
 

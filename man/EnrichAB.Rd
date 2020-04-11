@@ -6,62 +6,41 @@
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
 EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
-  organism = "hsa", pathway_limit = c(3, 50), adjust = "BH",
-  filename = NULL, out.dir = ".", gsea = FALSE, width = 6.5,
-  height = 4, ...)
+  organism = "hsa", limit = c(1, 120), filename = NULL,
+  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
 }
 \arguments{
-\item{data}{A data frame containing columns "diff", with rownames of Entrez IDs.}
+\item{data}{A data frame.}
 
 \item{pvalue}{Pvalue cutoff.}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).}
+\item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the min and
+\item{limit}{A two-length vector (default: c(1, 120)), specifying the min and
 max size of pathways for enrichent analysis.}
-
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", and "none".}
 
 \item{filename}{Suffix of output file name.}
 
 \item{out.dir}{Path to save plot to (combined with filename).}
 
-\item{gsea}{Boolean, specifying if do GSEA for GroupA and GroupB genes. Default gsea = FALSE.}
-
 \item{width}{As in ggsave.}
 
 \item{height}{As in ggsave.}
 
+\item{verbose}{Boolean}
+
 \item{...}{Other available parameters in ggsave.}
 }
 \value{
-A list containing enrichment results for each group genes. This list contains items four
-items, \code{keggA}, \code{keggB}, \code{goA}, \code{goB}. Four items are all list object, containing
-subitems of \code{gridPlot} and \code{enrichRes}. \code{gridPlot} is a ggplot object, and
-\code{enrichRes} is a enrichResult instance
+A list containing enrichment results for each group genes. This list contains eight
+items, which contain subitems of \code{gridPlot} and \code{enrichRes}.
 }
 \description{
 Do enrichment analysis for selected genes, in which positive selection and negative selection
 are termed as GroupA and GroupB
 }
-\examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
-data=ScatterView(dd, ctrlname = "dmso", treatname = "plx")$data
-\dontrun{
-  #GO and KEGG enrichment analysis
- enrich_result = EnrichAB(data, pvalue=0.05, organism="hsa")
-  print(enrich_result$keggA$gridPlot)
-  print(enrich_result$goA$gridPlot)
-}
-
-}
-\seealso{
-\code{\link{EnrichSquare}}
-}
 \author{
-Binbin Wang
+Wubing Zhang
 }

@@ -6,37 +6,53 @@
 \alias{RRApipeline}
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
-FluteRRA(gene_summary, sgrna_summary, lfcCutoff = c(-1, 1),
-  organism = "hsa", pathway_limit = c(3, 50), pvalueCutoff = 0.25,
-  adjust = "BH", prefix = "Test", width = 9, height = 6,
-  outdir = ".")
+FluteRRA(gene_summary, sgrna_summary = NULL, keytype = "Symbol",
+  organism = "hsa", incorporateDepmap = TRUE, cell_lines = NA,
+  lineages = "All", omitEssential = TRUE, top = 5,
+  toplabels = NULL, scale_cutoff = 2, limit = c(2, 200),
+  pvalueCutoff = 0.25, proj = NA, width = 12, height = 6,
+  outdir = ".", verbose = TRUE)
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}
 
 \item{sgrna_summary}{A file path or a data frame of sgRNA summary data.}
 
-\item{lfcCutoff}{A two-length vector (default: c(-1, 1)), specifying the logFC cutoff for negative selection and positive selection.}
+\item{keytype}{"Entrez" or "Symbol".}
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{pathway_limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{incorporateDepmap}{Boolean, indicating whether incorporate Depmap data into analysis.}
+
+\item{cell_lines}{A character vector, specifying the cell lines in Depmap to be considered.}
+
+\item{lineages}{A character vector, specifying the lineages in Depmap to be considered.}
+
+\item{omitEssential}{Boolean, indicating whether omit common essential genes from the downstream analysis.}
+
+\item{top}{An integer, specifying number of top selected genes to be labeled in rank figure.}
+
+\item{toplabels}{A character vector, specifying interested genes to be labeled in rank figure.}
+
+\item{scale_cutoff}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
+
+\item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
 \item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
-\item{adjust}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
-
-\item{prefix}{A character, indicating the prefix of output file name.}
+\item{proj}{A character, indicating the prefix of output file name.}
 
 \item{width}{The width of summary pdf in inches.}
 
 \item{height}{The height of summary pdf in inches.}
 
 \item{outdir}{Output directory on disk.}
+
+\item{verbose}{Boolean}
 }
 \value{
-All of the pipeline results is output into the \code{out.dir}/\code{prefix}_Results,
+All of the pipeline results is output into the \code{out.dir}/\code{proj}_Results,
 which includes a pdf file and a folder named 'RRA'.
 }
 \description{
@@ -54,10 +70,11 @@ The downstream analysis of this function includes identifying positive and negat
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 }
 \examples{
-data(rra.gene_summary)
+data("rra.gene_summary")
+data("rra.sgrna_summary")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(rra.gene_summary, prefix="GSC", organism="hsa")
+    FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="PLX", organism="hsa")
 }
 
 

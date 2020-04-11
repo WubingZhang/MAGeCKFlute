@@ -6,24 +6,24 @@
 \alias{normalizebeta}
 \title{Normalize gene beta scores}
 \usage{
-NormalizeBeta(beta, samples = NULL, method = "cell_cycle",
-  posControl = NULL, minus = 0.2)
+NormalizeBeta(beta, id = 1, method = "cell_cycle", posControl = NULL,
+  samples = NULL)
 }
 \arguments{
-\item{beta}{Data frame, in which rows are EntrezID, columns are samples.}
+\item{beta}{Data frame.}
 
-\item{samples}{Character vector, specifying the samples in \code{beta} to be normalized.
-If NULL (default), normalize beta score of all samples in \code{beta}.}
+\item{id}{An integer specifying the column of gene.}
 
-\item{method}{Character, one of 'cell_cycle'(default) and 'loess'.}
+\item{method}{Character, one of 'cell_cycle'(default) and 'loess'.
+or character string giving the name of the table column containing the gene names.}
 
-\item{posControl}{A file path or a character vector, specifying a list of gene entrezids as positive
-controls used for cell cycle normalization}
+\item{posControl}{A character vector, specifying a list of positive control genes.}
 
-\item{minus}{Numeric, scale for cell cycle normalization. Between 0 and 1.}
+\item{samples}{Character vector, specifying the sample names in \emph{beta} columns.
+If NULL (default), take all \emph{beta} columns as samples.}
 }
 \value{
-A data frame with same format as input data \code{beta}.
+A data frame with same format as input data \emph{beta}.
 }
 \description{
 Two normalization methods are available. \code{cell_cycle} method normalizes gene beta scores
@@ -31,18 +31,16 @@ Two normalization methods are available. \code{cell_cycle} method normalizes gen
  beta scores using loess.
 }
 \details{
-In CRISPR screens, cells treated with different conditions (e.g., with or without
-drug) may have different proliferation rates. So we defined a list of core essential genes,
-which is equally negatively selected between samples with different proliferation rate.
-Normalization of gene beta scores is performed using these essential genes. \code{cell_cycle}
-in MAGeCKFlute normalizes the beta scores of all genes based on the median beta score of essential genes.
-After normalization, the beta scores are comparable across samples. \code{loess} is another
-optional normalization method, which is used to normalize array data before.
+In CRISPR screens, cells treated with different conditions (e.g., with or without drug)
+may have different proliferation rates. So it's necessary to normalize the proliferation rate
+based on defined positive control genes among samples. After normalization, the beta scores are
+comparable across samples. \code{loess} is another optional normalization method, which is used
+to normalize array data before.
 }
 \examples{
 data(mle.gene_summary)
 # Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary, organism="hsa")
+dd = ReadBeta(mle.gene_summary)
 #Cell Cycle normalization
 dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 head(dd_essential)

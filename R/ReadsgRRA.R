@@ -18,16 +18,10 @@
 #' @export
 #'
 ReadsgRRA <- function(sgRNA_summary){
-  message(Sys.time(), " # Read sgRNA summary file ...")
-  if(class(sgRNA_summary)=="character" && file.exists(sgRNA_summary)){
-    dd = read.table(file = sgRNA_summary, header = TRUE, stringsAsFactors = FALSE)
-  }else if(class(sgRNA_summary)=="data.frame" &&
-           all(c("sgrna", "Gene", "LFC", "FDR") %in% colnames(sgRNA_summary))){
-    dd = sgRNA_summary
-  }else{
-    stop("The parameter sgRNA_summary is below standard!")
+  if(is.null(dim(sgRNA_summary))){
+    sgRNA_summary = read.table(file = sgRNA_summary, sep = "\t", header = TRUE, quote = "",
+                    comment.char = "", check.names = FALSE, stringsAsFactors = FALSE)
   }
-  dd = dd[, c("sgrna", "Gene", "LFC", "FDR")]
-  rownames(dd) = dd$EntrezID
+  dd = sgRNA_summary[, c("sgrna", "Gene", "LFC", "FDR")]
   return(dd)
 }

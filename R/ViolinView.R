@@ -26,7 +26,7 @@
 #' @examples
 #' data(mle.gene_summary)
 #' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary, organism="hsa")
+#' dd = ReadBeta(mle.gene_summary)
 #' ViolinView(dd, samples=c("dmso", "plx"))
 #' #or
 #' ViolinView(dd[, c("dmso", "plx")])
@@ -42,7 +42,6 @@ ViolinView <- function(beta, samples=NULL, main=NULL, ylab="Beta Score",
   requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 
-  message(Sys.time(), " # Violin plot for ", main, " ", ylab, " ...")
   if(!is.null(samples) && length(samples)>1){ beta = beta[, samples]}
 
   dd1 = melt(beta, id=NULL)
@@ -50,7 +49,7 @@ ViolinView <- function(beta, samples=NULL, main=NULL, ylab="Beta Score",
     dd1$variable = colnames(beta)
   }
   #======
-  p=ggplot(data=dd1,aes(x=variable,y=value,color=variable))
+  p=ggplot(data=dd1,aes_string(x="variable",y="value",color="variable"))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)
   #p=p+ylim(-1.5,1)
   p=p+scale_color_npg()

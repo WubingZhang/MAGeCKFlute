@@ -6,31 +6,34 @@
 \alias{enrichORT}
 \title{Do enrichment analysis using over-representation test}
 \usage{
-enrich.ORT(geneList, universe = NULL, keytype = "Entrez",
-  type = "GOBP+GOMF", organism = "hsa", pvalueCutoff = 0.25,
-  pAdjustMethod = "BH", limit = c(3, 50), gmtpath = NA)
+enrich.ORT(geneList, keytype = "Symbol", type = "GOBP",
+  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
+  universe = NULL, gmtpath = NULL, verbose = TRUE)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}
 
-\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
-
 \item{keytype}{"Entrez" or "Symbol".}
 
-\item{type}{Geneset category for testing, one of 'GOBP+GOMF' (default), 'GOBP', 'GOMF', 'GOCC',
-'KEGG', 'BIOCARTA', 'REACTOME', 'WikiPathways', 'EHMN', 'PID', or 'All' and any combination of them,
-such as 'KEGG+BIOCARTA+REACTOME+GOBP+GOCC+GOMF+EHMN+PID+WikiPathways'.}
+\item{type}{Molecular signatures for testing, available datasets include
+Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
+MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
+C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
+and Complex (CORUM). Any combination of them are also accessible
+(e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
 \item{organism}{'hsa' or 'mmu'.}
 
 \item{pvalueCutoff}{Pvalue cutoff.}
 
-\item{pAdjustMethod}{One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none".}
-
-\item{limit}{A two-length vector (default: c(3, 50)), specifying the minimal and
+\item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
 
-\item{gmtpath}{The path to gmt file.}
+\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
+
+\item{gmtpath}{The path to customized gmt file.}
+
+\item{verbose}{Boolean}
 }
 \value{
 A enrichedResult instance.
@@ -41,8 +44,8 @@ Do enrichment analysis using over-representation test
 \examples{
 data(geneList, package = "DOSE")
 genes <- geneList[1:100]
-enrichedRes <- enrich.ORT(genes)
-head(enrichedRes@result)
+enrichedRes <- enrich.ORT(genes, keytype = "entrez")
+head(slot(enrichedRes, "result"))
 
 }
 \seealso{
@@ -50,7 +53,7 @@ head(enrichedRes@result)
 
 \code{\link{enrich.GSE}}
 
-\code{\link{enrichment_analysis}}
+\code{\link{EnrichAnalyzer}}
 
 \code{\link[DOSE]{enrichResult-class}}
 }
