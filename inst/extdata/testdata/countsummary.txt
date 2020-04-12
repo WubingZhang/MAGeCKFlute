@@ -1,0 +1,5 @@
+File	Label	Reads	Mapped	Percentage	TotalsgRNAs	Zerocounts	GiniIndex	NegSelQC	NegSelQCPval	NegSelQCPvalPermutation	NegSelQCPvalPermutationFDR	NegSelQCGene
+../data/GSC_0131_Day23_Rep1.fastq.gz	day23_r1	62818064	39992777	0.6366	64076	57	0.0851	0	1	1	1	0.0
+../data/GSC_0131_Day0_Rep2.fastq.gz	day0_r2	47289074	31709075	0.6705	64076	17	0.07496	0	1	1	1	0.0
+../data/GSC_0131_Day0_Rep1.fastq.gz	day0_r1	51190401	34729858	0.6784	64076	14	0.07335	0	1	1	1	0.0
+../data/GSC_0131_Day23_Rep2.fastq.gz	day23_r2	58686580	37836392	0.6447	64076	51	0.08587	0	1	1	1	0.0

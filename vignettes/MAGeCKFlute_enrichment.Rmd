@@ -1,0 +1,163 @@
+---
+title: "MAGeCKFlute - Functional enrichment analysis in MAGeCKFlute"
+author: "Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu"
+output:
+  BiocStyle::html_document
+bibliography: library.bib
+vignette: >
+  %\VignetteIndexEntry{MAGeCKFlute_enrichment.Rmd}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+abstract:  >
+  CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK [@Wei2014] and MAGeCK-VISPR [@Wei2015], to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
+  Here, We developed MAGeCKFlute for supporting downstream analysis. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis, pathway enrichment analysis and protein complex enrichment analysis of these genes. The package also visualizes genes in multiple ways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
+---
+
+```{r setup, echo=FALSE, fig.height=4, fig.width=20, dpi=150}
+knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
+                      dev="png", message=FALSE, error=FALSE, warning=TRUE)
+```	
+
+**Citation:** if you use MAGeCKFlute in published research, please cite:
+Binbin Wang, Mei Wang, Wubing Zhang. "Integrative analysis of pooled CRISPR genetic screens using MAGeCKFlute." Nature Protocols (2019), doi: [10.1038/s41596-018-0113-7](https://www.nature.com/articles/s41596-018-0113-7).t
+
+# Input data - weighted gene list
+```{r load}
+library(MAGeCKFlute)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
+genelist = gdata$Score
+names(genelist) = gdata$id
+genelist[1:5]
+```
+
+# Enrichment analysis methods
+MAGeCKFlute incorporates three enrichment methods, including Over-Representation Test (ORT), Gene Set Enrichment Analysis (GSEA), and Hypergeometric test (HGT). Here, ORT and GSEA are borrowed from R package [clusterProfiler](https://github.com/YuLab-SMU/clusterProfiler) [@Yu2012].
+
+## Hypergeometric test
+```{r HGT}
+# Alternative functions EnrichAnalyzer and enrich.HGT.
+hgtRes1 = EnrichAnalyzer(genelist[genelist< -1], method = "HGT")
+head(hgtRes1@result)
+# hgtRes2 = enrich.HGT(genelist[genelist< -1])
+# head(hgtRes2@result)
+```
+
+## Over-representation test
+```{r ORT}
+# Alternative functions EnrichAnalyzer and enrich.ORT.
+ortRes1 = EnrichAnalyzer(genelist[genelist< -1], method = "ORT")
+head(ortRes1@result)
+# ortRes2 = enrich.ORT(genelist[genelist< -1])
+# head(ortRes2@result)
+```
+
+## Gene set enrichment analysis
+```{r GSE}
+# Alternative functions EnrichAnalyzer and enrich.GSE.
+gseRes1 = EnrichAnalyzer(genelist, method = "GSEA")
+head(gseRes1@result)
+# gseRes2 = enrich.GSE(genelist)
+# head(gseRes2@result)
+```
+
+## Visualize enrichment results.
+
+### Barplot
+```{r barview, fig.height=4, fig.width=9, dpi=150}
+require(ggplot2)
+df = hgtRes1@result
+df$logFDR = -log10(df$p.adjust)
+p = BarView(df[1:5,], "Description", 'logFDR')
+p = p + labs(x = NULL) + coord_flip()
+p
+
+# Or use function barplot from enrichplot package
+barplot(hgtRes1, showCategory = 5)
+```
+
+### Dot plot
+```{r, fig.height=4, fig.width=9, dpi=150}
+EnrichedView(hgtRes1, bottom = 5, mode = 1)
+EnrichedView(hgtRes1, bottom = 5, mode = 2)
+dotplot(hgtRes1, showCategory = 5)
+```
+
+### Visualization functions from [enrichplot](https://yulab-smu.github.io/clusterProfiler-book/chapter12.html) [@Yu2018].
+```{r, fig.height=7, fig.width=9, dpi=150}
+hgtRes1@result$geneID = hgtRes1@result$geneName
+#cnetplot
+cnetplot(hgtRes1, 2)
+```
+
+```{r, fig.height=7, fig.width=15, dpi=150}
+heatplot(hgtRes1, showCategory = 3, foldChange=genelist)
+emapplot(hgtRes1, layout="kk")
+```
+
+### Visulization for GSEA enriched categories
+```{r, fig.height=4, fig.width=7, dpi=150}
+#gseaplot
+gseaplot(gseRes1, geneSetID = 1, title = gseRes1$Description[1])
+gseaplot(gseRes1, geneSetID = 1, by = "runningScore", title = gseRes1$Description[1])
+gseaplot(gseRes1, geneSetID = 1, by = "preranked", title = gseRes1$Description[1])
+#or
+gseaplot2(gseRes1, geneSetID = 1:3)
+```
+
+## Type of gene sets for enrichment analysis
+For enrichment analysis, MAGeCKFlute signifies the public available gene sets, including Pathways (PID, KEGG, REACTOME, BIOCARTA, C2CP), GO terms (GOBP, GOCC, GOMF), Complexes (CORUM) and molecular signature from MsigDB (c1, c2, c3, c4, c5, c6, c7, HALLMARK). 
+
+### Functional enrichment analysis on GO terms and pathways
+Analysis of high-throughput data increasingly relies on pathway annotation and functional information derived from Gene Ontology, which is also useful in the analysis of CRISPR screens.
+```{r pathway, fig.height=4, fig.width=7, dpi=150}
+## KEGG and REACTOME pathways
+enrich = EnrichAnalyzer(geneList = genelist[genelist< -1], type = "KEGG+REACTOME")
+EnrichedView(enrich, bottom = 5)
+## Only KEGG pathways
+enrich = EnrichAnalyzer(geneList = genelist[genelist< -1], type = "KEGG")
+EnrichedView(enrich, bottom = 5)
+## Gene ontology
+enrichGo = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP+GOMF")
+EnrichedView(enrichGo, bottom = 5)
+```
+
+### Protein complex analysis
+Functional annotations from the pathways and GO are powerful in the context of network dynamics. However, the approach has limitations in particular for the analysis of CRISPR screenings, in which elements within a protein complex rather than complete pathways might have a strong selection. So we incorporate protein complex resource from CORUM database, which enable  identification of essential protein complexes from the CRISPR screens.
+```{r, fig.height=4, fig.width=7, dpi=150}
+enrichPro = EnrichAnalyzer(genelist[genelist< -1], type = "CORUM")
+EnrichedView(enrichPro, bottom = 5)
+```
+
+### Enrichment analysis on the combination of the gene sets
+```{r, fig.height=4, fig.width=7, dpi=150}
+enrichComb = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP+KEGG")
+EnrichedView(enrichComb, bottom = 5)
+```
+
+## Limit the size of gene sets for testing
+```{r limit, fig.height=4, fig.width=7, dpi=150}
+enrich = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP", limit = c(1, 80))
+EnrichedView(enrich, bottom = 5)
+```
+
+## Remove redundant results using `EnrichedFilter`.
+```{r filter1, fig.height=4, fig.width=7, dpi=150}
+enrich1 = EnrichAnalyzer(genelist[genelist< -1], type = "GOMF+GOBP")
+enrich2 = EnrichAnalyzer(genelist[genelist< -1], type = "GOMF+GOBP", filter = TRUE)
+enrich3 = EnrichedFilter(enrich1)
+EnrichedView(enrich1, bottom = 15)
+EnrichedView(enrich2, bottom = 15)
+EnrichedView(enrich3, bottom = 15)
+```
+
+# Session info
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+# References
+
+
