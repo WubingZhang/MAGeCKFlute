@@ -75,11 +75,10 @@ install:
   - Rscript -e 'BiocManager::install("DOSE", quiet=T)'
   - Rscript -e 'BiocManager::install("enrichplot", quiet=F)'
   - Rscript -e 'BiocManager::install("clusterProfiler", quiet=T)'
-  - Rscript -e 'BiocManager::install(c("BiocCheck", "BiocStyle"), quiet=T)'
+  - Rscript -e 'BiocManager::install("BiocStyle", quiet=T)'
 
 # Build and check package
 script:
   - R CMD build . --no-manual --no-build-vignettes
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
   - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
-  - R CMD BiocCheck "${PKG_FILE_NAME}"
