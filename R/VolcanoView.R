@@ -32,9 +32,10 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(rra.gene_summary)
-#' rra = ReadRRA(rra.gene_summary)
-#' VolcanoView(rra, x = "Score", y = "FDR", Label = "id")
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
+#' VolcanoView(gdata, x = "Score", y = "FDR", Label = "id")
 #'
 #' @import ggrepel
 #' @export

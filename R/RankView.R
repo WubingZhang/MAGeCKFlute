@@ -26,10 +26,11 @@
 #'
 #'
 #' @examples
-#' data(rra.gene_summary)
-#' rra = ReadRRA(rra.gene_summary)
-#' rankdata = rra$Score
-#' names(rankdata) = rra$id
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
+#' rankdata = gdata$Score
+#' names(rankdata) = gdata$id
 #' RankView(rankdata)
 #'
 #' @importFrom ggrepel geom_label_repel

@@ -27,9 +27,9 @@
 #'
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' MAView(dd, ctrlname = "dmso", treatname = "plx")
 #'
 #' @export

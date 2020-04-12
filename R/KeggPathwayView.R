@@ -137,8 +137,9 @@
 #'
 #' @examples
 #' #load data
-#' data(mle.gene_summary)
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' gene.data = dd$plx
 #' names(gene.data) = rownames(dd)
 #'
@@ -501,9 +502,9 @@ KeggPathwayView=function (gene.data = NULL, cpd.data = NULL, pathway.id,
 #' @seealso \code{\link{KeggPathwayView}}
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' colnames(dd)[2:3] = c("Control", "Treatment")
 #' arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 #'

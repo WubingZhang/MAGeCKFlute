@@ -5,8 +5,13 @@
 \alias{gsGetter}
 \title{Extract pathway annotation from GMT file.}
 \usage{
-gsGetter(gmtpath = NULL, type = "All", limit = c(0, Inf),
-  organism = "hsa", update = FALSE)
+gsGetter(
+  gmtpath = NULL,
+  type = "All",
+  limit = c(0, Inf),
+  organism = "hsa",
+  update = FALSE
+)
 }
 \arguments{
 \item{gmtpath}{The path to customized gmt file.}

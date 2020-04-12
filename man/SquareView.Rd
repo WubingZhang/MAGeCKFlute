@@ -6,12 +6,25 @@
 \alias{squareview}
 \title{Scatter plot of 9-Square}
 \usage{
-SquareView(beta, ctrlname = "Control", treatname = "Treatment",
-  label = 0, label.top = TRUE, top = 5, genelist = c(),
-  x_cutoff = NULL, y_cutoff = NULL, intercept = NULL,
+SquareView(
+  beta,
+  ctrlname = "Control",
+  treatname = "Treatment",
+  label = 0,
+  label.top = TRUE,
+  top = 5,
+  genelist = c(),
+  x_cutoff = NULL,
+  y_cutoff = NULL,
+  intercept = NULL,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
-  groupnames = paste0("Group", 1:length(groups)), main = NULL,
-  filename = NULL, width = 6, height = 4, ...)
+  groupnames = paste0("Group", 1:length(groups)),
+  main = NULL,
+  filename = NULL,
+  width = 6,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
@@ -58,9 +71,9 @@ Plot a scatter plot with Control beta score as x-axis and Treatment beta score a
 and colored treatment related genes.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
 
 

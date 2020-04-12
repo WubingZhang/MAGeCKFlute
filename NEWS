@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.7.2 (Bioconductor 3.11)
+-------------------------
+
+    o Allow user customized data input.
+    o Prioritize the documentation.
+
 CHANGES IN VERSION 1.6.4 (Bioconductor 3.10)
 -------------------------
 

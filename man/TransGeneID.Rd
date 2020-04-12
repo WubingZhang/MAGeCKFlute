@@ -6,9 +6,16 @@
 \alias{transGeneID}
 \title{Gene ID conversion between ENTREZID and SYMBOL}
 \usage{
-TransGeneID(genes, fromType = "Symbol", toType = "Entrez",
-  organism = "hsa", fromOrg = organism, toOrg = organism,
-  ensemblHost = "www.ensembl.org", update = FALSE)
+TransGeneID(
+  genes,
+  fromType = "Symbol",
+  toType = "Entrez",
+  organism = "hsa",
+  fromOrg = organism,
+  toOrg = organism,
+  ensemblHost = "www.ensembl.org",
+  update = FALSE
+)
 }
 \arguments{
 \item{genes}{A character vector, input genes to be converted.}

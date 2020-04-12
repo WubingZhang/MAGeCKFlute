@@ -5,10 +5,21 @@
 \alias{EnrichedGeneView}
 \title{Visualize enriched pathways and genes in those pathways}
 \usage{
-EnrichedGeneView(enrichment, geneList, rank_by = "p.adjust", top = 5,
-  bottom = 0, keytype = "Symbol", gene_cutoff = c(-log2(1.5),
-  log2(1.5)), custom_gene = NULL, charLength = 40, filename = NULL,
-  width = 7, height = 5, ...)
+EnrichedGeneView(
+  enrichment,
+  geneList,
+  rank_by = "p.adjust",
+  top = 5,
+  bottom = 0,
+  keytype = "Symbol",
+  gene_cutoff = c(-log2(1.5), log2(1.5)),
+  custom_gene = NULL,
+  charLength = 40,
+  filename = NULL,
+  width = 7,
+  height = 5,
+  ...
+)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result or an \code{enrichResult} object.}

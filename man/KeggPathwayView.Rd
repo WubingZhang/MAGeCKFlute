@@ -5,17 +5,35 @@
 \alias{KeggPathwayView}
 \title{Kegg pathway view}
 \usage{
-KeggPathwayView(gene.data = NULL, cpd.data = NULL, pathway.id,
-  species = "hsa", kegg.dir = ".", cpd.idtype = "kegg",
-  gene.idtype = "ENTREZ", gene.annotpkg = NULL, min.nnodes = 3,
-  kegg.native = TRUE, map.null = TRUE, expand.node = FALSE,
-  split.group = FALSE, map.symbol = TRUE, map.cpdname = TRUE,
-  node.sum = "sum", discrete = list(gene = FALSE, cpd = FALSE),
-  limit = list(gene = 1, cpd = 1), bins = list(gene = 10, cpd = 10),
-  both.dirs = list(gene = TRUE, cpd = TRUE), trans.fun = list(gene =
-  NULL, cpd = NULL), low = list(gene = "deepskyblue1", cpd = "blue"),
-  mid = list(gene = "gray", cpd = "gray"), high = list(gene = "red",
-  cpd = "yellow"), na.col = "transparent", verbose = TRUE, ...)
+KeggPathwayView(
+  gene.data = NULL,
+  cpd.data = NULL,
+  pathway.id,
+  species = "hsa",
+  kegg.dir = ".",
+  cpd.idtype = "kegg",
+  gene.idtype = "ENTREZ",
+  gene.annotpkg = NULL,
+  min.nnodes = 3,
+  kegg.native = TRUE,
+  map.null = TRUE,
+  expand.node = FALSE,
+  split.group = FALSE,
+  map.symbol = TRUE,
+  map.cpdname = TRUE,
+  node.sum = "sum",
+  discrete = list(gene = FALSE, cpd = FALSE),
+  limit = list(gene = 1, cpd = 1),
+  bins = list(gene = 10, cpd = 10),
+  both.dirs = list(gene = TRUE, cpd = TRUE),
+  trans.fun = list(gene = NULL, cpd = NULL),
+  low = list(gene = "deepskyblue1", cpd = "blue"),
+  mid = list(gene = "gray", cpd = "gray"),
+  high = list(gene = "red", cpd = "yellow"),
+  na.col = "transparent",
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{gene.data}{Either vector (single sample) or a matrix-like data (multiple sample).
@@ -176,8 +194,9 @@ The argument \code{low}, \code{mid}, and \code{high} specifies the color spectra
 }
 \examples{
 #load data
-data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 gene.data = dd$plx
 names(gene.data) = rownames(dd)
 

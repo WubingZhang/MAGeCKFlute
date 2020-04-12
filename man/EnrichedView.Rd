@@ -5,9 +5,20 @@
 \alias{EnrichedView}
 \title{View enriched terms}
 \usage{
-EnrichedView(enrichment, rank_by = "pvalue", mode = 1, subset = NULL,
-  top = 0, bottom = 0, x = "LogFDR", charLength = 40,
-  filename = NULL, width = 7, height = 4, ...)
+EnrichedView(
+  enrichment,
+  rank_by = "pvalue",
+  mode = 1,
+  subset = NULL,
+  top = 0,
+  bottom = 0,
+  x = "LogFDR",
+  charLength = 40,
+  filename = NULL,
+  width = 7,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{enrichment}{A data frame of enrichment result, with columns of ID, Description, p.adjust and NES.}

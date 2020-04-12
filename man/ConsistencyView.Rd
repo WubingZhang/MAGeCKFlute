@@ -5,8 +5,16 @@
 \alias{ConsistencyView}
 \title{Visualize the estimate cell cycle compared to control.}
 \usage{
-ConsistencyView(beta, ctrlname, treatname, main = NULL,
-  filename = NULL, width = 5, height = 4, ...)
+ConsistencyView(
+  beta,
+  ctrlname,
+  treatname,
+  main = NULL,
+  filename = NULL,
+  width = 5,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{beta}{Data frame, which has columns of \code{ctrlname} and other samples.}
@@ -33,9 +41,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Estimate cell cycle time in different samples by linear fitting of beta scores.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 ConsistencyView(dd, ctrlname = "dmso", treatname = "plx")
 
 }

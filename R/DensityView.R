@@ -23,9 +23,9 @@
 #' @seealso \code{\link{ViolinView}}
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' DensityView(dd, samples=c("dmso", "plx"))
 #' #or
 #' DensityView(dd[, c("dmso", "plx")])
@@ -90,9 +90,9 @@ DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
 #'
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' # Density plot of beta score deviation between control and treatment
 #' DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
 #'

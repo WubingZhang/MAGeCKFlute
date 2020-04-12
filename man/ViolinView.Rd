@@ -6,8 +6,16 @@
 \alias{violinview}
 \title{Violin plot}
 \usage{
-ViolinView(beta, samples = NULL, main = NULL, ylab = "Beta Score",
-  filename = NULL, width = 5, height = 4, ...)
+ViolinView(
+  beta,
+  samples = NULL,
+  main = NULL,
+  ylab = "Beta Score",
+  filename = NULL,
+  width = 5,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{beta}{Data frame, , including \code{samples} as columns.}
@@ -34,9 +42,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Plots the violin of beta scores in Control and Treatment samples.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 ViolinView(dd, samples=c("dmso", "plx"))
 #or
 ViolinView(dd[, c("dmso", "plx")])

@@ -5,9 +5,19 @@
 \alias{EnrichAB}
 \title{Enrichment analysis for Positive and Negative selection genes}
 \usage{
-EnrichAB(data, pvalue = 0.25, enrich_method = "ORT",
-  organism = "hsa", limit = c(1, 120), filename = NULL,
-  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
+EnrichAB(
+  data,
+  pvalue = 0.25,
+  enrich_method = "ORT",
+  organism = "hsa",
+  limit = c(1, 120),
+  filename = NULL,
+  out.dir = ".",
+  width = 6.5,
+  height = 4,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame.}

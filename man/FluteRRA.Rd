@@ -6,12 +6,26 @@
 \alias{RRApipeline}
 \title{Downstream analysis based on MAGeCK-RRA result}
 \usage{
-FluteRRA(gene_summary, sgrna_summary = NULL, keytype = "Symbol",
-  organism = "hsa", incorporateDepmap = TRUE, cell_lines = NA,
-  lineages = "All", omitEssential = TRUE, top = 5,
-  toplabels = NULL, scale_cutoff = 2, limit = c(2, 200),
-  pvalueCutoff = 0.25, proj = NA, width = 12, height = 6,
-  outdir = ".", verbose = TRUE)
+FluteRRA(
+  gene_summary,
+  sgrna_summary = NULL,
+  keytype = "Symbol",
+  organism = "hsa",
+  incorporateDepmap = TRUE,
+  cell_lines = NA,
+  lineages = "All",
+  omitEssential = FALSE,
+  top = 5,
+  toplabels = NULL,
+  scale_cutoff = 2,
+  limit = c(2, 200),
+  pvalueCutoff = 0.25,
+  proj = NA,
+  width = 12,
+  height = 6,
+  outdir = ".",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{gene_summary}{A file path or a data frame of gene summary data.}
@@ -70,13 +84,15 @@ The downstream analysis of this function includes identifying positive and negat
 and performing biological functional category analysis and pathway enrichment analysis of these genes.
 }
 \examples{
-data("rra.gene_summary")
-data("rra.sgrna_summary")
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/rra.sgrna_summary.txt")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="PLX", organism="hsa")
+    FluteRRA(file1, file2, proj="PLX", organism="hsa", incorporateDepmap = FALSE,
+    scale_cutoff = 1, outdir = "./")
 }
-
 
 }
 \seealso{

@@ -50,7 +50,9 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
 #' x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 #'

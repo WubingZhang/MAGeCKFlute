@@ -45,13 +45,15 @@
 #' @seealso \code{\link{FluteMLE}}
 #'
 #' @examples
-#' data("rra.gene_summary")
-#' data("rra.sgrna_summary")
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#'                   "testdata/rra.sgrna_summary.txt")
 #' \dontrun{
 #'     # Run the FluteRRA pipeline
-#'     FluteRRA(rra.gene_summary, rra.sgrna_summary, proj="PLX", organism="hsa")
+#'     FluteRRA(file1, file2, proj="PLX", organism="hsa", incorporateDepmap = FALSE,
+#'     scale_cutoff = 1, outdir = "./")
 #' }
-#'
 #'
 #' @export
 #' @import ggplot2
@@ -62,7 +64,7 @@ FluteRRA <- function(gene_summary,
                      organism = "hsa",
                      incorporateDepmap = TRUE,
                      cell_lines = NA, lineages = "All",
-                     omitEssential = TRUE,
+                     omitEssential = FALSE,
                      top = 5, toplabels = NULL,
                      scale_cutoff = 2,
                      limit = c(2, 200),

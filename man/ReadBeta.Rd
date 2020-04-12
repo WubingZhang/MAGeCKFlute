@@ -18,8 +18,9 @@ A data frame, whose first column is Gene and other columns are comparisons.
 Read gene beta scores from file or data frame
 }
 \examples{
-data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 head(dd)
 
 }

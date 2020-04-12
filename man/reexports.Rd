@@ -20,7 +20,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{clusterProfiler}{\code{\link[clusterProfiler]{GSEA}}, \code{\link[clusterProfiler]{enricher}}}
+  \item{clusterProfiler}{\code{\link[clusterProfiler]{enricher}}, \code{\link[clusterProfiler]{GSEA}}}
 
   \item{enrichplot}{\code{\link[enrichplot]{cnetplot}}, \code{\link[enrichplot]{dotplot}}, \code{\link[enrichplot]{emapplot}}, \code{\link[enrichplot]{goplot}}, \code{\link[enrichplot]{gseaplot}}, \code{\link[enrichplot]{gseaplot2}}, \code{\link[enrichplot]{heatplot}}, \code{\link[enrichplot]{ridgeplot}}}
 }}

@@ -5,9 +5,15 @@
 \alias{HeatmapView}
 \title{Draw heatmap}
 \usage{
-HeatmapView(mat, limit = c(-2, 2),
-  colPal = rev(colorRampPalette(c("#c12603", "white", "#0073B6"), space =
-  "Lab")(199)), filename = NA, width = NA, height = NA, ...)
+HeatmapView(
+  mat,
+  limit = c(-2, 2),
+  colPal = rev(colorRampPalette(c("#c12603", "white", "#0073B6"), space = "Lab")(199)),
+  filename = NA,
+  width = NA,
+  height = NA,
+  ...
+)
 }
 \arguments{
 \item{mat}{Matrix like object, each row is gene and each column is sample.}
@@ -31,8 +37,9 @@ Invisibly a pheatmap object that is a list with components.
 Draw heatmap
 }
 \examples{
-data(mle.gene_summary)
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 gg = cor(dd[,2:ncol(dd)])
 HeatmapView(gg, display_numbers = TRUE)
 

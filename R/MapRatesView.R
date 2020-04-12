@@ -23,7 +23,9 @@
 #'
 #'
 #' @examples
-#' data(countsummary)
+#' file4 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/countsummary.txt")
+#' countsummary = read.delim(file4, check.names = FALSE)
 #' MapRatesView(countsummary)
 #'
 #' @import ggplot2

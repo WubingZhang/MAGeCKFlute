@@ -5,8 +5,16 @@
 \alias{hclustView}
 \title{Cluster and view cluster tree}
 \usage{
-hclustView(d, method = "average", label_cols = NULL, bar_cols = NULL,
-  main = NA, xlab = NA, horiz = TRUE, ...)
+hclustView(
+  d,
+  method = "average",
+  label_cols = NULL,
+  bar_cols = NULL,
+  main = NA,
+  xlab = NA,
+  horiz = TRUE,
+  ...
+)
 }
 \arguments{
 \item{d}{A dissimilarity structure as produced by dist.}

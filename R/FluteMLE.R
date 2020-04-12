@@ -59,10 +59,11 @@
 #' @seealso \code{\link{FluteRRA}}
 #'
 #' @examples
-#' data(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
 #' \dontrun{
 #'   # functional analysis for MAGeCK MLE results
-#'   FluteMLE(mle.gene_summary, treatname = "plx", ctrlname = "dmso", proj = "PLX")
+#'   FluteMLE(file3, treatname = "plx", ctrlname = "dmso", proj = "PLX")
 #' }
 #'
 #' @import ggplot2 stats grDevices utils gridExtra grid
@@ -73,7 +74,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      incorporateDepmap = FALSE,
                      cell_lines = NA, lineages = "All",
                      norm_method = "cell_cycle", posControl = NULL,
-                     omitEssential = TRUE,
+                     omitEssential = FALSE,
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
                      pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
@@ -118,7 +119,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                             paste0(beta$Gene[idx2], collapse = ", "))
 
     dd = beta[!idx, ]
-    if(incorporateDepmap)
+    if(incorporateDepmap | ctrlname=="Depmap")
       dd = IncorporateDepmap(dd, symbol = "HumanGene", cell_lines = cell_lines,
                              lineages = lineages)
     if(!all(c(ctrlname, treatname) %in% colnames(dd)))

@@ -5,12 +5,26 @@
 \alias{VolcanoView}
 \title{Volcano View}
 \usage{
-VolcanoView(df, x = "logFC", y = "adj.P.Val", Label = NA, top = 5,
-  topnames = NULL, x_cutoff = log2(1.5), y_cutoff = 0.05,
-  mycolour = c("gray80", "#e41a1c", "#377eb8"), alpha = 0.6,
-  force = 0.1, main = NULL, xlab = "Log2 Fold Change",
-  ylab = "-Log10(Adjust.P)", filename = NULL, width = 4,
-  height = 2.5, ...)
+VolcanoView(
+  df,
+  x = "logFC",
+  y = "adj.P.Val",
+  Label = NA,
+  top = 5,
+  topnames = NULL,
+  x_cutoff = log2(1.5),
+  y_cutoff = 0.05,
+  mycolour = c("gray80", "#e41a1c", "#377eb8"),
+  alpha = 0.6,
+  force = 0.1,
+  main = NULL,
+  xlab = "Log2 Fold Change",
+  ylab = "-Log10(Adjust.P)",
+  filename = NULL,
+  width = 4,
+  height = 2.5,
+  ...
+)
 }
 \arguments{
 \item{df}{Data frame}
@@ -58,9 +72,10 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Volcano plot
 }
 \examples{
-data(rra.gene_summary)
-rra = ReadRRA(rra.gene_summary)
-VolcanoView(rra, x = "Score", y = "FDR", Label = "id")
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
+VolcanoView(gdata, x = "Score", y = "FDR", Label = "id")
 
 }
 \author{

@@ -5,9 +5,20 @@
 \alias{sgRankView}
 \title{View sgRNA rank.}
 \usage{
-sgRankView(df, gene = NULL, top = 3, bottom = 3, neg_ctrl = NULL,
-  binwidth = 0.3, interval = 0.1, bg.col = "gray90",
-  filename = NULL, width = 5, height = 3.5, ...)
+sgRankView(
+  df,
+  gene = NULL,
+  top = 3,
+  bottom = 3,
+  neg_ctrl = NULL,
+  binwidth = 0.3,
+  interval = 0.1,
+  bg.col = "gray90",
+  filename = NULL,
+  width = 5,
+  height = 3.5,
+  ...
+)
 }
 \arguments{
 \item{df}{A data frame, which contains columns of 'sgrna', 'Gene', and 'LFC'.}
@@ -41,8 +52,9 @@ An object created by \code{ggplot}.
 View sgRNA rank.
 }
 \examples{
-data(rra.sgrna_summary)
-sgrra = ReadsgRRA(rra.sgrna_summary)
+file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/rra.sgrna_summary.txt")
+sgrra = ReadsgRRA(file2)
 sgRankView(sgrra)
 
 }

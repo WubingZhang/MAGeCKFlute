@@ -14,10 +14,12 @@
 #' @return A data frame.
 #'
 #' @examples
-#' dd.rra = ReadRRA(rra.gene_summary)
-#' dim(dd.rra)
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
+#' dim(gdata)
 #' \dontrun{
-#'   rra.omit = OmitCommonEssential(dd.rra)
+#'   rra.omit = OmitCommonEssential(gdata)
 #'   dim(rra.omit)
 #' }
 #'

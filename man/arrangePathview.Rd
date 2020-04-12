@@ -5,10 +5,20 @@
 \alias{arrangePathview}
 \title{Kegg pathway view and arrange grobs on page}
 \usage{
-arrangePathview(genelist, pathways = c(), top = 4, ncol = 2,
-  title = NULL, sub = NULL, organism = "hsa", view_allpath = FALSE,
-  output = ".", path.archive = ".", kegg.native = TRUE,
-  verbose = TRUE)
+arrangePathview(
+  genelist,
+  pathways = c(),
+  top = 4,
+  ncol = 2,
+  title = NULL,
+  sub = NULL,
+  organism = "hsa",
+  view_allpath = FALSE,
+  output = ".",
+  path.archive = ".",
+  kegg.native = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{genelist}{a data frame with columns of ENTREZID, Control and Treatment. The columns
@@ -52,9 +62,9 @@ plot on the current device
 Kegg pathway view and arrange grobs on page.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 colnames(dd)[2:3] = c("Control", "Treatment")
 arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 

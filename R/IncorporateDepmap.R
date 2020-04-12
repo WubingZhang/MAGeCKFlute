@@ -14,10 +14,13 @@
 #' @return A data frame with Depmap column attached.
 #'
 #' @examples
-#' dd.rra = ReadRRA(rra.gene_summary)
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
+#' head(gdata)
 #' \dontrun{
-#'   dd.rra = IncorporateDepmap(dd.rra, cell_lines=rownames(depmap_similarity)[1:3])
-#'   head(dd.rra)
+#'   gdata = IncorporateDepmap(gdata)
+#'   head(gdata)
 #' }
 #' @export
 #'

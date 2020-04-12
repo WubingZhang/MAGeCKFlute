@@ -6,9 +6,17 @@
 \alias{Hypergeometric}
 \title{Do enrichment analysis using Hypergeometric test}
 \usage{
-enrich.HGT(geneList, keytype = "Symbol", type = "GOBP",
-  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
-  universe = NULL, gmtpath = NULL, verbose = TRUE)
+enrich.HGT(
+  geneList,
+  keytype = "Symbol",
+  type = "GOBP",
+  organism = "hsa",
+  pvalueCutoff = 0.25,
+  limit = c(2, 200),
+  universe = NULL,
+  gmtpath = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}

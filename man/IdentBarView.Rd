@@ -5,9 +5,19 @@
 \alias{IdentBarView}
 \title{Identical bar plot}
 \usage{
-IdentBarView(gg, x = "x", y = "y", fill = c("#CF3C2B", "#394E80"),
-  main = NULL, xlab = NULL, ylab = NULL, filename = NULL,
-  width = 5, height = 4, ...)
+IdentBarView(
+  gg,
+  x = "x",
+  y = "y",
+  fill = c("#CF3C2B", "#394E80"),
+  main = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  filename = NULL,
+  width = 5,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{gg}{A data frame.}
@@ -40,7 +50,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Identical bar plot
 }
 \examples{
-data(countsummary)
+file4 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/countsummary.txt")
+countsummary = read.delim(file4, check.names = FALSE)
 IdentBarView(countsummary, x="Label", y="Reads")
 
 }

@@ -15,9 +15,11 @@
 #' @return A data frame with correlation and test p.value.
 #'
 #' @examples
-#' dd.rra = ReadRRA(rra.gene_summary)
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
 #' \dontrun{
-#'   rra.omit = OmitCommonEssential(dd.rra)
+#'   rra.omit = OmitCommonEssential(gdata)
 #'   depmap_similarity = ResembleDepmap(rra.omit)
 #'   head(depmap_similarity)
 #' }

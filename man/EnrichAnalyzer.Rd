@@ -6,10 +6,19 @@
 \alias{enrichment}
 \title{Enrichment analysis}
 \usage{
-EnrichAnalyzer(geneList, keytype = "Symbol", type = "Pathway+GOBP",
-  method = "HGT", organism = "hsa", pvalueCutoff = 0.25,
-  limit = c(2, 200), universe = NULL, filter = FALSE,
-  gmtpath = NULL, verbose = TRUE)
+EnrichAnalyzer(
+  geneList,
+  keytype = "Symbol",
+  type = "Pathway+GOBP",
+  method = "HGT",
+  organism = "hsa",
+  pvalueCutoff = 0.25,
+  limit = c(2, 200),
+  universe = NULL,
+  filter = FALSE,
+  gmtpath = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}

@@ -5,8 +5,16 @@
 \alias{MapRatesView}
 \title{View mapping ratio}
 \usage{
-MapRatesView(countSummary, Label = "Label", Reads = "Reads",
-  Mapped = "Mapped", filename = NULL, width = 5, height = 4, ...)
+MapRatesView(
+  countSummary,
+  Label = "Label",
+  Reads = "Reads",
+  Mapped = "Mapped",
+  filename = NULL,
+  width = 5,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{countSummary}{A data frame, which contains columns of
@@ -34,7 +42,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 View mapping ratio of each sample
 }
 \examples{
-data(countsummary)
+file4 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/countsummary.txt")
+countsummary = read.delim(file4, check.names = FALSE)
 MapRatesView(countsummary)
 
 }

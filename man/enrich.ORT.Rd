@@ -6,9 +6,17 @@
 \alias{enrichORT}
 \title{Do enrichment analysis using over-representation test}
 \usage{
-enrich.ORT(geneList, keytype = "Symbol", type = "GOBP",
-  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
-  universe = NULL, gmtpath = NULL, verbose = TRUE)
+enrich.ORT(
+  geneList,
+  keytype = "Symbol",
+  type = "GOBP",
+  organism = "hsa",
+  pvalueCutoff = 0.25,
+  limit = c(2, 200),
+  universe = NULL,
+  gmtpath = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{geneList}{A numeric vector with gene as names.}

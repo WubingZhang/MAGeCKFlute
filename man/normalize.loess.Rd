@@ -6,9 +6,17 @@
 \alias{loess.normalize}
 \title{normalize.loess}
 \usage{
-normalize.loess(mat, subset = sample(1:(dim(mat)[1]), min(c(5000,
-  nrow(mat)))), epsilon = 10^-2, maxit = 1, log.it = FALSE,
-  verbose = TRUE, span = 2/3, family.loess = "symmetric", ...)
+normalize.loess(
+  mat,
+  subset = sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),
+  epsilon = 10^-2,
+  maxit = 1,
+  log.it = FALSE,
+  verbose = TRUE,
+  span = 2/3,
+  family.loess = "symmetric",
+  ...
+)
 }
 \arguments{
 \item{mat}{A matrix with columns containing the values of the chips to normalize.}
@@ -37,8 +45,10 @@ A matrix similar as \code{mat}.
 Loess normalization method.
 }
 \examples{
-beta = ReadBeta(mle.gene_summary)
-beta_loess = normalize.loess(beta[,c("dmso", "plx")])
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
+beta_loess = normalize.loess(dd[,c("dmso", "plx")])
 
 }
 \seealso{

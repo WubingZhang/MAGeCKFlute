@@ -24,9 +24,10 @@ If the score type is equal to lfc, then LFC will be returned. If the score type 
 the log10 transformed RRA score will be returned. For FACS-based CRISPR screens, rra score is not recommended.
 }
 \examples{
-data(rra.gene_summary)
-dd.rra = ReadRRA(rra.gene_summary)
-head(dd.rra)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
+head(gdata)
 
 }
 \author{

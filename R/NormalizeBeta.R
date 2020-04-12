@@ -28,14 +28,14 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' data(mle.gene_summary)
-#' # Read beta score from gene summary table in MAGeCK MLE results
-#' dd = ReadBeta(mle.gene_summary)
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
 #' #Cell Cycle normalization
 #' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
 #' head(dd_essential)
 #'
-#' #Optional loess normalization
+#' #Optional loess normalization (not recommended)
 #' dd_loess = NormalizeBeta(dd, samples=c("dmso", "plx"), method="loess")
 #' head(dd_loess)
 #'
@@ -101,8 +101,10 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
 #' @seealso \code{\link{NormalizeBeta}}
 #'
 #' @examples
-#' beta = ReadBeta(mle.gene_summary)
-#' beta_loess = normalize.loess(beta[,c("dmso", "plx")])
+#' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/mle.gene_summary.txt")
+#' dd = ReadBeta(file3)
+#' beta_loess = normalize.loess(dd[,c("dmso", "plx")])
 #'
 #' @export
 #'

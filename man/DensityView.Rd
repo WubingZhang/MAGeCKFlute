@@ -5,8 +5,16 @@
 \alias{DensityView}
 \title{Density plot for gene beta scores in Control and Treatment}
 \usage{
-DensityView(beta, samples = NULL, main = NULL, xlab = "Beta Score",
-  filename = NULL, width = 5, height = 4, ...)
+DensityView(
+  beta,
+  samples = NULL,
+  main = NULL,
+  xlab = "Beta Score",
+  filename = NULL,
+  width = 5,
+  height = 4,
+  ...
+)
 }
 \arguments{
 \item{beta}{Data frame, including \code{samples} as columns.}
@@ -33,9 +41,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Plot the density of gene beta scores in two samples.
 }
 \examples{
-data(mle.gene_summary)
-# Read beta score from gene summary table in MAGeCK MLE results
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 DensityView(dd, samples=c("dmso", "plx"))
 #or
 DensityView(dd[, c("dmso", "plx")])

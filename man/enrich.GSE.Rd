@@ -6,9 +6,18 @@
 \alias{enrichGSE}
 \title{Gene set enrichment analysis}
 \usage{
-enrich.GSE(geneList, keytype = "Symbol", type = "GOBP",
-  organism = "hsa", pvalueCutoff = 0.25, limit = c(2, 200),
-  gmtpath = NULL, nPerm = 2000, by = "fgsea", verbose = TRUE)
+enrich.GSE(
+  geneList,
+  keytype = "Symbol",
+  type = "GOBP",
+  organism = "hsa",
+  pvalueCutoff = 0.25,
+  limit = c(2, 200),
+  gmtpath = NULL,
+  nPerm = 2000,
+  by = "fgsea",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{geneList}{A order ranked numeric vector with geneid as names.}

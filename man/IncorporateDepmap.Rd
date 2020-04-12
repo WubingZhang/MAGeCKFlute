@@ -5,8 +5,13 @@
 \alias{IncorporateDepmap}
 \title{Incorporate Depmap screen into analysis}
 \usage{
-IncorporateDepmap(dd, symbol = "id", cell_lines = NA,
-  lineages = "All", na.rm = FALSE)
+IncorporateDepmap(
+  dd,
+  symbol = "id",
+  cell_lines = NA,
+  lineages = "All",
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{dd}{A data frame.}
@@ -26,10 +31,13 @@ A data frame with Depmap column attached.
 Incorporate Depmap screen into analysis
 }
 \examples{
-dd.rra = ReadRRA(rra.gene_summary)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
+head(gdata)
 \dontrun{
-  dd.rra = IncorporateDepmap(dd.rra, cell_lines=rownames(depmap_similarity)[1:3])
-  head(dd.rra)
+  gdata = IncorporateDepmap(gdata)
+  head(gdata)
 }
 }
 \author{

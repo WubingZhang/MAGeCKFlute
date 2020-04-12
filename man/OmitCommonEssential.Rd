@@ -5,8 +5,7 @@
 \alias{OmitCommonEssential}
 \title{Omit common essential genes based on depmap data}
 \usage{
-OmitCommonEssential(dd, symbol = "id", lineages = "All",
-  dependency = -0.5)
+OmitCommonEssential(dd, symbol = "id", lineages = "All", dependency = -0.5)
 }
 \arguments{
 \item{dd}{A data frame.}
@@ -24,10 +23,12 @@ A data frame.
 Omit common essential genes based on depmap data
 }
 \examples{
-dd.rra = ReadRRA(rra.gene_summary)
-dim(dd.rra)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
+dim(gdata)
 \dontrun{
-  rra.omit = OmitCommonEssential(dd.rra)
+  rra.omit = OmitCommonEssential(gdata)
   dim(rra.omit)
 }
 

@@ -16,9 +16,10 @@
 #'
 #'
 #' @examples
-#' data(rra.gene_summary)
-#' dd.rra = ReadRRA(rra.gene_summary)
-#' head(dd.rra)
+#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#' "testdata/rra.gene_summary.txt")
+#' gdata = ReadRRA(file1)
+#' head(gdata)
 #'
 #' @export
 #'

@@ -5,10 +5,23 @@
 \alias{EnrichSquare}
 \title{Enrichment analysis for selected treatment related genes}
 \usage{
-EnrichSquare(beta, id = "Gene", keytype = "Symbol", x = "Control",
-  y = "Treatment", pvalue = 0.05, enrich_method = "ORT",
-  organism = "hsa", limit = c(1, 120), filename = NULL,
-  out.dir = ".", width = 6.5, height = 4, verbose = TRUE, ...)
+EnrichSquare(
+  beta,
+  id = "Gene",
+  keytype = "Symbol",
+  x = "Control",
+  y = "Treatment",
+  pvalue = 0.05,
+  enrich_method = "ORT",
+  organism = "hsa",
+  limit = c(1, 120),
+  filename = NULL,
+  out.dir = ".",
+  width = 6.5,
+  height = 4,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{beta}{Data frame, with columns of "Gene", "group", and "Diff".}

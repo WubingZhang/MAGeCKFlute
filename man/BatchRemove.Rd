@@ -5,8 +5,15 @@
 \alias{BatchRemove}
 \title{Batch effect removal}
 \usage{
-BatchRemove(mat, batchMat, log2trans = FALSE, pca = TRUE,
-  positive = FALSE, cluster = FALSE, outdir = NULL)
+BatchRemove(
+  mat,
+  batchMat,
+  log2trans = FALSE,
+  pca = TRUE,
+  positive = FALSE,
+  cluster = FALSE,
+  outdir = NULL
+)
 }
 \arguments{
 \item{mat}{A data frame, each row is a gene, and each column is a sample.}

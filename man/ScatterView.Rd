@@ -5,14 +5,36 @@
 \alias{ScatterView}
 \title{Scatter plot}
 \usage{
-ScatterView(data, x = "x", y = "y", label = 0, model = c("none",
-  "ninesquare", "volcano", "rank")[1], x_cut = NULL, y_cut = NULL,
-  slope = 1, intercept = NULL, auto_cut = FALSE,
-  auto_cut_x = auto_cut, auto_cut_y = auto_cut,
-  auto_cut_diag = auto_cut, groups = NULL, group_col = NULL,
-  groupnames = NULL, label.top = TRUE, top = 0, toplabels = NULL,
-  display_cut = FALSE, color = NULL, shape = 16, size = 1,
-  main = NULL, xlab = x, ylab = y, legend.position = "none", ...)
+ScatterView(
+  data,
+  x = "x",
+  y = "y",
+  label = 0,
+  model = c("none", "ninesquare", "volcano", "rank")[1],
+  x_cut = NULL,
+  y_cut = NULL,
+  slope = 1,
+  intercept = NULL,
+  auto_cut = FALSE,
+  auto_cut_x = auto_cut,
+  auto_cut_y = auto_cut,
+  auto_cut_diag = auto_cut,
+  groups = NULL,
+  group_col = NULL,
+  groupnames = NULL,
+  label.top = TRUE,
+  top = 0,
+  toplabels = NULL,
+  display_cut = FALSE,
+  color = NULL,
+  shape = 16,
+  size = 1,
+  main = NULL,
+  xlab = x,
+  ylab = y,
+  legend.position = "none",
+  ...
+)
 }
 \arguments{
 \item{data}{Data frame.}
@@ -81,7 +103,9 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Scatter plot supporting groups.
 }
 \examples{
-dd = ReadBeta(mle.gene_summary)
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/mle.gene_summary.txt")
+dd = ReadBeta(file3)
 ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
 x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 

@@ -5,9 +5,19 @@
 \alias{BarView}
 \title{Bar plot}
 \usage{
-BarView(df, x = "x", y = "y", fill = "#FC6665", bar.width = 0.8,
-  position = "dodge", dodge.width = 0.8, main = NA, xlab = NULL,
-  ylab = NA, ...)
+BarView(
+  df,
+  x = "x",
+  y = "y",
+  fill = "#FC6665",
+  bar.width = 0.8,
+  position = "dodge",
+  dodge.width = 0.8,
+  main = NA,
+  xlab = NULL,
+  ylab = NA,
+  ...
+)
 }
 \arguments{
 \item{df}{A data frame.}

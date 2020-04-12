@@ -5,8 +5,13 @@
 \alias{ResembleDepmap}
 \title{Compute the similarity between customized CRISPR screen with Depmap screens}
 \usage{
-ResembleDepmap(dd, symbol = "id", score = "Score", lineages = "All",
-  method = c("pearson", "spearman", "kendall")[1])
+ResembleDepmap(
+  dd,
+  symbol = "id",
+  score = "Score",
+  lineages = "All",
+  method = c("pearson", "spearman", "kendall")[1]
+)
 }
 \arguments{
 \item{dd}{A data frame.}
@@ -26,9 +31,11 @@ A data frame with correlation and test p.value.
 Compute the similarity between customized CRISPR screen with Depmap screens
 }
 \examples{
-dd.rra = ReadRRA(rra.gene_summary)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+"testdata/rra.gene_summary.txt")
+gdata = ReadRRA(file1)
 \dontrun{
-  rra.omit = OmitCommonEssential(dd.rra)
+  rra.omit = OmitCommonEssential(gdata)
   depmap_similarity = ResembleDepmap(rra.omit)
   head(depmap_similarity)
 }

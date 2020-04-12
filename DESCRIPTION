@@ -2,7 +2,7 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative Analysis Pipeline for Pooled CRISPR Functional
         Genetic Screens
-Version: 1.6.5
+Version: 1.7.2
 Date: 2020-4-8
 Author: Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
@@ -28,7 +28,7 @@ Description: CRISPR (clustered regularly interspaced short palindrome repeats) c
 License: GPL (>=3)
 VignetteBuilder: knitr
 Depends: R (>= 3.5)
-Suggests: knitr, testthat
+Suggests: knitr, testthat, BiocStyle
 Imports: clusterProfiler, DOSE, enrichplot, gridExtra, biomaRt, sva,
         ggsci, ggplot2, ggrepel, ggpubr, data.table, pheatmap, png,
         grDevices, grid, stats, utils, dendextend, scales, Biobase,
@@ -38,5 +38,6 @@ NeedsCompilation: no
 biocViews: FunctionalGenomics, CRISPR, BatchEffect, QualityControl,
         Normalization, GeneSetEnrichment, Pathways, Visualization,
         PooledScreens, GeneTarget, KEGG
-RoxygenNote: 6.1.1
+Encoding: UTF-8
+RoxygenNote: 7.1.0
 Packaged: 2020-04-08 16:23:44 UTC; Wubing
