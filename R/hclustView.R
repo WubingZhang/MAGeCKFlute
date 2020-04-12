@@ -65,6 +65,9 @@ hclustView <- function(d, method="average", label_cols=NULL, bar_cols=NULL, main
 #'
 #' @importFrom scales gradient_n_pal
 #' @importFrom scales brewer_pal
+#'
+#' @examples
+#' getCols(1:4)
 #' @export
 #'
 getCols <- function(x, palette=1){

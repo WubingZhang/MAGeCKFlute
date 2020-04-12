@@ -25,8 +25,8 @@
 #' @author Wubing Zhang
 #' @seealso \code{\link{EnrichedView}}
 #' @examples
+#' data(geneList, package = "DOSE")
 #' \dontrun{
-#'     data(geneList, package = "DOSE")
 #'     enrichRes = enrich.GSE(geneList, organism="hsa")
 #'     EnrichedView(slot(enrichRes, "result"))
 #' }

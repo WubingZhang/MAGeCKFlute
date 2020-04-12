@@ -18,6 +18,9 @@ A vector of colors corresponding to input vector.
 \description{
 Map values to colors
 }
+\examples{
+getCols(1:4)
+}
 \author{
 Wubing Zhang
 }

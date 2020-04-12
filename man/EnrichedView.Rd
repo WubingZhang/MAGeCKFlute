@@ -52,8 +52,8 @@ An object created by \code{ggplot}, which can be assigned and further customized
 Grid plot for enriched terms
 }
 \examples{
+data(geneList, package = "DOSE")
 \dontrun{
-    data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, organism="hsa")
     EnrichedView(slot(enrichRes, "result"))
 }
