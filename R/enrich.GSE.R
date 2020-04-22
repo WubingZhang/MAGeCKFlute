@@ -16,7 +16,7 @@
 #' and Complex (CORUM). Any combination of them are also accessible
 #' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff Pvalue cutoff.
+#' @param pvalueCutoff FDR cutoff.
 #' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param gmtpath The path to customized gmt file.

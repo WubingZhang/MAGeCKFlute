@@ -17,7 +17,7 @@
 #' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff Pvalue cutoff.
+#' @param pvalueCutoff FDR cutoff.
 #' @param limit A two-length vector (default: c(2, 200)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
@@ -65,17 +65,17 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
   if(method == "GSEA"){
     enrichRes <- enrich.GSE(geneList, keytype = keytype, type = type,
                             organism = organism,
-                            pvalueCutoff = 1,
+                            pvalueCutoff = pvalueCutoff,
                             limit = limit, gmtpath = gmtpath,
                             verbose = verbose)
   }else if(method == "ORT"){
     enrichRes <- enrich.ORT(geneList, keytype = keytype, type = type,
-                            organism = organism, pvalueCutoff = 1,
+                            organism = organism, pvalueCutoff = pvalueCutoff,
                             limit = limit, universe = universe,
                             gmtpath = gmtpath, verbose = verbose)
   }else if(method == "HGT"){
     enrichRes = enrich.HGT(geneList, keytype = keytype, type = type,
-                           organism = organism, pvalueCutoff = 1,
+                           organism = organism, pvalueCutoff = pvalueCutoff,
                            limit = limit, universe = universe,
                            gmtpath = gmtpath, verbose = verbose)
   }else{

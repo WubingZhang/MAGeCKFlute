@@ -33,7 +33,7 @@ and Complex (CORUM). Any combination of them are also accessible
 
 \item{organism}{'hsa' or 'mmu'.}
 
-\item{pvalueCutoff}{Pvalue cutoff.}
+\item{pvalueCutoff}{FDR cutoff.}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}

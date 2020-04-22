@@ -14,7 +14,7 @@
 #' and Complex (CORUM). Any combination of them are also accessible
 #' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff Pvalue cutoff.
+#' @param pvalueCutoff FDR cutoff.
 #' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
@@ -56,21 +56,21 @@ enrich.HGT = function(geneList, keytype = "Symbol", type = "GOBP",
                         stringsAsFactors = FALSE)
 
   ## Gene ID conversion
-  if(keytype != "Entrez"){
+  if(tolower(keytype) != "entrez"){
     allsymbol = names(geneList)
-    gene = TransGeneID(allsymbol, keytype, "Entrez", organism = organism)
+    gene = TransGeneID(allsymbol, keytype, "entrez", organism = organism)
     idx = duplicated(gene)|is.na(gene)
     allsymbol = allsymbol[!idx]; names(allsymbol) = gene[!idx]
     geneList = geneList[!idx]; names(geneList) = gene[!idx]
   }else{
     gene = names(geneList)
-    allsymbol = TransGeneID(names(geneList), "Entrez", "Symbol", organism = organism)
+    allsymbol = TransGeneID(gene, "Entrez", "Symbol", organism = organism)
   }
   if(!is.null(universe)){
     universe = TransGeneID(universe, keytype, "Entrez", organism = organism)
     universe = universe[!is.na(universe)]
   }else{
-    universe = unique(c(gene, gene2path$Gene))
+    universe = unique(gene2path$Gene)
   }
   gene = names(geneList)
 
@@ -85,12 +85,12 @@ enrich.HGT = function(geneList, keytype = "Symbol", type = "GOBP",
     retr <- list(ID = NA, Description = NA, NES = NA,
                  pvalue = NA, GeneRatio = NA, BgRatio = NA,
                  geneID = NA, geneName = NA, Count = NA)
-    if(k>=limit[1] & k<=limit[2] & q>2){
+    if(k>=limit[1] & k<=limit[2] & q>0){
       pvalue = phyper(q, m, n, k, lower.tail = FALSE)
       retr <- list(ID = pid, Description = pathways$PathwayName[pathways$PathwayID==pid],
                    NES = mean(geneList[universe[idx1&idx2]]) * sum(idx1&idx2)^0.6,
-                   pvalue = pvalue, GeneRatio = paste(q, sum(idx1), sep="/"),
-                   BgRatio = paste(sum(idx1), length(pGene), sep="/"),
+                   pvalue = pvalue, GeneRatio = paste(q, sum(idx2), sep="/"),
+                   BgRatio = paste(length(pGene), length(universe), sep="/"),
                    geneID = geneID,
                    geneName = paste(allsymbol[universe[idx1&idx2]],
                                                      collapse = "/"), Count = q)

@@ -2,8 +2,8 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative Analysis Pipeline for Pooled CRISPR Functional
         Genetic Screens
-Version: 1.7.2
-Date: 2020-4-8
+Version: 1.7.3
+Date: 2020-4-22
 Author: Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
 Description: CRISPR (clustered regularly interspaced short palindrome repeats) coupled 
