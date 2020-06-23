@@ -87,19 +87,20 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     ## Retain unique conversion
     idx = ann[, toType]=="" | is.na(ann[, toType])
     ann = ann[!idx, ]
-    idx = duplicated(ann[, fromType]) | ann[, fromType]=="" | is.na(ann[, fromType])
+    idx = ann[, fromType]=="" | is.na(ann[, fromType])
     ann = ann[!idx, ]
     ##
     tmp = ann
     tmp[, fromType] = gsub("\\..*|-.*", "", tmp[, fromType])
     ann = rbind.data.frame(ann, tmp)
-    idx = duplicated(ann[, fromType])
-    convert = ann[!idx, toType]
-    names(convert) = ann[!idx, fromType]
-    gene_after = as.character(convert[genes])
-    names(gene_after) = genes
-    genes = gsub("\\..*|-.*", "", genes)
-    gene_after[is.na(gene_after)] = as.character(convert[genes[is.na(gene_after)]])
+    ann = ann[ann[,fromType]%in%genes, ]
+    # idx = duplicated(ann[, fromType])
+    # convert = ann[!idx, toType]
+    # names(convert) = ann[!idx, fromType]
+    # gene_after = as.character(convert[genes])
+    # names(gene_after) = genes
+    # genes = gsub("\\..*|-.*", "", genes)
+    # gene_after[is.na(gene_after)] = as.character(convert[genes[is.na(gene_after)]])
   }else{#### GeneID Transformation between organisms ####
     if(all(c(fromType, toType) %in% c("symbol", "entrez"))){
       ## read built-in annotation
@@ -137,13 +138,14 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     ## Retain unique conversion
     idx = ann[, toOrg]=="" | is.na(ann[, toOrg])
     ann = ann[!idx, ]
-    idx = duplicated(ann[, fromOrg])
-    convert = ann[!idx, toOrg]
-    names(convert) = ann[!idx, fromOrg]
-    gene_after = as.character(convert[genes])
-    names(gene_after) = genes
+    ann = ann[ann[,fromOrg]%in%genes, ]
+    # idx = duplicated(ann[, fromOrg])
+    # convert = ann[!idx, toOrg]
+    # names(convert) = ann[!idx, fromOrg]
+    # gene_after = as.character(convert[genes])
+    # names(gene_after) = genes
   }
-  return(gene_after)
+  return(ann)
 }
 
 #' Retrieve gene annotations from the NCBI, HNSC, and Uniprot databases.
