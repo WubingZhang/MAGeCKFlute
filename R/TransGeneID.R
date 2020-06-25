@@ -145,6 +145,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     # gene_after = as.character(convert[genes])
     # names(gene_after) = genes
   }
+  ann = ann[!duplicated(paste0(ann[,1], ann[,2])), ]
   return(ann)
 }
 
