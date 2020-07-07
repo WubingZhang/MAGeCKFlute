@@ -37,6 +37,7 @@
 #' @param color A character, specifying the column name of color in the data frame.
 #' @param shape A character, specifying the column name of shape in the data frame.
 #' @param size A character, specifying the column name of size in the data frame.
+#' @param alpha A numeric, specifying the transparency of the dots.
 #'
 #' @param main Title of the figure.
 #' @param xlab Title of x-axis
@@ -68,7 +69,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
                       auto_cut_y = auto_cut, auto_cut_diag = auto_cut,
                       groups = NULL, group_col = NULL, groupnames = NULL,
                       label.top = TRUE, top = 0, toplabels = NULL,
-                      display_cut = FALSE, color = NULL, shape = 16, size = 1,
+                      display_cut = FALSE, color = NULL, shape = 16, size = 1, alpha = 0.6,
                       main = NULL, xlab = x, ylab = y, legend.position = "none", ...){
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
@@ -246,31 +247,31 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   }
 
   ## Color issue
-  if(is.null(color)){
-    color = "group"
-  }else if(!color%in%colnames(gg)){
-    color = "group"
-    mycolour["none"] = color
-  }
+  if(is.null(color)) color = "group"
+
   ## Plot the scatter figure ##
   gg = data
+
   ## Plot the figure
+  gg = gg[order(gg[,color]), ]
   p = ggplot(gg, aes_string(x, y, label="Label", color = color))
   if(all(c(shape,size)%in%colnames(gg)))
-    p = p + geom_point(aes(shape = shape, size = size), alpha = 0.6)
+    p = p + geom_point(aes_string(shape = shape, size = size), alpha = alpha)
   else if(shape%in%colnames(gg))
-    p = p + geom_point(aes(shape = shape), size = size, alpha = 0.6)
+    p = p + geom_point(aes_string(shape = shape), size = size, alpha = alpha)
   else if(size%in%colnames(gg))
-    p = p + geom_point(aes(size = size), shape = shape, alpha = 0.6)
+    p = p + geom_point(aes_string(size = size), shape = shape, alpha = alpha)
   else
-    p = p + geom_point(size = size, shape = shape, alpha = 0.6)
+    p = p + geom_point(size = size, shape = shape, alpha = alpha)
 
-  ## Color
+  ## Customize colors
   if(color=="group"){
     if(mode(toplabels)!="list")
       p = p + scale_color_manual(values = mycolour, labels = groupnames)
     else
-      p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462", "#bc80bd", "#b3de69", "#bebada", "#8dd3c7", "#ffffb3", "#fccde5", "#ccebc5", "#ffed6f"))
+      p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462",
+                                            "#bc80bd", "#b3de69", "#bebada", "#8dd3c7",
+                                            "#ffffb3", "#fccde5", "#ccebc5", "#ffed6f"))
   }else if(color%in%colnames(gg)){
     if(mode(gg[,color])=="numeric")
       p = p + scale_color_gradient2(low = "#377eb8", high = "#e41a1c", midpoint = 0)
@@ -279,8 +280,6 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
       p = p + scale_color_manual(values = mycolour)
     }
   }
-  # else if(!"try-error"%in%class(try(col2rgb(x),silent=TRUE)))
-  #   p = p + scale_color_manual(values = color)
 
   if(label.top)
     p = p + ggrepel::geom_text_repel(...)

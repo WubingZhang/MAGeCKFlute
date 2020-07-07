@@ -14,6 +14,7 @@ TransGeneID(
   fromOrg = organism,
   toOrg = organism,
   ensemblHost = "www.ensembl.org",
+  unique = TRUE,
   update = FALSE
 )
 }
@@ -38,6 +39,8 @@ Look at the code in examples to check valid attributes.}
 \item{ensemblHost}{String, specifying ensembl host, you can use `listEnsemblArchives()`
 to show all available Ensembl archives hosts.}
 
+\item{unique}{Boolean, specifying whether do one-to-one mapping.}
+
 \item{update}{Boolean, specifying whether update built-in gene annotation (needs network and takes time).}
 }
 \value{
@@ -48,6 +51,7 @@ Gene ID conversion between ENTREZID and SYMBOL
 }
 \examples{
 TransGeneID("HLA-A", organism="hsa")
+TransGeneID("HLA-A", toType = "uniprot", organism="hsa")
 TransGeneID("H2-K1", toType="Symbol", fromOrg = "mmu", toOrg = "hsa")
 
 }

@@ -18,6 +18,7 @@
 #' (Only used when transform gene ids between organisms).
 #' @param ensemblHost String, specifying ensembl host, you can use `listEnsemblArchives()`
 #' to show all available Ensembl archives hosts.
+#' @param unique Boolean, specifying whether do one-to-one mapping.
 #' @param update Boolean, specifying whether update built-in gene annotation (needs network and takes time).
 #'
 #' @return A character vector, named by unique input gene ids.
@@ -26,14 +27,16 @@
 #'
 #' @examples
 #' TransGeneID("HLA-A", organism="hsa")
+#' TransGeneID("HLA-A", toType = "uniprot", organism="hsa")
 #' TransGeneID("H2-K1", toType="Symbol", fromOrg = "mmu", toOrg = "hsa")
 #'
-#' @import biomaRt
+#' @importFrom biomaRt useMart getBM getLDS listAttributes
 #' @export
 
 TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
                         organism = "hsa", fromOrg = organism, toOrg = organism,
-                        ensemblHost = "www.ensembl.org", update = FALSE){
+                        ensemblHost = "www.ensembl.org",
+                        unique = TRUE, update = FALSE){
 
   #### Verify  parameters ####
   genes = as.character(genes)
@@ -56,14 +59,23 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
                       "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
   if(fromOrg==toOrg){#### GeneID Transformation within organisms ####
     ## ID mapping.
-    if(all(c(fromType, toType) %in% c("entrez", "symbol", "ensembl", "refseq", "uniprot"))){
-      ann <- getGeneAnn(organism, update=update)[c(fromType, toType)]
+    if(all(c(fromType, toType) %in% c("entrez", "symbol", "ensembl"))){
+      ann <- getGeneAnn(organism, update=update)$Gene
+      if("symbol" %in% c(fromType, toType) & any(!genes%in%ann$symbol)){
+        ann = rbind(ann, ann)
+        idx = (nrow(ann)/2+1):nrow(ann)
+        ann$symbol[idx] = ann$synonyms[idx]
+      }
+      ann = ann[, c(fromType, toType)]
+    }else if(all(c(fromType, toType) %in% c("uniprot", "ensembl", "refseq", "symbol"))){
+      ann <- getGeneAnn(organism, update=update)$Protein
+      ann = ann[, c(fromType, toType)]
     }else{
-      requireNamespace("biomaRt")
       ds = datasets[grepl(organism, datasets)]
-      ensembl <- useMart(biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds, host = ensemblHost)
+      ensembl <- biomaRt::useMart(biomart = 'ENSEMBL_MART_ENSEMBL',
+                                  dataset = ds, host = ensemblHost)
       ## decide the attributes automatically
-      attrs = listAttributes(ensembl)$name
+      attrs = biomaRt::listAttributes(ensembl)$name
       if(sum(attrs==fromType)==0){
         idx1 = grepl(tolower(fromType), attrs)
         idx = idx1
@@ -79,11 +91,10 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
         if(toType=="hgnc_symbol" & toOrg=="mmu") toType = "mgi_symbol"
       }
       ## retrieve the data
-      ann = getBM(attributes=c(fromType, toType), mart = ensembl,
-                  filters = fromType, values = genes)
+      ann = biomaRt::getBM(attributes=c(fromType, toType), mart = ensembl,
+                           filters = fromType, values = genes)
     }
-    ## merge the annotation
-    colnames(ann) = c(fromType, toType)
+
     ## Retain unique conversion
     idx = ann[, toType]=="" | is.na(ann[, toType])
     ann = ann[!idx, ]
@@ -109,11 +120,11 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
       colnames(ann) = c(fromOrg, toOrg)
     }else{
       ## Ortholog ID mapping.
-      from = useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
-      to = useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
+      from = biomaRt::useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
+      to = biomaRt::useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
       ## decide the attributes automatically
-      attrs_1 = listAttributes(from)$name
-      attrs_2 = listAttributes(to)$name
+      attrs_1 = biomaRt::listAttributes(from)$name
+      attrs_2 = biomaRt::listAttributes(to)$name
       if(sum(attrs_1==fromType)==0){
         idx1 = grepl(tolower(fromType), attrs_1)
         idx = idx1
@@ -129,9 +140,9 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
         if(toType=="hgnc_symbol" & toOrg=="mmu") toType = "mgi_symbol"
       }
       ## retrieve the data
-      ann = getLDS(attributes = fromType, mart = from,
-                   filters = fromType, values = genes,
-                   attributesL = toType, martL = to)
+      ann = biomaRt::getLDS(attributes = fromType, mart = from,
+                            filters = fromType, values = genes,
+                            attributesL = toType, martL = to)
       colnames(ann) = c(fromOrg, toOrg)
     }
 
@@ -146,6 +157,13 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     # names(gene_after) = genes
   }
   ann = ann[!duplicated(paste0(ann[,1], ann[,2])), ]
+  if(unique){
+    ann = ann[!duplicated(ann[,1]), ]
+    rownames(ann) = ann[,1]
+    tmp = ann[genes,2]
+    names(tmp) = genes
+    ann = tmp
+  }
   return(ann)
 }
 
@@ -170,16 +188,18 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
 #' @export
 #'
 getGeneAnn <- function(org = "hsa", update = FALSE){
+  options(stringsAsFactors = FALSE)
   #### Read rds file directly ####
-  rdsann = file.path(system.file("extdata", package = "MAGeCKFlute"),
+  rdsann = file.path(system.file("extdata", package = "rMAUPS"),
                      paste0("GeneID_Annotation_", org, ".rds"))
-  if(file.exists(rdsann) & !update) return(readRDS(rdsann))
+  if(file.exists(rdsann) & !update)
+    return(list(Gene = readRDS(rdsann), Protein = readRDS(gsub("Gene", "Protein", rdsann))))
 
   #### NCBI gene annotation ####
   gzfile = paste0(c("Homo_sapiens", "Bos_taurus", "Canis_familiaris", "Mus_musculus",
-             "Pan_troglodytes", "Rattus_norvegicus", "Sus_scrofa"), ".gene_info.gz")
+                    "Pan_troglodytes", "Rattus_norvegicus", "Sus_scrofa"), ".gene_info.gz")
   names(gzfile) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno", "ssc")
-  locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"), gzfile[org])
+  locfname <- file.path(system.file("extdata", package = "rMAUPS"), gzfile[org])
   if((!file.exists(locfname)) | update){
     ## Download gene information from NCBI ftp server
     refname <- paste0("ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/", gzfile[org])
@@ -188,7 +208,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 
   ## Reorder the mapping file
   ncbi_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE,
-                  quote = "", stringsAsFactors = FALSE, comment.char = "")
+                      quote = "", stringsAsFactors = FALSE, comment.char = "")
   ncbi_ann = ncbi_ann[, c("GeneID", "Symbol", "Synonyms", "dbXrefs", "type_of_gene", "description")]
   colnames(ncbi_ann)[c(1,2,6)] = c("entrez", "symbol", "fullname")
   ncbi_ann$hgnc = gsub("\\|.*", "", gsub(".*HGNC:", "", ncbi_ann$dbXrefs))
@@ -196,17 +216,16 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   ncbi_ann$hgnc[!grepl("HGNC", ncbi_ann$dbXrefs)] = ""
   ncbi_ann$ensembl[!grepl("Ensembl", ncbi_ann$dbXrefs)] = ""
 
-  synonyms_row = matrix(unlist(apply(ncbi_ann, 1, function(x){
+  ncbi_ann = matrix(unlist(apply(ncbi_ann, 1, function(x){
     tmp = unlist(strsplit(x[3], "[|]"))
-    if(tmp[1]!="" & tmp[1]!="-") return(as.vector(rbind(x[1], tmp, x[7], x[8], x[6])))
-    return(NULL)
-  })) , ncol=5, byrow = TRUE)
-  colnames(synonyms_row) = c("entrez", "symbol", "hgnc", "ensembl", "fullname")
-  ncbi_ann = rbind(ncbi_ann[,c(1,8,2)], synonyms_row[,c(1,4,2)])
+    return(as.vector(rbind(x[1], x[2], tmp, x[7], x[8], x[6])))
+  })) , ncol=6, byrow = TRUE)
+  colnames(ncbi_ann) = c("entrez", "symbol", "synonyms", "hgnc", "ensembl", "fullname")
+  ncbi_ann[,1] = gsub(" ", "", ncbi_ann[,1])
 
   #### HGNC gene annotation ####
   # if(org=="hsa"){
-  #   locfname2 = file.path(system.file("extdata", package = "MAGeCKFlute"), "HGNC_GeneID_annotation.txt.gz")
+  #   locfname2 = file.path(system.file("extdata", package = "rMAUPS"), "HGNC_GeneID_annotation.txt.gz")
   #   if((!file.exists(locfname2)) | update){
   #     ## Download gene information from HGNC
   #     refname <- "ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt"
@@ -233,7 +252,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # }
 
   #### Ensembl gene annotation ####
-  tmpfile = file.path(system.file("extdata", package = "MAGeCKFlute"), "filelist")
+  tmpfile = file.path(system.file("extdata", package = "rMAUPS"), "filelist")
   download.file("ftp://ftp.ensembl.org/pub/", tmpfile, quiet = TRUE)
   tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
   tmp = gsub("release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
@@ -245,33 +264,32 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   entrezfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
                        tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
                        version, ".entrez.tsv.gz")
-  uniprotfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
-                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
-                       version, ".uniprot.tsv.gz")
+  # uniprotfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
+  #                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
+  #                       version, ".uniprot.tsv.gz")
   refseqfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
-                        tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
-                        version, ".refseq.tsv.gz")
+                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
+                       version, ".refseq.tsv.gz")
   download.file(entrezfile, tmpfile, quiet = TRUE)
   ensg_entrez = read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   ensg_entrez = ensg_entrez[, c(1,4)]
   ensg_entrez = ensg_entrez[!duplicated(paste0(ensg_entrez[,1], ensg_entrez[,2])), ]
-  download.file(uniprotfile, tmpfile, quiet = TRUE)
-  ensg_uniprot = read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-  ensg_uniprot = ensg_uniprot[, c(1,4)]
-  ensg_uniprot = ensg_uniprot[!duplicated(paste0(ensg_uniprot[,1], ensg_uniprot[,2])), ]
+  # download.file(uniprotfile, tmpfile, quiet = TRUE)
+  # ensg_uniprot = read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+  # ensg_uniprot = ensg_uniprot[, c(1,4)]
+  # ensg_uniprot = ensg_uniprot[!duplicated(paste0(ensg_uniprot[,1], ensg_uniprot[,2])), ]
   download.file(refseqfile, tmpfile, quiet = TRUE)
   ensg_refseq = read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   ensg_refseq = ensg_refseq[, c(1,4)]
   ensg_refseq = ensg_refseq[!duplicated(paste0(ensg_refseq[,1], ensg_refseq[,2])), ]
-  ensembl_ann = merge(ensg_entrez, ensg_uniprot, by = names(ensg_entrez)[1], all = TRUE)
-  ensembl_ann = merge(ensembl_ann, ensg_refseq, by = names(ensg_entrez)[1], all = TRUE)
-  colnames(ensembl_ann) = c("ensembl", "entrez", "uniprot", "refseq")
+  ensembl_ann = merge(ensg_entrez, ensg_refseq, by = names(ensg_entrez)[1], all = TRUE)
+  colnames(ensembl_ann) = c("ensembl", "entrez", "refseq")
   ## Remove redundant refseq ids.
-  idx = duplicated(paste(ensembl_ann$ensembl, ensembl_ann$entrez, ensembl_ann$uniprot))
+  idx = duplicated(paste(ensembl_ann$ensembl, ensembl_ann$entrez))
   ensembl_ann = ensembl_ann[!idx, ]
-  idx = is.na(ensembl_ann$entrez) & is.na(ensembl_ann$uniprot) & is.na(ensembl_ann$refseq)
+  idx = is.na(ensembl_ann$entrez) & is.na(ensembl_ann$refseq)
   ensembl_ann = ensembl_ann[!idx, ]
-
+  ensembl_ann = ensembl_ann[grepl("ENSG", ensembl_ann$ensembl), ]
   # datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
   #                     "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
   # ds = datasets[grepl(org, datasets)]
@@ -285,7 +303,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589",
                     "UP000002277", "UP000002494")
   names(proteome_code) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno")
-  locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"),
+  locfname <- file.path(system.file("extdata", package = "rMAUPS"),
                         paste0("uniprot_proteome_", proteome_code[org], ".tab"))
   uniprot_link <- paste0("https://www.uniprot.org/uniprot/?query=proteome:", proteome_code[org],
                          "&format=tab&force=true&columns=id,entry%20name,reviewed,protein%20names,genes,organism,database(Ensembl),comment(SUBCELLULAR%20LOCATION),database(RefSeq),comment(ALTERNATIVE%20PRODUCTS)&sort=score")
@@ -344,24 +362,21 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   RefSeq$uniprot[!grepl("-", RefSeq$uniprot)] =
     uniprot_ann[RefSeq$uniprot[!grepl("-", RefSeq$uniprot)], "Canonical"]
 
-  summary = merge(ENSTs[,-1], Symbols[,-1], by = "uniprot")
-  summary = merge(summary, RefSeq[,-1], by = "uniprot")
-  idx = duplicated(paste(summary$uniprot, summary$ensembl, summary$symbol))
-  summary = summary[!idx, ]
+  summary = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
+  Symbols = Symbols[!duplicated(Symbols$Entry), ]
+  rownames(Symbols) = Symbols$Entry
+  summary$symbol = Symbols[gsub("-.*","",summary$uniprot), "symbol"]
+  saveRDS(summary, gsub("Gene", "Protein", rdsann))
   #### Merge all annotations ####
-  data = merge(ncbi_ann, ensembl_ann[,-4], by = c("entrez", "ensembl"), all = TRUE)
-  ids = gsub("-.*$", "", uniprot_ann$Canonical[!grepl("-1", uniprot_ann$Canonical)])
-  data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
-  idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
-  data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
-  data = merge(summary, data, by = c("uniprot", "ensembl", "symbol"), all = TRUE)
+  data = merge(ncbi_ann[, c("ensembl","entrez","symbol","synonyms")],
+               ensembl_ann[,c("ensembl","entrez")], by = c("ensembl","entrez"), all = TRUE)
   data$entrez = gsub(" ", "", data$entrez)
-  idx = duplicated(paste(data$entrez, data$symbol, data$ensembl, data$uniprot, sep = "_"))
-  data = data[!idx, ]
-  rownames(data) = NULL
-  data = data[, c("ensembl", "entrez", "symbol", "uniprot", "refseq")]
+  # ids = gsub("-.*$", "", uniprot_ann$Canonical[!grepl("-1", uniprot_ann$Canonical)])
+  # data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
+  # idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
+  # data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
   saveRDS(data, rdsann)
-  return(data)
+  return(list(Gene = data, Protein = summary))
 }
 
 
@@ -385,6 +400,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 #' }
 #'
 #' @export
+#' @importFrom biomaRt useMart getLDS
 #'
 getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
   #### Read rds file directly ####
@@ -441,14 +457,14 @@ getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
   datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
                       "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
   ## Ortholog ID mapping.
-  from = useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
-  to = useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
+  from = biomaRt::useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
+  to = biomaRt::useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
   ## decide the attributes automatically
   from_symbol <- ifelse(fromOrg=="mmu", "mgi_symbol", "hgnc_symbol")
   to_symbol <- ifelse(toOrg=="mmu", "mgi_symbol", "hgnc_symbol")
   ## retrieve the data
-  ensembl_ann = getLDS(attributes = c(from_symbol, "entrezgene_id"), mart = from,
-                       attributesL = c(to_symbol, "entrezgene_id"), martL = to)
+  ensembl_ann = biomaRt::getLDS(attributes = c(from_symbol, "entrezgene_id"), mart = from,
+                                attributesL = c(to_symbol, "entrezgene_id"), martL = to)
   colnames(ensembl_ann) = c(paste0(fromOrg, c("_symbol", "_entrez")),
                             paste0(toOrg, c("_symbol", "_entrez")))
 

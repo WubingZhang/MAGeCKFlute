@@ -37,7 +37,7 @@ A three-column data frame.
 Extract pathway annotation from GMT file.
 }
 \examples{
-gene2path = gsGetter(type = "REACTOME+CORUM")
+gene2path = gsGetter(type = "REACTOME+KEGG")
 head(gene2path)
 
 }

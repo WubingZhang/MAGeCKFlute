@@ -21,7 +21,7 @@
 #' @author Wubing Zhang
 #'
 #' @examples
-#' gene2path = gsGetter(type = "REACTOME+CORUM")
+#' gene2path = gsGetter(type = "REACTOME+KEGG")
 #' head(gene2path)
 #'
 #' @importFrom msigdbr msigdbr
