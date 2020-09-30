@@ -39,5 +39,5 @@ biocViews: FunctionalGenomics, CRISPR, BatchEffect, QualityControl,
         Normalization, GeneSetEnrichment, Pathways, Visualization,
         PooledScreens, GeneTarget, KEGG
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Packaged: 2020-04-08 16:23:44 UTC; Wubing

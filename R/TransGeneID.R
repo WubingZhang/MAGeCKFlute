@@ -190,7 +190,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
 getGeneAnn <- function(org = "hsa", update = FALSE){
   options(stringsAsFactors = FALSE)
   #### Read rds file directly ####
-  rdsann = file.path(system.file("extdata", package = "rMAUPS"),
+  rdsann = file.path(system.file("extdata", package = "MAGeCKFlute"),
                      paste0("GeneID_Annotation_", org, ".rds"))
   if(file.exists(rdsann) & !update)
     return(list(Gene = readRDS(rdsann), Protein = readRDS(gsub("Gene", "Protein", rdsann))))
@@ -199,7 +199,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   gzfile = paste0(c("Homo_sapiens", "Bos_taurus", "Canis_familiaris", "Mus_musculus",
                     "Pan_troglodytes", "Rattus_norvegicus", "Sus_scrofa"), ".gene_info.gz")
   names(gzfile) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno", "ssc")
-  locfname <- file.path(system.file("extdata", package = "rMAUPS"), gzfile[org])
+  locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"), gzfile[org])
   if((!file.exists(locfname)) | update){
     ## Download gene information from NCBI ftp server
     refname <- paste0("ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/", gzfile[org])
@@ -225,7 +225,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 
   #### HGNC gene annotation ####
   # if(org=="hsa"){
-  #   locfname2 = file.path(system.file("extdata", package = "rMAUPS"), "HGNC_GeneID_annotation.txt.gz")
+  #   locfname2 = file.path(system.file("extdata", package = "MAGeCKFlute"), "HGNC_GeneID_annotation.txt.gz")
   #   if((!file.exists(locfname2)) | update){
   #     ## Download gene information from HGNC
   #     refname <- "ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt"
@@ -252,7 +252,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # }
 
   #### Ensembl gene annotation ####
-  tmpfile = file.path(system.file("extdata", package = "rMAUPS"), "filelist")
+  tmpfile = file.path(system.file("extdata", package = "MAGeCKFlute"), "filelist")
   download.file("ftp://ftp.ensembl.org/pub/", tmpfile, quiet = TRUE)
   tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
   tmp = gsub("release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
@@ -300,10 +300,9 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # ensembl_ann$hgnc = gsub("HGNC:", "", ensembl_ann$hgnc)
 
   #### Uniprot gene annotation ####
-  proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589",
-                    "UP000002277", "UP000002494")
+  proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589", "UP000002277", "UP000002494")
   names(proteome_code) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno")
-  locfname <- file.path(system.file("extdata", package = "rMAUPS"),
+  locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"),
                         paste0("uniprot_proteome_", proteome_code[org], ".tab"))
   uniprot_link <- paste0("https://www.uniprot.org/uniprot/?query=proteome:", proteome_code[org],
                          "&format=tab&force=true&columns=id,entry%20name,reviewed,protein%20names,genes,organism,database(Ensembl),comment(SUBCELLULAR%20LOCATION),database(RefSeq),comment(ALTERNATIVE%20PRODUCTS)&sort=score")
@@ -325,14 +324,12 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   Symbols = unlist(apply(uniprot_ann, 1, function(x){
     Uniprot = x[1]
     Symbols = unlist(strsplit(gsub(";$", "", x[5]), " "))
-    # Symbols[!grepl("\\[", Symbols)] = paste0(Symbols[!grepl("\\[", Symbols)], " [", Uniprot, "]")
-    rbind(rep(Uniprot, length(Symbols)), Symbols)
+    rbind(rep(Uniprot, max(1,length(Symbols)-1)), Symbols[1], Symbols[-1])
   }))
-  Symbols = matrix(Symbols, ncol = 2, byrow = TRUE)
-  colnames(Symbols) = c('Entry', "symbol")
+  Symbols = matrix(Symbols, ncol = 3, byrow = TRUE)
+  colnames(Symbols) = c('Entry', "symbol", "synonyms")
   Symbols = as.data.frame(Symbols, stringsAsFactors = FALSE)
   Symbols = Symbols[!grepl("^hCG_", Symbols$symbol), ]
-  Symbols$uniprot = uniprot_ann[Symbols$Entry, "Canonical"]
 
   ENSTs = unlist(apply(uniprot_ann, 1, function(x){
     Uniprot = x[1]
@@ -361,11 +358,11 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   RefSeq$refseq = gsub(" .*", "", RefSeq$refseq)
   RefSeq$uniprot[!grepl("-", RefSeq$uniprot)] =
     uniprot_ann[RefSeq$uniprot[!grepl("-", RefSeq$uniprot)], "Canonical"]
-
-  summary = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
+  ## Merge all annotations from each column
+  uniprot_ann = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
+  uniprot_ann$Entry = gsub("-.*","",uniprot_ann$uniprot)
   Symbols = Symbols[!duplicated(Symbols$Entry), ]
-  rownames(Symbols) = Symbols$Entry
-  summary$symbol = Symbols[gsub("-.*","",summary$uniprot), "symbol"]
+  uniprot_ann = merge(uniprot_ann, Symbols, by = "Entry", all = TRUE)
   saveRDS(summary, gsub("Gene", "Protein", rdsann))
   #### Merge all annotations ####
   data = merge(ncbi_ann[, c("ensembl","entrez","symbol","synonyms")],
