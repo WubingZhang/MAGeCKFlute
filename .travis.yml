@@ -16,9 +16,9 @@ branches:
    - devel
 
 # cache local R libraries directory:
-# cache:
-#  directory:
-#  - "~/miniconda"
+cache:
+ directory:
+ - "~/miniconda"
 
 before_install:
   # Set conda path info
@@ -71,8 +71,8 @@ install:
   - Rscript -e 'BiocManager::install("pathview", quiet=F)'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
   - Rscript -e 'BiocManager::install("biomaRt", quiet=F)'
-  - Rscript -e 'BiocManager::install(c("sva","ggsci","ggrepel"), quiet=T)'
-  - Rscript -e 'BiocManager::install(c("ggpubr", "knitr"), quiet=F)'
+  - Rscript -e 'BiocManager::install(c("sva","ggrepel"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("knitr"), quiet=F)'
   - Rscript -e 'BiocManager::install("DOSE", quiet=F)'
   - Rscript -e 'BiocManager::install("enrichplot", quiet=T)'
   - Rscript -e 'BiocManager::install("BiocStyle", quiet=F)'
