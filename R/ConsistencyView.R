@@ -30,13 +30,11 @@
 
 ConsistencyView <- function(beta, ctrlname, treatname, main=NULL,
                           filename=NULL, width=5, height = 4, ...){
-  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
   dd2 = data.frame(x = rowMeans(beta[,ctrlname,drop=FALSE]),
                    y = rowMeans(beta[,treatname,drop=FALSE]))
-  p = ggplot(dd2, aes_string("x", "y"))
-  p = p + geom_jitter(size = 0.1, alpha=0.8, color="#1f78b4")
-  p = p + geom_abline(slope = 1, intercept = 0, color="#47484a", linetype=2, size=0.3)
-  p = p + geom_smooth(method='lm', se=TRUE, size=0.5, color="#e41a1c")
+  p = ScatterView(dd2, "x", "y", color="#1f78b4")
+  p = p + geom_abline(slope = 1, intercept = 0, color="gray50", linetype=2, size=0.8)
+  p = p + geom_smooth(method='lm', formula = y ~ x, se=TRUE, size=0.5, color="#e41a1c")
   p = p + labs(x = ctrlname[1], y = treatname[1], title=main, color=NULL)
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),

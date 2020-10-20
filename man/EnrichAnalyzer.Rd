@@ -36,7 +36,7 @@ and Complex (CORUM). Any combination of them are also accessible
 
 \item{organism}{'hsa' or 'mmu'.}
 
-\item{pvalueCutoff}{Pvalue cutoff.}
+\item{pvalueCutoff}{FDR cutoff.}
 
 \item{limit}{A two-length vector (default: c(2, 200)), specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
@@ -61,7 +61,6 @@ data(geneList, package = "DOSE")
   keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
   head(keggA@result)
 }
-
 }
 \seealso{
 \code{\link{enrich.GSE}}

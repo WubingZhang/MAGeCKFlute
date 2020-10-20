@@ -23,13 +23,16 @@
 #' label_cols = rownames(USArrests)
 #' hclustView(dist(USArrests), label_cols=label_cols, bar_cols=label_cols)
 #'
-#' @importFrom dendextend labels_colors
-#' @importFrom dendextend colored_bars
-#' @importFrom graphics par plot
 #' @export
 #'
 
 hclustView <- function(d, method="average", label_cols=NULL, bar_cols=NULL, main=NA, xlab=NA, horiz = TRUE, ...){
+  if (!requireNamespace("dendextend", quietly = TRUE)) {
+    stop("Package \"dendextend\" is required. Please install it.", call. = FALSE)
+  }
+  if (!requireNamespace("graphics", quietly = TRUE)) {
+    stop("Package \"graphics\" is required. Please install it.", call. = FALSE)
+  }
   hc = hclust(dist(d), method = method)
   if(!is.null(label_cols)) label_cols = getCols(label_cols)
   if(!is.null(bar_cols)){
@@ -62,15 +65,14 @@ hclustView <- function(d, method="average", label_cols=NULL, bar_cols=NULL, main
 #'
 #' @author Wubing Zhang
 #'
-#'
-#' @importFrom scales gradient_n_pal
-#' @importFrom scales brewer_pal
-#'
 #' @examples
 #' getCols(1:4)
 #' @export
 #'
 getCols <- function(x, palette=1){
+  if (!requireNamespace("scales", quietly = TRUE)) {
+    stop("Package \"scales\" is required. Please install it.", call. = FALSE)
+  }
   cols = scales::gradient_n_pal(scales::brewer_pal("qual", palette)(8))(seq(0, 1, length.out = length(unique(x))))
   names(cols) = unique(x)
   return(cols[x])

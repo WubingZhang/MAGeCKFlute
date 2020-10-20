@@ -29,7 +29,6 @@
 #' MapRatesView(countsummary)
 #'
 #' @import ggplot2
-#' @import scales
 #' @export
 
 MapRatesView <- function(countSummary,
@@ -39,6 +38,9 @@ MapRatesView <- function(countSummary,
                          filename = NULL,
                          width = 5, height = 4,
                          ...){
+  if (!requireNamespace("scales", quietly = TRUE)) {
+    stop("Package \"scales\" is required. Please install it.", call. = FALSE)
+  }
   gg = data.frame(Label=rep(countSummary[, Label], 2),
                   read=rep(countSummary[, Reads],2),
                   count=c(countSummary[, Mapped],

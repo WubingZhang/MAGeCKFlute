@@ -29,6 +29,7 @@ ScatterView(
   color = NULL,
   shape = 16,
   size = 1,
+  alpha = 0.6,
   main = NULL,
   xlab = x,
   ylab = y,
@@ -84,6 +85,8 @@ ScatterView(
 \item{shape}{A character, specifying the column name of shape in the data frame.}
 
 \item{size}{A character, specifying the column name of size in the data frame.}
+
+\item{alpha}{A numeric, specifying the transparency of the dots.}
 
 \item{main}{Title of the figure.}
 

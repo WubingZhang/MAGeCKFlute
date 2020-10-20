@@ -35,7 +35,7 @@ ResembleDepmap <- function(dd, symbol = "id", score = "Score", lineages = "All",
   if(file.exists(depmap_rds)){
     Depmap_19Q3 = readRDS(depmap_rds)
   }else{
-    Depmap_19Q3 = t(read.csv("https://ndownloader.figshare.com/files/20234073", header = TRUE,
+    Depmap_19Q3 = t(read.csv("https://ndownloader.figshare.com/files/24613292", header = TRUE,
                              row.names = 1, stringsAsFactors = FALSE, check.names = FALSE))
     rownames(Depmap_19Q3) = gsub(" .*", "", rownames(Depmap_19Q3))
     saveRDS(Depmap_19Q3, depmap_rds)
@@ -44,7 +44,7 @@ ResembleDepmap <- function(dd, symbol = "id", score = "Score", lineages = "All",
   if(file.exists(meta_rds)){
     sampleinfo = readRDS(meta_rds)
   }else{
-    sampleinfo = read.csv("https://ndownloader.figshare.com/files/20274744",
+    sampleinfo = read.csv("https://ndownloader.figshare.com/files/24613394",
                           row.names = 1, header = TRUE, stringsAsFactors = FALSE)
     saveRDS(sampleinfo, meta_rds)
   }
