@@ -16,9 +16,9 @@ branches:
    - devel
 
 # cache local R libraries directory:
-cache:
-  directory:
-  - "~/miniconda"
+# cache:
+#  directory:
+#  - "~/miniconda"
 
 before_install:
   # Set conda path info
