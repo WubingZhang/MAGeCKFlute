@@ -24,7 +24,7 @@ BarView(
 
 \item{x}{A character, specifying the x-axis.}
 
-\item{y}{A character, specifying the x-axis.}
+\item{y}{A character, specifying the y-axis.}
 
 \item{fill}{A character, specifying the fill color.}
 

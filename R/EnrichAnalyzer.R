@@ -40,8 +40,7 @@
 #'   keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
 #'   head(keggA@result)
 #' }
-#'
-#' @import DOSE
+#' @import stats
 #' @export
 
 EnrichAnalyzer = function(geneList, keytype = "Symbol",
@@ -84,8 +83,8 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
 
   if(!is.null(enrichRes) && nrow(enrichRes@result)>10 && filter){
     result = EnrichedFilter(enrichRes)
-    result$p.adjust = p.adjust(result$pvalue, method = "BH")
-    enrichRes@result = result[result$p.adjust<pvalueCutoff, ]
+    # result$p.adjust = p.adjust(result$pvalue, method = "BH")
+    # enrichRes@result = result[result$p.adjust<pvalueCutoff, ]
   }
   return(enrichRes)
 }

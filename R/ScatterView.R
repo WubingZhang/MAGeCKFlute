@@ -57,7 +57,7 @@
 #' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
 #' x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
 #'
-#' @import ggplot2 ggpubr ggrepel
+#' @import ggplot2 ggrepel
 #' @export
 #'
 #'
@@ -73,7 +73,6 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
                       main = NULL, xlab = x, ylab = y, legend.position = "none", ...){
   requireNamespace("ggplot2", quietly=TRUE) || stop("need ggplot package")
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
-  requireNamespace("ggpubr", quietly=TRUE) || stop("need ggpubr package")
   data = as.data.frame(data, stringsAsFactors = FALSE)
   data = data[!(is.na(data[,x])|is.na(data[,y])), ]
   ## Add label column in the data frame.
@@ -247,7 +246,18 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   }
 
   ## Color issue
-  if(is.null(color)) color = "group"
+  if(is.null(color)){
+    color = "group"
+  }else if(length(color)==1){
+    if(!color%in%colnames(data)){
+      data$color = color
+      color = "color"
+    }
+  }else{
+    data$color = color[1]
+    color = "color"
+    warning("Only the first color is took.")
+  }
 
   ## Plot the scatter figure ##
   gg = data
@@ -272,12 +282,14 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
       p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462",
                                             "#bc80bd", "#b3de69", "#bebada", "#8dd3c7",
                                             "#ffffb3", "#fccde5", "#ccebc5", "#ffed6f"))
-  }else if(color%in%colnames(gg)){
+  }else{
     if(mode(gg[,color])=="numeric")
       p = p + scale_color_gradient2(low = "#377eb8", high = "#e41a1c", midpoint = 0)
     else if(!"try-error"%in%class(try(col2rgb(gg[1,color]),silent=TRUE))){
       mycolour = unique(gg[,color]); names(mycolour) = mycolour
       p = p + scale_color_manual(values = mycolour)
+    }else{
+      p = p + scale_color_brewer(type = "div")
     }
   }
 
@@ -292,7 +304,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
       p = p + geom_abline(slope=slope, intercept=intercept, linetype = "dotted")
   }
   p = p + labs(x=xlab, y = ylab, title = main, color = NULL)
-  p = p + ggpubr::theme_pubr() + theme(plot.title = element_text(hjust = 0.5))
+  p = p + theme_bw(base_size = 12)
   p = p + theme(legend.position = legend.position)
 
   return(p)

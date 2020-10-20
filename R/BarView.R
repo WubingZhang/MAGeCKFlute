@@ -8,7 +8,7 @@
 #'
 #' @param df A data frame.
 #' @param x A character, specifying the x-axis.
-#' @param y A character, specifying the x-axis.
+#' @param y A character, specifying the y-axis.
 #' @param fill A character, specifying the fill color.
 #' @param bar.width A numeric, specifying the width of bar.
 #' @param position "dodge" (default), "stack", "fill".
@@ -26,7 +26,7 @@
 #' @examples
 #' mdata = data.frame(group=letters[1:5], count=sample(1:100,5))
 #' BarView(mdata, x = "group", y = "count")
-#' @import ggplot2 ggpubr
+#' @import ggplot2
 #' @export
 
 BarView <- function(df, x = "x", y = "y", fill = "#FC6665",
@@ -34,7 +34,6 @@ BarView <- function(df, x = "x", y = "y", fill = "#FC6665",
                     dodge.width = 0.8, main = NA,
                     xlab = NULL, ylab = NA, ...){
   requireNamespace("ggplot2")
-  requireNamespace("ggpubr")
   ## Check if fill is valid color
   boo <- try(col2rgb(fill), silent=TRUE)
   boo = "try-error" %in% class(boo)
@@ -60,7 +59,7 @@ BarView <- function(df, x = "x", y = "y", fill = "#FC6665",
   if(!(length(xlab)==1 && is.na(xlab))) p = p + labs(x=xlab)
   if(!(length(ylab)==1 && is.na(ylab))) p = p + labs(y=ylab)
   if(!(length(main)==1 && is.na(main))) p = p + labs(title=main)
-  p = p + theme_pubr()
+  p = p + theme_bw(base_size = 12)
   p = p + theme(plot.title = element_text(hjust = 0.5, size=16))
   return(p)
 }

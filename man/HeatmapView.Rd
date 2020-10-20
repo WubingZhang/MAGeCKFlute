@@ -8,6 +8,7 @@
 HeatmapView(
   mat,
   limit = c(-2, 2),
+  na_col = "gray70",
   colPal = rev(colorRampPalette(c("#c12603", "white", "#0073B6"), space = "Lab")(199)),
   filename = NA,
   width = NA,
@@ -19,6 +20,8 @@ HeatmapView(
 \item{mat}{Matrix like object, each row is gene and each column is sample.}
 
 \item{limit}{Max value in heatmap}
+
+\item{na_col}{Color for missing values}
 
 \item{colPal}{colorRampPalette.}
 

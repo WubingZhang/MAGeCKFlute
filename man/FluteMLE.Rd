@@ -28,7 +28,7 @@ FluteMLE(
   width = 10,
   height = 7,
   outdir = ".",
-  view_allpath = FALSE,
+  pathview.top = 4,
   verbose = TRUE
 )
 }
@@ -76,7 +76,7 @@ If there is no controls in your CRISPR screen, you can specify "Depmap" as ctrln
 
 \item{outdir}{Output directory on disk.}
 
-\item{view_allpath}{Boolean, whether output all pathway view figures (time-consuming).}
+\item{pathview.top}{Integer, specifying the number of pathways for pathview visualization.}
 
 \item{verbose}{Boolean}
 }

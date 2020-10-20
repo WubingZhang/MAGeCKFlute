@@ -61,7 +61,6 @@ data(geneList, package = "DOSE")
   keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
   head(keggA@result)
 }
-
 }
 \seealso{
 \code{\link{enrich.GSE}}

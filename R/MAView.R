@@ -53,7 +53,7 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
   p = p + geom_point(shape=1, size=0.5, alpha = 0.6)
   p = p + geom_hline(yintercept = 0, color="blue")
   if(add.smooth)
-    p = p + geom_smooth(method = plot.method[1], color=smooth.col, linetype=lty)
+    p = p + geom_smooth(method = plot.method[1], formula = y ~ x, color=smooth.col, linetype=lty)
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))

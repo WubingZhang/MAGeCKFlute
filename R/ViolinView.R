@@ -32,19 +32,16 @@
 #' ViolinView(dd[, c("dmso", "plx")])
 #'
 #'
-#' @importFrom data.table melt
-#' @importFrom ggsci scale_color_npg
+#' @importFrom reshape2 melt
 #'
 #' @export
 #'
 ViolinView <- function(beta, samples=NULL, main=NULL, ylab="Beta Score",
                        filename=NULL, width=5, height=4, ...){
-  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
-  requireNamespace("ggsci", quietly=TRUE) || stop("need ggsci package")
 
   if(!is.null(samples) && length(samples)>1){ beta = beta[, samples]}
 
-  dd1 = melt(beta, id=NULL)
+  dd1 = reshape2::melt(beta, id.vars=NULL)
   if(!"variable" %in% colnames(dd1)){
     dd1$variable = colnames(beta)
   }
@@ -52,7 +49,7 @@ ViolinView <- function(beta, samples=NULL, main=NULL, ylab="Beta Score",
   p=ggplot(data=dd1,aes_string(x="variable",y="value",color="variable"))
   p=p+geom_violin()+geom_boxplot(width=.1, outlier.colour=NA)
   #p=p+ylim(-1.5,1)
-  p=p+scale_color_npg()
+  # p=p+scale_color_npg()
   p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))

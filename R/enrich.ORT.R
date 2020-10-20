@@ -22,14 +22,18 @@
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
 #' @param gmtpath The path to customized gmt file.
 #' @param verbose Boolean
+#' @param ... Other parameter
 #'
-#' @return A enrichedResult instance.
+#' @return An enrichedResult instance.
 #'
 #' @author Wubing Zhang
 #'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.GSE}}
 #' @seealso \code{\link{EnrichAnalyzer}}
+#' @seealso \code{\link[clusterProfiler]{enrichGO}}
+#' @seealso \code{\link[clusterProfiler]{enrichKEGG}}
+#' @seealso \code{\link[clusterProfiler]{enricher}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
@@ -38,14 +42,18 @@
 #' enrichedRes <- enrich.ORT(genes, keytype = "entrez")
 #' head(slot(enrichedRes, "result"))
 #'
-#' @import DOSE
 #' @export
 
-enrich.ORT <- function(geneList, keytype = "Symbol", type = "GOBP",
-                       organism = 'hsa', pvalueCutoff = 0.25,
-                       limit = c(2, 200), universe=NULL,
-                       gmtpath = NULL, verbose = TRUE){
-  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
+enrich.ORT <- function(geneList,
+                       keytype = "Symbol",
+                       type = "GOBP",
+                       organism = 'hsa',
+                       pvalueCutoff = 0.25,
+                       limit = c(2, 200),
+                       universe=NULL,
+                       gmtpath = NULL,
+                       verbose = TRUE,
+                       ...){
 
   ## Prepare gene set annotation
   gene2path = gsGetter(gmtpath, type, limit, organism)

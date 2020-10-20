@@ -30,7 +30,6 @@
 #' TransGeneID("HLA-A", toType = "uniprot", organism="hsa")
 #' TransGeneID("H2-K1", toType="Symbol", fromOrg = "mmu", toOrg = "hsa")
 #'
-#' @importFrom biomaRt useMart getBM getLDS listAttributes
 #' @export
 
 TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
@@ -71,6 +70,9 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
       ann <- getGeneAnn(organism, update=update)$Protein
       ann = ann[, c(fromType, toType)]
     }else{
+      if (!requireNamespace("biomaRt", quietly = TRUE)) {
+        stop("Package \"biomaRt\" is required. Please install it.", call. = FALSE)
+      }
       ds = datasets[grepl(organism, datasets)]
       ensembl <- biomaRt::useMart(biomart = 'ENSEMBL_MART_ENSEMBL',
                                   dataset = ds, host = ensemblHost)
@@ -119,6 +121,10 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
       ann = ann[, c(paste0(fromOrg, "_", fromType), paste0(toOrg, "_", toType))]
       colnames(ann) = c(fromOrg, toOrg)
     }else{
+      if (!requireNamespace("biomaRt", quietly = TRUE)) {
+        stop("Package \"biomaRt\" is required. Please install it.",
+             call. = FALSE)
+      }
       ## Ortholog ID mapping.
       from = biomaRt::useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
       to = biomaRt::useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
@@ -299,6 +305,16 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # colnames(ensembl_ann) = c("entrez", "symbol", "hgnc", "ensembl")
   # ensembl_ann$hgnc = gsub("HGNC:", "", ensembl_ann$hgnc)
 
+  #### Merge all annotations ####
+  geneann = merge(ncbi_ann[, c("ensembl","entrez","symbol","synonyms")],
+                  ensembl_ann[,c("ensembl","entrez")], by = c("ensembl","entrez"), all = TRUE)
+  geneann$entrez = gsub(" ", "", geneann$entrez)
+  # ids = gsub("-.*$", "", uniprot_ann$Canonical[!grepl("-1", uniprot_ann$Canonical)])
+  # data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
+  # idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
+  # data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
+  saveRDS(geneann, rdsann)
+
   #### Uniprot gene annotation ####
   proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589", "UP000002277", "UP000002494")
   names(proteome_code) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno")
@@ -324,12 +340,14 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   Symbols = unlist(apply(uniprot_ann, 1, function(x){
     Uniprot = x[1]
     Symbols = unlist(strsplit(gsub(";$", "", x[5]), " "))
-    rbind(rep(Uniprot, max(1,length(Symbols)-1)), Symbols[1], Symbols[-1])
+    Symbols = Symbols[Symbols!=""|Symbols==""]
+    if(length(Symbols)==0) return(NULL)
+    if(length(Symbols)==1) Symbols = c(Symbols, "")
+    rbind(rep(Uniprot, length(Symbols)-1), Symbols[1], Symbols[-1])
   }))
   Symbols = matrix(Symbols, ncol = 3, byrow = TRUE)
   colnames(Symbols) = c('Entry', "symbol", "synonyms")
   Symbols = as.data.frame(Symbols, stringsAsFactors = FALSE)
-  Symbols = Symbols[!grepl("^hCG_", Symbols$symbol), ]
 
   ENSTs = unlist(apply(uniprot_ann, 1, function(x){
     Uniprot = x[1]
@@ -361,19 +379,11 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   ## Merge all annotations from each column
   uniprot_ann = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
   uniprot_ann$Entry = gsub("-.*","",uniprot_ann$uniprot)
-  Symbols = Symbols[!duplicated(Symbols$Entry), ]
+  # Symbols = Symbols[!duplicated(Symbols$Entry), ]
   uniprot_ann = merge(uniprot_ann, Symbols, by = "Entry", all = TRUE)
-  saveRDS(summary, gsub("Gene", "Protein", rdsann))
-  #### Merge all annotations ####
-  data = merge(ncbi_ann[, c("ensembl","entrez","symbol","synonyms")],
-               ensembl_ann[,c("ensembl","entrez")], by = c("ensembl","entrez"), all = TRUE)
-  data$entrez = gsub(" ", "", data$entrez)
-  # ids = gsub("-.*$", "", uniprot_ann$Canonical[!grepl("-1", uniprot_ann$Canonical)])
-  # data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
-  # idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
-  # data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
-  saveRDS(data, rdsann)
-  return(list(Gene = data, Protein = summary))
+  saveRDS(uniprot_ann, gsub("Gene", "Protein", rdsann))
+
+  return(list(Gene = geneann, Protein = uniprot_ann))
 }
 
 
@@ -397,7 +407,6 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 #' }
 #'
 #' @export
-#' @importFrom biomaRt useMart getLDS
 #'
 getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
   #### Read rds file directly ####
@@ -454,6 +463,9 @@ getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
   datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
                       "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
   ## Ortholog ID mapping.
+  if (!requireNamespace("biomaRt", quietly = TRUE)) {
+    stop("Package \"biomaRt\" is required. Please install it.", call. = FALSE)
+  }
   from = biomaRt::useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
   to = biomaRt::useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])
   ## decide the attributes automatically

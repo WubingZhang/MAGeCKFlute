@@ -29,7 +29,7 @@
 #' @param width The width of summary pdf in inches.
 #' @param height The height of summary pdf in inches.
 #' @param outdir Output directory on disk.
-#' @param view_allpath Boolean, whether output all pathway view figures (time-consuming).
+#' @param pathview.top Integer, specifying the number of pathways for pathview visualization.
 #' @param verbose Boolean
 #'
 #' @author Wubing Zhang
@@ -79,7 +79,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      scale_cutoff = 2, limit = c(0,200),
                      pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
                      width = 10, height = 7, outdir = ".",
-                     view_allpath = FALSE, verbose = TRUE){
+                     pathview.top = 4, verbose = TRUE){
 	## Prepare the running environment ##
   {
     message(Sys.time(), " # Create output dir and pdf file...")
@@ -235,13 +235,14 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
 	  # Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes)>0)
-	    arrangePathview(dd, gsub("KEGG_", "", E1$keggA$enrichRes$ID), top = 4, ncol = 2,
-	                    title="Group A", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	    arrangePathview(dd, gsub("KEGG_", "", E1$keggA$enrichRes$ID),
+	                    top = pathview.top, ncol = 2, title="Group A",
+	                    organism=organism, output=outputDir4)
 	  if(!is.null(E1$keggB$enrichRes) && nrow(E1$keggB$enrichRes)>0)
-	    arrangePathview(dd, gsub("KEGG_", "", E1$keggB$enrichRes$ID), top = 4, ncol = 2,
+	    arrangePathview(dd, gsub("KEGG_", "", E1$keggB$enrichRes$ID),
+	                    top = pathview.top, ncol = 2,
 	                    title="Group B", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    output=outputDir4)
   }
 
 	## Nine-squares ##
@@ -276,36 +277,36 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  # PathwayView
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg1$enrichRes$ID), ncol = 2,
-	                    title = "Group 1", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, title = "Group 1", organism=organism,
+	                    output=outputDir4)
 	  if(!is.null(E1$kegg2$enrichRes) && nrow(E1$kegg2$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg2$enrichRes$ID), ncol = 2,
-	                    title = "Group 2",
-	                    organism=organism,view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, title = "Group 2",
+	                    organism=organism,output=outputDir4)
 	  if(!is.null(E1$kegg3$enrichRes) && nrow(E1$kegg3$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg3$enrichRes$ID), ncol = 2,
-	                    title = "Group 3",
-	                    organism=organism, view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, title = "Group 3",
+	                    organism=organism, output=outputDir4)
 	  if(!is.null(E1$kegg4$enrichRes) && nrow(E1$kegg4$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg4$enrichRes$ID), ncol = 2,
 	                    title = "Group 4", organism = organism,
-	                    view_allpath = view_allpath, output=outputDir4)
+	                    top = pathview.top, output=outputDir4)
 	  if(!is.null(E1$kegg12$enrichRes) && nrow(E1$kegg12$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg12$enrichRes$ID), ncol = 2,
 	                    title = "Group 1 & Group 2", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, output=outputDir4)
 	  if(!is.null(E1$kegg13$enrichRes) && nrow(E1$kegg13$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg13$enrichRes$ID), ncol = 2,
 	                    title = "Group 1 & Group 3", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, output=outputDir4)
 	  if(!is.null(E1$kegg24$enrichRes) && nrow(E1$kegg24$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg24$enrichRes$ID), ncol = 2,
 	                    title = "Group 2 & Group 4", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, output=outputDir4)
 	  if(!is.null(E1$kegg34$enrichRes) && nrow(E1$kegg34$enrichRes)>0)
 	    arrangePathview(dd, gsub("KEGG_", "", E1$kegg34$enrichRes$ID), ncol = 2,
 	                    title = "Group 3 & Group 4", organism=organism,
-	                    view_allpath=view_allpath, output=outputDir4)
+	                    top = pathview.top, output=outputDir4)
   }
 	dev.off()
 }

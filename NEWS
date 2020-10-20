@@ -1,3 +1,17 @@
+CHANGES IN VERSION 1.8.1 (Bioconductor 3.11)
+-------------------------
+
+    o Update the standard gene names
+    o Debug the color issue in the ScatterView
+    o Remove the usage of scale_color_npg and data.table::melt from the DensitiView
+    o Remove nPerm parameter from the enrich.GSE
+    o Download GO-gene relationship from NCBI ftp folder
+    o Move multiple imports to suggests
+    o Replace view_allpath with pathview.top in FluteMLE to allow users
+      to set the number of pathways for pathview visualization.
+
+
+
 CHANGES IN VERSION 1.7.3 (Bioconductor 3.11)
 -------------------------
 

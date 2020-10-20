@@ -13,7 +13,6 @@ arrangePathview(
   title = NULL,
   sub = NULL,
   organism = "hsa",
-  view_allpath = FALSE,
   output = ".",
   path.archive = ".",
   kegg.native = TRUE,
@@ -40,9 +39,6 @@ the target species. This applies to both pathway and gene.data or cpd.data. When
 ortholog pathway is considered, species="ko". Default species="hsa", it is equivalent
 to use either "Homo sapiens" (scientific name) or "human" (common name).}
 
-\item{view_allpath}{boolean, specifying whether view all pathways. Default view_allpath='FALSE',
-and only plot top enriched pathways.}
-
 \item{output}{Path to save plot to.}
 
 \item{path.archive}{character, the directory of KEGG pathway data file (.xml) and image file
@@ -68,9 +64,6 @@ dd = ReadBeta(file3)
 colnames(dd)[2:3] = c("Control", "Treatment")
 arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
 
-}
-\seealso{
-\code{\link{KeggPathwayView}}
 }
 \author{
 Wubing Zhang

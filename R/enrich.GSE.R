@@ -7,30 +7,33 @@
 #' @rdname enrich.GSE
 #' @aliases enrichGSE
 #'
-#' @param geneList A order ranked numeric vector with geneid as names.
-#' @param keytype "Entrez" or "Symbol".
+#' @param geneList A order ranked numeric vector with geneid as names
+#' @param keytype "Entrez", "Ensembl", or "Symbol"
 #' @param type Molecular signatures for testing, available datasets include
 #' Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
 #' MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
 #' C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
 #' and Complex (CORUM). Any combination of them are also accessible
-#' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
-#' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff FDR cutoff.
+#' (e.g. 'GOBP+GOMF+KEGG+REACTOME')
+#' @param organism 'hsa' or 'mmu'
+#' @param pvalueCutoff FDR cutoff
 #' @param limit A two-length vector, specifying the minimal and
-#' maximal size of gene sets for enrichent analysis.
-#' @param gmtpath The path to customized gmt file.
-#' @param nPerm The number of permutations.
+#' maximal size of gene sets for enrichent analysis
+#' @param gmtpath The path to customized gmt file
 #' @param by One of 'fgsea' or 'DOSE'
 #' @param verbose Boolean
+#' @param ... Other parameter
 #'
-#' @return A enrichResult instance.
+#' @return An enrichResult instance
 #'
 #' @author Wubing Zhang
 #'
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.ORT}}
 #' @seealso \code{\link{EnrichAnalyzer}}
+#' @seealso \code{\link[clusterProfiler]{gseGO}}
+#' @seealso \code{\link[clusterProfiler]{gseKEGG}}
+#' @seealso \code{\link[clusterProfiler]{GSEA}}
 #' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
@@ -40,15 +43,19 @@
 #'     head(slot(enrichRes, "result"))
 #' }
 #'
-#' @import data.table DOSE
 #' @export
 
-enrich.GSE <- function(geneList, keytype = "Symbol", type = "GOBP",
-                       organism = 'hsa', pvalueCutoff = 0.25,
-                       limit = c(2, 200), gmtpath = NULL,
-                       nPerm = 2000, by = "fgsea", verbose = TRUE){
-  requireNamespace("data.table", quietly=TRUE) || stop("need data.table package")
-
+enrich.GSE <- function(geneList,
+                       keytype = "Symbol",
+                       type = "GOBP",
+                       organism = 'hsa',
+                       pvalueCutoff = 0.25,
+                       limit = c(2, 200),
+                       gmtpath = NULL,
+                       # nPerm = 2000,
+                       by = "fgsea",
+                       verbose = TRUE,
+                       ...){
   geneList = sort(geneList, decreasing = TRUE)
 
   ## Prepare gene set annotation
@@ -72,9 +79,9 @@ enrich.GSE <- function(geneList, keytype = "Symbol", type = "GOBP",
   if(verbose) message("\t", len, " genes are mapped ...")
   enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
                      minGSSize = 0, maxGSSize = max(limit),
-                     TERM2NAME = pathways, nPerm = nPerm, by = by,
+                     TERM2NAME = pathways, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")],
-                     verbose = verbose)
+                     verbose = verbose, eps = 0)
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     colnames(enrichedRes@result)[11] = "geneID"
@@ -95,4 +102,3 @@ enrich.GSE <- function(geneList, keytype = "Symbol", type = "GOBP",
   }
   return(enrichedRes)
 }
-

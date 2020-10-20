@@ -30,8 +30,7 @@
 #' #or
 #' DensityView(dd[, c("dmso", "plx")])
 #'
-#' @importFrom data.table melt
-#' @importFrom ggsci scale_color_npg
+#' @importFrom reshape2 melt
 #'
 #' @export
 
@@ -39,7 +38,7 @@
 DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
                         filename = NULL, width = 5, height = 4, ...){
   if(!is.null(samples) && length(samples)>0){ beta = beta[, samples, drop = FALSE]}
-  dd1 = data.table::melt(beta,id=NULL)
+  dd1 = reshape2::melt(beta,id=NULL)
   if(!"variable" %in% colnames(dd1)){
     dd1$variable = colnames(beta)
   }
@@ -47,7 +46,7 @@ DensityView <- function(beta, samples = NULL, main = NULL,xlab = "Beta Score",
   p=ggplot(data=dd1, aes_string(x="value",color="variable",group="variable"))
   p=p+geom_density()
   # p=p+facet_wrap(~variable,nrow=1)
-  p=p+scale_color_npg()
+  # p=p+ggsci::scale_color_npg()
   p=p+labs(color=NULL)
   p=p+theme(legend.justification = c(1, 1), legend.position = c(0.99, 0.99))
   # p=p+theme(legend.text = element_text(size=8))
