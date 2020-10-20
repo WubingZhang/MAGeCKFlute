@@ -27,11 +27,35 @@ Description: CRISPR (clustered regularly interspaced short palindrome repeats) c
   functions. This vignette explains the use of the package and demonstrates typical workflows.
 License: GPL (>=3)
 VignetteBuilder: knitr
-Depends: R (>= 3.5)
-Imports: clusterProfiler, gridExtra, ggplot2, ggrepel, reshape2, stats, utils, Biobase, enrichplot
-Suggests: biomaRt, pheatmap, DOSE, KEGGgraph, KEGGREST, XML, dendextend, 
-          scales, png, grDevices, grid, graph, graphics, sva, msigdbr,
-          knitr, testthat, BiocStyle, pathview
+Depends: R (>= 4.0)
+Imports: Biobase, 
+         clusterProfiler, 
+         enrichplot, 
+         gridExtra, 
+         ggplot2, 
+         ggrepel, 
+         grDevices, 
+         grid, 
+         reshape2, 
+         stats, 
+         utils
+Suggests: biomaRt, 
+          BiocStyle, 
+          DOSE, 
+          dendextend, 
+          graph, 
+          graphics, 
+          knitr, 
+          KEGGgraph, 
+          KEGGREST, 
+          msigdbr,
+          pheatmap, 
+          png, 
+          pathview,
+          scales, 
+          sva, 
+          testthat, 
+          XML
 LazyData: TRUE
 NeedsCompilation: no
 biocViews: FunctionalGenomics, CRISPR, BatchEffect, QualityControl,
