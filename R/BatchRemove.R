@@ -25,20 +25,19 @@
 #' edata1 = BatchRemove(edata, batchMat)
 #' print(edata1$p)
 #'
-#' @importFrom sva ComBat
-#'
 #' @export
 #'
 BatchRemove <- function(mat, batchMat, log2trans=FALSE,
                         pca = TRUE, positive = FALSE,
                         cluster = FALSE, outdir = NULL){
-  requireNamespace("sva", quietly=TRUE) || stop("need sva package")
+  if (!requireNamespace("sva", quietly = TRUE)) {
+    stop("Package \"sva\" is required. Please install it.", call. = FALSE)
+  }
   mat = as.data.frame(mat, stringsAsFactors = FALSE)
   batchMat = as.data.frame(batchMat, stringsAsFactors = FALSE)
   colnames(batchMat)[1:2] = c("Sample", "Batch")
   rownames(batchMat) = batchMat[,1]
   batch = batchMat
-  requireNamespace("sva")
   # mat = as.matrix(mat)
   # if(mode(mat)!="numeric") stop("Numeric data matrix is needed!")
   # batch = as.matrix(batchMat)

@@ -18,7 +18,6 @@
 #' hits = Selector(mat, select = 0.68)
 #' print(hits$p)
 #'
-#' @import ggsci
 #' @export
 
 Selector <- function(mat, cutoff = 0, type = "<", select = 0.8){
@@ -39,7 +38,7 @@ Selector <- function(mat, cutoff = 0, type = "<", select = 0.8){
   p = p + geom_point(aes_string(x="x",y="y"),data=text, shape=17, size=2, color="#d66648")
   p = p + geom_text(aes_string(x="x",y="y"),data=text, label=paste("(",text$x,", ",text$y,")",sep=""),
                     colour = "black",size=3.5)
-  p = p + ylab("Gene number")+xlab("Sample number")+scale_colour_npg()
+  p = p + ylab("Gene number")+xlab("Sample number")
   p = p + theme(text = element_text(colour="black",size = 14),
                 plot.title = element_text(hjust = 0.5, size=18),
                 axis.text = element_text(colour="gray10"))

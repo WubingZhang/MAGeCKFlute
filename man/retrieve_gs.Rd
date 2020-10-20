@@ -5,10 +5,10 @@
 \alias{retrieve_gs}
 \title{Update genesets from source database}
 \usage{
-retrieve_gs(type = c("KEGG", "REACTOME", "CORUM"), organism = "hsa")
+retrieve_gs(type = c("KEGG", "REACTOME", "CORUM", "GO"), organism = "hsa")
 }
 \arguments{
-\item{type}{A vector of databases, such as KEGG, REACTOME, CORUM.}
+\item{type}{A vector of databases, such as KEGG, REACTOME, CORUM, GO.}
 
 \item{organism}{'hsa' or 'mmu'.}
 }

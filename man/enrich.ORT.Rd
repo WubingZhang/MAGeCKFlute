@@ -15,7 +15,8 @@ enrich.ORT(
   limit = c(2, 200),
   universe = NULL,
   gmtpath = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
@@ -32,7 +33,7 @@ and Complex (CORUM). Any combination of them are also accessible
 
 \item{organism}{'hsa' or 'mmu'.}
 
-\item{pvalueCutoff}{Pvalue cutoff.}
+\item{pvalueCutoff}{FDR cutoff.}
 
 \item{limit}{A two-length vector, specifying the minimal and
 maximal size of gene sets for enrichent analysis.}
@@ -42,9 +43,11 @@ maximal size of gene sets for enrichent analysis.}
 \item{gmtpath}{The path to customized gmt file.}
 
 \item{verbose}{Boolean}
+
+\item{...}{Other parameter}
 }
 \value{
-A enrichedResult instance.
+An enrichedResult instance.
 }
 \description{
 Do enrichment analysis using over-representation test
@@ -62,6 +65,12 @@ head(slot(enrichedRes, "result"))
 \code{\link{enrich.GSE}}
 
 \code{\link{EnrichAnalyzer}}
+
+\code{\link[clusterProfiler]{enrichGO}}
+
+\code{\link[clusterProfiler]{enrichKEGG}}
+
+\code{\link[clusterProfiler]{enricher}}
 
 \code{\link[DOSE]{enrichResult-class}}
 }

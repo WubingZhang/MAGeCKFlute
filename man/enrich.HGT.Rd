@@ -3,8 +3,7 @@
 \docType{methods}
 \name{enrich.HGT}
 \alias{enrich.HGT}
-\alias{Hypergeometric}
-\title{Do enrichment analysis using Hypergeometric test}
+\title{Do enrichment analysis using hypergeometric test}
 \usage{
 enrich.HGT(
   geneList,
@@ -15,39 +14,42 @@ enrich.HGT(
   limit = c(2, 200),
   universe = NULL,
   gmtpath = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
-\item{geneList}{A numeric vector with gene as names.}
+\item{geneList}{A numeric vector with gene as names}
 
-\item{keytype}{"Entrez" or "Symbol".}
+\item{keytype}{"Entrez", "Ensembl", or "Symbol"}
 
 \item{type}{Molecular signatures for testing, available datasets include
 Pathway (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF),
 MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA), C2_CGP),
 C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK)
 and Complex (CORUM). Any combination of them are also accessible
-(e.g. 'GOBP+GOMF+KEGG+REACTOME').}
+(e.g. 'GOBP+GOMF+KEGG+REACTOME')}
 
-\item{organism}{'hsa' or 'mmu'.}
+\item{organism}{'hsa' or 'mmu'}
 
-\item{pvalueCutoff}{Pvalue cutoff.}
+\item{pvalueCutoff}{FDR cutoff}
 
 \item{limit}{A two-length vector, specifying the minimal and
-maximal size of gene sets for enrichent analysis.}
+maximal size of gene sets for enrichent analysis}
 
-\item{universe}{A character vector, specifying the backgound genelist, default is whole genome.}
+\item{universe}{A character vector, specifying the backgound genelist, default is whole genome}
 
-\item{gmtpath}{The path to customized gmt file.}
+\item{gmtpath}{The path to customized gmt file}
 
 \item{verbose}{Boolean}
+
+\item{...}{Other parameter}
 }
 \value{
-A enrichResult instance.
+An enrichResult instance.
 }
 \description{
-Do enrichment analysis using Hypergeometric test
+Do enrichment analysis using hypergeometric test
 }
 \examples{
 data(geneList, package = "DOSE")

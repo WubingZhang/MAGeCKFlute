@@ -17,7 +17,7 @@
 #' (e.g. 'GOBP+GOMF+KEGG+REACTOME').
 #' @param method One of "ORT"(Over-Representing Test), "GSEA"(Gene Set Enrichment Analysis), and "HGT"(HyperGemetric test).
 #' @param organism 'hsa' or 'mmu'.
-#' @param pvalueCutoff Pvalue cutoff.
+#' @param pvalueCutoff FDR cutoff.
 #' @param limit A two-length vector (default: c(2, 200)), specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
 #' @param universe A character vector, specifying the backgound genelist, default is whole genome.
@@ -40,8 +40,7 @@
 #'   keggA = EnrichAnalyzer(geneList[1:500], keytype = "entrez")
 #'   head(keggA@result)
 #' }
-#'
-#' @import DOSE
+#' @import stats
 #' @export
 
 EnrichAnalyzer = function(geneList, keytype = "Symbol",
@@ -65,17 +64,17 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
   if(method == "GSEA"){
     enrichRes <- enrich.GSE(geneList, keytype = keytype, type = type,
                             organism = organism,
-                            pvalueCutoff = 1,
+                            pvalueCutoff = pvalueCutoff,
                             limit = limit, gmtpath = gmtpath,
                             verbose = verbose)
   }else if(method == "ORT"){
     enrichRes <- enrich.ORT(geneList, keytype = keytype, type = type,
-                            organism = organism, pvalueCutoff = 1,
+                            organism = organism, pvalueCutoff = pvalueCutoff,
                             limit = limit, universe = universe,
                             gmtpath = gmtpath, verbose = verbose)
   }else if(method == "HGT"){
     enrichRes = enrich.HGT(geneList, keytype = keytype, type = type,
-                           organism = organism, pvalueCutoff = 1,
+                           organism = organism, pvalueCutoff = pvalueCutoff,
                            limit = limit, universe = universe,
                            gmtpath = gmtpath, verbose = verbose)
   }else{
@@ -84,8 +83,8 @@ EnrichAnalyzer = function(geneList, keytype = "Symbol",
 
   if(!is.null(enrichRes) && nrow(enrichRes@result)>10 && filter){
     result = EnrichedFilter(enrichRes)
-    result$p.adjust = p.adjust(result$pvalue, method = "BH")
-    enrichRes@result = result[result$p.adjust<pvalueCutoff, ]
+    # result$p.adjust = p.adjust(result$pvalue, method = "BH")
+    # enrichRes@result = result[result$p.adjust<pvalueCutoff, ]
   }
   return(enrichRes)
 }

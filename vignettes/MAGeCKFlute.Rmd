@@ -70,20 +70,16 @@ head(sdata)
 ### Run the FluteRRA pipeline
 Run the downstream analysis pipeline with both gene summary and sgrna summary
 ```{r FluteRRA1, eval=FALSE}
-FluteRRA(file1, file2, proj="Test", organism="hsa",
-         scale_cutoff = 1, outdir = "./")
+FluteRRA(file1, file2, proj="Test", organism="hsa", scale_cutoff = 1, outdir = "./")
 # Or
-FluteRRA(gdata, sdata, proj="Test", organism="hsa",
-         scale_cutoff = 1, outdir = "./")
+FluteRRA(gdata, sdata, proj="Test", organism="hsa", scale_cutoff = 1, outdir = "./")
 ```
 
 Run the downstream analysis pipeline with only gene summary file
 ```{r FluteRRA2, eval=FALSE}
-FluteRRA(file1, proj="Test", organism="hsa",
-         scale_cutoff = 1, outdir = "./")
+FluteRRA(file1, proj="Test", organism="hsa", outdir = "./")
 # Or
-FluteRRA(gdata, proj="Test", organism="hsa",
-         scale_cutoff = 1, outdir = "./")
+FluteRRA(gdata, proj="Test", organism="hsa", outdir = "./")
 ```
 
 Incorporate Depmap data into analysis

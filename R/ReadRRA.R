@@ -10,7 +10,7 @@
 #'
 #' @return A data frame including three columns, including "id", "LFC" and "FDR".
 #' @details If the score type is equal to lfc, then LFC will be returned. If the score type is rra,
-#' the log10 transformed RRA score will be returned. For FACS-based CRISPR screens, rra score is not recommended.
+#' the log10 transformed RRA score will be returned.
 #'
 #' @author Wubing Zhang
 #'

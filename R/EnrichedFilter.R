@@ -16,7 +16,6 @@
 #'   enrichRes <- enrich.HGT(geneList, keytype = "entrez")
 #'   EnrichedFilter(enrichRes)
 #' }
-#' @import data.table
 #' @export
 
 EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
@@ -34,12 +33,9 @@ EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   diag(ijc) = 0
   idx <- which(ijc>cutoff, arr.ind = TRUE)
   colnames(idx) = c("row", "col")
-  idx = as.data.table(idx)
-  max_value = NULL
-  if(nrow(idx)>0){
-    imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
-    enrichment <- enrichment[setdiff(1:nrow(enrichment), imat$max_value), ]
-  }
+  idx = unlist(apply(idx, 1, max))
+  enrichment <- enrichment[setdiff(1:nrow(enrichment), idx), ]
+
   # The second round simplification
   genelist = strsplit(enrichment$geneID, "/")
   names(genelist) = enrichment$ID
@@ -48,10 +44,7 @@ EnrichedFilter <- function(enrichment = enrichment, cutoff = 0.8){
   diag(ijc2) = 0
   idx <- which(ijc2>cutoff, arr.ind = TRUE)
   colnames(idx) = c("row", "col")
-  idx = as.data.table(idx)
-  if(nrow(idx)>0){
-    imat <- idx[, max_value:=max(row, col), by=1:nrow(idx)]
-    enrichment <- enrichment[setdiff(1:nrow(enrichment), imat$max_value), ]
-  }
+  idx = unlist(apply(idx, 1, max))
+  enrichment <- enrichment[setdiff(1:nrow(enrichment), idx), ]
   return(enrichment)
 }
