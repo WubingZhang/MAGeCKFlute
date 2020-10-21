@@ -205,18 +205,17 @@ head(sdata)
 ```
 
 ### Compute the similarity between the CRISPR screen with Depmap screens
-```{r}
+```{r Depmap, eval=FALSE}
+## The first run must be time-consuming for downloading Depmap data automatically.
 depmap_similarity = ResembleDepmap(gdata, symbol = "id", score = "Score")
-head(depmap_similarity)
 ```
 
 ### Omit common essential genes from the data
-```{r omitessential}
+```{r omitessential, eval=FALSE}
 gdata = OmitCommonEssential(gdata)
 sdata = OmitCommonEssential(sdata, symbol = "Gene")
 # Compute the similarity with Depmap screens based on subset genes
 depmap_similarity = ResembleDepmap(gdata, symbol = "id", score = "Score")
-head(depmap_similarity)
 ```
 
 ### Visualization of negative selections and positive selections

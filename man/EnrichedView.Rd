@@ -29,9 +29,9 @@ EnrichedView(
 
 \item{subset}{A vector of pathway ids.}
 
-\item{top}{An integer, specifying the number of positively enriched terms to show.}
+\item{top}{An integer, specifying the number of upregulated terms to show.}
 
-\item{bottom}{An integer, specifying the number of negatively enriched terms to show.}
+\item{bottom}{An integer, specifying the number of downregulated terms to show.}
 
 \item{x}{Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.}
 
@@ -55,7 +55,7 @@ Grid plot for enriched terms
 data(geneList, package = "DOSE")
 \dontrun{
     enrichRes = enrich.GSE(geneList, organism="hsa")
-    EnrichedView(slot(enrichRes, "result"))
+    EnrichedView(enrichRes, top = 5, bottom = 5)
 }
 }
 \seealso{

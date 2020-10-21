@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.9.1 (Bioconductor 3.11)
+-------------------------
+
+    o Turn off the Depmap analysis in vignettes because it's time consuming
+    o Use count in EnrichedView when NES is not available
+
+
 CHANGES IN VERSION 1.8.1 (Bioconductor 3.11)
 -------------------------
 

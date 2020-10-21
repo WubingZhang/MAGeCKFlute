@@ -10,8 +10,8 @@
 #' @param rank_by "pvalue" or "NES", specifying the indices for ranking pathways.
 #' @param mode 1 or 2.
 #' @param subset A vector of pathway ids.
-#' @param top An integer, specifying the number of positively enriched terms to show.
-#' @param bottom An integer, specifying the number of negatively enriched terms to show.
+#' @param top An integer, specifying the number of upregulated terms to show.
+#' @param bottom An integer, specifying the number of downregulated terms to show.
 
 #' @param x Character, "NES", "LogP", or "LogFDR", indicating the variable on the x-axis.
 #' @param charLength Integer, specifying max length of enriched term name to show as coordinate lab.
@@ -28,7 +28,7 @@
 #' data(geneList, package = "DOSE")
 #' \dontrun{
 #'     enrichRes = enrich.GSE(geneList, organism="hsa")
-#'     EnrichedView(slot(enrichRes, "result"))
+#'     EnrichedView(enrichRes, top = 5, bottom = 5)
 #' }
 #' @export
 EnrichedView = function(enrichment,
@@ -51,7 +51,8 @@ EnrichedView = function(enrichment,
     }
     return(p1)
   }
-
+  flag = ifelse("NES"%in%colnames(enrichment), TRUE, FALSE)
+  if(!flag) colnames(enrichment)[colnames(enrichment)=="Count"] = "NES"
   ## Rank enriched pathways ##
   enrichment$logP = round(-log10(enrichment$pvalue), 1)
   enrichment$logFDR = round(-log10(enrichment$p.adjust), 1)
@@ -135,11 +136,15 @@ EnrichedView = function(enrichment,
     p1 = p1 + geom_text(aes_string(hjust = "hjust"))
     p1 = p1 + theme_bw() + theme(plot.title = element_text(hjust = 0.5))
   }
-  if(x=="NES")
+  if(x=="NES"){
     p1 = p1 + labs(x = "Enrichment score", y = NULL, color = NULL,
                    size = expression(-log[10]*FDR))
-  else
+    if(!flag) p1 = p1 + labs(x = "Count")
+  }else{
     p1 = p1 + labs(x = expression(-log[10]*FDR), y = NULL, color = NULL, size = "NES")
+    if(!flag) p1 = p1 + labs(size = "Count")
+  }
+
   if(!is.null(filename)){
     ggsave(plot=p1, filename=filename, units = "in", width=width, height=height, ...)
   }
