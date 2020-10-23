@@ -48,7 +48,7 @@ ReadGMT <- function(gmtpath, limit = c(0, Inf)){
 #' @author Wubing Zhang
 #' @examples
 #' gene2path = gsGetter(type = "Complex")
-#' writeGMT(gene2path, "Protein_complex.gmt")
+#' # writeGMT(gene2path, "Protein_complex.gmt")
 #'
 #' @export
 #'

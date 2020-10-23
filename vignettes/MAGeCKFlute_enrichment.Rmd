@@ -79,25 +79,23 @@ barplot(hgtRes1, showCategory = 5)
 
 ### Dot plot
 ```{r, fig.height=4, fig.width=9, dpi=150}
-EnrichedView(hgtRes1, bottom = 5, mode = 1)
-EnrichedView(hgtRes1, bottom = 5, mode = 2)
+## top: up-regulated pathways; 
+## bottom: down-regulated pathways
+EnrichedView(hgtRes1, top = 0, bottom = 5, mode = 1)
+EnrichedView(hgtRes1, top = 0, bottom = 5, mode = 2)
 dotplot(hgtRes1, showCategory = 5)
 ```
 
-### Visualization functions from [enrichplot](https://yulab-smu.github.io/clusterProfiler-book/chapter12.html) [@Yu2018].
-```{r, fig.height=7, fig.width=9, dpi=150}
+### Other visualization functions from [enrichplot](https://yulab-smu.github.io/clusterProfiler-book/chapter12.html) [@Yu2018].
+```{r enrichplot, eval=FALSE}
 hgtRes1@result$geneID = hgtRes1@result$geneName
-#cnetplot
 cnetplot(hgtRes1, 2)
-```
-
-```{r, fig.height=7, fig.width=15, dpi=150}
 heatplot(hgtRes1, showCategory = 3, foldChange=genelist)
 emapplot(hgtRes1, layout="kk")
 ```
 
 ### Visulization for GSEA enriched categories
-```{r, fig.height=4, fig.width=7, dpi=150}
+```{r gseaplot2}
 #gseaplot
 gseaplot(gseRes1, geneSetID = 1, title = gseRes1$Description[1])
 gseaplot(gseRes1, geneSetID = 1, by = "runningScore", title = gseRes1$Description[1])
@@ -138,7 +136,7 @@ EnrichedView(enrichComb, bottom = 5)
 
 ## Limit the size of gene sets for testing
 ```{r limit, fig.height=4, fig.width=7, dpi=150}
-enrich = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP", limit = c(1, 80))
+enrich = EnrichAnalyzer(genelist[genelist< -1], type = "GOBP", limit = c(50, 500))
 EnrichedView(enrich, bottom = 5)
 ```
 

@@ -178,7 +178,7 @@ BarView(countsummary, x = "Label", y = "Missed", fill = "#394E80",
 MapRatesView(countsummary)
 # Or
 countsummary$Unmapped = countsummary$Reads - countsummary$Mapped
-gg = data.table::melt(countsummary[, c("Label", "Mapped", "Unmapped")], id.vars = "Label")
+gg = reshape2::melt(countsummary[, c("Label", "Mapped", "Unmapped")], id.vars = "Label")
 gg$variable = factor(gg$variable, levels = c("Unmapped", "Mapped"))
 p = BarView(gg, x = "Label", y = "value", fill = "variable", 
             position = "stack", xlab = NULL, ylab = "Reads", main = "Map ratio")

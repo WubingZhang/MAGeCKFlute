@@ -31,7 +31,7 @@ write data frame to a gmt file
 }
 \examples{
 gene2path = gsGetter(type = "Complex")
-writeGMT(gene2path, "Protein_complex.gmt")
+# writeGMT(gene2path, "Protein_complex.gmt")
 
 }
 \author{
