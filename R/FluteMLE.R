@@ -119,7 +119,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                             paste0(beta$Gene[idx2], collapse = ", "))
 
     dd = beta[!idx, ]
-    if(incorporateDepmap | ctrlname=="Depmap")
+    if(incorporateDepmap | "Depmap"%in%ctrlname)
       dd = IncorporateDepmap(dd, symbol = "HumanGene", cell_lines = cell_lines,
                              lineages = lineages)
     if(!all(c(ctrlname, treatname) %in% colnames(dd)))

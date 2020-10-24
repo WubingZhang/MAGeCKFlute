@@ -36,7 +36,7 @@
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
 #' colnames(dd)[2:3] = c("Control", "Treatment")
-#' # arrangePathview(dd, "hsa00534", title=NULL, sub=NULL, organism="hsa")
+#' # arrangePathview(dd, c("hsa00534"), title=NULL, sub=NULL, organism="hsa")
 #'
 #' @importFrom grid rasterGrob
 #' @importFrom gridExtra grid.arrange
@@ -70,10 +70,12 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
   if(length(keggID)<1) return()
 
   if(verbose) message(Sys.time(), " # Starting plot kegg pathways for ", sub, " ", title)
-  p1 <- pathview(gene.data  = genelist[,c("Control","Treatment")],
-                 pathway.id = keggID, species=organism, kegg.dir = path.archive,
-                 kegg.native = kegg.native)
-
+  for(id in keggID){
+    tryCatch(pathview(gene.data  = genelist[,c("Control","Treatment")],
+                 pathway.id = id, species=organism, kegg.dir = path.archive,
+                 kegg.native = kegg.native), error = function(e)
+                   message("pathview failed for ", id))
+  }
   #Maybe there are not multi file, but only keggID.pathview.png
   allpngnames=paste0(keggID, ".pathview.multi.png")
   idx = file.exists(allpngnames)
