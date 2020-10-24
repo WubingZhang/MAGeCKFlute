@@ -27,7 +27,7 @@ Description: CRISPR (clustered regularly interspaced short palindrome repeats) c
   functions. This vignette explains the use of the package and demonstrates typical workflows.
 License: GPL (>=3)
 VignetteBuilder: knitr
-Depends: R (>= 3.5)
+Depends: R (>= 4)
 Imports: Biobase, 
          clusterProfiler, 
          enrichplot, 
