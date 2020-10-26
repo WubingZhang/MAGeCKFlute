@@ -2,7 +2,7 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative Analysis Pipeline for Pooled CRISPR Functional
         Genetic Screens
-Version: 1.9.3
+Version: 1.9.4
 Date: 2020-10-19
 Author: Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu
 Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
@@ -27,7 +27,7 @@ Description: CRISPR (clustered regularly interspaced short palindrome repeats) c
   functions. This vignette explains the use of the package and demonstrates typical workflows.
 License: GPL (>=3)
 VignetteBuilder: knitr
-Depends: R (>= 4)
+Depends: R (>= 4.0)
 Imports: Biobase, 
          clusterProfiler, 
          enrichplot, 
