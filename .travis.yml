@@ -64,9 +64,10 @@ install:
   - conda install r r-recommended r-markdown
   #- echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
   - echo '.travis.yml' > .Rbuildignore
-  - conda install -c conda-forge tar r-devtools r-biocmanager r-matrixstats
+  - conda install -c conda-forge tar r-devtools r-matrixstats
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
+  - Rscript -e 'install.packages("BiocManager", repos="https:://cloud.r-project.org")'
   - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
   - Rscript -e 'BiocManager::install("pathview", quiet=F)'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
