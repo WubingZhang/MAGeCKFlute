@@ -67,7 +67,7 @@ install:
   - conda install -c conda-forge tar r-devtools r-matrixstats
   - conda install -c anaconda libxml2
   - conda install -c r r-xml
-  - Rscript -e 'install.packages("BiocManager", repos="https:://cloud.r-project.org")'
+  - Rscript -e 'install.packages("BiocManager", repos="https://cloud.r-project.org")'
   - Rscript -e 'BiocManager::install("KEGGREST", quiet=T)'
   - Rscript -e 'BiocManager::install("pathview", quiet=F)'
   - Rscript -e 'BiocManager::install(c("msigdbr", "dendextend", "pheatmap"), quiet=T)'
