@@ -66,8 +66,13 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
         ann$symbol[idx] = ann$synonyms[idx]
       }
       ann = ann[, c(fromType, toType)]
-    }else if(all(c(fromType, toType) %in% c("uniprot", "ensembl", "refseq", "symbol"))){
+    }else if(all(c(fromType, toType) %in% c("uniprot", "symbol"))){
       ann <- getGeneAnn(organism, update=update)$Protein
+      if("symbol" %in% c(fromType, toType) & any(!genes%in%ann$symbol)){
+        ann = rbind(ann, ann)
+        idx = (nrow(ann)/2+1):nrow(ann)
+        ann$symbol[idx] = ann$synonyms[idx]
+      }
       ann = ann[, c(fromType, toType)]
     }else{
       if (!requireNamespace("biomaRt", quietly = TRUE)) {
@@ -215,6 +220,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   ## Reorder the mapping file
   ncbi_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE,
                       quote = "", stringsAsFactors = FALSE, comment.char = "")
+  suppressWarnings(try(file.remove(locfname), silent = TRUE))
   ncbi_ann = ncbi_ann[, c("GeneID", "Symbol", "Synonyms", "dbXrefs", "type_of_gene", "description")]
   colnames(ncbi_ann)[c(1,2,6)] = c("entrez", "symbol", "fullname")
   ncbi_ann$hgnc = gsub("\\|.*", "", gsub(".*HGNC:", "", ncbi_ann$dbXrefs))
@@ -314,6 +320,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
   # data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
   saveRDS(geneann, rdsann)
+  suppressWarnings(try(file.remove(tmpfile), silent = TRUE))
 
   #### Uniprot gene annotation ####
   proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589", "UP000002277", "UP000002494")
@@ -321,7 +328,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"),
                         paste0("uniprot_proteome_", proteome_code[org], ".tab"))
   uniprot_link <- paste0("https://www.uniprot.org/uniprot/?query=proteome:", proteome_code[org],
-                         "&format=tab&force=true&columns=id,entry%20name,reviewed,protein%20names,genes,organism,database(Ensembl),comment(SUBCELLULAR%20LOCATION),database(RefSeq),comment(ALTERNATIVE%20PRODUCTS)&sort=score")
+                         "&format=tab&force=true&columns=id,reviewed,genes,database(Ensembl),database(RefSeq),comment(ALTERNATIVE%20PRODUCTS)&sort=score")
 
   if((!file.exists(locfname)) | update){
     ## Download protein annotation information from uniprot
@@ -331,56 +338,68 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   uniprot_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE,
                          quote = "", stringsAsFactors = FALSE, comment.char = "")
   suppressWarnings(try(file.remove(locfname), silent = TRUE))
-  colnames(uniprot_ann) = c("Entry", "EntryName", "Status", "Name", "Gene",
-                            "Organism", "Ensembl", "Subcellular", "RefSeq", "Isoforms")
-  uniprot_ann$Canonical = gsub(".*IsoId=", "", gsub("; Sequence=Displayed.*", "", uniprot_ann$Isoforms))
-  uniprot_ann$Canonical[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)] =
-    paste0(uniprot_ann$Entry[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)], "-1")
-  rownames(uniprot_ann) = uniprot_ann$Entry
-  Symbols = unlist(apply(uniprot_ann, 1, function(x){
+  colnames(uniprot_ann) = c("Entry", "Status", "Gene", "Ensembl", "RefSeq", "Isoforms")
+  uniprot_ann = uniprot_ann[uniprot_ann$Status=="reviewed", ]
+  # uniprot_ann$Canonical = gsub(".*IsoId=", "", gsub("; Sequence=Displayed.*", "", uniprot_ann$Isoforms))
+  # uniprot_ann$Canonical[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)] =
+  #   paste0(uniprot_ann$Entry[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)], "-1")
+  # rownames(uniprot_ann) = uniprot_ann$Entry
+  Symbols = apply(uniprot_ann, 1, function(x){
     Uniprot = x[1]
-    Symbols = unlist(strsplit(gsub(";$", "", x[5]), " "))
-    Symbols = Symbols[Symbols!=""|Symbols==""]
+    Symbols = unlist(strsplit(x[3], "; "))
+    Symbols = Symbols[Symbols!=""]
     if(length(Symbols)==0) return(NULL)
-    if(length(Symbols)==1) Symbols = c(Symbols, "")
-    rbind(rep(Uniprot, length(Symbols)-1), Symbols[1], Symbols[-1])
-  }))
-  Symbols = matrix(Symbols, ncol = 3, byrow = TRUE)
-  colnames(Symbols) = c('Entry', "symbol", "synonyms")
+    res = c()
+    for(i in Symbols){
+      syn = unlist(strsplit(Symbols, " "))
+      official = syn[1]
+      syn = syn[-1]
+      if(length(syn)==0) syn = ""
+      tmp = rbind(Uniprot, official, syn)
+      res = rbind(res, tmp)
+    }
+    return(res)
+  })
+  Symbols = matrix(unlist(Symbols), ncol = 3, byrow = TRUE)
+  colnames(Symbols) = c("uniprot", "symbol", "synonyms")
   Symbols = as.data.frame(Symbols, stringsAsFactors = FALSE)
-
-  ENSTs = unlist(apply(uniprot_ann, 1, function(x){
-    Uniprot = x[1]
-    ENSTs = unlist(strsplit(gsub(";$", "", x[7]), ";"))
-    rbind(rep(Uniprot, length(ENSTs)), ENSTs)
-  }))
-  ENSTs = matrix(ENSTs, ncol = 2, byrow = TRUE)
-  ENSTs = as.data.frame(ENSTs, stringsAsFactors = FALSE)
-  colnames(ENSTs) = c('Entry', "ensembl")
-  ENSTs$uniprot = gsub(".*\\[|\\]", "", ENSTs$ensembl)
-  ENSTs$uniprot[!grepl("\\[", ENSTs$ensembl)] = ENSTs$Entry[!grepl("\\[", ENSTs$ensembl)]
-  ENSTs$ensembl = gsub(" .*", "", ENSTs$ensembl)
-  ENSTs$uniprot[!grepl("-", ENSTs$uniprot)] =
-    uniprot_ann[ENSTs$uniprot[!grepl("-", ENSTs$uniprot)], "Canonical"]
-
-  RefSeq = unlist(apply(uniprot_ann, 1, function(x){
-    Uniprot = x[1]
-    RefSeq = unlist(strsplit(gsub(";$", "", x[9]), ";"))
-    rbind(rep(Uniprot, length(RefSeq)), RefSeq)
-  }))
-  RefSeq = matrix(RefSeq, ncol = 2, byrow = TRUE)
-  RefSeq = as.data.frame(RefSeq, stringsAsFactors = FALSE)
-  colnames(RefSeq) = c('Entry', "refseq")
-  RefSeq$uniprot = gsub(".*\\[|\\]", "", RefSeq$refseq)
-  RefSeq$uniprot[!grepl("\\[", RefSeq$refseq)] = RefSeq$Entry[!grepl("\\[", RefSeq$refseq)]
-  RefSeq$refseq = gsub(" .*", "", RefSeq$refseq)
-  RefSeq$uniprot[!grepl("-", RefSeq$uniprot)] =
-    uniprot_ann[RefSeq$uniprot[!grepl("-", RefSeq$uniprot)], "Canonical"]
-  ## Merge all annotations from each column
-  uniprot_ann = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
-  uniprot_ann$Entry = gsub("-.*","",uniprot_ann$uniprot)
-  # Symbols = Symbols[!duplicated(Symbols$Entry), ]
-  uniprot_ann = merge(uniprot_ann, Symbols, by = "Entry", all = TRUE)
+  uniprot_ann = Symbols
+#   ENSTs = unlist(apply(uniprot_ann, 1, function(x){
+#     Uniprot = x[1]
+#     ENSTs = unlist(strsplit(gsub(";$", "", x[4]), ";"))
+#     ENSTs = ENSTs[ENSTs!=""]
+#     if(length(ENSTs)==0) return(NULL)
+#     rbind(Uniprot, ENSTs)
+#   }))
+#   ENSTs = matrix(ENSTs, ncol = 2, byrow = TRUE)
+#   ENSTs = as.data.frame(ENSTs, stringsAsFactors = FALSE)
+#   colnames(ENSTs) = c('Entry', "ensembl")
+#   ENSTs$uniprot = gsub(".*\\[|\\]", "", ENSTs$ensembl)
+#   ENSTs$uniprot[!grepl("\\[", ENSTs$ensembl)] = ENSTs$Entry[!grepl("\\[", ENSTs$ensembl)]
+#   ENSTs$ensembl = gsub(" .*", "", ENSTs$ensembl)
+#   ENSTs$uniprot[!grepl("-", ENSTs$uniprot)] =
+#     uniprot_ann[ENSTs$uniprot[!grepl("-", ENSTs$uniprot)], "Canonical"]
+#
+#   RefSeq = unlist(apply(uniprot_ann, 1, function(x){
+#     Uniprot = x[1]
+#     RefSeq = unlist(strsplit(gsub(";$", "", x[5]), ";"))
+#     RefSeq = RefSeq[RefSeq!=""]
+#     if(length(RefSeq)==0) return(NULL)
+#     rbind(Uniprot, RefSeq)
+#   }))
+#   RefSeq = matrix(RefSeq, ncol = 2, byrow = TRUE)
+#   RefSeq = as.data.frame(RefSeq, stringsAsFactors = FALSE)
+#   colnames(RefSeq) = c('Entry', "refseq")
+#   RefSeq$uniprot = gsub(".*\\[|\\]", "", RefSeq$refseq)
+#   RefSeq$uniprot[!grepl("\\[", RefSeq$refseq)] = RefSeq$Entry[!grepl("\\[", RefSeq$refseq)]
+#   RefSeq$refseq = gsub(" .*", "", RefSeq$refseq)
+#   RefSeq$uniprot[!grepl("-", RefSeq$uniprot)] =
+#     uniprot_ann[RefSeq$uniprot[!grepl("-", RefSeq$uniprot)], "Canonical"]
+#   ## Merge all annotations from each column
+#   uniprot_ann = merge(ENSTs[,-1], RefSeq[,-1], by = "uniprot", all = TRUE)
+#   uniprot_ann$Entry = gsub("-.*","",uniprot_ann$uniprot)
+#   # Symbols = Symbols[!duplicated(Symbols$Entry), ]
+#   uniprot_ann = merge(uniprot_ann, Symbols, by = "Entry", all = TRUE)
   saveRDS(uniprot_ann, gsub("Gene", "Protein", rdsann))
 
   return(list(Gene = geneann, Protein = uniprot_ann))

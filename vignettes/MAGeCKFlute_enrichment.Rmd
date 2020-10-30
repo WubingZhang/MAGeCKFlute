@@ -1,6 +1,6 @@
 ---
 title: "MAGeCKFlute - Functional enrichment analysis in MAGeCKFlute"
-author: "Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu"
+author: "Binbin Wang, Mei Wang, Wubing Zhang, Wei Li & X. Shirley Liu"
 output:
   BiocStyle::html_document
 bibliography: library.bib
