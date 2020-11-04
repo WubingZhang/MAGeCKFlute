@@ -29,7 +29,7 @@ License: GPL (>=3)
 VignetteBuilder: knitr
 Depends: R (>= 3.5)
 Imports: Biobase, 
-         clusterProfiler (>= 3.16.1), 
+         clusterProfiler, 
          enrichplot, 
          gridExtra, 
          ggplot2, 

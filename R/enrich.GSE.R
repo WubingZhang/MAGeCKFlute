@@ -81,7 +81,7 @@ enrich.GSE <- function(geneList,
                      minGSSize = 0, maxGSSize = max(limit),
                      TERM2NAME = pathways, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")],
-                     verbose = verbose, eps = 0)
+                     verbose = verbose, ...)
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     colnames(enrichedRes@result)[11] = "geneID"

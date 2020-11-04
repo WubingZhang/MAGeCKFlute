@@ -56,13 +56,13 @@ ScatterView(
 
 \item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
 
-\item{auto_cut}{Boolean, take 1.5 fold standard deviation as cutoff.}
+\item{auto_cut}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
 
-\item{auto_cut_x}{Boolean, take 1.5 fold standard deviation as cutoff on x-axis.}
+\item{auto_cut_x}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on x-axis.}
 
-\item{auto_cut_y}{Boolean, take 1.5 fold standard deviation as cutoff on y-axis.}
+\item{auto_cut_y}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on y-axis}
 
-\item{auto_cut_diag}{Boolean, take 1.5 fold standard deviation as cutoff on diagonal.}
+\item{auto_cut_diag}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on diagonal.}
 
 \item{groups}{A character vector specifying groups. Optional groups include "top", "mid", "bottom",
 "left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
@@ -111,6 +111,8 @@ file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 dd = ReadBeta(file3)
 ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
 x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
+ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
+auto_cut = 2, model = "ninesquare", top = 5, display_cut = TRUE)
 
 }
 \author{
