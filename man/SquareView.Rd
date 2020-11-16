@@ -7,16 +7,21 @@
 \title{Scatter plot of 9-Square}
 \usage{
 SquareView(
-  beta,
+  df,
   ctrlname = "Control",
   treatname = "Treatment",
   label = 0,
   label.top = TRUE,
   top = 5,
   genelist = c(),
-  x_cutoff = NULL,
-  y_cutoff = NULL,
+  x_cut = NULL,
+  y_cut = NULL,
+  slope = 1,
   intercept = NULL,
+  auto_cut = FALSE,
+  auto_cut_x = auto_cut,
+  auto_cut_y = auto_cut,
+  auto_cut_diag = auto_cut,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
   groupnames = paste0("Group", 1:length(groups)),
   main = NULL,
@@ -27,7 +32,7 @@ SquareView(
 )
 }
 \arguments{
-\item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
+\item{df}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
 
 \item{ctrlname}{A character, specifying the names of control samples.}
 
@@ -41,11 +46,21 @@ SquareView(
 
 \item{genelist}{Character vector, specifying labeled genes.}
 
-\item{x_cutoff}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
+\item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
 
-\item{y_cutoff}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
+\item{y_cut}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
 
-\item{intercept}{An one or two-length numeric vector, specifying the intercept of diagonal.}
+\item{slope}{A numberic value indicating slope of the diagonal cutoff.}
+
+\item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
+
+\item{auto_cut}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
+
+\item{auto_cut_x}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on x-axis.}
+
+\item{auto_cut_y}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on y-axis}
+
+\item{auto_cut_diag}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on diagonal.}
 
 \item{groups}{A character vector, specifying which group to be colored. Optional groups include "topleft",
 "topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".}
@@ -67,8 +82,8 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot a scatter plot with Control beta score as x-axis and Treatment beta score as y-axis,
-and colored treatment related genes.
+Plot a scatter plot with Control as x-axis and Treatment as y-axis,
+and color condition specific genes.
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
