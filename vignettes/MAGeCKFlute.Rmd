@@ -51,7 +51,7 @@ gdata = ReadRRA(file1)
 head(gdata)
 ```
 
-**Hints**: you can also use a data from other analysis, just make sure the three columns (id, Score, and FDR) are avaible in the data.
+**Hints**: you can also use a data from other analysis, just make sure the three columns (id, Score, and FDR) are available in the data.
 
 ### sgrna_summary file (optional)
 ```{r sgrna}
@@ -129,7 +129,7 @@ FluteMLE(gdata, treatname="plx", ctrlname="dmso", proj="Test", organism="hsa")
 ```
 
 #### Incorporate Depmap data into analysis
-If your data only include one condition, you can take Depmap screens as control.
+If your data only include one comparison, you can take Depmap screens as the second control for further analysis.
 ```{r, eval=FALSE}
 ## Take Depmap screen as control
 FluteMLE(gdata, treatname="plx", ctrlname="Depmap", proj="PLX", organism="hsa", incorporateDepmap = TRUE)
@@ -417,7 +417,7 @@ print(p2)
 # 9-square groups
 Square9 = p1$data
 idx=Square9$group=="topcenter"
-geneList = Square9$Diff
+geneList = Square9$Diff[idx]
 names(geneList) = Square9$Gene[idx]
 universe = Square9$Gene
 
