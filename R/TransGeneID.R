@@ -339,7 +339,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
                          quote = "", stringsAsFactors = FALSE, comment.char = "")
   suppressWarnings(try(file.remove(locfname), silent = TRUE))
   colnames(uniprot_ann) = c("Entry", "Status", "Gene", "Ensembl", "RefSeq", "Isoforms")
-  uniprot_ann = uniprot_ann[uniprot_ann$Status=="reviewed", ]
+  uniprot_ann = uniprot_ann[order(uniprot_ann$Status), ]
   # uniprot_ann$Canonical = gsub(".*IsoId=", "", gsub("; Sequence=Displayed.*", "", uniprot_ann$Isoforms))
   # uniprot_ann$Canonical[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)] =
   #   paste0(uniprot_ann$Entry[!grepl("Sequence=Displayed", uniprot_ann$Isoforms)], "-1")
