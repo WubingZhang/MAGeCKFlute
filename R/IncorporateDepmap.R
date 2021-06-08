@@ -72,16 +72,17 @@ IncorporateDepmap <- function(dd, symbol = "id",
   sampleinfo = depmapDat$sampleinfo
 
   sampleinfo = sampleinfo[colnames(Depmap), ]
-  idx1 = sampleinfo$lineage%in%lineages
-  idx2 = sampleinfo$stripped_cell_line_name%in%cell_lines |
-    sampleinfo$CCLE.Name%in%cell_lines |
-    sampleinfo$alias%in%cell_lines
+  idx1 = which(sampleinfo$lineage%in%lineages)
+  idx2 = which(sampleinfo$stripped_cell_line_name%in%cell_lines)
+  idx3 = which(sampleinfo$CCLE.Name%in%cell_lines)
+  idx4 = which(sampleinfo$alias%in%cell_lines)
+  idx2 = c(idx2, idx3, idx4)
   genes = as.character(dd[, symbol])
   Depmap = as.data.frame(Depmap, stringsAsFactors = FALSE)
-  if(sum(idx2)>0){
-    dd = cbind(dd, Depmap = rowMeans(Depmap[genes, idx2], na.rm = TRUE))
-  }else if(sum(idx1)>0){
-    dd = cbind(dd, Depmap = rowMeans(Depmap[genes, idx1], na.rm = TRUE))
+  if(length(idx2)>0){
+    dd = cbind(dd, Depmap = rowMeans(Depmap[genes, idx2, drop=FALSE], na.rm = TRUE))
+  }else if(length(idx1)>0){
+    dd = cbind(dd, Depmap = rowMeans(Depmap[genes, idx1, drop=FALSE], na.rm = TRUE))
   }else{
     dd = cbind(dd, Depmap = rowMeans(Depmap[genes, ], na.rm = TRUE))
   }
