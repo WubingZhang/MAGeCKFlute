@@ -267,8 +267,8 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   tmpfile = file.path(system.file("extdata", package = "MAGeCKFlute"), "filelist")
   download.file("ftp://ftp.ensembl.org/pub/", tmpfile, quiet = TRUE)
   tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
-  tmp = gsub("release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
-  version = tmp[length(tmp)]
+  tmp = gsub(".*release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
+  version = gsub("\\D.*", "", tmp[length(tmp)])
   gzfile = c("Homo_sapiens.GRCh38.", "Bos_taurus.ARS-UCD1.2.", "Canis_familiaris.CanFam3.1.",
              "Mus_musculus.GRCm38.", "Pan_troglodytes.Pan_tro_3.0.",
              "Rattus_norvegicus.Rnor_6.0.", "Sus_scrofa.Sscrofa11.1.")
