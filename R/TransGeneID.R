@@ -203,11 +203,10 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   #### Read rds file directly ####
   rdsann = file.path(system.file("extdata", package = "MAGeCKFlute"),
                      paste0("GeneID_Annotation_", org, ".rds"))
-  if(file.exists(rdsann) & !update)
-    return(list(Gene = readRDS(rdsann), Protein = readRDS(gsub("Gene", "Protein", rdsann))))
+  if(file.exists(rdsann) & !update) return(readRDS(rdsann))
 
   #### NCBI gene annotation ####
-  gzfile = paste0(c("Homo_sapiens", "Bos_taurus", "Canis_familiaris", "Mus_musculus",
+  gzfile = paste0(c("Homo_sapiens", "Bos_taurus", "Canis_lupus_familiaris", "Mus_musculus",
                     "Pan_troglodytes", "Rattus_norvegicus", "Sus_scrofa"), ".gene_info.gz")
   names(gzfile) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno", "ssc")
   locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"), gzfile[org])
@@ -269,19 +268,17 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
   tmp = gsub(".*release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
   version = max(as.integer(gsub("\\D.*", "", tmp)), na.rm = TRUE)
-  gzfile = c("Homo_sapiens.GRCh38.", "Bos_taurus.ARS-UCD1.2.", "Canis_familiaris.CanFam3.1.",
-             "Mus_musculus.GRCm38.", "Pan_troglodytes.Pan_tro_3.0.",
-             "Rattus_norvegicus.Rnor_6.0.", "Sus_scrofa.Sscrofa11.1.")
+  gzfile = c("Homo_sapiens", "Bos_taurus", "Canis_lupus_familiaris",
+             "Mus_musculus", "Pan_troglodytes", "Rattus_norvegicus", "Sus_scrofa")
   names(gzfile) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno", "ssc")
-  entrezfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
-                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
-                       version, ".entrez.tsv.gz")
+  orgfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/", tolower(gzfile[org]), "/")
+  download.file(orgfile, tmpfile, quiet = TRUE)
+  tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
+  entrezfile <- paste0(orgfile, grep(paste0(version, ".entrez.tsv.gz"), tmp[,ncol(tmp)], value = TRUE))
   # uniprotfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
   #                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
   #                       version, ".uniprot.tsv.gz")
-  refseqfile <- paste0("ftp://ftp.ensembl.org/pub/release-", version, "/tsv/",
-                       tolower(gsub("\\..*", "", gzfile[org])), "/", gzfile[org],
-                       version, ".refseq.tsv.gz")
+  refseqfile <- paste0(orgfile, grep(paste0(version, ".refseq.tsv.gz"), tmp[,ncol(tmp)], value = TRUE))
   download.file(entrezfile, tmpfile, quiet = TRUE)
   ensg_entrez = read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
   ensg_entrez = ensg_entrez[, c(1,4)]
@@ -319,7 +316,6 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
   # idx = !(grepl("-", data$uniprot)|is.na(data$uniprot))
   # data$uniprot[idx] = paste0(data$uniprot[idx], "-1")
-  saveRDS(geneann, rdsann)
   suppressWarnings(try(file.remove(tmpfile), silent = TRUE))
 
   #### Uniprot gene annotation ####
@@ -400,9 +396,9 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 #   uniprot_ann$Entry = gsub("-.*","",uniprot_ann$uniprot)
 #   # Symbols = Symbols[!duplicated(Symbols$Entry), ]
 #   uniprot_ann = merge(uniprot_ann, Symbols, by = "Entry", all = TRUE)
-  saveRDS(uniprot_ann, gsub("Gene", "Protein", rdsann))
-
-  return(list(Gene = geneann, Protein = uniprot_ann))
+  ann = list(Gene = geneann, Protein = uniprot_ann)
+  saveRDS(ann, rdsann)
+  return(ann)
 }
 
 
