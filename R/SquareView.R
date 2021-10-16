@@ -1,30 +1,30 @@
-#' Scatter plot of 9-Square
+#' Scatter plot showing 9 quadrants
 #'
-#' Plot a scatter plot with Control as x-axis and Treatment as y-axis,
-#' and color condition specific genes.
+#' A scatter plot labeling dots in 9 quadrants
 #'
 #' @docType methods
 #' @name SquareView
 #' @rdname SquareView
 #' @aliases squareview
 #'
-#' @param df Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.
-#' @param ctrlname A character, specifying the names of control samples.
-#' @param treatname A character, specifying the name of treatment samples.
-#'
+#' @param df A data frame.
+#' @param ctrlname A character, specifying the names of control samples,
+#' of which the average scores will show as the x-axis.
+#' @param treatname A character, specifying the name of treatment samples,
+#' of which the average scores will show as the y-axis.
 #' @param label An integer or a character specifying the column used as the label, default value is 0 (row names).
 #' @param label.top Boolean, whether label the top selected genes, default label the top 10 genes in each group.
 #' @param top Integer, specifying the number of top selected genes to be labeled. Default is 5.
-#' @param genelist Character vector, specifying labeled genes.
+#' @param genelist Character vector, specifying genes to be labeled.
 #'
 #' @param x_cut An one or two-length numeric vector, specifying the cutoff used for x-axis.
 #' @param y_cut An one or two-length numeric vector, specifying the cutoff used for y-axis.
 #' @param slope A numberic value indicating slope of the diagonal cutoff.
 #' @param intercept A numberic value indicating intercept of the diagonal cutoff.
-#' @param auto_cut Boolean or numeric, specifying how many standard deviation will be used as cutoff.
-#' @param auto_cut_x Boolean or numeric, specifying how many standard deviation will be used as cutoff on x-axis.
-#' @param auto_cut_y Boolean or numeric, specifying how many standard deviation will be used as cutoff on y-axis
-#' @param auto_cut_diag Boolean or numeric, specifying how many standard deviation will be used as cutoff on diagonal.
+#' @param auto_cut Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff.
+#' @param auto_cut_x Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on x-axis.
+#' @param auto_cut_y Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on y-axis
+#' @param auto_cut_diag Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on diagonal.
 #'
 #' @param groups A character vector, specifying which group to be colored. Optional groups include "topleft",
 #' "topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".
@@ -208,13 +208,8 @@ SquareView<-function(df,
     p = p + annotate("text", color="red", x = x_cut[2], y=min(gg$y),
                      vjust=0, hjust = -3, label=sum(df$group=="bottomright"))
   p = p + theme(legend.key = element_rect(fill = "transparent"))
-  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
-  # p = p + theme(legend.position="none")
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + theme(legend.title=element_blank())
   # p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
   # p = p + xlim(x_min, x_max) + ylim(y_min, y_max)

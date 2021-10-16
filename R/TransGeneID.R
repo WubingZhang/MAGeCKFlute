@@ -16,7 +16,7 @@
 #' (Only used when transform gene ids between organisms).
 #' @param toOrg "hsa"(default), "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional
 #' (Only used when transform gene ids between organisms).
-#' @param ensemblHost String, specifying ensembl host, you can use `listEnsemblArchives()`
+#' @param ensemblHost Character, specifying ensembl host, you can use `listEnsemblArchives()`
 #' to show all available Ensembl archives hosts.
 #' @param unique Boolean, specifying whether do one-to-one mapping.
 #' @param update Boolean, specifying whether update built-in gene annotation (needs network and takes time).
@@ -75,9 +75,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
       }
       ann = ann[, c(fromType, toType)]
     }else{
-      if (!requireNamespace("biomaRt", quietly = TRUE)) {
-        stop("Package \"biomaRt\" is required. Please install it.", call. = FALSE)
-      }
+      requireNamespace("biomaRt", quietly=TRUE) || stop("biomaRt package is required")
       ds = datasets[grepl(organism, datasets)]
       ensembl <- biomaRt::useMart(biomart = 'ENSEMBL_MART_ENSEMBL',
                                   dataset = ds, host = ensemblHost)
@@ -126,10 +124,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
       ann = ann[, c(paste0(fromOrg, "_", fromType), paste0(toOrg, "_", toType))]
       colnames(ann) = c(fromOrg, toOrg)
     }else{
-      if (!requireNamespace("biomaRt", quietly = TRUE)) {
-        stop("Package \"biomaRt\" is required. Please install it.",
-             call. = FALSE)
-      }
+      requireNamespace("biomaRt", quietly=TRUE) || stop("biomaRt package is required")
       ## Ortholog ID mapping.
       from = biomaRt::useMart("ensembl", dataset = datasets[grepl(fromOrg, datasets)])
       to = biomaRt::useMart("ensembl", dataset = datasets[grepl(toOrg, datasets)])

@@ -4,7 +4,7 @@
 \name{SquareView}
 \alias{SquareView}
 \alias{squareview}
-\title{Scatter plot of 9-Square}
+\title{Scatter plot showing 9 quadrants}
 \usage{
 SquareView(
   df,
@@ -32,11 +32,13 @@ SquareView(
 )
 }
 \arguments{
-\item{df}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
+\item{df}{A data frame.}
 
-\item{ctrlname}{A character, specifying the names of control samples.}
+\item{ctrlname}{A character, specifying the names of control samples,
+of which the average scores will show as the x-axis.}
 
-\item{treatname}{A character, specifying the name of treatment samples.}
+\item{treatname}{A character, specifying the name of treatment samples,
+of which the average scores will show as the y-axis.}
 
 \item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
@@ -44,7 +46,7 @@ SquareView(
 
 \item{top}{Integer, specifying the number of top selected genes to be labeled. Default is 5.}
 
-\item{genelist}{Character vector, specifying labeled genes.}
+\item{genelist}{Character vector, specifying genes to be labeled.}
 
 \item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
 
@@ -54,13 +56,13 @@ SquareView(
 
 \item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
 
-\item{auto_cut}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
+\item{auto_cut}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff.}
 
-\item{auto_cut_x}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on x-axis.}
+\item{auto_cut_x}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on x-axis.}
 
-\item{auto_cut_y}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on y-axis}
+\item{auto_cut_y}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on y-axis}
 
-\item{auto_cut_diag}{Boolean or numeric, specifying how many standard deviation will be used as cutoff on diagonal.}
+\item{auto_cut_diag}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on diagonal.}
 
 \item{groups}{A character vector, specifying which group to be colored. Optional groups include "topleft",
 "topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".}
@@ -82,8 +84,7 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot a scatter plot with Control as x-axis and Treatment as y-axis,
-and color condition specific genes.
+A scatter plot labeling dots in 9 quadrants
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),

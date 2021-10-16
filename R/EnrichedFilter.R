@@ -4,7 +4,7 @@
 #' @name EnrichedFilter
 #' @rdname EnrichedFilter
 #'
-#' @param enrichment A data frame of enrichment result.
+#' @param enrichment A data frame of enrichment result or an enrichResult object.
 #' @param cutoff A numeric, specifying the cutoff of Jaccard index between two pathways.
 #'
 #' @return A data frame.

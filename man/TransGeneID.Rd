@@ -36,7 +36,7 @@ Look at the code in examples to check valid attributes.}
 \item{toOrg}{"hsa"(default), "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional
 (Only used when transform gene ids between organisms).}
 
-\item{ensemblHost}{String, specifying ensembl host, you can use `listEnsemblArchives()`
+\item{ensemblHost}{Character, specifying ensembl host, you can use `listEnsemblArchives()`
 to show all available Ensembl archives hosts.}
 
 \item{unique}{Boolean, specifying whether do one-to-one mapping.}

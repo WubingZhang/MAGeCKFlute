@@ -8,7 +8,7 @@
 EnrichedFilter(enrichment = enrichment, cutoff = 0.8)
 }
 \arguments{
-\item{enrichment}{A data frame of enrichment result.}
+\item{enrichment}{A data frame of enrichment result or an enrichResult object.}
 
 \item{cutoff}{A numeric, specifying the cutoff of Jaccard index between two pathways.}
 }

@@ -54,13 +54,7 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
   p = p + geom_hline(yintercept = 0, color="blue")
   if(add.smooth)
     p = p + geom_smooth(method = plot.method[1], formula = y ~ x, color=smooth.col, linetype=lty)
-  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank(),
-                legend.key = element_rect(fill = "transparent"))
+  p = p + theme_bw(base_size = 14)
   p = p + labs(title=main)
   if(show.statistics){
     xmax = max(gg$A)

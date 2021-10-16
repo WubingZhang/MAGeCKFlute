@@ -8,11 +8,11 @@
 #' @rdname EnrichAB
 #'
 #' @param data A data frame.
-#' @param pvalue Pvalue cutoff.
-#' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
+#' @param enrich_method One of "ORT" (Over-Representing Test) and "HGT" (HyperGemetric test).
+#' @param top An integer, specifying the number of pathways to show.
 #' @param organism "hsa" or "mmu".
-#' @param limit A two-length vector (default: c(1, 120)), specifying the min and
-#' max size of pathways for enrichent analysis.
+#' @param limit A two-length vector, specifying the min and max size of pathways
+#' for enrichent analysis.
 #' @param filename Suffix of output file name.
 #' @param out.dir Path to save plot to (combined with filename).
 #' @param width As in ggsave.
@@ -25,10 +25,11 @@
 #'
 #' @author Wubing Zhang
 #'
-EnrichAB <- function(data, pvalue = 0.25,
-                     enrich_method = "ORT",
+EnrichAB <- function(data,
+                     enrich_method = "HGT",
+                     top = top,
                      organism = "hsa",
-                     limit = c(1, 120),
+                     limit = c(2, 100),
                      filename = NULL, out.dir = ".",
                      width = 6.5, height = 4,
                      verbose = TRUE, ...){
@@ -50,13 +51,13 @@ EnrichAB <- function(data, pvalue = 0.25,
     gobpA = enrichA@result[grepl("^GO", enrichA@result$ID), ]
     reactomeA = enrichA@result[grepl("REACTOME", enrichA@result$ID), ]
     complexA = enrichA@result[grepl("CORUM", enrichA@result$ID), ]
-    keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = 5, bottom = 0)
+    keggA = list(enrichRes = keggA, gridPlot = EnrichedView(keggA, top = top, bottom = 0)
                  + labs(title = "KEGG: GroupA"))
-    gobpA = list(enrichRes = gobpA, gridPlot = EnrichedView(gobpA, top = 5, bottom = 0)
+    gobpA = list(enrichRes = gobpA, gridPlot = EnrichedView(gobpA, top = top, bottom = 0)
                + labs(title = "GOBP: GroupA"))
-    reactomeA = list(enrichRes = reactomeA, gridPlot = EnrichedView(reactomeA, top = 5, bottom = 0)
+    reactomeA = list(enrichRes = reactomeA, gridPlot = EnrichedView(reactomeA, top = top, bottom = 0)
                      + labs(title = "REACTOME: GroupA"))
-    complexA = list(enrichRes = complexA, gridPlot = EnrichedView(complexA, top = 5, bottom = 0)
+    complexA = list(enrichRes = complexA, gridPlot = EnrichedView(complexA, top = top, bottom = 0)
                     + labs(title = "Complex: GroupA"))
   }else{
     keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
@@ -73,13 +74,13 @@ EnrichAB <- function(data, pvalue = 0.25,
     gobpB = enrichB@result[grepl("^GO", enrichB@result$ID), ]
     reactomeB = enrichB@result[grepl("REACTOME", enrichB@result$ID), ]
     complexB = enrichB@result[grepl("CORUM", enrichB@result$ID), ]
-    keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = 5)
+    keggB = list(enrichRes = keggB, gridPlot = EnrichedView(keggB, top = 0, bottom = top)
                  + labs(title = "KEGG: GroupB"))
-    gobpB = list(enrichRes = gobpB, gridPlot = EnrichedView(gobpB, top = 0, bottom = 5)
+    gobpB = list(enrichRes = gobpB, gridPlot = EnrichedView(gobpB, top = 0, bottom = top)
                + labs(title = "GOBP: GroupB"))
-    reactomeB = list(enrichRes = reactomeB, gridPlot = EnrichedView(reactomeB, top = 0, bottom = 5)
+    reactomeB = list(enrichRes = reactomeB, gridPlot = EnrichedView(reactomeB, top = 0, bottom = top)
                      + labs(title = "REACTOME: GroupB"))
-    complexB = list(enrichRes = complexB, gridPlot = EnrichedView(complexB, top = 0, bottom = 5)
+    complexB = list(enrichRes = complexB, gridPlot = EnrichedView(complexB, top = 0, bottom = top)
                     + labs(title = "Complex: GroupB"))
   }else{
     keggB = gobpB = reactomeB = complexB = list(enrichRes = NULL, gridPlot = noEnrichPlot())

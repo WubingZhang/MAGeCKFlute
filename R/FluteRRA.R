@@ -15,12 +15,12 @@
 #' @param cell_lines A character vector, specifying the cell lines in Depmap to be considered.
 #' @param lineages A character vector, specifying the lineages in Depmap to be considered.
 #' @param omitEssential Boolean, indicating whether omit common essential genes from the downstream analysis.
-#' @param top An integer, specifying number of top selected genes to be labeled in rank figure.
+#' @param top An integer, specifying the number of top selected genes to be labeled
+#' in rank figure and the number of top pathways to be shown.
 #' @param toplabels A character vector, specifying interested genes to be labeled in rank figure.
 #' @param scale_cutoff Boolean or numeric, specifying how many standard deviation will be used as cutoff.
 #' @param limit A two-length vector, specifying the minimal and
 #' maximal size of gene sets for enrichent analysis.
-#' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param proj A character, indicating the prefix of output file name.
 #' @param width The width of summary pdf in inches.
 #' @param height The height of summary pdf in inches.
@@ -62,13 +62,12 @@ FluteRRA <- function(gene_summary,
                      sgrna_summary = NULL,
                      keytype = "Symbol",
                      organism = "hsa",
-                     incorporateDepmap = TRUE,
+                     incorporateDepmap = FALSE,
                      cell_lines = NA, lineages = "All",
                      omitEssential = FALSE,
                      top = 5, toplabels = NULL,
                      scale_cutoff = 2,
-                     limit = c(2, 200),
-                     pvalueCutoff = 0.25,
+                     limit = c(2, 100),
                      proj = NA,
                      width = 12, height = 6,
                      outdir = ".",
@@ -157,7 +156,7 @@ FluteRRA <- function(gene_summary,
                 sep = "\t", row.names = FALSE, quote = FALSE)
 
     E1 = EnrichSquare(p.square$data, id = "EntrezID", keytype = "entrez",
-                      x = "Depmap", y = "Score", pvalue = pvalueCutoff,
+                      x = "Depmap", y = "Score", top = top,
                       organism=organism, filename="RRA", limit = limit,
                       out.dir=file.path(outdir, "RRA/"))
   }
@@ -187,10 +186,10 @@ FluteRRA <- function(gene_summary,
   ggsave(file.path(outdir,"RRA/RankView_sgRNA.png"), p2, units = "in", width = 6.5, height = 5)
   p3 = ScatterView(dd[dd$Score>0, ], x = "RandomIndex", y = "Score", label = "Symbol",
                    y_cut = cutoff, groups = "top", top = top)
-  ggsave(file.path(outdir, "RRA/ScatterView_Positive.png"), p2, width = 5, height = 4)
+  ggsave(file.path(outdir, "RRA/ScatterView_Positive.png"), p3, width = 5, height = 4)
   p4 = ScatterView(dd[dd$Score<0, ], x = "RandomIndex", y = "Score", label = "Symbol",
                    auto_cut_y = TRUE, groups = "bottom", top = top)
-  ggsave(file.path(outdir, "RRA/ScatterView_Negative.png"), p2, width = 5, height = 4)
+  ggsave(file.path(outdir, "RRA/ScatterView_Negative.png"), p4, width = 5, height = 4)
   grid.arrange(p1, p2, p3, p4, ncol = 2)
 
   ## Enrichment analysis ##
@@ -199,7 +198,7 @@ FluteRRA <- function(gene_summary,
   geneList = dd$Score; names(geneList) = dd$EntrezID
   idx1 = dd$Score<cutoff[1]; idx2 = dd$Score>cutoff[2]
   kegg.pos = EnrichAnalyzer(geneList=geneList[idx2], universe=universe,
-                            organism=organism, pvalueCutoff=pvalueCutoff,
+                            organism=organism, pvalueCutoff=1,
                             limit = limit, keytype = "entrez",
                             type = "KEGG+REACTOME+GOBP+Complex")
   if(!is.null(kegg.pos) && nrow(kegg.pos@result)>0){
@@ -219,7 +218,7 @@ FluteRRA <- function(gene_summary,
     keggA = gobpA = reactomeA = complexA = list(enrichRes = NULL, gridPlot = noEnrichPlot())
   }
   kegg.neg = EnrichAnalyzer(geneList=geneList[idx1], universe=universe,
-                            organism=organism, pvalueCutoff=pvalueCutoff,
+                            organism=organism, pvalueCutoff=1,
                             limit = limit, keytype = "entrez",
                             type = "KEGG+REACTOME+GOBP+Complex")
   if(!is.null(kegg.neg) && nrow(kegg.neg@result)>0){

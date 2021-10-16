@@ -59,7 +59,7 @@ BarView <- function(df, x = "x", y = "y", fill = "#FC6665",
   if(!(length(xlab)==1 && is.na(xlab))) p = p + labs(x=xlab)
   if(!(length(ylab)==1 && is.na(ylab))) p = p + labs(y=ylab)
   if(!(length(main)==1 && is.na(main))) p = p + labs(title=main)
-  p = p + theme_bw(base_size = 12)
-  p = p + theme(plot.title = element_text(hjust = 0.5, size=16))
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   return(p)
 }

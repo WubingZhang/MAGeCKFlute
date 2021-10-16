@@ -5,16 +5,24 @@
 \alias{OmitCommonEssential}
 \title{Omit common essential genes based on depmap data}
 \usage{
-OmitCommonEssential(dd, symbol = "id", lineages = "All", dependency = -0.5)
+OmitCommonEssential(
+  dd,
+  symbol = "id",
+  lineages = "All",
+  cell_lines = NULL,
+  dependency = -0.5
+)
 }
 \arguments{
 \item{dd}{A data frame.}
 
 \item{symbol}{A character, specifying the column name of gene symbols in the data frame.}
 
-\item{lineages}{A character vector, specifying the lineages used for common essential gene selection.}
+\item{lineages}{A character vector, specifying the lineages for selecting essential genes.}
 
-\item{dependency}{A numeric, specifying the threshold for common essential gene selection.}
+\item{cell_lines}{A character vector, specifying cell lines for selecting essential genes.}
+
+\item{dependency}{A numeric, specifying the threshold for selecting essential genes.}
 }
 \value{
 A data frame.

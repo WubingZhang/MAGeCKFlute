@@ -19,11 +19,11 @@
 #' @param norm_method One of "none", "cell_cycle" (default) or "loess".
 #' @param posControl A character vector, specifying a list of positive control gene symbols.
 #' @param omitEssential Boolean, indicating whether omit common essential genes from the downstream analysis.
-#' @param top An integer, specifying number of top selected genes to be labeled in rank figure.
+#' @param top An integer, specifying the number of top selected genes to be labeled
+#' in rank figure and the number of top pathways to be shown.
 #' @param toplabels A character vector, specifying interested genes to be labeled in rank figure.
 #' @param scale_cutoff Boolean or numeric, specifying how many standard deviation will be used as cutoff.
 #' @param limit A two-length vector, specifying the minimal and maximal size of gene sets for enrichent analysis.
-#' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param proj A character, indicating the prefix of output file name, which can't contain special characters.
 #' @param width The width of summary pdf in inches.
@@ -77,7 +77,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      omitEssential = FALSE,
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
-                     pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
+                     enrich_method = "ORT", proj = NA,
                      width = 10, height = 7, outdir = ".",
                      pathview.top = 4, verbose = TRUE){
 	## Prepare the running environment ##
@@ -226,7 +226,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir3, showWarnings=FALSE)
 	  dir.create(outputDir4, showWarnings=FALSE)
 
-	  E1 = EnrichAB(p1$data, pvalue = pvalueCutoff, enrich_method = enrich_method,
+	  E1 = EnrichAB(p1$data, pvalue = 1, enrich_method = enrich_method,
 	                organism = organism, limit = limit,
 	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
@@ -262,7 +262,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	{
 	  E1 = EnrichSquare(p1$data, id = "EntrezID", keytype = "entrez",
 	                    x = "Control", y = "Treatment", organism=organism,
-	                    pvalue = pvalueCutoff, enrich_method = enrich_method,
+	                    top = top, enrich_method = enrich_method,
 	                    filename=norm_method, limit = limit, out.dir=outputDir3)
     # EnrichView
 	  grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)

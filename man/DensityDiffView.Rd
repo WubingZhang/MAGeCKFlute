@@ -6,7 +6,7 @@
 \title{Density plot}
 \usage{
 DensityDiffView(
-  beta,
+  dat,
   ctrlname = "Control",
   treatname = "Treatment",
   main = NULL,
@@ -17,19 +17,20 @@ DensityDiffView(
 )
 }
 \arguments{
-\item{beta}{Data frame, including \code{ctrlname} and \code{treatname} as columns.}
+\item{dat}{A data frame.}
 
-\item{ctrlname}{A character, specifying the name of control sample.}
+\item{ctrlname}{A character, specifying the control samples.}
 
-\item{treatname}{A character, specifying the name of treatment sample.}
+\item{treatname}{A character, specifying the treatment samples.}
 
-\item{main}{As in 'plot'.}
+\item{main}{A character, specifying title.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
+\item{filename}{A character, specifying a file name to create on disk.
+Set filename to be "NULL", if don't want to save the figure.}
 
-\item{width}{As in ggsave.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{height}{As in ggsave.}
+\item{height}{Numeric, specifying height of figure.}
 
 \item{...}{Other parameters in ggsave.}
 }
@@ -37,7 +38,7 @@ DensityDiffView(
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot the density of beta score deviations.
+Plot the distribution of score differences between treatment and control.
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),

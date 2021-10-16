@@ -1,6 +1,5 @@
-#' Do enrichment analysis using over-representation test
+#' Enrichment analysis using over-representation test
 #'
-#' Do enrichment analysis using over-representation test
 #'
 #' @docType methods
 #' @name enrich.ORT
@@ -31,10 +30,6 @@
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.GSE}}
 #' @seealso \code{\link{EnrichAnalyzer}}
-#' @seealso \code{\link[clusterProfiler]{enrichGO}}
-#' @seealso \code{\link[clusterProfiler]{enrichKEGG}}
-#' @seealso \code{\link[clusterProfiler]{enricher}}
-#' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
@@ -48,13 +43,14 @@ enrich.ORT <- function(geneList,
                        keytype = "Symbol",
                        type = "GOBP",
                        organism = 'hsa',
-                       pvalueCutoff = 0.25,
-                       limit = c(2, 200),
+                       pvalueCutoff = 1,
+                       limit = c(2, 100),
                        universe=NULL,
                        gmtpath = NULL,
                        verbose = TRUE,
                        ...){
-
+  requireNamespace("clusterProfiler", quietly=TRUE) || stop("Please install the clusterProfiler package")
+  requireNamespace("DOSE", quietly=TRUE) || stop("Please install the DOSE package")
   ## Prepare gene set annotation
   gene2path = gsGetter(gmtpath, type, limit, organism)
   idx = duplicated(gene2path$PathwayID)
@@ -82,7 +78,7 @@ enrich.ORT <- function(geneList,
   len = length(unique(intersect(gene, gene2path$Gene)))
   if(verbose) message("\t", len, " genes are mapped ...")
   orgdb = getOrg(organism)$pkg
-  enrichedRes = enricher(gene, universe = universe,
+  enrichedRes = clusterProfiler::enricher(gene, universe = universe,
                          minGSSize = 0, maxGSSize = max(limit),
                          TERM2NAME = pathways, pvalueCutoff = pvalueCutoff,
                          TERM2GENE = gene2path[,c("PathwayID","Gene")])

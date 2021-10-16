@@ -4,15 +4,15 @@
 \name{enrich.ORT}
 \alias{enrich.ORT}
 \alias{enrichORT}
-\title{Do enrichment analysis using over-representation test}
+\title{Enrichment analysis using over-representation test}
 \usage{
 enrich.ORT(
   geneList,
   keytype = "Symbol",
   type = "GOBP",
   organism = "hsa",
-  pvalueCutoff = 0.25,
-  limit = c(2, 200),
+  pvalueCutoff = 1,
+  limit = c(2, 100),
   universe = NULL,
   gmtpath = NULL,
   verbose = TRUE,
@@ -50,7 +50,7 @@ maximal size of gene sets for enrichent analysis.}
 An enrichedResult instance.
 }
 \description{
-Do enrichment analysis using over-representation test
+Enrichment analysis using over-representation test
 }
 \examples{
 data(geneList, package = "DOSE")
@@ -65,14 +65,6 @@ head(slot(enrichedRes, "result"))
 \code{\link{enrich.GSE}}
 
 \code{\link{EnrichAnalyzer}}
-
-\code{\link[clusterProfiler]{enrichGO}}
-
-\code{\link[clusterProfiler]{enrichKEGG}}
-
-\code{\link[clusterProfiler]{enricher}}
-
-\code{\link[DOSE]{enrichResult-class}}
 }
 \author{
 Wubing Zhang

@@ -19,7 +19,6 @@ Load processed Depmap data
 \dontrun{
   depmapDat = LoadDepmap()
 }
-
 }
 \author{
 Wubing Zhang

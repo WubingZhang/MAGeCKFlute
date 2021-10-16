@@ -3,13 +3,13 @@
 \docType{methods}
 \name{DensityView}
 \alias{DensityView}
-\title{Density plot for gene beta scores in Control and Treatment}
+\title{Density plot}
 \usage{
 DensityView(
-  beta,
+  dat,
   samples = NULL,
   main = NULL,
-  xlab = "Beta Score",
+  xlab = "Score",
   filename = NULL,
   width = 5,
   height = 4,
@@ -17,20 +17,20 @@ DensityView(
 )
 }
 \arguments{
-\item{beta}{Data frame, including \code{samples} as columns.}
+\item{dat}{A data frame.}
 
-\item{samples}{Character, specifying sample names in \code{beta}.}
+\item{samples}{A character vector, specifying columns in \code{dat} for plotting.}
 
-\item{main}{As in 'plot'.}
+\item{main}{A character, specifying title.}
 
-\item{xlab}{As in 'plot'.}
+\item{xlab}{A character, specifying title of x-axis.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-don't save the figure on disk.}
+\item{filename}{A character, specifying a file name to create on disk.
+Set filename to be "NULL", if don't want to save the figure.}
 
-\item{width}{As in ggsave.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{height}{As in ggsave.}
+\item{height}{Numeric, specifying height of figure.}
 
 \item{...}{Other available parameters in ggsave.}
 }
@@ -38,7 +38,7 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot the density of gene beta scores in two samples.
+Plot the distribution of numeric vectors with the same length.
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),

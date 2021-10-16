@@ -7,10 +7,10 @@
 \usage{
 EnrichAB(
   data,
-  pvalue = 0.25,
-  enrich_method = "ORT",
+  enrich_method = "HGT",
+  top = top,
   organism = "hsa",
-  limit = c(1, 120),
+  limit = c(2, 100),
   filename = NULL,
   out.dir = ".",
   width = 6.5,
@@ -22,14 +22,14 @@ EnrichAB(
 \arguments{
 \item{data}{A data frame.}
 
-\item{pvalue}{Pvalue cutoff.}
+\item{enrich_method}{One of "ORT" (Over-Representing Test) and "HGT" (HyperGemetric test).}
 
-\item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
+\item{top}{An integer, specifying the number of pathways to show.}
 
 \item{organism}{"hsa" or "mmu".}
 
-\item{limit}{A two-length vector (default: c(1, 120)), specifying the min and
-max size of pathways for enrichent analysis.}
+\item{limit}{A two-length vector, specifying the min and max size of pathways
+for enrichent analysis.}
 
 \item{filename}{Suffix of output file name.}
 

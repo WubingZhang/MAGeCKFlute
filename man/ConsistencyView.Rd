@@ -6,7 +6,7 @@
 \title{Visualize the estimate cell cycle compared to control.}
 \usage{
 ConsistencyView(
-  beta,
+  dat,
   ctrlname,
   treatname,
   main = NULL,
@@ -17,20 +17,20 @@ ConsistencyView(
 )
 }
 \arguments{
-\item{beta}{Data frame, which has columns of \code{ctrlname} and other samples.}
+\item{dat}{A data frame.}
 
 \item{ctrlname}{A character, specifying the names of control samples.}
 
-\item{treatname}{A character, specifying the name of treatment samples.}
+\item{treatname}{A character, specifying the names of treatment samples.}
 
-\item{main}{As in 'plot'.}
+\item{main}{A character, specifying title.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-no output.}
+\item{filename}{A character, specifying a file name to create on disk.
+Set filename to be "NULL", if don't want to save the figure.}
 
-\item{width}{As in ggsave.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{height}{As in ggsave.}
+\item{height}{Numeric, specifying height of figure.}
 
 \item{...}{Other available parameters in ggsave.}
 }

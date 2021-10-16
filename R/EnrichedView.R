@@ -118,13 +118,8 @@ EnrichedView = function(enrichment,
                     panel.background=element_blank())
     p1 = p1 + theme(legend.position="right")
     p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
-    p1 = p1 + theme(text = element_text(colour="black",size = 11, family = "Helvetica"),
-                    plot.title = element_text(hjust = 0.5, size=14),
-                    axis.text = element_text(colour="gray10"))
-    p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
-                    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                    panel.border = element_blank(), panel.background = element_blank(),
-                    legend.key = element_rect(fill = "transparent"))
+    p1 = p1 + theme_bw(base_size = 14)
+    p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
     p1 = p1 + guides(color = FALSE)
   }else if(mode == 2){
     idx = (max(enrichment$x)-enrichment$x) > enrichment$x
@@ -134,7 +129,7 @@ EnrichedView = function(enrichment,
     p1 = p1 + geom_point(aes_string(color = "col", size = "size"))
     p1 = p1 + xlim(0, NA)
     p1 = p1 + geom_text(aes_string(hjust = "hjust"))
-    p1 = p1 + theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+    p1 = p1 + theme_bw(base_size = 14) + theme(plot.title = element_text(hjust = 0.5))
   }
   if(x=="NES"){
     p1 = p1 + labs(x = "Enrichment score", y = NULL, color = NULL,
@@ -164,11 +159,7 @@ noEnrichPlot = function(main = "No enriched terms"){
   p1 = p1 + geom_text(aes(x=0, y=0, label="No enriched terms"), size=6)
   p1 = p1 + labs(title=main)
   p1 = p1 + theme(plot.title = element_text(size=12))
-  p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                  plot.title = element_text(hjust = 0.5, size=18),
-                  axis.text = element_text(colour="gray10"))
-  p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
-                  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                  panel.border = element_blank(), panel.background = element_blank())
+  p1 = p1 + theme_bw(base_size = 14)
+  p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
   p1
 }
