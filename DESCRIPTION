@@ -51,7 +51,6 @@ Suggests: biomaRt,
           pathview,
           scales, 
           sva, 
-          testthat, 
           clusterProfiler,
           enrichplot
 LazyData: TRUE

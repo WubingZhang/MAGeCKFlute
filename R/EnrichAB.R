@@ -44,7 +44,7 @@ EnrichAB <- function(data,
   enrichA = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                            method = enrich_method,
                            type = "KEGG+REACTOME+GOBP+Complex",
-                           organism = organism, pvalueCutoff = pvalue,
+                           organism = organism, pvalueCutoff = 1,
                            limit = limit, keytype = "entrez")
   if(!is.null(enrichA) && nrow(enrichA@result)>0){
     keggA = enrichA@result[grepl("KEGG", enrichA@result$ID), ]
@@ -67,7 +67,7 @@ EnrichAB <- function(data,
   geneList = gg$Diff[idx2]; names(geneList) = genes
   enrichB = EnrichAnalyzer(geneList = geneList, universe = gg$EntrezID,
                            method = enrich_method, type = "KEGG+REACTOME+GOBP+Complex",
-                           organism = organism, pvalueCutoff = pvalue,
+                           organism = organism, pvalueCutoff = 1,
                            limit = limit, keytype = "entrez", verbose = verbose)
   if(!is.null(enrichB) && nrow(enrichB@result)>0){
     keggB = enrichB@result[grepl("KEGG", enrichB@result$ID), ]

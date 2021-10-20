@@ -106,7 +106,7 @@ FluteRRA <- function(gene_summary,
   idx1 = is.na(dd$EntrezID)
   idx2 = !is.na(dd$EntrezID) & duplicated(dd$EntrezID)
   idx = idx1|idx2
-  if(sum(idx1)>0) message(sum(idx1), " genes genes fail to convert into Entrez IDs: ",
+  if(sum(idx1)>0) message(sum(idx1), " genes fail to convert into Entrez IDs: ",
                           paste0(dd$id[idx1], collapse = ", "))
   if(sum(idx2)>0) message(sum(idx2), " genes have duplicate Entrez IDs: ",
                           paste0(dd$id[idx2], collapse = ", "))

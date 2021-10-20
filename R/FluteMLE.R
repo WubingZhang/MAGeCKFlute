@@ -226,7 +226,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir3, showWarnings=FALSE)
 	  dir.create(outputDir4, showWarnings=FALSE)
 
-	  E1 = EnrichAB(p1$data, pvalue = 1, enrich_method = enrich_method,
+	  E1 = EnrichAB(p1$data, enrich_method = enrich_method,
 	                organism = organism, limit = limit,
 	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
