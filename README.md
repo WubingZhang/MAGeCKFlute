@@ -1,4 +1,3 @@
-[![platform](https://bioconductor.org/shields/availability/3.11/MAGeCKFlute.svg)](https://bioconductor.org/shields/availability/3.11/MAGeCKFlute) [![Build Status](https://travis-ci.com/WubingZhang/MAGeCKFlute.svg)](https://travis-ci.com/WubingZhang/MAGeCKFlute) [![Update Status](https://www.bioconductor.org/shields/lastcommit/release/bioc/MAGeCKFlute.svg)](https://www.bioconductor.org/packages/3.11/bioc/html/MAGeCKFlute.html)
 # MAGeCKFlute 
 
 This package implements methods to perform quality control (QC), normalization, batch effect removal, gene hit identification and downstream functional enrichment analysis for CRISPR screens. Before using this package, please finish the preliminary analysis using [MAGeCK](https://sourceforge.net/p/mageck/wiki/Home/) or [MAGeCK-VISPR](https://bitbucket.org/liulab/mageck-vispr/src/master/). For more detail, please read our paper [Integrative analysis pipeline for pooled CRISPR functional genetic screens](https://www.nature.com/articles/s41596-018-0113-7).
@@ -32,13 +31,10 @@ conda install -c anaconda libxml2
 ~~~
 
 ## Documentation
-Details on how to use MAGeCKFlute are available on bioconductor website:
-https://www.bioconductor.org/packages/3.11/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute.html
-https://www.bioconductor.org/packages/3.11/bioc/vignettes/MAGeCKFlute/inst/doc/MAGeCKFlute_enrichment.html
-
+Details on how to use MAGeCKFlute are available on bioconductor website: https://www.bioconductor.org/packages/release/bioc/html/MAGeCKFlute.html
 
 ## Version history
-Please browse the [version tracking page](https://www.bioconductor.org/packages/3.11/bioc/news/MAGeCKFlute/NEWS).
+Please browse the [version tracking page](https://www.bioconductor.org/packages/3.13/bioc/news/MAGeCKFlute/NEWS).
 	
 ## Contacts
 
