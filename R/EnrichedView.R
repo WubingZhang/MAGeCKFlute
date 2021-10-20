@@ -120,7 +120,7 @@ EnrichedView = function(enrichment,
     p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
     p1 = p1 + theme_bw(base_size = 14)
     p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
-    p1 = p1 + guides(color = FALSE)
+    p1 = p1 + guides(color = "none")
   }else if(mode == 2){
     idx = (max(enrichment$x)-enrichment$x) > enrichment$x
     enrichment$hjust = 1.1

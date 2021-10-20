@@ -109,9 +109,9 @@ Scatter plot supporting groups.
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
-x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
-ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
+ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
+auto_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
+ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
 auto_cut = 2, model = "ninesquare", top = 5, display_cut = TRUE)
 
 }

@@ -55,6 +55,7 @@ MAView <- function(beta, ctrlname="Control",treatname="Treatment", main=NULL,
   if(add.smooth)
     p = p + geom_smooth(method = plot.method[1], formula = y ~ x, color=smooth.col, linetype=lty)
   p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + labs(title=main)
   if(show.statistics){
     xmax = max(gg$A)

@@ -8,7 +8,7 @@
 EnrichAB(
   data,
   enrich_method = "HGT",
-  top = top,
+  top = 10,
   organism = "hsa",
   limit = c(2, 100),
   filename = NULL,

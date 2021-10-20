@@ -54,9 +54,9 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
-#' x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
-#' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
+#' ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
+#' auto_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
+#' ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
 #' auto_cut = 2, model = "ninesquare", top = 5, display_cut = TRUE)
 #'
 #' @import ggplot2 ggrepel
@@ -80,8 +80,6 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   ## Add label column in the data frame.
   if(label==0) data$Label = rownames(data)
   else data$Label = as.character(data[, label])
-
-  if(!is.null(groupnames)) legend.position = "right"
 
   ## Compute the cutoff used for each dimension.
   model = tolower(model)
@@ -281,7 +279,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   ## Customize colors
   if(color=="group"){
     if(mode(toplabels)!="list")
-      p = p + scale_color_manual(values = mycolour, labels = groupnames)
+      p = p + scale_color_manual(values = mycolour[names(groupnames)], labels = groupnames)
     else
       p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462",
                                             "#bc80bd", "#b3de69", "#bebada", "#8dd3c7",

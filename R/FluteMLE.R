@@ -145,7 +145,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                       filename = paste0(outputDir1, "Consistency_all_", norm_method, ".png"))
 	  P4 = MAView(dd, ctrlname, treatname, main = "All genes",
 	              filename = paste0(outputDir1, "MAView_all_", norm_method, ".png"))
-	  grid.arrange(P1, P2, P3, P4, ncol = 2)
+	  gridExtra::grid.arrange(P1, P2, P3, P4, ncol = 2)
 
 	  ## Essential genes ##
 	  Zuber_Essential = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
@@ -164,7 +164,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                         filename = paste0(outputDir1, "Consistency_posctrl_", norm_method, ".png"))
 	    P4 = MAView(dd[idx, ], ctrlname, treatname, main = "Essential genes",
 	                filename = paste0(outputDir1, "MAView_posctrl_", norm_method, ".png"))
-	    grid.arrange(P1, P2, P3, P4, ncol = 2)
+	    gridExtra::grid.arrange(P1, P2, P3, P4, ncol = 2)
 	  }
 	}
 
@@ -216,7 +216,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Negative_", norm_method, ".png"),
 	         p4, width = 4, height = 3)
 
-	  grid.arrange(p1, p2, p3, p4, ncol = 2)
+	  gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 	}
 
 	## Enrichment analysis of negative and positive selected genes ##
@@ -227,11 +227,11 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir4, showWarnings=FALSE)
 
 	  E1 = EnrichAB(p1$data, enrich_method = enrich_method,
-	                organism = organism, limit = limit,
+	                organism = organism, limit = limit, top = top,
 	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
-	  grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
-	  grid.arrange(E1$keggB$gridPlot, E1$reactomeB$gridPlot, E1$gobpB$gridPlot, E1$complexB$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$keggB$gridPlot, E1$reactomeB$gridPlot, E1$gobpB$gridPlot, E1$complexB$gridPlot, ncol = 2)
 
 	  # Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes)>0)
@@ -255,7 +255,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  ggsave(paste0(outputDir2, "SquareView_", norm_method, ".png"), p1, width = 5, height = 4)
 	  write.table(p1$data, paste0(outputDir2, proj, "squareview_data.txt"),
 	              sep = "\t", row.names = FALSE, quote = FALSE)
-	  grid.arrange(p1, ncol = 1)
+	  gridExtra::grid.arrange(p1, ncol = 1)
 	}
 
 	## Nine-Square grouped gene enrichment ##
@@ -265,14 +265,14 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                    top = top, enrich_method = enrich_method,
 	                    filename=norm_method, limit = limit, out.dir=outputDir3)
     # EnrichView
-	  grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg3$gridPlot, E1$reactome3$gridPlot, E1$gobp3$gridPlot, E1$complex3$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg4$gridPlot, E1$reactome4$gridPlot, E1$gobp4$gridPlot, E1$complex4$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg12$gridPlot, E1$reactome12$gridPlot, E1$gobp12$gridPlot, E1$complex12$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg13$gridPlot, E1$reactome13$gridPlot, E1$gobp13$gridPlot, E1$complex13$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg24$gridPlot, E1$reactome24$gridPlot, E1$gobp24$gridPlot, E1$complex24$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg34$gridPlot, E1$reactome34$gridPlot, E1$gobp34$gridPlot, E1$complex34$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg3$gridPlot, E1$reactome3$gridPlot, E1$gobp3$gridPlot, E1$complex3$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg4$gridPlot, E1$reactome4$gridPlot, E1$gobp4$gridPlot, E1$complex4$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg12$gridPlot, E1$reactome12$gridPlot, E1$gobp12$gridPlot, E1$complex12$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg13$gridPlot, E1$reactome13$gridPlot, E1$gobp13$gridPlot, E1$complex13$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg24$gridPlot, E1$reactome24$gridPlot, E1$gobp24$gridPlot, E1$complex24$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg34$gridPlot, E1$reactome34$gridPlot, E1$gobp34$gridPlot, E1$complex34$gridPlot, ncol = 2)
 
 	  # PathwayView
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes)>0)

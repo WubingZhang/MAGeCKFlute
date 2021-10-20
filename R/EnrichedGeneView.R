@@ -118,7 +118,6 @@ EnrichedGeneView=function(enrichment, geneList,
                   panel.background=element_blank())
   p1 = p1 + labs(x=NULL, y=NULL, color = "Gene score", size = "LogP")
   # p1 = p1 + theme(legend.position="top")
-  # p1 = p1 + scale_size_continuous(guide = FALSE)
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
   p1 = p1 + theme_bw(base_size = 14)
   p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
