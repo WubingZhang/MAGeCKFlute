@@ -62,15 +62,8 @@ MapRatesView <- function(countSummary,
   p = p + scale_y_continuous(expand = c(0,0))
   p = p + scale_fill_manual(values=fill)
   p = p + theme(legend.title = element_blank())
-  p = p + theme(text = element_text(colour="black",size = 14),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text.x = element_text(angle = 45, hjust=1, vjust = 1,
-                                           colour="gray10", face="plain"),
-                axis.text.y= element_text(colour="gray10", face="plain"))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
-
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   if(!is.null(filename)){
     ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)
   }

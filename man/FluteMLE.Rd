@@ -17,12 +17,11 @@ FluteMLE(
   lineages = "All",
   norm_method = "cell_cycle",
   posControl = NULL,
-  omitEssential = FALSE,
+  omitEssential = TRUE,
   top = 10,
   toplabels = NA,
   scale_cutoff = 2,
   limit = c(0, 200),
-  pvalueCutoff = 0.25,
   enrich_method = "ORT",
   proj = NA,
   width = 10,
@@ -56,15 +55,14 @@ If there is no controls in your CRISPR screen, you can specify "Depmap" as ctrln
 
 \item{omitEssential}{Boolean, indicating whether omit common essential genes from the downstream analysis.}
 
-\item{top}{An integer, specifying number of top selected genes to be labeled in rank figure.}
+\item{top}{An integer, specifying the number of top selected genes to be labeled
+in rank figure and the number of top pathways to be shown.}
 
 \item{toplabels}{A character vector, specifying interested genes to be labeled in rank figure.}
 
 \item{scale_cutoff}{Boolean or numeric, specifying how many standard deviation will be used as cutoff.}
 
 \item{limit}{A two-length vector, specifying the minimal and maximal size of gene sets for enrichent analysis.}
-
-\item{pvalueCutoff}{A numeric, specifying pvalue cutoff of enrichment analysis, default 1.}
 
 \item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
@@ -111,7 +109,7 @@ file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 \dontrun{
   # functional analysis for MAGeCK MLE results
-  FluteMLE(file3, treatname = "plx", ctrlname = "dmso", proj = "PLX")
+  FluteMLE(file3, treatname = "Pmel1", ctrlname = "Pmel1_Ctrl", proj = "Pmel1")
 }
 
 }

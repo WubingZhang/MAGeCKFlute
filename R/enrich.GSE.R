@@ -31,10 +31,6 @@
 #' @seealso \code{\link{enrich.HGT}}
 #' @seealso \code{\link{enrich.ORT}}
 #' @seealso \code{\link{EnrichAnalyzer}}
-#' @seealso \code{\link[clusterProfiler]{gseGO}}
-#' @seealso \code{\link[clusterProfiler]{gseKEGG}}
-#' @seealso \code{\link[clusterProfiler]{GSEA}}
-#' @seealso \code{\link[DOSE]{enrichResult-class}}
 #'
 #' @examples
 #' data(geneList, package = "DOSE")
@@ -42,20 +38,21 @@
 #'     enrichRes = enrich.GSE(geneList, keytype = "entrez")
 #'     head(slot(enrichRes, "result"))
 #' }
-#'
 #' @export
 
 enrich.GSE <- function(geneList,
                        keytype = "Symbol",
                        type = "GOBP",
                        organism = 'hsa',
-                       pvalueCutoff = 0.25,
-                       limit = c(2, 200),
+                       pvalueCutoff = 1,
+                       limit = c(2, 100),
                        gmtpath = NULL,
                        # nPerm = 2000,
                        by = "fgsea",
                        verbose = TRUE,
                        ...){
+  requireNamespace("clusterProfiler", quietly=TRUE) || stop("Please install the clusterProfiler package")
+  requireNamespace("DOSE", quietly=TRUE) || stop("Please install the DOSE package")
   geneList = sort(geneList, decreasing = TRUE)
 
   ## Prepare gene set annotation
@@ -77,11 +74,11 @@ enrich.GSE <- function(geneList,
   ## Enrichment analysis
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
   if(verbose) message("\t", len, " genes are mapped ...")
-  enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
+  enrichedRes = clusterProfiler::GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
                      minGSSize = 0, maxGSSize = max(limit),
                      TERM2NAME = pathways, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")],
-                     verbose = verbose, eps = 0)
+                     verbose = verbose, ...)
   ## Add enriched gene symbols into enrichedRes table
   if(!is.null(enrichedRes) && nrow(enrichedRes@result)>0){
     colnames(enrichedRes@result)[11] = "geneID"

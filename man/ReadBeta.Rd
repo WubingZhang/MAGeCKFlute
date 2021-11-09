@@ -4,7 +4,7 @@
 \name{ReadBeta}
 \alias{ReadBeta}
 \alias{readbeta}
-\title{Read gene beta scores}
+\title{Read gene beta scores from MAGeCK-MLE results}
 \usage{
 ReadBeta(gene_summary)
 }
@@ -15,7 +15,7 @@ ReadBeta(gene_summary)
 A data frame, whose first column is Gene and other columns are comparisons.
 }
 \description{
-Read gene beta scores from file or data frame
+Read gene beta scores from MAGeCK-MLE results
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),

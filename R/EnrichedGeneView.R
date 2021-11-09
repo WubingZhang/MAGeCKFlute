@@ -118,16 +118,9 @@ EnrichedGeneView=function(enrichment, geneList,
                   panel.background=element_blank())
   p1 = p1 + labs(x=NULL, y=NULL, color = "Gene score", size = "LogP")
   # p1 = p1 + theme(legend.position="top")
-  # p1 = p1 + scale_size_continuous(guide = FALSE)
   p1 = p1 + theme(legend.key = element_rect(fill = "transparent", colour = "transparent"))
-  p1 = p1 + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                  plot.title = element_text(hjust = 0.5, size=18),
-                  axis.text = element_text(colour="gray10"),
-                  axis.text.x = element_text(angle = 60, hjust = 1, vjust = 1))
-  p1 = p1 + theme(axis.line = element_line(size=0.5, colour = "black"),
-                  panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                  panel.border = element_blank(), panel.background = element_blank(),
-                  legend.key = element_rect(fill = "transparent"))
+  p1 = p1 + theme_bw(base_size = 14)
+  p1 = p1 + theme(plot.title = element_text(hjust = 0.5))
 
   if(!is.null(filename)){
     ggsave(plot=p1, filename=filename, units = "in", width=width, height=height, ...)

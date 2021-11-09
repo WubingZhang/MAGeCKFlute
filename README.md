@@ -4,7 +4,7 @@ This package implements methods to perform quality control (QC), normalization, 
 
 
 ## Installation
-Installing the package in a fresh R environment may take a long time. It may fail because of some issues. You can check the possible issues and solutions from https://github.com/WubingZhang/MAGeCKFlute/issues/3, or post a new issue there.
+Installing the package in a fresh R environment may take a long time. For any questions or comments, please post it to the [MAGeCK Google group](https://groups.google.com/d/forum/mageck).
 
 
 ### Prerequisites
@@ -24,20 +24,14 @@ conda install -c anaconda libxml2
 ### Installation using R
 ~~~
 > install.packages(c("devtools", "BiocManager"), repos = "https://cloud.r-project.org")
-> BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler"))
-> devtools::install_github("WubingZhang/MAGeCKFlute", "devel") # Development version
-# Or
+> BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler", "depmap"))
 > BiocManager::install("MAGeCKFlute") # Released version
 ~~~
 
 ## Documentation
 Details on how to use MAGeCKFlute are available on bioconductor website: https://www.bioconductor.org/packages/release/bioc/html/MAGeCKFlute.html
 
-## Version history
-Please browse the [version tracking page](https://www.bioconductor.org/packages/3.13/bioc/news/MAGeCKFlute/NEWS).
-	
 ## Contacts
 
-* Wubing Zhang (Watson5bZhang@gmail.com)
 * Binbin Wang (wangbinbintj@gmail.com)
 * Wei Li (li.david.wei@gmail.com)

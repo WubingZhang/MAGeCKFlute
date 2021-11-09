@@ -19,11 +19,11 @@
 #' @param norm_method One of "none", "cell_cycle" (default) or "loess".
 #' @param posControl A character vector, specifying a list of positive control gene symbols.
 #' @param omitEssential Boolean, indicating whether omit common essential genes from the downstream analysis.
-#' @param top An integer, specifying number of top selected genes to be labeled in rank figure.
+#' @param top An integer, specifying the number of top selected genes to be labeled
+#' in rank figure and the number of top pathways to be shown.
 #' @param toplabels A character vector, specifying interested genes to be labeled in rank figure.
 #' @param scale_cutoff Boolean or numeric, specifying how many standard deviation will be used as cutoff.
 #' @param limit A two-length vector, specifying the minimal and maximal size of gene sets for enrichent analysis.
-#' @param pvalueCutoff A numeric, specifying pvalue cutoff of enrichment analysis, default 1.
 #' @param enrich_method One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).
 #' @param proj A character, indicating the prefix of output file name, which can't contain special characters.
 #' @param width The width of summary pdf in inches.
@@ -63,7 +63,7 @@
 #' "testdata/mle.gene_summary.txt")
 #' \dontrun{
 #'   # functional analysis for MAGeCK MLE results
-#'   FluteMLE(file3, treatname = "plx", ctrlname = "dmso", proj = "PLX")
+#'   FluteMLE(file3, treatname = "Pmel1", ctrlname = "Pmel1_Ctrl", proj = "Pmel1")
 #' }
 #'
 #' @import ggplot2 stats grDevices utils gridExtra grid
@@ -74,10 +74,10 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      incorporateDepmap = FALSE,
                      cell_lines = NA, lineages = "All",
                      norm_method = "cell_cycle", posControl = NULL,
-                     omitEssential = FALSE,
+                     omitEssential = TRUE,
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
-                     pvalueCutoff=0.25, enrich_method = "ORT", proj = NA,
+                     enrich_method = "ORT", proj = NA,
                      width = 10, height = 7, outdir = ".",
                      pathview.top = 4, verbose = TRUE){
 	## Prepare the running environment ##
@@ -105,8 +105,10 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
     if(organism != "hsa"){
       beta$HumanGene = TransGeneID(beta$Symbol, "Symbol", "Symbol",
                                    fromOrg = organism, toOrg = "hsa")
+      beta$GeneID = TransGeneID(beta$HumanGene, "Symbol", "Entrez")
     }else{
       beta$HumanGene = beta$Symbol
+      beta$GeneID = beta$EntrezID
     }
 
     message(Sys.time(), " # Transform id to official human gene name ...")
@@ -145,7 +147,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                       filename = paste0(outputDir1, "Consistency_all_", norm_method, ".png"))
 	  P4 = MAView(dd, ctrlname, treatname, main = "All genes",
 	              filename = paste0(outputDir1, "MAView_all_", norm_method, ".png"))
-	  grid.arrange(P1, P2, P3, P4, ncol = 2)
+	  gridExtra::grid.arrange(P1, P2, P3, P4, ncol = 2)
 
 	  ## Essential genes ##
 	  Zuber_Essential = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
@@ -164,7 +166,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	                         filename = paste0(outputDir1, "Consistency_posctrl_", norm_method, ".png"))
 	    P4 = MAView(dd[idx, ], ctrlname, treatname, main = "Essential genes",
 	                filename = paste0(outputDir1, "MAView_posctrl_", norm_method, ".png"))
-	    grid.arrange(P1, P2, P3, P4, ncol = 2)
+	    gridExtra::grid.arrange(P1, P2, P3, P4, ncol = 2)
 	  }
 	}
 
@@ -216,7 +218,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  ggsave(paste0(outputDir2, "ScatterView_Treat-Ctrl_Negative_", norm_method, ".png"),
 	         p4, width = 4, height = 3)
 
-	  grid.arrange(p1, p2, p3, p4, ncol = 2)
+	  gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 	}
 
 	## Enrichment analysis of negative and positive selected genes ##
@@ -226,12 +228,12 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  dir.create(outputDir3, showWarnings=FALSE)
 	  dir.create(outputDir4, showWarnings=FALSE)
 
-	  E1 = EnrichAB(p1$data, pvalue = pvalueCutoff, enrich_method = enrich_method,
-	                organism = organism, limit = limit,
+	  E1 = EnrichAB(p1$data, enrich_method = enrich_method,
+	                organism = organism, limit = limit, top = top,
 	                filename = norm_method, out.dir = outputDir3)
 	  # EnrichedView
-	  grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
-	  grid.arrange(E1$keggB$gridPlot, E1$reactomeB$gridPlot, E1$gobpB$gridPlot, E1$complexB$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$keggA$gridPlot, E1$reactomeA$gridPlot, E1$gobpA$gridPlot, E1$complexA$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$keggB$gridPlot, E1$reactomeB$gridPlot, E1$gobpB$gridPlot, E1$complexB$gridPlot, ncol = 2)
 
 	  # Pathway view for top 4 pathway
 	  if(!is.null(E1$keggA$enrichRes) && nrow(E1$keggA$enrichRes)>0)
@@ -255,24 +257,24 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 	  ggsave(paste0(outputDir2, "SquareView_", norm_method, ".png"), p1, width = 5, height = 4)
 	  write.table(p1$data, paste0(outputDir2, proj, "squareview_data.txt"),
 	              sep = "\t", row.names = FALSE, quote = FALSE)
-	  grid.arrange(p1, ncol = 1)
+	  gridExtra::grid.arrange(p1, ncol = 1)
 	}
 
 	## Nine-Square grouped gene enrichment ##
 	{
-	  E1 = EnrichSquare(p1$data, id = "EntrezID", keytype = "entrez",
-	                    x = "Control", y = "Treatment", organism=organism,
-	                    pvalue = pvalueCutoff, enrich_method = enrich_method,
-	                    filename=norm_method, limit = limit, out.dir=outputDir3)
+	  E1 = EnrichSquare(p1$data, id = "GeneID", keytype = "entrez",
+	                    x = "Control", y = "Treatment", top = top,
+	                    enrich_method = enrich_method, limit = limit,
+	                    filename=norm_method, out.dir=outputDir3)
     # EnrichView
-	  grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg3$gridPlot, E1$reactome3$gridPlot, E1$gobp3$gridPlot, E1$complex3$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg4$gridPlot, E1$reactome4$gridPlot, E1$gobp4$gridPlot, E1$complex4$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg12$gridPlot, E1$reactome12$gridPlot, E1$gobp12$gridPlot, E1$complex12$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg13$gridPlot, E1$reactome13$gridPlot, E1$gobp13$gridPlot, E1$complex13$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg24$gridPlot, E1$reactome24$gridPlot, E1$gobp24$gridPlot, E1$complex24$gridPlot, ncol = 2)
-	  grid.arrange(E1$kegg34$gridPlot, E1$reactome34$gridPlot, E1$gobp34$gridPlot, E1$complex34$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg3$gridPlot, E1$reactome3$gridPlot, E1$gobp3$gridPlot, E1$complex3$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg4$gridPlot, E1$reactome4$gridPlot, E1$gobp4$gridPlot, E1$complex4$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg12$gridPlot, E1$reactome12$gridPlot, E1$gobp12$gridPlot, E1$complex12$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg13$gridPlot, E1$reactome13$gridPlot, E1$gobp13$gridPlot, E1$complex13$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg24$gridPlot, E1$reactome24$gridPlot, E1$gobp24$gridPlot, E1$complex24$gridPlot, ncol = 2)
+	  gridExtra::grid.arrange(E1$kegg34$gridPlot, E1$reactome34$gridPlot, E1$gobp34$gridPlot, E1$complex34$gridPlot, ncol = 2)
 
 	  # PathwayView
 	  if(!is.null(E1$kegg1$enrichRes) && nrow(E1$kegg1$enrichRes)>0)

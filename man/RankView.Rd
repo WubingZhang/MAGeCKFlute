@@ -4,14 +4,15 @@
 \name{RankView}
 \alias{RankView}
 \alias{rankview}
-\title{View the rank of gene points}
+\title{Rank plot}
 \usage{
 RankView(
   rankdata,
   genelist = NULL,
-  top = 10,
-  bottom = 10,
-  cutoff = NULL,
+  decreasing = TRUE,
+  top = 5,
+  bottom = 5,
+  cutoff = 2,
   main = NULL,
   filename = NULL,
   width = 5,
@@ -20,32 +21,35 @@ RankView(
 )
 }
 \arguments{
-\item{rankdata}{Numeric vector, with gene as names.}
+\item{rankdata}{A numeric vector, with gene as names.}
 
-\item{genelist}{Character vector, specifying genes to be labeled in figure.}
+\item{genelist}{A character vector, specifying genes to be labeled.}
 
-\item{top}{Integer, specifying number of top genes to be labeled.}
+\item{decreasing}{Boolean, specifying the order of genes to plot.}
 
-\item{bottom}{Integer, specifying number of bottom genes to be labeled.}
+\item{top}{Integer, specifying number of positive genes to be labeled.}
 
-\item{cutoff}{Numeric.}
+\item{bottom}{Integer, specifying number of negative genes to be labeled.}
 
-\item{main}{As in 'plot'.}
+\item{cutoff}{One numeric value indicating the fold of standard deviation used as cutoff;
+two number vector, such as c(-1, 1), specifying the exact cutoff for selecting top genes.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means no output.}
+\item{main}{A character, specifying title.}
 
-\item{width}{As in ggsave.}
+\item{filename}{A character, specifying a file name to create on disk.
+Set filename to be "NULL", if don't want to save the figure.}
 
-\item{height}{As in ggsave.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{...}{Other available parameters in function 'ggsave'.}
+\item{height}{Numeric, specifying height of figure.}
+
+\item{...}{Other available parameters in the function 'geom_text_repel'.}
 }
 \value{
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Rank all genes according to beta score deviation, and label top and bottom meaningful genes.
-Some other interested genes can be labeled too.
+Draw the score and rank of genes on a scatter plot.
 }
 \examples{
 file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),

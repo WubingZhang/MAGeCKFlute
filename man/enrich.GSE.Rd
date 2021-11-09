@@ -11,8 +11,8 @@ enrich.GSE(
   keytype = "Symbol",
   type = "GOBP",
   organism = "hsa",
-  pvalueCutoff = 0.25,
-  limit = c(2, 200),
+  pvalueCutoff = 1,
+  limit = c(2, 100),
   gmtpath = NULL,
   by = "fgsea",
   verbose = TRUE,
@@ -58,7 +58,6 @@ data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, keytype = "entrez")
     head(slot(enrichRes, "result"))
 }
-
 }
 \seealso{
 \code{\link{enrich.HGT}}
@@ -66,14 +65,6 @@ data(geneList, package = "DOSE")
 \code{\link{enrich.ORT}}
 
 \code{\link{EnrichAnalyzer}}
-
-\code{\link[clusterProfiler]{gseGO}}
-
-\code{\link[clusterProfiler]{gseKEGG}}
-
-\code{\link[clusterProfiler]{GSEA}}
-
-\code{\link[DOSE]{enrichResult-class}}
 }
 \author{
 Wubing Zhang

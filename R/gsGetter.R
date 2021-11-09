@@ -154,10 +154,11 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM", "GO"), organism = 
     corum <- read.table(unz(locfname, "allComplexes.txt"), sep = "\t",
                         header = TRUE, quote = "", stringsAsFactors = FALSE)
     file.remove(locfname)
-    if(organism=="hsa")
+    if(organism=="hsa"){
       corum = corum[corum$Organism=="Human", ]
-    else if(organism=="mmu")
+    }else if(organism=="mmu"){
       corum = corum[corum$Organism=="Mouse", ]
+    }
     genes = strsplit(corum$subunits.Gene.name., ";")
     nset = unlist(lapply(genes, length))
     gene2corum = data.frame(EntrezID = unlist(genes),

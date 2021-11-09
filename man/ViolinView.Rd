@@ -7,10 +7,10 @@
 \title{Violin plot}
 \usage{
 ViolinView(
-  beta,
+  dat,
   samples = NULL,
   main = NULL,
-  ylab = "Beta Score",
+  ylab = "Score",
   filename = NULL,
   width = 5,
   height = 4,
@@ -18,20 +18,20 @@ ViolinView(
 )
 }
 \arguments{
-\item{beta}{Data frame, , including \code{samples} as columns.}
+\item{dat}{A data frame.}
 
-\item{samples}{Character, specifying the name of samples to be compared.}
+\item{samples}{A character vector, specifying the columns in the \code{dat} for plotting.}
 
-\item{main}{As in 'plot'.}
+\item{main}{A character, specifying title.}
 
-\item{ylab}{As in 'plot'.}
+\item{ylab}{A character, specifying title of y-axis.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL", which means
-don't save the figure on disk.}
+\item{filename}{A character, specifying a file name to create on disk.
+Set filename to be "NULL", if don't want to save the figure.}
 
-\item{width}{As in ggsave.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{height}{As in ggsave.}
+\item{height}{Numeric, specifying height of figure.}
 
 \item{...}{Other available parameters in function 'ggsave'.}
 }
@@ -39,15 +39,13 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plots the violin of beta scores in Control and Treatment samples.
+Violin plot showing the distribution of numeric vectors with the same length.
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-ViolinView(dd, samples=c("dmso", "plx"))
-#or
-ViolinView(dd[, c("dmso", "plx")])
+ViolinView(dd[, -1])
 
 
 }

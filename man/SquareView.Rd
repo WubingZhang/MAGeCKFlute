@@ -4,21 +4,27 @@
 \name{SquareView}
 \alias{SquareView}
 \alias{squareview}
-\title{Scatter plot of 9-Square}
+\title{Scatter plot showing dots in 9 quadrants}
 \usage{
 SquareView(
-  beta,
+  df,
   ctrlname = "Control",
   treatname = "Treatment",
   label = 0,
   label.top = TRUE,
   top = 5,
   genelist = c(),
-  x_cutoff = NULL,
-  y_cutoff = NULL,
+  x_cut = NULL,
+  y_cut = NULL,
+  slope = 1,
   intercept = NULL,
+  auto_cut = FALSE,
+  auto_cut_x = auto_cut,
+  auto_cut_y = auto_cut,
+  auto_cut_diag = auto_cut,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
   groupnames = paste0("Group", 1:length(groups)),
+  legend.position = "none",
   main = NULL,
   filename = NULL,
   width = 6,
@@ -27,11 +33,13 @@ SquareView(
 )
 }
 \arguments{
-\item{beta}{Data frame, including columns of \emph{ctrlname} and \emph{treatname}, with Gene Symbol as rowname.}
+\item{df}{A data frame.}
 
-\item{ctrlname}{A character, specifying the names of control samples.}
+\item{ctrlname}{A character, specifying the names of control samples,
+of which the average scores will show as the x-axis.}
 
-\item{treatname}{A character, specifying the name of treatment samples.}
+\item{treatname}{A character, specifying the name of treatment samples,
+of which the average scores will show as the y-axis.}
 
 \item{label}{An integer or a character specifying the column used as the label, default value is 0 (row names).}
 
@@ -39,18 +47,30 @@ SquareView(
 
 \item{top}{Integer, specifying the number of top selected genes to be labeled. Default is 5.}
 
-\item{genelist}{Character vector, specifying labeled genes.}
+\item{genelist}{Character vector, specifying genes to be labeled.}
 
-\item{x_cutoff}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
+\item{x_cut}{An one or two-length numeric vector, specifying the cutoff used for x-axis.}
 
-\item{y_cutoff}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
+\item{y_cut}{An one or two-length numeric vector, specifying the cutoff used for y-axis.}
 
-\item{intercept}{An one or two-length numeric vector, specifying the intercept of diagonal.}
+\item{slope}{A numberic value indicating slope of the diagonal cutoff.}
+
+\item{intercept}{A numberic value indicating intercept of the diagonal cutoff.}
+
+\item{auto_cut}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff.}
+
+\item{auto_cut_x}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on x-axis.}
+
+\item{auto_cut_y}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on y-axis}
+
+\item{auto_cut_diag}{Boolean (2-fold SD by default) or numeric, specifying how many standard deviation will be used as cutoff on diagonal.}
 
 \item{groups}{A character vector, specifying which group to be colored. Optional groups include "topleft",
 "topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".}
 
 \item{groupnames}{A character vector, specifying group names.}
+
+\item{legend.position}{Position of the legend.}
 
 \item{main}{As in 'plot'.}
 
@@ -67,14 +87,13 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Plot a scatter plot with Control beta score as x-axis and Treatment beta score as y-axis,
-and colored treatment related genes.
+Scatter plot showing dots in 9 quadrants
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
+SquareView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1", label = "Gene")
 
 
 }

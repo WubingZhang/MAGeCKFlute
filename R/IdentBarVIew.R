@@ -34,21 +34,17 @@
 #' @export
 
 IdentBarView <- function(gg, x = "x", y = "y", fill = c("#CF3C2B", "#394E80"),
-                    main = NULL, xlab = NULL, ylab = NULL,
-                    filename = NULL, width = 5, height = 4, ...){
+                         main = NULL, xlab = NULL, ylab = NULL,
+                         filename = NULL, width = 5, height = 4, ...){
   gg$x = gg[, x]
   gg$y = gg[, y]
   p <- ggplot(gg)
   p = p + geom_bar(aes(x, y), stat="identity", width=0.6, fill = fill[1], alpha=0.8)
   p = p + labs(x=xlab, y=ylab, title=main)
   p = p + scale_y_continuous(expand = c(0,0))
-  p = p + theme(text = element_text(colour="black",size = 14),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"),
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5, size=18),
                 axis.text.x=element_text(angle = 45, hjust=1, vjust = 1))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
 
   if(!is.null(filename)){
     ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)

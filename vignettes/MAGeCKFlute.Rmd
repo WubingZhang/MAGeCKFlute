@@ -1,6 +1,7 @@
 ---
 title: "MAGeCKFlute - Integrative analysis pipeline for pooled CRISPR functional genetic screens"
-author: "Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu"
+author: "Binbin Wang, Mei Wang, Wubing Zhang, Wei Li & X. Shirley Liu"
+date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
 bibliography: library.bib
@@ -9,14 +10,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 abstract: >
-  CRISPR (clustered regularly interspaced short palindrome repeats) coupled with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a critical process that includes identifying screen hits and exploring biological functions for these hits in downstream analysis. We have previously developed two algorithms, MAGeCK [@Wei2014] and MAGeCK-VISPR [@Wei2015], to analyze CRISPR/Cas9 screen data in various scenarios. These two algorithms allow users to perform quality control, read count generation and normalization, and calculate beta score to evaluate gene selection performance. In downstream analysis, the biological functional analysis is required for understanding biological functions of these identified genes with different screening purposes.
-  Here, We developed MAGeCKFlute for supporting downstream analysis. MAGeCKFlute provides several strategies to remove potential biases within sgRNA-level read counts and gene-level beta scores. The downstream analysis with the package includes identifying essential, non-essential, and target-associated genes, and performing biological functional category analysis, pathway enrichment analysis and protein complex enrichment analysis of these genes. The package also visualizes genes in multiple ways to benefit users exploring screening data. Collectively, MAGeCKFlute enables accurate identification of essential, non-essential, and targeted genes, as well as their related biological functions. This vignette explains the use of the package and demonstrates typical workflows.
+  CRISPR screens represent a promising technology to systematically evaluate gene functions. We have previously developed two algorithms, MAGeCK [@Wei2014] and MAGeCK-VISPR [@Wei2015], to analyze CRISPR screen data. The two algorithms use a negative binomial distribution to model variances of sgRNA read counts and allow users to perform read-count mapping, normalization and QC, as well as to identify positively and negatively selected genes in the screens.
+  Here, we developed MAGeCKFlute for accurate identification of gene hits and associated pathways. MAGeCKFlute is distinguished from other currently available tools by its comprehensive pipeline, which contains a series of functions for analyzing CRISPR screen data. This vignette explains how to use MAGeCKFlute to perform quality control (QC), normalization, batch effect removal, gene hit identification and downstream functional enrichment analysis for CRISPR screens.
 ---
 
 
 <!-- This is the source document -->
 
-```{r setup, echo=FALSE, fig.height=6, fig.width=9, dpi=300}
+```{r setup}
 knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
                       dev="png", message=FALSE, error=FALSE, warning=TRUE)
 ```	
@@ -24,129 +25,84 @@ knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
 **Note:** if you use MAGeCKFlute in published research, please cite:
 Binbin Wang, Mei Wang, Wubing Zhang. "Integrative analysis of pooled CRISPR genetic screens using MAGeCKFlute." Nature Protocols (2019), doi: [10.1038/s41596-018-0113-7](https://www.nature.com/articles/s41596-018-0113-7).
 
+## Install and load the required packages
+```{r library, eval=TRUE}
+if(!"MAGeCKFlute" %in% installed.packages()) BiocManager::install("MAGeCKFlute")
+if(!"clusterProfiler" %in% installed.packages()) BiocManager::install("clusterProfiler")
+if(!"ggplot2" %in% installed.packages()) BiocManager::install("ggplot2")
 
-# Quick start
-
-## Load the required packages
-```{r library, eval=TRUE, message=FALSE}
 library(MAGeCKFlute)
+library(clusterProfiler)
 library(ggplot2)
 ```
 
+
+# Quick start
+
 ## Downstream analysis of MAGeCK RRA
-The MAGeCK (`mageck test`) uses Robust Rank Aggregation (RRA) for robust identification of CRISPR-screen hits, and outputs the summary results at both sgRNA and gene level. Before performing the downstream analysis, please make sure you have got the gene summary and sgRNA summary results from `mageck test`. MAGeCKFlute incorporates an example datasets [@Ophir2014] for demonstration, shown as below.
-
-### gene_summary file (required)
-```{r gene_summary}
-file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                  "testdata/rra.gene_summary.txt")
-# Read and visualize the file format
-gdata = read.delim(file1, check.names = FALSE)
-head(gdata)
-```
-
-You can also read the file using `ReadRRA` in MAGeCKFlute
-```{r readrra}
-gdata = ReadRRA(file1)
-head(gdata)
-```
-
-**Hints**: you can also use a data from other analysis, just make sure the three columns (id, Score, and FDR) are avaible in the data.
-
-### sgrna_summary file (optional)
-```{r sgrna}
-file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                  "testdata/rra.sgrna_summary.txt")
-sdata = read.delim(file2)
-head(sdata)
-```
-
-You can also read the file using `ReadsgRRA` in MAGeCKFlute
-```{r readsgrra}
-sdata = ReadsgRRA(file2)
-head(sdata)
-```
+The MAGeCK (`mageck test`) uses Robust Rank Aggregation (RRA) for robust identification of CRISPR-screen hits, and outputs the summary results at both sgRNA and gene level. Before performing the downstream analysis, please make sure you have got the gene summary and sgRNA summary results from `mageck test`. MAGeCKFlute incorporates an example datasets [@Pan2018], which study the gene functions in T cell mediate tumor killing by performing CRISPR screens in B16F10 cell lines co-cultured with Pmel-1 T cells. There are three samples in the data, including Pmel1_Input (B16F10 cells without T cell co-culture), Pmel1_Ctrl (B16F10 cells co-cultured with control T cells), and Pmel1 (B16F10 cells co-cultured with antigen specific T cells). We compared `Pmel1` with `Pmel1_Ctrl` using `mageck test`, which identifies genes associated with T cell mediated tumor killing.
 
 ### Run the FluteRRA pipeline
-Run the downstream analysis pipeline with both gene summary and sgrna summary
-```{r FluteRRA1, eval=FALSE}
-FluteRRA(file1, file2, proj="Test", organism="hsa", scale_cutoff = 1, outdir = "./")
-# Or
-FluteRRA(gdata, sdata, proj="Test", organism="hsa", scale_cutoff = 1, outdir = "./")
+MAGeCKFlute processes MAGeCK RRA results ("gene_summary" and "sgrna_summary") with the function FluteRRA, which identifies positively and negatively selected genes and performs functional analysis.
+```{r fluterra, eval=FALSE}
+## path to the gene summary file (required)
+file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/rra.gene_summary.txt")
+## path to the sgRNA summary file (optional)
+file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/rra.sgrna_summary.txt")
+# Run FluteRRA with only gene summary file
+FluteRRA(file1, proj="Pmel1", organism="mmu", outdir = "./")
+
+# Run FluteRRA with both gene summary file and sgRNA summary file
+FluteRRA(file1, file2, proj="Pmel1", organism="mmu", outdir = "./")
 ```
 
-Run the downstream analysis pipeline with only gene summary file
-```{r FluteRRA2, eval=FALSE}
-FluteRRA(file1, proj="Test", organism="hsa", outdir = "./")
-# Or
-FluteRRA(gdata, proj="Test", organism="hsa", outdir = "./")
+### Important parameters
+* `incorporateDepmap` will allow users to compare the selected genes in the input data and Depmap data, which could clean the selected genes by eliminating lethal genes (false positive hits in some CRISPR screens) and then perform downstream enrichment analysis. You can set the `incorporateDepmap` to be `TRUE` if you want to include this analysis. Users could specify Depmap data of specific cell lines by setting the `cell_lines` and `lineages`.
+
+```{r incorporateDepmap, eval=FALSE}
+FluteRRA(file1, proj="Pmel1", organism="mmu", incorporateDepmap = TRUE, outdir = "./")
 ```
 
-Incorporate Depmap data into analysis
-```{r DepmapRRA, eval=FALSE}
-FluteRRA(gdata, proj="Test", organism="hsa", incorporateDepmap = TRUE,
-         outdir = "./")
-```
-
-Omit common essential genes in the analysis
-```{r DepmapRRA2, eval=FALSE}
-FluteRRA(gdata, proj="Test", organism="hsa", incorporateDepmap = TRUE,
-         omitEssential = TRUE, outdir = "./")
+* `omitEssential` allows users to eliminate all common essential genes selected in the Depmap from all of the downstream analysis.
+```{r omitEssential, eval=FALSE}
+FluteRRA(gdata, proj="Pmel1", organism="mmu", omitEssential = TRUE, outdir = "./")
 ```
 
 **Hints**: all figures and intermediate data are saved into local directory "./MAGeCKFlute_Test/", and all figures are integrated into file "FluteRRA_Test.pdf".
 
-For more available parameters in `FluteRRA`, please read the documentation
-```{r helpRRA, eval=FALSE}
-?FluteRRA
-```
+For more available parameters in `FluteRRA`, please read the documentation using the command `?FluteRRA`.
+
 
 ## Downstream analysis of MAGeCK MLE
-The MAGeCK-VISPR (`mageck mle`) computes beta scores and the associated statistics for all genes in  multiple conditions. The **beta score** describes how the gene is selected: a positive beta score indicates a positive selection, and a negative beta score indicates a negative selection. Before using `FluteMLE`, you should first get gene summary result from MAGeCK-VISPR (`mageck mle`). MAGeCKFlute incorporates an example datasets for demonstration.
-
-### gene_summary file (required)
-```{r mledata}
-file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                  "testdata/mle.gene_summary.txt")
-# Read and visualize the file format
-gdata = read.delim(file3, check.names = FALSE)
-head(gdata)
-```
-
-You can also read beta scores from the data using `ReadBeta` in MAGeCKFlute
-```{r readbeta}
-gdata = ReadBeta(file3)
-head(gdata)
-```
-
-**Hints**: you can also run FluteMLE using other data, in which the first column is "Gene", and other columns represent samples.
+The MAGeCK-VISPR (`mageck mle`) utilizes a maximum likelihood estimation (MLE) for robust identification of CRISPR screen hits. It outputs **beta scores** and the associated statistics in multiple conditions. The **beta score** describes how a gene is selected: a positive beta score indicates positive selection, and a negative beta score indicates negative selection. Before using `FluteMLE`, you should first get gene summary result from MAGeCK-VISPR (`mageck mle`). MAGeCKFlute uses the same dataset as before for demonstration. Using `mageck mle`, we removed the baseline effect (plasmid sample) from all the three samples, including Pmel1_Input (B16F10 cells without T cell co-culture), Pmel1_Ctrl (B16F10 cells co-cultured with control T cells), and Pmel1 (B16F10 cells co-cultured with antigen specific T cells).
 
 ### Run the FluteMLE pipeline
-```{r FluteMLE, eval=FALSE}
-FluteMLE(file3, treatname="plx", ctrlname="dmso", proj="Test", organism="hsa")
-# Or
-FluteMLE(gdata, treatname="plx", ctrlname="dmso", proj="Test", organism="hsa")
+MAGeCKFlute processes MAGeCK MLE results ("gene_summary") with the function FluteMLE, which performs QC and data normalization based on the beta score, identifies essential genes by comparing control and treatment samples, and finally performs functional enrichment analysis.
+```{r flutemle, eval=FALSE}
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/mle.gene_summary.txt")
+FluteMLE(file3, treatname="Pmel1", ctrlname="Pmel1_Ctrl", proj="Pmel1", organism="mmu")
 ```
 
-#### Incorporate Depmap data into analysis
-If your data only include one condition, you can take Depmap screens as control.
-```{r, eval=FALSE}
+
+### Important parameters
+* `incorporateDepmap` will allow users to compare the selected genes in the input data and Depmap data, which could clean the selected genes by eliminating lethal genes (false positive hits in some CRISPR screens) and then perform downstream enrichment analysis. You can set the `incorporateDepmap` to be `TRUE` if you want to include this analysis. Users could specify Depmap data of specific cell lines by setting the `cell_lines` and `lineages`.
+
+```{r incorporateDepmap2, eval=FALSE}
 ## Take Depmap screen as control
-FluteMLE(gdata, treatname="plx", ctrlname="Depmap", proj="PLX", organism="hsa", incorporateDepmap = TRUE)
+FluteMLE(gdata, treatname="Pmel1_Ctrl", ctrlname="Depmap", proj="Pmel1", organism="mmu", incorporateDepmap = TRUE)
 ```
 
-If you are not interested in common essential genes, you can omit them in the analysis by setting a parameter "omitEssential"
-```{r, eval=FALSE}
-FluteMLE(gdata, treatname="plx", ctrlname="Depmap", proj="PLX", organism="hsa", incorporateDepmap = TRUE, omitEssential = TRUE)
+* `omitEssential` allows users to eliminate all common essential genes selected in the Depmap from all of the downstream analysis.
+```{r omitEssential2, eval=FALSE}
+FluteMLE(gdata, treatname="Pmel1", ctrlname="Pmel1_Ctrl", proj="Pmel1", organism="mmu", omitEssential = TRUE)
 ```
 
 **Hint**: All pipeline results are written into local directory "./MAGeCKFlute_Test/", and all figures are integrated into file "FluteMLE_Test.pdf".
 
-For more available parameters in `FluteMLE`, please read the documentation
-```{r helpMLE, eval=FALSE}
-?FluteMLE
-```
-
+For more available parameters in `FluteMLE`, please read the documentation using the command `?FluteMLE`.
 
 
 # Step by step analysis
@@ -180,6 +136,7 @@ MapRatesView(countsummary)
 countsummary$Unmapped = countsummary$Reads - countsummary$Mapped
 gg = reshape2::melt(countsummary[, c("Label", "Mapped", "Unmapped")], id.vars = "Label")
 gg$variable = factor(gg$variable, levels = c("Unmapped", "Mapped"))
+gg = gg[order(gg$Label, gg$variable), ]
 p = BarView(gg, x = "Label", y = "value", fill = "variable", 
             position = "stack", xlab = NULL, ylab = "Reads", main = "Map ratio")
 p + scale_fill_manual(values = c("#9BC7E9", "#1C6DAB"))
@@ -204,25 +161,35 @@ sdata = ReadsgRRA(file2)
 head(sdata)
 ```
 
+## To incorporate depmap data that are profiled in human cell lines, we will convert mouse gene names to homologous human genes for this dataset.
+```{r mmu2hsa}
+gdata$HumanGene = TransGeneID(gdata$id, fromType = "symbol", toType = "symbol",
+                              fromOrg = "mmu", toOrg = "hsa")
+sdata$HumanGene = TransGeneID(sdata$Gene, fromType = "symbol", toType = "symbol",
+                              fromOrg = "mmu", toOrg = "hsa")
+```
+
 ### Compute the similarity between the CRISPR screen with Depmap screens
 ```{r Depmap, eval=FALSE}
-## The first run must be time-consuming for downloading Depmap data automatically.
-depmap_similarity = ResembleDepmap(gdata, symbol = "id", score = "Score")
+## Remove missing or duplicate human genes
+idx = duplicated(gdata$HumanGene)|is.na(gdata$HumanGene)
+gdata = gdata[!idx, ]
+depmap_similarity = ResembleDepmap(gdata, symbol = "HumanGene", score = "Score")
+head(depmap_similarity)
 ```
 
 ### Omit common essential genes from the data
 ```{r omitessential, eval=FALSE}
-gdata = OmitCommonEssential(gdata)
-sdata = OmitCommonEssential(sdata, symbol = "Gene")
-# Compute the similarity with Depmap screens based on subset genes
-depmap_similarity = ResembleDepmap(gdata, symbol = "id", score = "Score")
+gdata = OmitCommonEssential(gdata, symbol = "HumanGene")
+sdata = OmitCommonEssential(sdata, symbol = "HumanGene")
 ```
 
 ### Visualization of negative selections and positive selections
 #### Volcano plot
 ```{r selection1, fig.height=4, fig.width=7}
 gdata$LogFDR = -log10(gdata$FDR)
-p1 = ScatterView(gdata, x = "Score", y = "LogFDR", label = "id", model = "volcano", top = 5)
+p1 = ScatterView(gdata, x = "Score", y = "LogFDR", label = "id", 
+                 model = "volcano", top = 5)
 print(p1)
 
 # Or
@@ -243,33 +210,18 @@ print(p1)
 
 Label interested hits using parameter `toplabels` (in ScatterView) and `genelist` (in RankView).
 ```{r, fig.height=4, fig.width=2.5}
-ScatterView(gdata, x = "Rank", y = "Score", label = "id", 
+ScatterView(gdata, x = "Rank", y = "Score", label = "id", top = 5, 
             auto_cut_y = TRUE, groups = c("top", "bottom"), 
-            ylab = "Log2FC", toplabels = c("EP300", "NF2"))
+            ylab = "Log2FC", toplabels = c("Pbrm1", "Arid2", "Brd7"))
 ```
 
-Plot Log2FC at x-axis
-```{r, warning=FALSE, fig.height=4, fig.width=6}
-ScatterView(gdata, x = "Score", y = "Rank", label = "id", 
-            auto_cut_x = TRUE, groups = c("left", "right"), 
-            xlab = "Log2FC", top = 3)
-```
-
-Or
-```{r rankrra2, fig.height=5, fig.width=6}
+You can also use the function `RankView` to draw the figure.
+```{r rankrra2, fig.height=4, fig.width=3}
 geneList= gdata$Score
 names(geneList) = gdata$id
-p2 = RankView(geneList, top = 5, bottom = 10) + xlab("Log2FC")
+p2 = RankView(geneList, top = 5, bottom = 10)
 print(p2)
-RankView(geneList, top = 0, bottom = 0, genelist = c("EP300", "NF2")) + xlab("Log2FC")
-```
-
-Only plot positive selection
-```{r, warning=FALSE, fig.height=5.5, fig.width=4}
-gdata$Rank = rank(-gdata$Score)
-ScatterView(gdata[gdata$Score>0,], x = "Rank", y = "Score", label = "id", 
-            auto_cut_y = TRUE, groups = c("top", "bottom"), 
-            ylab = "Log2FC", top = 5)
+RankView(geneList, top = 0, bottom = 0, genelist = c("Pbrm1", "Arid2", "Brd7"))
 ```
 
 #### Dot plot
@@ -301,27 +253,22 @@ For more information about functional enrichment analysis in MAGeCKFlute, please
 ```{r enrich_rra, fig.height=4, fig.width=9}
 geneList= gdata$Score
 names(geneList) = gdata$id
-enrich = EnrichAnalyzer(geneList = geneList[geneList>0.5], 
-                        method = "HGT", type = "KEGG")
+enrich_pos = EnrichAnalyzer(geneList = geneList[geneList>0.5], 
+                            method = "HGT", type = "KEGG")
+enrich_neg = EnrichAnalyzer(geneList = geneList[geneList< -0.5], 
+                            method = "HGT", type = "KEGG")
 ```
 
 #### Visualization of enrichment results
 ```{r enrichview}
-EnrichedView(enrich, mode = 1, top = 5)
-EnrichedView(enrich, mode = 2, top = 5)
+EnrichedView(enrich_pos, mode = 1, top = 5, bottom = 0)
+EnrichedView(enrich_pos, mode = 2, top = 5, bottom = 0)
+EnrichedView(enrich_neg, mode = 2, top = 0, bottom = 5)
 ```
+
 
 ## Section III: Downstream analysis of MAGeCK MLE
 The MAGeCK-VISPR (`mageck mle`) computes beta scores and the associated statistics for all genes in  multiple conditions. The **beta score** describes how the gene is selected: a positive beta score indicates a positive selection, and a negative beta score indicates a negative selection. Before using `FluteMLE`, you should first get gene summary result from MAGeCK-VISPR (`mageck mle`). MAGeCKFlute incorporates an example datasets for demonstration.
-
-### read required data
-```{r ReadBeta}
-file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                  "testdata/mle.gene_summary.txt")
-# Read and visualize the file format
-gdata = ReadBeta(file3)
-head(gdata)
-```
 
 ### Batch effect removal (not recommended)
 
@@ -340,14 +287,27 @@ head(edata1$data)
 print(edata1$p)
 ```
 
+### read gene summary file
+```{r ReadBeta}
+file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                  "testdata/mle.gene_summary.txt")
+# Read and visualize the file format
+gdata = ReadBeta(file3)
+head(gdata)
+```
+
 ### Normalization of beta scores
 
 It is difficult to control all samples with a consistent cell cycle in a CRISPR screen experiment with multi conditions. Besides, beta score among different states with an inconsistent cell cycle is incomparable. So it is necessary to do the normalization when comparing the beta scores in different conditions. Essential genes are those genes that are indispensable for its survival. The effect generated by knocking out these genes in different cell types is consistent. Based on this, we developed the cell cycle normalization method to shorten the gap of the cell cycle in different conditions.
 
 ```{r NormalizeBeta}
-ctrlname = "dmso"
-treatname = "plx"
-gdata_cc = NormalizeBeta(gdata, samples=c(ctrlname, treatname), method="cell_cycle")
+ctrlname = "Pmel1_Ctrl"
+treatname = "Pmel1"
+gdata$HumanGene = TransGeneID(gdata$Gene, fromType = "symbol", toType = "symbol",
+                              fromOrg = "mmu", toOrg = "hsa")
+
+gdata_cc = NormalizeBeta(gdata, id = "HumanGene", samples=c(ctrlname, treatname), 
+                         method="cell_cycle")
 head(gdata_cc)
 ```
 
@@ -367,20 +327,23 @@ MAView(gdata_cc, ctrlname, treatname)
 ```
 
 ### Positive selection and negative selection
-```{r selection2, fig.height=5, fig.width=7}
+```{r selection2, fig.height=4, fig.width=5}
 gdata_cc$Control = rowMeans(gdata_cc[,ctrlname, drop = FALSE])
 gdata_cc$Treatment = rowMeans(gdata_cc[,treatname, drop = FALSE])
 
-p1 = ScatterView(gdata_cc, "Control", "Treatment", groups = c("top", "bottom"), auto_cut_diag = TRUE, display_cut = TRUE, toplabels = c("NF1", "NF2", "EP300"))
+p1 = ScatterView(gdata_cc, "Control", "Treatment", label = "Gene", 
+                 auto_cut_diag = TRUE, display_cut = TRUE, 
+                 groups = c("top", "bottom"),
+                 toplabels = c("Pbrm1", "Brd7", "Arid2", "Jak1", "Stat1", "B2m"))
 print(p1)
 ```
 
 #### Rank plot - label top hits
-```{r rank, fig.height=5, fig.width=7}
+```{r rank, fig.height=4, fig.width=3}
 gdata_cc$Diff = gdata_cc$Treatment - gdata_cc$Control
 gdata_cc$Rank = rank(gdata_cc$Diff)
-p1 = ScatterView(gdata_cc, x = "Diff", y = "Rank", label = "Gene", 
-                 top = 5, model = "rank")
+p1 = ScatterView(gdata_cc, x = "Rank", y =  "Diff", label = "Gene", 
+                 top = 5, auto_cut_y = TRUE, groups = c("top", "bottom"))
 print(p1)
 
 # Or
@@ -390,22 +353,22 @@ RankView(rankdata)
 ```
 
 #### Nine-square scatter plot - identify treatment-associated genes
-```{r Square, fig.height=6, fig.width=8}
-p1 = ScatterView(gdata_cc, x = "dmso", y = "plx", label = "Gene", 
+```{r Square, fig.height=4, fig.width=5}
+p1 = ScatterView(gdata_cc, x="Pmel1_Ctrl", y="Pmel1", label = "Gene", 
                  model = "ninesquare", top = 5, display_cut = TRUE, force = 2)
 print(p1)
 ```
 
 Customize the cutoff
-```{r Square2, fig.height=6, fig.width=8}
-p1 = ScatterView(gdata_cc, x = "dmso", y = "plx", label = "Gene", 
+```{r Square2, fig.height=4, fig.width=5}
+p1 = ScatterView(gdata_cc, x="Pmel1_Ctrl", y="Pmel1", label = "Gene", 
                  model = "ninesquare", top = 5, display_cut = TRUE, 
                  x_cut = c(-1,1), y_cut = c(-1,1))
 print(p1)
 ```
 
 Or
-```{r, fig.height=6, fig.width=8}
+```{r, fig.height=4, fig.width=5}
 p2 = SquareView(gdata_cc, label = "Gene", 
                 x_cutoff = CutoffCalling(gdata_cc$Control, 2), 
                 y_cutoff = CutoffCalling(gdata_cc$Treatment, 2))
@@ -413,11 +376,11 @@ print(p2)
 ```
 
 ### Functional analysis for treatment-associated genes
-```{r EnrichSquare, fig.height=4, fig.width=9}
+```{r EnrichSquare, fig.height=4, fig.width=6}
 # 9-square groups
 Square9 = p1$data
 idx=Square9$group=="topcenter"
-geneList = Square9$Diff
+geneList = Square9$Diff[idx]
 names(geneList) = Square9$Gene[idx]
 universe = Square9$Gene
 
@@ -427,9 +390,10 @@ EnrichedView(kegg1, top = 6, bottom = 0)
 ```
 
 Also, pathway visualization can be done using function `KeggPathwayView` [@Luo2013].
-```{r pathview2, eval=FALSE}
-genedata = gdata_cc[, c("Control","Treatment")]
-arrangePathview(genedata, pathways = "hsa01521", organism = "hsa", sub = NULL)
+```{r pathview2, eval=TRUE}
+gdata_cc$Entrez = TransGeneID(gdata_cc$Gene, "symbol", "entrez", organism = "mmu")
+genedata = gdata_cc[, c("Entrez", "Control","Treatment")]
+arrangePathview(genedata, pathways = "mmu04630", organism = "mmu", sub = NULL)
 ```
 
 

@@ -18,14 +18,14 @@ IncorporateDepmap(
 
 \item{symbol}{A character, specifying the column name of gene symbols in the data frame.}
 
-\item{cell_lines}{A character vector, specifying the cell lines in Depmap to be considered.}
+\item{cell_lines}{A character vector, specifying the cell lines for incorporation.}
 
-\item{lineages}{A character vector, specifying the lineages in Depmap to be considered.}
+\item{lineages}{A character vector, specifying the cancer types for incorporation.}
 
 \item{na.rm}{Boolean, indicating whether removing NAs from the results.}
 }
 \value{
-A data frame with Depmap column attached.
+A data frame with Depmap column (average CERES scores across selected cell lines) attached.
 }
 \description{
 Incorporate Depmap screen into analysis

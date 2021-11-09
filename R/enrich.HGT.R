@@ -36,20 +36,21 @@
 #' enrichRes <- enrich.HGT(genes, type = "KEGG", keytype = "entrez")
 #' head(slot(enrichRes, "result"))
 #'
+#' @import DOSE
 #' @export
 
 enrich.HGT = function(geneList,
                       keytype = "Symbol",
                       type = "GOBP",
                       organism = 'hsa',
-                      pvalueCutoff = 0.25,
-                      limit = c(2, 200),
+                      pvalueCutoff = 1,
+                      limit = c(2, 100),
                       universe = NULL,
                       gmtpath = NULL,
                       verbose = TRUE,
                       ...){
 
-  requireNamespace("clusterProfiler", quietly=TRUE) || stop("need clusterProfiler package")
+  requireNamespace("DOSE", quietly=TRUE) || stop("Please install the DOSE package")
 
   ## Prepare gene set annotation
   gene2path = gsGetter(gmtpath, type, limit, organism)
@@ -112,6 +113,7 @@ enrich.HGT = function(geneList,
   if(nrow(res)>0){
     res[, c(1:2, 5:8)] = matrix(unlist(res[, c(1:2, 5:8)]), ncol = 6)
     res[, c(3:4, 9)] = matrix(unlist(res[, c(3:4, 9)]), ncol = 3)
+    res = res[order(res$pvalue), ]
     res$p.adjust = p.adjust(res$pvalue, "BH")
     res$nLogpvalue = -log10(res$p.adjust)
     idx = which(res$p.adjust<=pvalueCutoff)
@@ -122,7 +124,7 @@ enrich.HGT = function(geneList,
       res = res[, idx]
     }else res=data.frame()
   }
-  res = res[order(res$pvalue), ]
+
   ## Create enrichResult object ##
   new("enrichResult",
       result         = res,

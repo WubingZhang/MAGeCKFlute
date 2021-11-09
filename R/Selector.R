@@ -4,12 +4,12 @@
 #' @name Selector
 #' @rdname Selector
 #'
-#' @param mat Data matrix, each row is candidates (genes), each column is samples.
-#' @param cutoff Cutoff to define the signatures.
-#' @param type Direction to select signatures.
-#' @param select Proportion of samples in which signature is selected.
+#' @param mat A matrix, each row is candidates (genes), each column is samples.
+#' @param cutoff Numeric, specifying the cutoff to define the signatures.
+#' @param type Character, ">" or "<".
+#' @param select Numeric, specifying the proportion of samples in which signature is selected.
 #'
-#' @return An list containing two elements, first is selected signature and second is a ggplot object.
+#' @return An list containing two elements, the first is the selected signature and the second is a ggplot object.
 #'
 #' @examples
 #' mat = matrix(rnorm(1000*30), 1000, 30)
@@ -39,12 +39,8 @@ Selector <- function(mat, cutoff = 0, type = "<", select = 0.8){
   p = p + geom_text(aes_string(x="x",y="y"),data=text, label=paste("(",text$x,", ",text$y,")",sep=""),
                     colour = "black",size=3.5)
   p = p + ylab("Gene number")+xlab("Sample number")
-  p = p + theme(text = element_text(colour="black",size = 14),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"))
-  p = p + theme(axis.line = element_line(size=0.5, colour = "black"),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
 
   return(list(sig=genes, p = p))
 }

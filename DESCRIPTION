@@ -2,10 +2,10 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative Analysis Pipeline for Pooled CRISPR Functional
         Genetic Screens
-Version: 1.9.5
-Date: 2020-10-26
+Version: 1.99.0
+Date: "`r Sys.Date()`"
 Author: Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu
-Maintainer: Wubing Zhang<Watson5bZhang@gmail.com>
+Maintainer: Wubing Zhang <Watson5bZhang@gmail.com>
 Description: CRISPR (clustered regularly interspaced short palindrome repeats) coupled 
   with nuclease Cas9 (CRISPR/Cas9) screens represent a promising technology to 
   systematically evaluate gene functions. Data analysis for CRISPR/Cas9 screens is a 
@@ -27,10 +27,8 @@ Description: CRISPR (clustered regularly interspaced short palindrome repeats) c
   functions. This vignette explains the use of the package and demonstrates typical workflows.
 License: GPL (>=3)
 VignetteBuilder: knitr
-Depends: R (>= 3.5)
+Depends: R (>= 3.6)
 Imports: Biobase, 
-         clusterProfiler (>= 3.16.1), 
-         enrichplot, 
          gridExtra, 
          ggplot2, 
          ggrepel, 
@@ -38,20 +36,24 @@ Imports: Biobase,
          grid, 
          reshape2, 
          stats, 
-         utils
+         utils,
+         DOSE, 
+         depmap,
+         ExperimentHub,
+         clusterProfiler,
+         pathview
 Suggests: biomaRt, 
           BiocStyle, 
-          DOSE, 
           dendextend, 
           graphics, 
           knitr, 
           msigdbr,
           pheatmap, 
           png, 
-          pathview,
           scales, 
           sva, 
-          testthat, 
+          enrichplot,
+          BiocManager
 LazyData: TRUE
 NeedsCompilation: no
 biocViews: FunctionalGenomics, 

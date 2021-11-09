@@ -3,8 +3,7 @@
 \docType{methods}
 \name{TransGeneID}
 \alias{TransGeneID}
-\alias{transGeneID}
-\title{Gene ID conversion between ENTREZID and SYMBOL}
+\title{Gene ID conversion}
 \usage{
 TransGeneID(
   genes,
@@ -36,7 +35,7 @@ Look at the code in examples to check valid attributes.}
 \item{toOrg}{"hsa"(default), "mmu", "bta", "cfa", "ptr", "rno", and "ssc" are optional
 (Only used when transform gene ids between organisms).}
 
-\item{ensemblHost}{String, specifying ensembl host, you can use `listEnsemblArchives()`
+\item{ensemblHost}{Character, specifying ensembl host, you can use `listEnsemblArchives()`
 to show all available Ensembl archives hosts.}
 
 \item{unique}{Boolean, specifying whether do one-to-one mapping.}
@@ -47,7 +46,7 @@ to show all available Ensembl archives hosts.}
 A character vector, named by unique input gene ids.
 }
 \description{
-Gene ID conversion between ENTREZID and SYMBOL
+Gene ID conversion
 }
 \examples{
 TransGeneID("HLA-A", organism="hsa")

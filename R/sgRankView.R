@@ -111,13 +111,12 @@ sgRankView <- function(df, gene = NULL,
   p = p + scale_y_continuous(breaks = bgcol$y[seq(1, nrow(bgcol), 4)] + binwidth/2,
                              labels = gene, expand = c(0, 0))
   p = p + labs(x = "Log2(Fold change)", y = NULL)
-  p = p + theme(text = element_text(colour="black",size = 14, family = "Helvetica"),
-                plot.title = element_text(hjust = 0.5, size=18),
-                axis.text = element_text(colour="gray10"))
-  p = p + theme(axis.line = element_blank(),
-                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                panel.border = element_blank(), panel.background = element_blank())
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + theme(legend.position = "none")
+  p = p + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                panel.border = element_blank(), panel.background = element_blank())
+
 
   if(!is.null(filename)){
     ggsave(plot=p, filename=filename, units = "in", width=width, height=height, ...)

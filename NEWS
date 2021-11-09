@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.10.1 (Bioconductor 3.11)
+-------------------------
+
+    o Remove transcripts ids from uniprot data in TransGeneID
+    o Enable single cell type incorporation using the IncorporateDepmap
+
+
 CHANGES IN VERSION 1.9.1 (Bioconductor 3.11)
 -------------------------
 

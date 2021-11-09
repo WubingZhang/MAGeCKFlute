@@ -5,7 +5,7 @@
 \alias{CutoffCalling}
 \title{Quantile of normal distribution.}
 \usage{
-CutoffCalling(d, scale = 1)
+CutoffCalling(d, scale = 2)
 }
 \arguments{
 \item{d}{A numeric vector.}

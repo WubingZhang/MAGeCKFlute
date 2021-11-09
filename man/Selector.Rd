@@ -8,16 +8,16 @@
 Selector(mat, cutoff = 0, type = "<", select = 0.8)
 }
 \arguments{
-\item{mat}{Data matrix, each row is candidates (genes), each column is samples.}
+\item{mat}{A matrix, each row is candidates (genes), each column is samples.}
 
-\item{cutoff}{Cutoff to define the signatures.}
+\item{cutoff}{Numeric, specifying the cutoff to define the signatures.}
 
-\item{type}{Direction to select signatures.}
+\item{type}{Character, ">" or "<".}
 
-\item{select}{Proportion of samples in which signature is selected.}
+\item{select}{Numeric, specifying the proportion of samples in which signature is selected.}
 }
 \value{
-An list containing two elements, first is selected signature and second is a ggplot object.
+An list containing two elements, the first is the selected signature and the second is a ggplot object.
 }
 \description{
 Select signatures from candidate list (according to the consistence in most samples).

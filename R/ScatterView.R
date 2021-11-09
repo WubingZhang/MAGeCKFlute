@@ -17,10 +17,10 @@
 #' @param y_cut An one or two-length numeric vector, specifying the cutoff used for y-axis.
 #' @param slope A numberic value indicating slope of the diagonal cutoff.
 #' @param intercept A numberic value indicating intercept of the diagonal cutoff.
-#' @param auto_cut Boolean, take 1.5 fold standard deviation as cutoff.
-#' @param auto_cut_x Boolean, take 1.5 fold standard deviation as cutoff on x-axis.
-#' @param auto_cut_y Boolean, take 1.5 fold standard deviation as cutoff on y-axis.
-#' @param auto_cut_diag Boolean, take 1.5 fold standard deviation as cutoff on diagonal.
+#' @param auto_cut Boolean or numeric, specifying how many standard deviation will be used as cutoff.
+#' @param auto_cut_x Boolean or numeric, specifying how many standard deviation will be used as cutoff on x-axis.
+#' @param auto_cut_y Boolean or numeric, specifying how many standard deviation will be used as cutoff on y-axis
+#' @param auto_cut_diag Boolean or numeric, specifying how many standard deviation will be used as cutoff on diagonal.
 #'
 #' @param groups A character vector specifying groups. Optional groups include "top", "mid", "bottom",
 #' "left", "center", "right", "topleft", "topcenter", "topright", "midleft", "midcenter",
@@ -54,8 +54,10 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' ScatterView(dd, x = "dmso", y = "plx", label = "Gene",
-#' x_cut = 1, y_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
+#' ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
+#' auto_cut = 1, groups = "topright", top = 5, display_cut = TRUE)
+#' ScatterView(dd, x = "Pmel1_Ctrl", y = "Pmel1", label = "Gene",
+#' auto_cut = 2, model = "ninesquare", top = 5, display_cut = TRUE)
 #'
 #' @import ggplot2 ggrepel
 #' @export
@@ -79,35 +81,35 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   if(label==0) data$Label = rownames(data)
   else data$Label = as.character(data[, label])
 
-  if(!is.null(groupnames)) legend.position = "right"
-
   ## Compute the cutoff used for each dimension.
   model = tolower(model)
   if(model == "ninesquare"){
     if(length(x_cut)==0)
-      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+      x_cut = c(-CutoffCalling(data[,x], 2), CutoffCalling(data[,x], 2))
     if(length(y_cut)==0)
-      y_cut = c(-CutoffCalling(data[,y], 1.5), CutoffCalling(data[,y], 1.5))
+      y_cut = c(-CutoffCalling(data[,y], 2), CutoffCalling(data[,y], 2))
     if(length(intercept)==0)
-      intercept = c(-CutoffCalling(data[,y]-data[,x], 1.5), CutoffCalling(data[,y]-data[,x], 1.5))
+      intercept = c(-CutoffCalling(data[,y]-slope*data[,x], 2),
+                    CutoffCalling(data[,y]-slope*data[,x], 2))
   }
   if(model == "volcano"){
     if(length(x_cut)==0)
-      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+      x_cut = c(-CutoffCalling(data[,x], 2), CutoffCalling(data[,x], 2))
     if(length(y_cut)==0) y_cut = -log10(0.05)
   }
   if(model == "rank"){
     if(length(x_cut)==0)
-      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
+      x_cut = c(-CutoffCalling(data[,x], 2), CutoffCalling(data[,x], 2))
   }
-  if(model == "none"){
-    if(auto_cut_x)
-      x_cut = c(-CutoffCalling(data[,x], 1.5), CutoffCalling(data[,x], 1.5))
-    if(auto_cut_y)
-      y_cut = c(-CutoffCalling(data[,y], 1.5), CutoffCalling(data[,y], 1.5))
-    if(auto_cut_diag)
-      intercept = c(-CutoffCalling(data[,y]-data[,x], 1.5), CutoffCalling(data[,y]-data[,x], 1.5))
-  }
+  ## Update the cutoff when user set the auto_cut option
+  if(auto_cut_x)
+    x_cut = c(-CutoffCalling(data[,x], auto_cut_x), CutoffCalling(data[,x], auto_cut_x))
+  if(auto_cut_y)
+    y_cut = c(-CutoffCalling(data[,y], auto_cut_y), CutoffCalling(data[,y], auto_cut_y))
+  if(auto_cut_diag)
+    intercept = c(-CutoffCalling(data[,y]-slope*data[,x], auto_cut_diag),
+                  CutoffCalling(data[,y]-slope*data[,x], auto_cut_diag))
+
   ## Decide the colored groups
   avail_groups = c("topleft", "topright", "bottomleft", "bottomright",
                    "midleft", "topcenter", "midright", "bottomcenter", "midcenter",
@@ -277,7 +279,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
   ## Customize colors
   if(color=="group"){
     if(mode(toplabels)!="list")
-      p = p + scale_color_manual(values = mycolour, labels = groupnames)
+      p = p + scale_color_manual(values = mycolour[names(groupnames)], labels = groupnames)
     else
       p = p + scale_color_manual(values = c("#d9d9d9", "#fb8072", "#80b1d3", "#fdb462",
                                             "#bc80bd", "#b3de69", "#bebada", "#8dd3c7",
@@ -304,7 +306,8 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
       p = p + geom_abline(slope=slope, intercept=intercept, linetype = "dotted")
   }
   p = p + labs(x=xlab, y = ylab, title = main, color = NULL)
-  p = p + theme_bw(base_size = 12)
+  p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + theme(legend.position = legend.position)
 
   return(p)
@@ -327,7 +330,7 @@ ScatterView<-function(data, x = "x", y = "y", label = 0,
 #' @examples
 #' CutoffCalling(rnorm(10000))
 
-CutoffCalling=function(d, scale=1){
+CutoffCalling=function(d, scale=2){
   param=1
   if(is.logical(scale) & scale){
     param = round(length(d) / 20000, digits = 1)

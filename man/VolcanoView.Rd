@@ -18,8 +18,8 @@ VolcanoView(
   alpha = 0.6,
   force = 0.1,
   main = NULL,
-  xlab = "Log2 Fold Change",
-  ylab = "-Log10(Adjust.P)",
+  xlab = "log2FC",
+  ylab = "-log10(FDR)",
   filename = NULL,
   width = 4,
   height = 2.5,
@@ -27,41 +27,41 @@ VolcanoView(
 )
 }
 \arguments{
-\item{df}{Data frame}
+\item{df}{A data frame.}
 
-\item{x}{Colname of df specifying x-axis in Volcanno figure, 'logFC' (default).}
+\item{x}{A character, specifying the x-axis in Volcanno figure, 'logFC' (default).}
 
-\item{y}{Colname of df specifying y-axis in Volcanno figure, 'adj.P.Val' (default),
-which will be plot after log10 transformation.}
+\item{y}{A character, specifying the y-axis in Volcanno figure, 'adj.P.Val' (default).
+log10 transformation will be done automatically.}
 
-\item{Label}{Colname of df specifying labeled terms in Volcanno figure.}
+\item{Label}{A character, specifying dots to be labeled on the figure.}
 
-\item{top}{Interger, the number of top significant terms to be labeled.}
+\item{top}{An integer, specifying the number of top significant genes to be labeled.}
 
-\item{topnames}{Character vector, indicating interested terms to be labeled.}
+\item{topnames}{A character vector, indicating positive/negative controls to be labeled.}
 
-\item{x_cutoff}{Cutoff of x-axis.}
+\item{x_cutoff}{Numeric, specifying cutoff of the x-axis.}
 
-\item{y_cutoff}{Cutoff of y-axis.}
+\item{y_cutoff}{Numeric, specifying cutoff of the y-axis.}
 
-\item{mycolour}{A color vector, specifying colors of non-significant, significant up and down-regulated genes.}
+\item{mycolour}{A color vector, specifying colors of non-significant, significantly up and down-regulated genes.}
 
-\item{alpha}{Parameter in ggplot.}
+\item{alpha}{Numeric, parameter in ggplot.}
 
-\item{force}{Parameter for geom_text_repel.}
+\item{force}{Numeric, Parameter for geom_text_repel. Force of repulsion between overlapping text labels.}
 
-\item{main}{Title of volcano figure.}
+\item{main}{A character, specifying title.}
 
-\item{xlab}{Label of x-axis in figure.}
+\item{xlab}{A character, specifying title of x-axis.}
 
-\item{ylab}{Label of y-axis in figure.}
+\item{ylab}{A character, specifying title of y-axis.}
 
-\item{filename}{Figure file name to create on disk. Default filename="NULL",
-which means don't save the figure on disk.}
+\item{filename}{A character, specifying a file name to create on disk. Set filename to be "NULL",
+if don't want to save the figure.}
 
-\item{width}{Width of figure.}
+\item{width}{Numeric, specifying width of figure.}
 
-\item{height}{Height of figure.}
+\item{height}{Numeric, specifying height of figure.}
 
 \item{...}{Other available parameters in ggsave.}
 }
@@ -69,7 +69,7 @@ which means don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Volcano plot
+Volcano plot for differential analysis.
 }
 \examples{
 file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
