@@ -38,7 +38,6 @@
 #'     enrichRes = enrich.GSE(geneList, keytype = "entrez")
 #'     head(slot(enrichRes, "result"))
 #' }
-#'
 #' @export
 
 enrich.GSE <- function(geneList,
@@ -75,7 +74,7 @@ enrich.GSE <- function(geneList,
   ## Enrichment analysis
   len = length(unique(intersect(names(geneList), gene2path$Gene)))
   if(verbose) message("\t", len, " genes are mapped ...")
-  enrichedRes = GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
+  enrichedRes = clusterProfiler::GSEA(geneList = geneList, pvalueCutoff = pvalueCutoff,
                      minGSSize = 0, maxGSSize = max(limit),
                      TERM2NAME = pathways, by = by,
                      TERM2GENE = gene2path[,c("PathwayID","Gene")],

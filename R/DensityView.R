@@ -26,9 +26,9 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' DensityView(dd, samples=c("dmso", "plx"))
+#' DensityView(dd, samples=c("Pmel1_Ctrl", "Pmel1"))
 #' #or
-#' DensityView(dd[, c("dmso", "plx")])
+#' DensityView(dd[,-1])
 #'
 #' @importFrom reshape2 melt
 #'
@@ -89,7 +89,7 @@ DensityView <- function(dat, samples = NULL,
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
 #' # Density plot of beta score deviation between control and treatment
-#' DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
+#' DensityDiffView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1")
 #'
 #'
 #' @export

@@ -40,6 +40,7 @@
 #'
 #' @importFrom grid rasterGrob
 #' @importFrom gridExtra grid.arrange
+#' @import pathview
 #' @export
 
 arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
@@ -50,7 +51,7 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
   if (!requireNamespace("png", quietly = TRUE)) {
     stop("Package \"png\" is required. Please install it.", call. = FALSE)
   }
-  if (!require("pathview", quietly = TRUE)) {
+  if (!requireNamespace("pathview", quietly = TRUE)) {
     stop("Package \"pathview\" is required. Please install it.", call. = FALSE)
   }
   #====No pathways supplied======================
@@ -71,7 +72,7 @@ arrangePathview <- function(genelist, pathways=c(), top = 4, ncol = 2,
 
   if(verbose) message(Sys.time(), " # Starting plot kegg pathways for ", sub, " ", title)
   for(id in keggID){
-    tryCatch(pathview(gene.data  = genelist[,c("Control","Treatment")],
+    tryCatch(pathview::pathview(gene.data  = genelist[,c("Control","Treatment")],
                  pathway.id = id, species=organism, kegg.dir = path.archive,
                  kegg.native = kegg.native), error = function(e)
                    message("pathview failed for ", id))

@@ -37,8 +37,8 @@ ReadGMT <- function(gmtpath, limit = c(0, Inf)){
 #' write data frame to a gmt file
 #'
 #' @docType methods
-#' @name ReadGMT
-#' @rdname ReadGMT
+#' @name writeGMT
+#' @rdname writeGMT
 #'
 #' @param gene2path A data frame. The columns should be Gene, Pathway ID, and Pathway Name.
 #' @param gmtfile Path to gmt file.

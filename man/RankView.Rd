@@ -10,8 +10,8 @@ RankView(
   rankdata,
   genelist = NULL,
   decreasing = TRUE,
-  top = 10,
-  bottom = 10,
+  top = 5,
+  bottom = 5,
   cutoff = 2,
   main = NULL,
   filename = NULL,
@@ -24,6 +24,8 @@ RankView(
 \item{rankdata}{A numeric vector, with gene as names.}
 
 \item{genelist}{A character vector, specifying genes to be labeled.}
+
+\item{decreasing}{Boolean, specifying the order of genes to plot.}
 
 \item{top}{Integer, specifying number of positive genes to be labeled.}
 
@@ -47,7 +49,7 @@ Set filename to be "NULL", if don't want to save the figure.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-Rank all genes by beta scores and label interested genes.
+Draw the score and rank of genes on a scatter plot.
 }
 \examples{
 file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),

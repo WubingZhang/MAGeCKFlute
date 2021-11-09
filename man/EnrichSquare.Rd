@@ -7,13 +7,12 @@
 \usage{
 EnrichSquare(
   beta,
-  id = "Gene",
-  keytype = "Symbol",
+  id = "GeneID",
+  keytype = "Entrez",
   x = "Control",
   y = "Treatment",
-  enrich_method = "HGT",
+  enrich_method = "ORT",
   top = 5,
-  organism = "hsa",
   limit = c(2, 100),
   filename = NULL,
   out.dir = ".",
@@ -24,7 +23,7 @@ EnrichSquare(
 )
 }
 \arguments{
-\item{beta}{Data frame, with columns of "Gene", "group", and "Diff".}
+\item{beta}{Data frame, with columns of "GeneID", "group", and "Diff".}
 
 \item{id}{A character, indicating the gene column in the data.}
 
@@ -37,8 +36,6 @@ EnrichSquare(
 \item{enrich_method}{One of "ORT"(Over-Representing Test) and "HGT"(HyperGemetric test).}
 
 \item{top}{An integer, specifying the number of pathways to show.}
-
-\item{organism}{"hsa" or "mmu".}
 
 \item{limit}{A two-length vector, specifying the min and
 max size of pathways for enrichent analysis.}

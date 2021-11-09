@@ -3,39 +3,21 @@
 \docType{methods}
 \name{ReadGMT}
 \alias{ReadGMT}
-\alias{writeGMT}
 \title{ReadGMT}
 \usage{
 ReadGMT(gmtpath, limit = c(0, Inf))
-
-writeGMT(gene2path, gmtfile)
 }
 \arguments{
 \item{gmtpath}{The path to gmt file.}
 
 \item{limit}{A integer vector of length two, specifying the limit of geneset size.}
-
-\item{gene2path}{A data frame. The columns should be Gene, Pathway ID, and Pathway Name.}
-
-\item{gmtfile}{Path to gmt file.}
 }
 \value{
 An data.frame, in which the first column is gene, and the second column is pathway name.
-
-Output gmt file to local folder.
 }
 \description{
 Parse gmt file to a data.frame
-
-write data frame to a gmt file
-}
-\examples{
-gene2path = gsGetter(type = "Complex")
-# writeGMT(gene2path, "Protein_complex.gmt")
-
 }
 \author{
-Wubing Zhang
-
 Wubing Zhang
 }

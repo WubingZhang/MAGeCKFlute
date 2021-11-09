@@ -16,6 +16,7 @@
 #' @param posControl A character vector, specifying a list of positive control genes.
 #' @param samples Character vector, specifying the sample names in \emph{beta} columns.
 #' If NULL (default), take all \emph{beta} columns as samples.
+#' @param org "hsa", "mmu", "bta", "cfa", "ptr", "rno", or "ssc" indicating the organism.
 #'
 #' @return A data frame with same format as input data \emph{beta}.
 #'
@@ -31,31 +32,41 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' #Cell Cycle normalization
-#' dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
-#' head(dd_essential)
-#'
+#' \dontrun{
+#'   #Cell Cycle normalization
+#'   dd_essential = NormalizeBeta(dd, method="cell_cycle", org = "mmu")
+#'   head(dd_essential)
+#' }
 #' #Optional loess normalization (not recommended)
-#' dd_loess = NormalizeBeta(dd, samples=c("dmso", "plx"), method="loess")
+#' dd_loess = NormalizeBeta(dd, method="loess")
 #' head(dd_loess)
 #'
-#'
 #' @export
-
-#===normalize function=====================================
+#'
 NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
-                          posControl=NULL, samples=NULL){
+                          posControl=NULL, samples=NULL, org = "hsa"){
   normalized = beta[, colnames(beta)[setdiff(1:ncol(beta), id)]]
   if(id==0) ids = rownames(beta) else ids = as.character(beta[,id])
-  if(!is.null(samples)) normalized = normalized[, samples]
+  if(is.null(samples)) samples = colnames(normalized)
+  normalized = normalized[, samples]
   normalized = as.matrix(normalized)
   if(method=="cell_cycle"){
     if(is.null(posControl)){
-      Zuber_Essential = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
-                                "Zuber_Essential.rds"))
-      posControl=Zuber_Essential$GeneSymbol
+      # depmapDat = LoadDepmap()
+      # Depmap = depmapDat$Depmap
+      # posControl = Selector(Depmap, -0.5, select = 0.9)$sig
+      posControl = readRDS(file.path(system.file("extdata", package = "MAGeCKFlute"),
+                                     "Zuber_Essential.rds"))$GeneSymbol
+      if(org!="hsa"){
+        posControl = TransGeneID(posControl, fromType = "Symbol", toType = "Symbol",
+                                fromOrg = "hsa", toOrg = org)
+        posControl = na.omit(posControl)
+      }
+      # Zuber_Essential = readRDS(file.path(system.file("extdata", package =
+      # "MAGeCKFlute"), "Zuber_Essential.rds"))
+      # posControl=Zuber_Essential$GeneSymbol
     }
-    idx = which(ids %in% toupper(posControl))
+    idx = which(toupper(ids) %in% toupper(posControl))
     if(length(idx)>0){
       mid = apply(normalized[idx,], 2, median, na.rm = TRUE)
       # mad = apply(normalized[idx,], 2, mad, na.rm = TRUE)
@@ -104,7 +115,7 @@ NormalizeBeta <- function(beta, id = 1, method="cell_cycle",
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' beta_loess = normalize.loess(dd[,c("dmso", "plx")])
+#' beta_loess = normalize.loess(dd[,-1])
 #'
 #' @export
 #'

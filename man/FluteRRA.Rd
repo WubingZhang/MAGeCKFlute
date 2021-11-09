@@ -14,7 +14,7 @@ FluteRRA(
   incorporateDepmap = FALSE,
   cell_lines = NA,
   lineages = "All",
-  omitEssential = FALSE,
+  omitEssential = TRUE,
   top = 5,
   toplabels = NULL,
   scale_cutoff = 2,
@@ -88,7 +88,7 @@ file2 = file.path(system.file("extdata", package = "MAGeCKFlute"),
                   "testdata/rra.sgrna_summary.txt")
 \dontrun{
     # Run the FluteRRA pipeline
-    FluteRRA(file1, file2, proj="PLX", organism="hsa", incorporateDepmap = FALSE,
+    FluteRRA(file1, file2, proj="Pmel", organism="hsa", incorporateDepmap = FALSE,
     scale_cutoff = 1, outdir = "./")
 }
 

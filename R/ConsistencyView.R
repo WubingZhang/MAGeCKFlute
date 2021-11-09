@@ -24,7 +24,7 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' ConsistencyView(dd, ctrlname = "dmso", treatname = "plx")
+#' ConsistencyView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1")
 #'
 #' @export
 

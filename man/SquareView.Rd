@@ -4,7 +4,7 @@
 \name{SquareView}
 \alias{SquareView}
 \alias{squareview}
-\title{Scatter plot showing 9 quadrants}
+\title{Scatter plot showing dots in 9 quadrants}
 \usage{
 SquareView(
   df,
@@ -24,6 +24,7 @@ SquareView(
   auto_cut_diag = auto_cut,
   groups = c("midleft", "topcenter", "midright", "bottomcenter"),
   groupnames = paste0("Group", 1:length(groups)),
+  legend.position = "none",
   main = NULL,
   filename = NULL,
   width = 6,
@@ -69,6 +70,8 @@ of which the average scores will show as the y-axis.}
 
 \item{groupnames}{A character vector, specifying group names.}
 
+\item{legend.position}{Position of the legend.}
+
 \item{main}{As in 'plot'.}
 
 \item{filename}{Figure file name to create on disk. Default filename="NULL", which means
@@ -84,13 +87,13 @@ don't save the figure on disk.}
 An object created by \code{ggplot}, which can be assigned and further customized.
 }
 \description{
-A scatter plot labeling dots in 9 quadrants
+Scatter plot showing dots in 9 quadrants
 }
 \examples{
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
+SquareView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1", label = "Gene")
 
 
 }

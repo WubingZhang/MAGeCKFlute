@@ -48,7 +48,7 @@ Loess normalization method.
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-beta_loess = normalize.loess(dd[,c("dmso", "plx")])
+beta_loess = normalize.loess(dd[,-1])
 
 }
 \seealso{

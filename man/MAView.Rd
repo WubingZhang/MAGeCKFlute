@@ -59,7 +59,9 @@ MAplot of gene beta scores in Control vs Treatment
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-MAView(dd, ctrlname = "dmso", treatname = "plx")
+MAView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1")
+dd2 = NormalizeBeta(dd, method="loess", org = "mmu")
+MAView(dd2, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1")
 
 }
 \author{

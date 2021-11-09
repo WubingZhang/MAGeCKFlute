@@ -17,7 +17,7 @@ FluteMLE(
   lineages = "All",
   norm_method = "cell_cycle",
   posControl = NULL,
-  omitEssential = FALSE,
+  omitEssential = TRUE,
   top = 10,
   toplabels = NA,
   scale_cutoff = 2,
@@ -109,7 +109,7 @@ file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 \dontrun{
   # functional analysis for MAGeCK MLE results
-  FluteMLE(file3, treatname = "plx", ctrlname = "dmso", proj = "PLX")
+  FluteMLE(file3, treatname = "Pmel1", ctrlname = "Pmel1_Ctrl", proj = "Pmel1")
 }
 
 }

@@ -1,6 +1,6 @@
 #' Rank plot
 #'
-#' Rank all genes by beta scores and label interested genes.
+#' Draw the score and rank of genes on a scatter plot.
 #'
 #' @docType methods
 #' @name RankView
@@ -9,6 +9,7 @@
 #'
 #' @param rankdata A numeric vector, with gene as names.
 #' @param genelist A character vector, specifying genes to be labeled.
+#' @param decreasing Boolean, specifying the order of genes to plot.
 #' @param top Integer, specifying number of positive genes to be labeled.
 #' @param bottom Integer, specifying number of negative genes to be labeled.
 #' @param cutoff One numeric value indicating the fold of standard deviation used as cutoff;
@@ -39,9 +40,9 @@
 #' @export
 #'
 
-RankView <- function(rankdata, genelist=NULL, decreasing = TRUE,
-                     top=10, bottom=10, cutoff=2,
-                     main=NULL, filename=NULL, width=5, height=4, ...){
+RankView <- function(rankdata, genelist = NULL, decreasing = TRUE,
+                     top = 5, bottom = 5, cutoff = 2,
+                     main = NULL, filename = NULL, width = 5, height = 4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
   if(length(cutoff)<2){
     cutoff = CutoffCalling(rankdata, cutoff)
@@ -62,7 +63,7 @@ RankView <- function(rankdata, genelist=NULL, decreasing = TRUE,
     p = p + ggrepel::geom_text_repel(aes_string(label = "Gene"), data=data[idx,], size = 2.5, ...)
   p = p + scale_color_manual(values=mycolour)
   p = p + scale_fill_manual(values=mycolour)
-  p = p + labs(x = "Rank", y = "Treatment vs Control", title=main)
+  p = p + labs(x = "Rank", y = "Score", title=main)
   p = p + theme_bw(base_size = 14)
   p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + theme(legend.position="none")#+ylim(-1000,7000)

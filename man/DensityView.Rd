@@ -44,9 +44,9 @@ Plot the distribution of numeric vectors with the same length.
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-DensityView(dd, samples=c("dmso", "plx"))
+DensityView(dd, samples=c("Pmel1_Ctrl", "Pmel1"))
 #or
-DensityView(dd[, c("dmso", "plx")])
+DensityView(dd[,-1])
 
 }
 \seealso{

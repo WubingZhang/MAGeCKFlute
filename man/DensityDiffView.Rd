@@ -45,7 +45,7 @@ file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
 # Density plot of beta score deviation between control and treatment
-DensityDiffView(dd, ctrlname = "dmso", treatname = "plx")
+DensityDiffView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1")
 
 
 }

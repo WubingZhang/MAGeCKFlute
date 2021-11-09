@@ -58,7 +58,6 @@ data(geneList, package = "DOSE")
     enrichRes = enrich.GSE(geneList, keytype = "entrez")
     head(slot(enrichRes, "result"))
 }
-
 }
 \seealso{
 \code{\link{enrich.HGT}}

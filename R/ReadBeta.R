@@ -1,6 +1,4 @@
-#' Read gene beta scores
-#'
-#' Read gene beta scores from file or data frame
+#' Read gene beta scores from MAGeCK-MLE results
 #'
 #' @docType methods
 #' @name ReadBeta

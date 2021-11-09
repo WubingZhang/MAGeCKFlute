@@ -1,6 +1,4 @@
-#' Scatter plot showing 9 quadrants
-#'
-#' A scatter plot labeling dots in 9 quadrants
+#' Scatter plot showing dots in 9 quadrants
 #'
 #' @docType methods
 #' @name SquareView
@@ -29,6 +27,7 @@
 #' @param groups A character vector, specifying which group to be colored. Optional groups include "topleft",
 #' "topcenter", "topright", "midleft", "midright", "bottomleft", "bottomcenter", "bottomright".
 #' @param groupnames A character vector, specifying group names.
+#' @param legend.position Position of the legend.
 #'
 #' @param main As in 'plot'.
 #' @param filename Figure file name to create on disk. Default filename="NULL", which means
@@ -47,7 +46,7 @@
 #' file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 #' "testdata/mle.gene_summary.txt")
 #' dd = ReadBeta(file3)
-#' SquareView(dd, ctrlname = "dmso", treatname = "plx", label = "Gene")
+#' SquareView(dd, ctrlname = "Pmel1_Ctrl", treatname = "Pmel1", label = "Gene")
 #'
 #'
 #' @importFrom ggrepel geom_text_repel
@@ -70,6 +69,7 @@ SquareView<-function(df,
                      auto_cut_diag = auto_cut,
                      groups = c("midleft", "topcenter", "midright", "bottomcenter"),
                      groupnames = paste0("Group", 1:length(groups)),
+                     legend.position = "none",
                      main = NULL, filename = NULL, width = 6, height = 4, ...){
   requireNamespace("ggrepel", quietly=TRUE) || stop("need ggrepel package")
 
@@ -211,6 +211,7 @@ SquareView<-function(df,
   p = p + theme_bw(base_size = 14)
   p = p + theme(plot.title = element_text(hjust = 0.5))
   p = p + theme(legend.title=element_blank())
+  p = p + theme(legend.position = legend.position)
   # p = suppressWarnings(ggExtra::ggMarginal(p, type="histogram", bins=50, fill = "gray80"))
   # p = p + xlim(x_min, x_max) + ylim(y_min, y_max)
 

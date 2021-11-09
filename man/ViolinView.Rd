@@ -45,9 +45,7 @@ Violin plot showing the distribution of numeric vectors with the same length.
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-ViolinView(dd, samples=c("dmso", "plx"))
-#or
-ViolinView(dd[, c("dmso", "plx")])
+ViolinView(dd[, -1])
 
 
 }

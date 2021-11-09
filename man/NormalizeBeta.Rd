@@ -11,7 +11,8 @@ NormalizeBeta(
   id = 1,
   method = "cell_cycle",
   posControl = NULL,
-  samples = NULL
+  samples = NULL,
+  org = "hsa"
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ or character string giving the name of the table column containing the gene name
 
 \item{samples}{Character vector, specifying the sample names in \emph{beta} columns.
 If NULL (default), take all \emph{beta} columns as samples.}
+
+\item{org}{"hsa", "mmu", "bta", "cfa", "ptr", "rno", or "ssc" indicating the organism.}
 }
 \value{
 A data frame with same format as input data \emph{beta}.
@@ -46,14 +49,14 @@ to normalize array data before.
 file3 = file.path(system.file("extdata", package = "MAGeCKFlute"),
 "testdata/mle.gene_summary.txt")
 dd = ReadBeta(file3)
-#Cell Cycle normalization
-dd_essential = NormalizeBeta(dd, samples=c("dmso", "plx"), method="cell_cycle")
-head(dd_essential)
-
+\dontrun{
+  #Cell Cycle normalization
+  dd_essential = NormalizeBeta(dd, method="cell_cycle", org = "mmu")
+  head(dd_essential)
+}
 #Optional loess normalization (not recommended)
-dd_loess = NormalizeBeta(dd, samples=c("dmso", "plx"), method="loess")
+dd_loess = NormalizeBeta(dd, method="loess")
 head(dd_loess)
-
 
 }
 \author{

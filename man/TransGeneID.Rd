@@ -3,8 +3,7 @@
 \docType{methods}
 \name{TransGeneID}
 \alias{TransGeneID}
-\alias{transGeneID}
-\title{Gene ID conversion between ENTREZID and SYMBOL}
+\title{Gene ID conversion}
 \usage{
 TransGeneID(
   genes,
@@ -47,7 +46,7 @@ to show all available Ensembl archives hosts.}
 A character vector, named by unique input gene ids.
 }
 \description{
-Gene ID conversion between ENTREZID and SYMBOL
+Gene ID conversion
 }
 \examples{
 TransGeneID("HLA-A", organism="hsa")

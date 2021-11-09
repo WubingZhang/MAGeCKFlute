@@ -40,6 +40,7 @@ Selector <- function(mat, cutoff = 0, type = "<", select = 0.8){
                     colour = "black",size=3.5)
   p = p + ylab("Gene number")+xlab("Sample number")
   p = p + theme_bw(base_size = 14)
+  p = p + theme(plot.title = element_text(hjust = 0.5))
 
   return(list(sig=genes, p = p))
 }

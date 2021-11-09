@@ -9,7 +9,6 @@ EnrichAB(
   data,
   enrich_method = "HGT",
   top = 10,
-  organism = "hsa",
   limit = c(2, 100),
   filename = NULL,
   out.dir = ".",
@@ -25,8 +24,6 @@ EnrichAB(
 \item{enrich_method}{One of "ORT" (Over-Representing Test) and "HGT" (HyperGemetric test).}
 
 \item{top}{An integer, specifying the number of pathways to show.}
-
-\item{organism}{"hsa" or "mmu".}
 
 \item{limit}{A two-length vector, specifying the min and max size of pathways
 for enrichent analysis.}
@@ -49,7 +46,7 @@ items, which contain subitems of \code{gridPlot} and \code{enrichRes}.
 }
 \description{
 Do enrichment analysis for selected genes, in which positive selection and negative selection
-are termed as GroupA and GroupB
+are termed as Positive and Negative
 }
 \author{
 Wubing Zhang

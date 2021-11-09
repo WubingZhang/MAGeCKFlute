@@ -1,9 +1,8 @@
-#' Gene ID conversion between ENTREZID and SYMBOL
+#' Gene ID conversion
 #'
 #' @docType methods
 #' @name TransGeneID
 #' @rdname TransGeneID
-#' @aliases transGeneID
 #'
 #' @param genes A character vector, input genes to be converted.
 #' @param fromType The input ID type, one of "entrez", "symbol"(default), "hgnc",
@@ -212,8 +211,8 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   }
 
   ## Reorder the mapping file
-  ncbi_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE,
-                      quote = "", stringsAsFactors = FALSE, comment.char = "")
+  ncbi_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE, quote = "",
+                      stringsAsFactors = FALSE, comment.char = "")
   suppressWarnings(try(file.remove(locfname), silent = TRUE))
   ncbi_ann = ncbi_ann[, c("GeneID", "Symbol", "Synonyms", "dbXrefs", "type_of_gene", "description")]
   colnames(ncbi_ann)[c(1,2,6)] = c("entrez", "symbol", "fullname")
@@ -258,7 +257,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   # }
 
   #### Ensembl gene annotation ####
-  tmpfile = file.path(system.file("extdata", package = "MAGeCKFlute"), "filelist")
+  tmpfile = file.path(system.file("extdata", package = "MAGeCKFlute"), "tmpfile")
   download.file("ftp://ftp.ensembl.org/pub/", tmpfile, quiet = TRUE)
   tmp = read.table(tmpfile, fill = TRUE, quote = "", stringsAsFactors = FALSE)
   tmp = gsub(".*release-", "", tmp[grepl("release", tmp[, ncol(tmp)]), ncol(tmp)])
@@ -305,7 +304,8 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 
   #### Merge all annotations ####
   geneann = merge(ncbi_ann[, c("ensembl","entrez","symbol","synonyms")],
-                  ensembl_ann[,c("ensembl","entrez")], by = c("ensembl","entrez"), all = TRUE)
+                  ensembl_ann[,c("ensembl","entrez")],
+                  by = c("ensembl","entrez"), all = TRUE)
   geneann$entrez = gsub(" ", "", geneann$entrez)
   # ids = gsub("-.*$", "", uniprot_ann$Canonical[!grepl("-1", uniprot_ann$Canonical)])
   # data$uniprot[data$uniprot%in%ids] = uniprot_ann[data$uniprot[data$uniprot%in%ids], "Canonical"]
@@ -314,7 +314,8 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
   suppressWarnings(try(file.remove(tmpfile), silent = TRUE))
 
   #### Uniprot gene annotation ####
-  proteome_code = c("up000005640", "UP000009136", "UP000002254", "up000000589", "UP000002277", "UP000002494")
+  proteome_code = c("up000005640", "UP000009136", "UP000002254",
+                    "up000000589", "UP000002277", "UP000002494")
   names(proteome_code) = c("hsa", "bta", "cfa", "mmu", "ptr", "rno")
   locfname <- file.path(system.file("extdata", package = "MAGeCKFlute"),
                         paste0("uniprot_proteome_", proteome_code[org], ".tab"))
@@ -326,8 +327,8 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
     download.file(uniprot_link, locfname, quiet = TRUE)
   }
   ## Reorder the mapping file
-  uniprot_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE,
-                         quote = "", stringsAsFactors = FALSE, comment.char = "")
+  uniprot_ann = read.csv(gzfile(locfname), sep = "\t", header = TRUE, quote = "",
+                         stringsAsFactors = FALSE, comment.char = "")
   suppressWarnings(try(file.remove(locfname), silent = TRUE))
   colnames(uniprot_ann) = c("Entry", "Status", "Gene", "Ensembl", "RefSeq", "Isoforms")
   uniprot_ann = uniprot_ann[order(uniprot_ann$Status), ]
@@ -421,7 +422,7 @@ getGeneAnn <- function(org = "hsa", update = FALSE){
 getOrtAnn <- function(fromOrg = "mmu", toOrg = "hsa", update = FALSE){
   #### Read rds file directly ####
   rdsann = file.path(system.file("extdata", package = "MAGeCKFlute"),
-                     paste0("HOM_GeneID_Annotation_", fromOrg, "_", toOrg, ".rds"))
+                     paste0("GeneID_Annotation_", fromOrg, "_", toOrg, ".rds"))
   if(file.exists(rdsann) & !update) return(readRDS(rdsann))
 
   keggcode = c("hsa", "mmu", "rno", "bta", "cfa", "ptr", "ssc")

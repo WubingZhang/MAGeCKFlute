@@ -63,7 +63,7 @@
 #' "testdata/mle.gene_summary.txt")
 #' \dontrun{
 #'   # functional analysis for MAGeCK MLE results
-#'   FluteMLE(file3, treatname = "plx", ctrlname = "dmso", proj = "PLX")
+#'   FluteMLE(file3, treatname = "Pmel1", ctrlname = "Pmel1_Ctrl", proj = "Pmel1")
 #' }
 #'
 #' @import ggplot2 stats grDevices utils gridExtra grid
@@ -74,7 +74,7 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
                      incorporateDepmap = FALSE,
                      cell_lines = NA, lineages = "All",
                      norm_method = "cell_cycle", posControl = NULL,
-                     omitEssential = FALSE,
+                     omitEssential = TRUE,
                      top = 10, toplabels = NA,
                      scale_cutoff = 2, limit = c(0,200),
                      enrich_method = "ORT", proj = NA,
@@ -105,8 +105,10 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
     if(organism != "hsa"){
       beta$HumanGene = TransGeneID(beta$Symbol, "Symbol", "Symbol",
                                    fromOrg = organism, toOrg = "hsa")
+      beta$GeneID = TransGeneID(beta$HumanGene, "Symbol", "Entrez")
     }else{
       beta$HumanGene = beta$Symbol
+      beta$GeneID = beta$EntrezID
     }
 
     message(Sys.time(), " # Transform id to official human gene name ...")
@@ -260,10 +262,10 @@ FluteMLE <- function(gene_summary, treatname, ctrlname = "Depmap",
 
 	## Nine-Square grouped gene enrichment ##
 	{
-	  E1 = EnrichSquare(p1$data, id = "EntrezID", keytype = "entrez",
-	                    x = "Control", y = "Treatment", organism=organism,
-	                    top = top, enrich_method = enrich_method,
-	                    filename=norm_method, limit = limit, out.dir=outputDir3)
+	  E1 = EnrichSquare(p1$data, id = "GeneID", keytype = "entrez",
+	                    x = "Control", y = "Treatment", top = top,
+	                    enrich_method = enrich_method, limit = limit,
+	                    filename=norm_method, out.dir=outputDir3)
     # EnrichView
 	  gridExtra::grid.arrange(E1$kegg1$gridPlot, E1$reactome1$gridPlot, E1$gobp1$gridPlot, E1$complex1$gridPlot, ncol = 2)
 	  gridExtra::grid.arrange(E1$kegg2$gridPlot, E1$reactome2$gridPlot, E1$gobp2$gridPlot, E1$complex2$gridPlot, ncol = 2)

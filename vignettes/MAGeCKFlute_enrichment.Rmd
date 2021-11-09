@@ -22,7 +22,7 @@ Binbin Wang, Mei Wang, Wubing Zhang. "Integrative analysis of pooled CRISPR gene
 
 ## Install and load the packages
 
-```{r install, eval=FALSE}
+```{r install, eval=TRUE}
 if(!"MAGeCKFlute" %in% installed.packages()) BiocManager::install("MAGeCKFlute")
 if(!"ggplot2" %in% installed.packages()) BiocManager::install("ggplot2")
 library(MAGeCKFlute)

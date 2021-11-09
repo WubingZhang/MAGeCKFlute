@@ -25,11 +25,11 @@ LoadDepmap <- function(){
   metadata = as.data.frame(metadata)
   rownames(metadata) = metadata$depmap_id
   metadata = metadata[,-1]
-  crispr = matrix(crispr$dependency, nrow = length(unique(crispr$gene_name)),
-                  ncol = length(unique(crispr$depmap_id)),
-                  dimnames = list(rownames = unique(crispr$gene_name),
-                                  colnames = unique(crispr$depmap_id)))
-  crispr = as.data.frame(crispr)
+  crispr = matrix(crispr$dependency, nrow = length(unique(crispr$depmap_id)),
+                  ncol = length(unique(crispr$gene_name)),
+                  dimnames = list(rownames = unique(crispr$depmap_id),
+                                  colnames = unique(crispr$gene_name)))
+  crispr = as.data.frame(t(crispr))
   # ## Load Depmap data
   # depmap_rds = file.path(system.file("extdata", package = "MAGeCKFlute"), "Depmap.rds")
   # if(file.exists(depmap_rds)){
@@ -240,8 +240,7 @@ OmitCommonEssential <- function(dd, symbol = "id",
     warning("No cell line is selected. Using all cell types instead")
   }
 
-  idx = rowSums(Depmap<dependency, na.rm = TRUE)>0.6*ncol(Depmap)
-  lethal_genes = rownames(Depmap)[idx]
+  lethal_genes = Selector(Depmap, -0.5, select = 0.9)$sig
   dd = dd[!(dd[,symbol] %in% lethal_genes), ]
   return(dd)
 }

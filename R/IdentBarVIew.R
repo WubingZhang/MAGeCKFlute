@@ -34,8 +34,8 @@
 #' @export
 
 IdentBarView <- function(gg, x = "x", y = "y", fill = c("#CF3C2B", "#394E80"),
-                    main = NULL, xlab = NULL, ylab = NULL,
-                    filename = NULL, width = 5, height = 4, ...){
+                         main = NULL, xlab = NULL, ylab = NULL,
+                         filename = NULL, width = 5, height = 4, ...){
   gg$x = gg[, x]
   gg$y = gg[, y]
   p <- ggplot(gg)
