@@ -104,8 +104,9 @@ dotplot(hgtRes1, showCategory = 5)
 library(enrichplot)
 hgtRes1@result$geneID = hgtRes1@result$geneName
 cnetplot(hgtRes1, 5)
-heatplot(hgtRes1, showCategory = 5, foldChange=genelist)
-emapplot(hgtRes1, showCategory = 5, layout="kk")
+heatplot(hgtRes1, showCategory = 5, foldChange = genelist)
+tmp <- pairwise_termsim(hgtRes1)
+emapplot(tmp, showCategory = 5, layout = "kk")
 ```
 
 ### Visulization for GSEA enriched categories
@@ -131,7 +132,6 @@ enrich = EnrichAnalyzer(geneList = genelist[1:200], type = "REACTOME", organism 
 EnrichedView(enrich, top = 5)
 ## All gene ontology
 enrichGo = EnrichAnalyzer(genelist[1:200], type = "GOBP", organism = "mmu")
-EnrichedView(enrichGo, top = 5)
 ```
 
 ### Protein complex analysis

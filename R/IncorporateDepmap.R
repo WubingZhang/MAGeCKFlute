@@ -13,15 +13,15 @@
 #' \dontrun{
 #'   depmapDat = LoadDepmap()
 #' }
-#' @import depmap ExperimentHub
+#' @import depmap
 #' @export
 
 LoadDepmap <- function(){
-  requireNamespace("depmap", quietly=TRUE) || stop("need depmap package")
-  requireNamespace("ExperimentHub", quietly=TRUE) || stop("need ExperimentHub package")
-  eh <- ExperimentHub()
-  crispr <- eh[["EH2261"]]
-  metadata <- eh[["EH2266"]]
+  # eh <- ExperimentHub::ExperimentHub()
+  # crispr <- eh[["EH2261"]]
+  # metadata <- eh[["EH2266"]]
+  crispr <- depmap::depmap_crispr()
+  metadata <- depmap::depmap_metadata()
   metadata = as.data.frame(metadata)
   rownames(metadata) = metadata$depmap_id
   metadata = metadata[,-1]
@@ -78,7 +78,8 @@ LoadDepmap <- function(){
 #' @export
 #'
 IncorporateDepmap <- function(dd, symbol = "id",
-                              cell_lines = NA, lineages = "All",
+                              cell_lines = NA,
+                              lineages = "All",
                               na.rm = FALSE){
   depmapDat = LoadDepmap()
   Depmap = depmapDat$Depmap
@@ -198,11 +199,11 @@ ResembleDepmap <- function(dd, symbol = "id", score = "Score", lineages = "All",
 #' @return A data frame.
 #'
 #' @examples
-#' file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-#' "testdata/rra.gene_summary.txt")
-#' gdata = ReadRRA(file1)
-#' dim(gdata)
 #' \dontrun{
+#'   file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+#'                     "testdata/rra.gene_summary.txt")
+#'   gdata = ReadRRA(file1)
+#'   dim(gdata)
 #'   rra.omit = OmitCommonEssential(gdata)
 #'   dim(rra.omit)
 #' }

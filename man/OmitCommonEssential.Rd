@@ -31,11 +31,11 @@ A data frame.
 Omit common essential genes based on depmap data
 }
 \examples{
-file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
-"testdata/rra.gene_summary.txt")
-gdata = ReadRRA(file1)
-dim(gdata)
 \dontrun{
+  file1 = file.path(system.file("extdata", package = "MAGeCKFlute"),
+                    "testdata/rra.gene_summary.txt")
+  gdata = ReadRRA(file1)
+  dim(gdata)
   rra.omit = OmitCommonEssential(gdata)
   dim(rra.omit)
 }
