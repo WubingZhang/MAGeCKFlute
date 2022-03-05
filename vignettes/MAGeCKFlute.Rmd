@@ -40,7 +40,7 @@ library(ggplot2)
 # Quick start
 
 ## Downstream analysis of MAGeCK RRA
-The MAGeCK (`mageck test`) uses Robust Rank Aggregation (RRA) for robust identification of CRISPR-screen hits, and outputs the summary results at both sgRNA and gene level. Before performing the downstream analysis, please make sure you have got the gene summary and sgRNA summary results from `mageck test`. MAGeCKFlute incorporates an example datasets [@Pan2018], which study the gene functions in T cell mediate tumor killing by performing CRISPR screens in B16F10 cell lines co-cultured with Pmel-1 T cells. There are three samples in the data, including Pmel1_Input (B16F10 cells without T cell co-culture), Pmel1_Ctrl (B16F10 cells co-cultured with control T cells), and Pmel1 (B16F10 cells co-cultured with antigen specific T cells). We compared `Pmel1` with `Pmel1_Ctrl` using `mageck test`, which identifies genes associated with T cell mediated tumor killing.
+The MAGeCK (`mageck test`) uses Robust Rank Aggregation (RRA) for robust identification of CRISPR-screen hits, and outputs the summary results at both sgRNA and gene level. Before performing the downstream analysis, please make sure you have got the gene summary and sgRNA summary results from `mageck test`. MAGeCKFlute incorporates an example dataset [@Pan2018], which studies the gene functions in T cell mediate tumor killing by performing CRISPR screens in B16F10 cell lines co-cultured with Pmel-1 T cells. There are three samples in the data, including Pmel1_Input (B16F10 cells without T cell co-culture), Pmel1_Ctrl (B16F10 cells co-cultured with control T cells), and Pmel1 (B16F10 cells co-cultured with antigen specific T cells). We compared `Pmel1` with `Pmel1_Ctrl` using `mageck test`, which identifies genes associated with T cell mediated tumor killing.
 
 ### Run the FluteRRA pipeline
 MAGeCKFlute processes MAGeCK RRA results ("gene_summary" and "sgrna_summary") with the function FluteRRA, which identifies positively and negatively selected genes and performs functional analysis.
@@ -110,7 +110,7 @@ For more available parameters in `FluteMLE`, please read the documentation using
 ## Section I: Quality control
 
 ### Input data
-MAGeCK/MAGeCK-VISPR outputs a count summary file, which summarizes some basic QC scores at raw count level, including map ratio, Gini index, and NegSelQC. MAGeCKFlute incorporates an example datasets [@Ophir2014] for demonstration.
+MAGeCK/MAGeCK-VISPR outputs a count summary file, which summarizes some basic QC scores at raw count level, including map ratio, Gini index, and NegSelQC. MAGeCKFlute incorporates an example dataset [@Ophir2014] for demonstration.
 
 ```{r CheckCountSummary}
 file4 = file.path(system.file("extdata", package = "MAGeCKFlute"),
