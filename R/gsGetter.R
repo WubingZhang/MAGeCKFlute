@@ -148,7 +148,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM", "GO"), organism = 
   }
   if("CORUM" %in% type){ ## Process genesets from CORUM
     message(format(Sys.time(), " Downloading genesets from CORUM ..."))
-    base_url = "http://mips.helmholtz-muenchen.de/corum/download/allComplexes.txt.zip"
+    base_url = "https://mips.helmholtz-muenchen.de/corum/download/allComplexes.txt.zip"
     locfname = file.path(system.file("extdata", package = "MAGeCKFlute"), "allComplexes.txt.zip")
     download.file(base_url, locfname, quiet = TRUE)
     corum <- read.table(unz(locfname, "allComplexes.txt"), sep = "\t",
