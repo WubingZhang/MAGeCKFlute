@@ -2,7 +2,7 @@ Package: MAGeCKFlute
 Type: Package
 Title: Integrative Analysis Pipeline for Pooled CRISPR Functional
         Genetic Screens
-Version: 1.99.2
+Version: 1.99.2001
 Date: "`r Sys.Date()`"
 Author: Binbin Wang, Wubing Zhang, Feizhen Wu, Wei Li & X. Shirley Liu
 Maintainer: Wubing Zhang <Watson5bZhang@gmail.com>
@@ -52,7 +52,7 @@ Suggests: biomaRt,
           png, 
           scales, 
           sva, 
-          BiocManager        
+          BiocManager, magick        
 LazyData: TRUE
 NeedsCompilation: no
 biocViews: FunctionalGenomics, 
